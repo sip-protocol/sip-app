@@ -1,0 +1,302 @@
+# CLAUDE.md - SIP App
+
+> **Ecosystem Hub:** See [sip-protocol/CLAUDE.md](https://github.com/sip-protocol/sip-protocol/blob/main/CLAUDE.md) for full ecosystem context
+
+**Repository:** https://github.com/sip-protocol/sip-app
+**Live URL:** https://app.sip-protocol.org
+**Purpose:** THE world-class privacy application for Web3 — powered by SIP Protocol SDK
+
+---
+
+## 🎯 PRODUCT PHILOSOPHY (READ THIS FIRST)
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                     THIS IS NOT A DEMO. THIS IS THE PRODUCT.                │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│   app.sip-protocol.org = THE Privacy App for Web3 Users                     │
+│                                                                             │
+│   Like jup.ag is to Jupiter SDK:                                            │
+│   • Jupiter SDK → for developers to integrate swaps                         │
+│   • jup.ag → THE best swap interface on Solana (world-class consumer app)   │
+│                                                                             │
+│   SIP follows the same model:                                               │
+│   • @sip-protocol/sdk → for developers to integrate privacy                 │
+│   • app.sip-protocol.org → THE best privacy interface (world-class app)     │
+│                                                                             │
+│   THE APP IS THE PITCH.                                                     │
+│   Developers see the app → impressed → want to use the SDK.                 │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### Quality Standards (Non-Negotiable)
+
+| Aspect | Standard | Why |
+|--------|----------|-----|
+| **UX** | Delightful, intuitive, zero friction | User satisfaction = adoption |
+| **Performance** | Sub-second interactions, optimistic UI | Users don't wait |
+| **Design** | Clean, modern, professional | First impressions matter |
+| **Reliability** | 99.9% uptime, graceful error handling | Trust requires reliability |
+| **Accessibility** | WCAG 2.1 AA compliant | Privacy is for everyone |
+| **Mobile** | Mobile-first responsive design | Most users are on mobile |
+
+### Build Triggers (Ask These Every Time)
+
+Before building ANY feature, ask:
+
+1. **"Would this be acceptable on jup.ag?"** — If no, raise the bar
+2. **"Is this production-ready or prototype-quality?"** — Ship production only
+3. **"Would a user be delighted or just satisfied?"** — Aim for delight
+4. **"Does this showcase SIP's capabilities impressively?"** — The app sells the SDK
+5. **"Am I cutting corners because of deadline?"** — Quality over deadlines
+
+> **⚠️ REMINDER:** Hackathon is a BONUS. We're building for users, not judges. If the app is world-class, prizes will follow. If we rush for prizes, we get neither.
+
+---
+
+## Current Focus
+
+**Status:** Initial Development | Building world-class privacy app
+**Context:** Solana Privacy Hack (Jan 12 - Feb 1, 2026) — bonus opportunity, not primary driver
+
+### Priority: /payments (Privacy Payments App)
+Build the best private payments experience on Solana:
+- [ ] `/payments` - Dashboard for private payments
+- [ ] `/payments/send` - Send shielded payments (beautiful UX)
+- [ ] `/payments/receive` - Generate stealth addresses (one-click)
+- [ ] `/payments/scan` - Scan for incoming payments (real-time)
+- [ ] `/payments/history` - Transaction history (clear, searchable)
+
+**Target UX:** As smooth as Venmo, as private as cash.
+
+---
+
+## Architecture
+
+**Philosophy:**
+- `sip-protocol.org` = "What is SIP?" (marketing)
+- `app.sip-protocol.org` = "Use SIP now" (THE product)
+
+### App Routes
+
+| Route | Purpose | Status | Priority |
+|-------|---------|--------|----------|
+| `/` | App hub / dashboard | Planned | Medium |
+| `/payments` | Private Payments | **HACKATHON** | Critical |
+| `/payments/send` | Send shielded payment | **HACKATHON** | Critical |
+| `/payments/receive` | Generate stealth address | **HACKATHON** | Critical |
+| `/payments/scan` | Scan for incoming | **HACKATHON** | High |
+| `/payments/history` | Transaction history | Planned | Medium |
+| `/wallet` | Wallet interface | Planned | Medium |
+| `/wallet/keys` | Viewing key management | Planned | Medium |
+| `/dex` | Private DEX (from /demo) | Planned | Medium |
+| `/dex/jupiter` | Jupiter integration | Planned | Medium |
+| `/enterprise` | Enterprise dashboard | Planned | Low |
+| `/enterprise/compliance` | Compliance tools | Planned | Low |
+| `/gaming` | Gaming transactions | Future | Low |
+
+### Route Groups Structure
+
+```
+src/app/
+├── layout.tsx              # Root layout (shared nav/footer)
+├── page.tsx                # Hub: links to all apps
+│
+├── (payments)/             # Route group: Private Payments
+│   ├── payments/
+│   │   ├── page.tsx        # Main payments interface
+│   │   ├── send/page.tsx   # Send shielded payment
+│   │   ├── receive/page.tsx# Generate stealth address
+│   │   ├── scan/page.tsx   # Scan for incoming
+│   │   └── history/page.tsx# Transaction history
+│   └── layout.tsx          # Payments-specific layout
+│
+├── (wallet)/               # Route group: Wallet
+│   └── wallet/
+│       ├── page.tsx        # Wallet overview
+│       └── keys/page.tsx   # Viewing key management
+│
+├── (dex)/                  # Route group: DEX
+│   └── dex/
+│       ├── page.tsx        # Private swap interface
+│       └── jupiter/page.tsx# Jupiter integration
+│
+└── (enterprise)/           # Route group: Enterprise
+    └── enterprise/
+        ├── page.tsx        # Dashboard
+        └── compliance/     # Compliance tools
+```
+
+---
+
+## Quick Reference
+
+**Tech Stack:** Next.js 14 (App Router), React 18, Tailwind CSS, Zustand, Vitest
+**Deployment:** app.sip-protocol.org (Docker + GHCR → VPS port 5004)
+
+**Key Commands:**
+```bash
+pnpm install              # Install dependencies
+pnpm dev                  # Dev server (localhost:3000)
+pnpm test -- --run        # Run tests
+pnpm build                # Build for production
+pnpm typecheck            # Type check
+```
+
+---
+
+## Dependencies
+
+**Core:**
+- `@sip-protocol/sdk` - Core privacy SDK
+- `@sip-protocol/types` - TypeScript types
+- `@sip-protocol/react` - React hooks (useSIP, useStealthAddress, etc.)
+
+**Solana:**
+- `@solana/web3.js` - Solana client
+- `@solana/wallet-adapter-react` - Wallet connection
+- `@solana/wallet-adapter-wallets` - Wallet adapters (Phantom, Solflare)
+
+**Integrations:**
+- Helius SDK - DAS API for stealth scanning
+- Helius Webhooks - Real-time payment notifications
+
+---
+
+## Key Components
+
+### Payments App
+
+| Component | Purpose |
+|-----------|---------|
+| `SendShieldedForm` | Form for sending private payments |
+| `StealthAddressGenerator` | Generate + display stealth meta-address |
+| `PaymentScanner` | Scan blockchain for incoming payments |
+| `ClaimPayment` | Claim received stealth payments |
+| `ViewingKeyDisclosure` | Reveal transaction to auditor |
+
+### Shared
+
+| Component | Purpose |
+|-----------|---------|
+| `WalletConnect` | Solana wallet connection |
+| `PrivacyToggle` | Privacy level selector |
+| `TransactionStatus` | Transaction progress display |
+
+---
+
+## Migration from sip-website
+
+The following pages are **deprecated** in sip-website and replaced here:
+
+| Old (sip-website) | New (sip-app) | Status |
+|-------------------|---------------|--------|
+| `/demo` | `/dex` | Planned |
+| `/claim` | `/payments/receive` | Planned |
+| `/phantom-poc` | `/wallet` | Planned |
+| `/jupiter-poc` | `/dex/jupiter` | Planned |
+| `/compliance-dashboard` | `/enterprise/compliance` | Planned |
+
+---
+
+## Deployment
+
+### VPS Configuration
+
+```yaml
+# docker-compose.yml
+name: sip-app  # CRITICAL: Isolate from other projects
+
+services:
+  app-blue:
+    image: ghcr.io/sip-protocol/sip-app:latest
+    container_name: sip-app-blue
+    ports:
+      - "5004:3000"
+    restart: unless-stopped
+
+  app-green:
+    image: ghcr.io/sip-protocol/sip-app:green
+    container_name: sip-app-green
+    ports:
+      - "5005:3000"
+    restart: unless-stopped
+```
+
+### Port Allocation
+
+| Port | Service |
+|------|---------|
+| 5004 | sip-app (blue) |
+| 5005 | sip-app (green) |
+
+---
+
+## Design Inspirations (World-Class References)
+
+Study these for quality benchmarks:
+
+| App | What to Learn |
+|-----|---------------|
+| **jup.ag** | Swap UX, token selection, transaction flow |
+| **phantom.app** | Wallet UX, onboarding, mobile experience |
+| **uniswap.org** | Clean design, professional feel |
+| **stripe.com** | Form design, error handling, trust signals |
+| **linear.app** | Speed, keyboard shortcuts, polish |
+
+**Design Principles:**
+1. **Clarity over cleverness** — Users should never be confused
+2. **Speed is a feature** — Every interaction should feel instant
+3. **Progressive disclosure** — Simple by default, powerful when needed
+4. **Trust through transparency** — Show what's happening, explain why
+
+---
+
+## Repo-Specific Guidelines
+
+### DO (World-Class Standards):
+- **Design first, code second** — Sketch the UX before implementation
+- **Mobile-first** — Design for mobile, enhance for desktop
+- **Test on real devices** — Not just browser DevTools
+- **Use Helius DAS API** — For efficient stealth address scanning
+- **Optimistic UI** — Show success immediately, handle errors gracefully
+- **Animations with purpose** — Micro-interactions that delight
+- **Keyboard accessible** — Power users love keyboard shortcuts
+- **Error messages that help** — Not just "Something went wrong"
+
+### DON'T (Quality Killers):
+- **Ship "good enough"** — If it's not great, iterate
+- **Skip loading states** — Users need feedback
+- **Ignore edge cases** — Empty states, errors, slow connections
+- **Hard-code anything** — Addresses, amounts, network endpoints
+- **Forget accessibility** — Screen readers, color contrast, focus states
+- **Rush for deadlines** — Quality > speed (hackathon is bonus)
+
+### Quality Checklist (Before Every PR)
+
+- [ ] Works on mobile (tested on real device)
+- [ ] Loading states for all async operations
+- [ ] Error states with helpful messages
+- [ ] Empty states that guide users
+- [ ] Keyboard navigation works
+- [ ] No console errors or warnings
+- [ ] Performance: no jank, instant feedback
+- [ ] Accessibility: can navigate with screen reader
+
+---
+
+## Related Repositories
+
+| Repo | Purpose | Relationship |
+|------|---------|--------------|
+| [sip-protocol](https://github.com/sip-protocol/sip-protocol) | Core SDK | Imports SDK |
+| [sip-website](https://github.com/sip-protocol/sip-website) | Marketing site | Replaces /demo |
+| [docs-sip](https://github.com/sip-protocol/docs-sip) | Documentation | Documents usage |
+
+---
+
+**Last Updated:** 2026-01-11
+**Status:** Building World-Class Privacy App
+**Philosophy:** THE product, not a demo. Quality over deadlines. User satisfaction first.
