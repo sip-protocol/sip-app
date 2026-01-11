@@ -4,7 +4,6 @@ import { useSendPayment } from "@/hooks/use-send-payment"
 
 // Mock wallet adapter
 vi.mock("@solana/wallet-adapter-react", () => ({
-  useConnection: () => ({ connection: {} }),
   useWallet: () => ({
     publicKey: { toBase58: () => "MockPublicKey123" },
     signTransaction: vi.fn(),

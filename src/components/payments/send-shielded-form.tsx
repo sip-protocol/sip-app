@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback, useMemo } from "react"
+import { useState, useCallback, useEffect } from "react"
 import { useWallet, useConnection } from "@solana/wallet-adapter-react"
 import { LAMPORTS_PER_SOL } from "@solana/web3.js"
 import { RecipientInput, validateRecipient } from "./recipient-input"
@@ -25,13 +25,29 @@ export function SendShieldedForm() {
   const { status, txHash, error, send, reset } = useSendPayment()
 
   // Fetch balance when connected
-  useMemo(() => {
-    if (publicKey && connection) {
-      connection.getBalance(publicKey).then((bal) => {
-        setBalance(bal / LAMPORTS_PER_SOL)
+  useEffect(() => {
+    let cancelled = false
+
+    if (!publicKey || !connection) {
+      // Reset balance when wallet disconnects (deferred to avoid sync setState in effect)
+      queueMicrotask(() => {
+        if (!cancelled) {
+          setBalance(undefined)
+        }
       })
-    } else {
-      setBalance(undefined)
+      return () => {
+        cancelled = true
+      }
+    }
+
+    connection.getBalance(publicKey).then((bal) => {
+      if (!cancelled) {
+        setBalance(bal / LAMPORTS_PER_SOL)
+      }
+    })
+
+    return () => {
+      cancelled = true
     }
   }, [publicKey, connection])
 

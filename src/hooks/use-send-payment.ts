@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useCallback } from "react"
-import { useConnection, useWallet } from "@solana/wallet-adapter-react"
+import { useWallet } from "@solana/wallet-adapter-react"
 import type { PrivacyLevel } from "@/components/payments/privacy-toggle"
 import type { Token } from "@/components/payments/amount-input"
 import type { TxStatus } from "@/components/payments/transaction-status"
@@ -22,7 +22,6 @@ interface UseSendPaymentResult {
 }
 
 export function useSendPayment(): UseSendPaymentResult {
-  const { connection } = useConnection()
   const { publicKey, signTransaction } = useWallet()
 
   const [status, setStatus] = useState<TxStatus>("idle")
@@ -83,7 +82,7 @@ export function useSendPayment(): UseSendPaymentResult {
         setStatus("error")
       }
     },
-    [publicKey, signTransaction, connection]
+    [publicKey, signTransaction]
   )
 
   return { status, txHash, error, send, reset }
