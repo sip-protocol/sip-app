@@ -4,10 +4,9 @@ import { AddressDisplay } from "@/components/payments/address-display"
 
 // Mock clipboard API
 const mockWriteText = vi.fn()
-Object.assign(navigator, {
-  clipboard: {
-    writeText: mockWriteText,
-  },
+Object.defineProperty(navigator, "clipboard", {
+  value: { writeText: mockWriteText },
+  configurable: true,
 })
 
 describe("AddressDisplay", () => {

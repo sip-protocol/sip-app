@@ -51,11 +51,12 @@
     "eslint": "^9",
     "eslint-config-next": "16.1.1",
     "eslint-config-prettier": "^10.1.8",
+    "happy-dom": "^20.1.0",
     "jsdom": "^27.4.0",
     "prettier": "^3.7.4",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "vitest": "^2.1.8"
+    "vitest": "^4.0.16"
   },
   "engines": {
     "node": ">=20.0.0"
