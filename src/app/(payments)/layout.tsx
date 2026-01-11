@@ -1,4 +1,7 @@
+"use client"
+
 import Link from "next/link"
+import { WalletButton } from "@/components/shared/wallet-button"
 
 const navItems = [
   { name: "Dashboard", href: "/payments" },
@@ -42,15 +45,8 @@ export default function PaymentsLayout({
               ))}
             </nav>
 
-            {/* Wallet Connect Placeholder */}
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                className="px-4 py-2 text-sm font-medium rounded-lg bg-sip-purple-600 text-white hover:bg-sip-purple-700 transition-colors"
-              >
-                Connect Wallet
-              </button>
-            </div>
+            {/* Wallet */}
+            <WalletButton />
           </div>
         </div>
 
