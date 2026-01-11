@@ -1,9 +1,6 @@
-import type { Metadata } from "next"
+"use client"
 
-export const metadata: Metadata = {
-  title: "Receive Payment",
-  description: "Generate a stealth address to receive private payments.",
-}
+import { StealthAddressGenerator } from "@/components/payments/stealth-address-generator"
 
 export default function ReceivePaymentPage() {
   return (
@@ -16,81 +13,43 @@ export default function ReceivePaymentPage() {
         </p>
       </div>
 
-      {/* Stealth Address Card */}
-      <div className="bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-2xl p-6 sm:p-8">
-        {/* QR Code Placeholder */}
-        <div className="flex justify-center mb-6">
-          <div className="w-48 h-48 bg-[var(--surface-secondary)] rounded-xl flex items-center justify-center border border-[var(--border-default)]">
-            <div className="text-center">
-              <p className="text-4xl mb-2">🔐</p>
-              <p className="text-sm text-[var(--text-secondary)]">
-                Connect wallet to
-                <br />
-                generate address
-              </p>
-            </div>
-          </div>
-        </div>
+      {/* Stealth Address Generator */}
+      <StealthAddressGenerator />
 
-        {/* Address Display */}
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">
-            Your Stealth Meta-Address
-          </label>
-          <div className="relative">
-            <div className="w-full px-4 py-3 bg-[var(--surface-secondary)] border border-[var(--border-default)] rounded-xl font-mono text-sm text-[var(--text-tertiary)] break-all">
-              Connect wallet to view your stealth meta-address
-            </div>
-            <button
-              type="button"
-              disabled
-              className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-tertiary)] rounded-lg transition-colors disabled:opacity-50"
-              title="Copy address"
-            >
-              📋
-            </button>
-          </div>
-        </div>
-
-        {/* Connect Button */}
-        <button
-          type="button"
-          className="w-full py-4 px-6 text-lg font-semibold rounded-xl bg-sip-green-500 text-white hover:bg-sip-green-600 transition-colors"
-        >
-          Connect Wallet to Generate
-        </button>
-
-        {/* Info */}
-        <div className="mt-6 pt-6 border-t border-[var(--border-default)]">
-          <h3 className="font-medium mb-3">How it works</h3>
-          <ul className="space-y-2 text-sm text-[var(--text-secondary)]">
-            <li className="flex gap-2">
-              <span className="text-sip-purple-500">1.</span>
-              Share your stealth meta-address with the sender
-            </li>
-            <li className="flex gap-2">
-              <span className="text-sip-purple-500">2.</span>
-              Sender generates a one-time address just for you
-            </li>
-            <li className="flex gap-2">
-              <span className="text-sip-purple-500">3.</span>
-              Only you can discover and claim the payment
-            </li>
-          </ul>
-        </div>
+      {/* How it works */}
+      <div className="mt-8 bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-2xl p-6">
+        <h3 className="font-medium mb-4">How it works</h3>
+        <ul className="space-y-3 text-sm text-[var(--text-secondary)]">
+          <li className="flex gap-3">
+            <span className="flex-shrink-0 w-6 h-6 rounded-full bg-sip-purple-500/20 text-sip-purple-400 flex items-center justify-center text-xs font-medium">
+              1
+            </span>
+            <span>Share your stealth meta-address with the sender</span>
+          </li>
+          <li className="flex gap-3">
+            <span className="flex-shrink-0 w-6 h-6 rounded-full bg-sip-purple-500/20 text-sip-purple-400 flex items-center justify-center text-xs font-medium">
+              2
+            </span>
+            <span>Sender generates a one-time address just for you</span>
+          </li>
+          <li className="flex gap-3">
+            <span className="flex-shrink-0 w-6 h-6 rounded-full bg-sip-purple-500/20 text-sip-purple-400 flex items-center justify-center text-xs font-medium">
+              3
+            </span>
+            <span>Only you can discover and claim the payment</span>
+          </li>
+        </ul>
       </div>
 
       {/* Security Note */}
-      <div className="mt-6 p-4 rounded-xl bg-sip-green-50 dark:bg-sip-green-900/20 border border-sip-green-200 dark:border-sip-green-800">
+      <div className="mt-6 p-4 rounded-xl bg-sip-green-500/10 border border-sip-green-500/30">
         <div className="flex gap-3">
           <span className="text-xl">🛡️</span>
           <div>
-            <p className="font-medium text-sip-green-900 dark:text-sip-green-100">
-              One-time addresses
-            </p>
-            <p className="text-sm text-sip-green-700 dark:text-sip-green-300 mt-1">
-              Each payment uses a unique derived address. Your transactions
-              cannot be linked together.
+            <p className="font-medium text-sip-green-400">One-time addresses</p>
+            <p className="text-sm text-[var(--text-secondary)] mt-1">
+              Each payment uses a unique derived address. Your transactions cannot be linked
+              together.
             </p>
           </div>
         </div>
