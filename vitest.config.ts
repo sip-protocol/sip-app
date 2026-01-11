@@ -9,12 +9,8 @@ export default defineConfig({
     setupFiles: ["./tests/setup.ts"],
     include: ["**/*.{test,spec}.{ts,tsx}"],
     exclude: ["node_modules", ".next", "e2e"],
-    pool: "threads",
-    poolOptions: {
-      threads: {
-        singleThread: true,
-      },
-    },
+    // Use single isolation to reduce memory pressure
+    isolate: false,
     coverage: {
       provider: "v8",
       reporter: ["text", "json", "html"],
