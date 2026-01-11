@@ -17,11 +17,25 @@ const OPTIONS: {
   icon: string
 }[] = [
   { level: "shielded", label: "Shielded", desc: "Full privacy", icon: "🔒" },
-  { level: "compliant", label: "Compliant", desc: "With viewing key", icon: "👁️" },
-  { level: "transparent", label: "Transparent", desc: "No privacy", icon: "🔓" },
+  {
+    level: "compliant",
+    label: "Compliant",
+    desc: "With viewing key",
+    icon: "👁️",
+  },
+  {
+    level: "transparent",
+    label: "Transparent",
+    desc: "No privacy",
+    icon: "🔓",
+  },
 ]
 
-export function PrivacyToggle({ value, onChange, disabled }: PrivacyToggleProps) {
+export function PrivacyToggle({
+  value,
+  onChange,
+  disabled,
+}: PrivacyToggleProps) {
   return (
     <div>
       <label className="block text-sm font-medium text-[var(--text-secondary)] mb-3">
@@ -55,7 +69,9 @@ export function PrivacyToggle({ value, onChange, disabled }: PrivacyToggleProps)
                   {option.label}
                 </span>
               </div>
-              <p className="text-xs text-[var(--text-tertiary)]">{option.desc}</p>
+              <p className="text-xs text-[var(--text-tertiary)]">
+                {option.desc}
+              </p>
             </button>
           )
         })}

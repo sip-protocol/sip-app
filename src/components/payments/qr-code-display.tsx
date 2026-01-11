@@ -9,14 +9,13 @@ interface QRCodeDisplayProps {
   className?: string
 }
 
-export function QRCodeDisplay({ value, size = 200, className }: QRCodeDisplayProps) {
+export function QRCodeDisplay({
+  value,
+  size = 200,
+  className,
+}: QRCodeDisplayProps) {
   return (
-    <div
-      className={cn(
-        "bg-white p-4 rounded-2xl inline-block",
-        className
-      )}
-    >
+    <div className={cn("bg-white p-4 rounded-2xl inline-block", className)}>
       <QRCodeSVG
         value={value}
         size={size}

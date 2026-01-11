@@ -51,7 +51,9 @@ export function useStealthKeys(): UseStealthKeysResult {
         setKeys(parsed)
       }
 
-      const backedUp = localStorage.getItem(`${BACKUP_KEY}_${publicKey.toBase58()}`)
+      const backedUp = localStorage.getItem(
+        `${BACKUP_KEY}_${publicKey.toBase58()}`
+      )
       setHasBackedUp(backedUp === "true")
     } catch {
       console.error("Failed to load stealth keys from storage")

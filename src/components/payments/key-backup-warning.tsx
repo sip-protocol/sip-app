@@ -8,7 +8,11 @@ interface KeyBackupWarningProps {
   className?: string
 }
 
-export function KeyBackupWarning({ onConfirm, onCancel, className }: KeyBackupWarningProps) {
+export function KeyBackupWarning({
+  onConfirm,
+  onCancel,
+  className,
+}: KeyBackupWarningProps) {
   return (
     <div
       className={cn(
@@ -28,8 +32,9 @@ export function KeyBackupWarning({ onConfirm, onCancel, className }: KeyBackupWa
 
           <div className="text-sm text-[var(--text-secondary)] space-y-3">
             <p>
-              You are about to generate a new stealth meta-address. This will create
-              cryptographic keys that control access to funds sent to this address.
+              You are about to generate a new stealth meta-address. This will
+              create cryptographic keys that control access to funds sent to
+              this address.
             </p>
 
             <div className="bg-[var(--surface-secondary)] rounded-lg p-4">

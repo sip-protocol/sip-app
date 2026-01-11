@@ -9,7 +9,11 @@ interface AddressDisplayProps {
   className?: string
 }
 
-export function AddressDisplay({ address, label, className }: AddressDisplayProps) {
+export function AddressDisplay({
+  address,
+  label,
+  className,
+}: AddressDisplayProps) {
   const [copied, setCopied] = useState(false)
 
   const handleCopy = useCallback(async () => {
@@ -31,7 +35,8 @@ export function AddressDisplay({ address, label, className }: AddressDisplayProp
     if (parts.length >= 3 && parts[0] === "sip") {
       const chain = parts[1]
       const keys = parts.slice(2).join(":")
-      const truncated = keys.length > 20 ? `${keys.slice(0, 12)}...${keys.slice(-8)}` : keys
+      const truncated =
+        keys.length > 20 ? `${keys.slice(0, 12)}...${keys.slice(-8)}` : keys
       return `sip:${chain}:${truncated}`
     }
 

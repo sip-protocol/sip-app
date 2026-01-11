@@ -12,10 +12,19 @@ interface StealthAddressGeneratorProps {
   className?: string
 }
 
-export function StealthAddressGenerator({ className }: StealthAddressGeneratorProps) {
+export function StealthAddressGenerator({
+  className,
+}: StealthAddressGeneratorProps) {
   const { connected } = useWallet()
-  const { keys, isLoading, error, generate, clear, hasBackedUp, confirmBackup } =
-    useStealthKeys()
+  const {
+    keys,
+    isLoading,
+    error,
+    generate,
+    clear,
+    hasBackedUp,
+    confirmBackup,
+  } = useStealthKeys()
 
   const [showWarning, setShowWarning] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
@@ -53,7 +62,8 @@ export function StealthAddressGenerator({ className }: StealthAddressGeneratorPr
           Connect Wallet to Receive
         </h2>
         <p className="text-[var(--text-secondary)]">
-          Connect your Solana wallet to generate a stealth address for receiving private payments.
+          Connect your Solana wallet to generate a stealth address for receiving
+          private payments.
         </p>
       </div>
     )
@@ -86,8 +96,8 @@ export function StealthAddressGenerator({ className }: StealthAddressGeneratorPr
         </h2>
 
         <p className="text-[var(--text-secondary)] mb-6 max-w-md mx-auto">
-          Create a unique stealth meta-address that allows anyone to send you private payments.
-          Each payment creates a new unlinkable address.
+          Create a unique stealth meta-address that allows anyone to send you
+          private payments. Each payment creates a new unlinkable address.
         </p>
 
         {error && (
@@ -129,7 +139,10 @@ export function StealthAddressGenerator({ className }: StealthAddressGeneratorPr
 
         {/* Address Display */}
         <div className="w-full mb-6">
-          <AddressDisplay address={keys.metaAddress} label="Your Stealth Address" />
+          <AddressDisplay
+            address={keys.metaAddress}
+            label="Your Stealth Address"
+          />
         </div>
 
         {/* Created At */}
@@ -194,8 +207,8 @@ export function StealthAddressGenerator({ className }: StealthAddressGeneratorPr
               Full Privacy Enabled
             </h4>
             <p className="text-xs text-[var(--text-secondary)] mt-1">
-              Payments to this address are unlinkable. Each sender creates a unique one-time
-              address that only you can spend from.
+              Payments to this address are unlinkable. Each sender creates a
+              unique one-time address that only you can spend from.
             </p>
           </div>
         </div>

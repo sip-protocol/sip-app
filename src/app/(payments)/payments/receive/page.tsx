@@ -48,8 +48,8 @@ export default function ReceivePaymentPage() {
           <div>
             <p className="font-medium text-sip-green-400">One-time addresses</p>
             <p className="text-sm text-[var(--text-secondary)] mt-1">
-              Each payment uses a unique derived address. Your transactions cannot be linked
-              together.
+              Each payment uses a unique derived address. Your transactions
+              cannot be linked together.
             </p>
           </div>
         </div>

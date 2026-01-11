@@ -11,16 +11,23 @@ interface TransactionStatusProps {
   error?: string
 }
 
-export function TransactionStatus({ status, txHash, error }: TransactionStatusProps) {
+export function TransactionStatus({
+  status,
+  txHash,
+  error,
+}: TransactionStatusProps) {
   if (status === "idle") return null
 
   return (
     <div
       className={cn(
         "mt-6 p-4 rounded-xl border",
-        status === "pending" && "bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-800",
-        status === "confirmed" && "bg-sip-green-50 border-sip-green-200 dark:bg-sip-green-900/20 dark:border-sip-green-800",
-        status === "error" && "bg-red-50 border-red-200 dark:bg-red-900/20 dark:border-red-800"
+        status === "pending" &&
+          "bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-800",
+        status === "confirmed" &&
+          "bg-sip-green-50 border-sip-green-200 dark:bg-sip-green-900/20 dark:border-sip-green-800",
+        status === "error" &&
+          "bg-red-50 border-red-200 dark:bg-red-900/20 dark:border-red-800"
       )}
     >
       <div className="flex items-start gap-3">
@@ -34,7 +41,8 @@ export function TransactionStatus({ status, txHash, error }: TransactionStatusPr
             className={cn(
               "font-medium",
               status === "pending" && "text-blue-900 dark:text-blue-100",
-              status === "confirmed" && "text-sip-green-900 dark:text-sip-green-100",
+              status === "confirmed" &&
+                "text-sip-green-900 dark:text-sip-green-100",
               status === "error" && "text-red-900 dark:text-red-100"
             )}
           >
@@ -53,7 +61,9 @@ export function TransactionStatus({ status, txHash, error }: TransactionStatusPr
             </a>
           )}
           {error && status === "error" && (
-            <p className="text-sm text-red-700 dark:text-red-300 mt-1">{error}</p>
+            <p className="text-sm text-red-700 dark:text-red-300 mt-1">
+              {error}
+            </p>
           )}
         </div>
       </div>

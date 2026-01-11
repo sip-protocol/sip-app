@@ -54,8 +54,10 @@ export function SendShieldedForm() {
   // Validation
   const isValidRecipient = recipient !== "" && validateRecipient(recipient)
   const numericAmount = parseFloat(amount) || 0
-  const isValidAmount = numericAmount > 0 && (balance === undefined || numericAmount <= balance)
-  const canSubmit = connected && isValidRecipient && isValidAmount && status !== "pending"
+  const isValidAmount =
+    numericAmount > 0 && (balance === undefined || numericAmount <= balance)
+  const canSubmit =
+    connected && isValidRecipient && isValidAmount && status !== "pending"
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
@@ -144,7 +146,11 @@ export function SendShieldedForm() {
       </button>
 
       {/* Transaction Status */}
-      <TransactionStatus status={status} txHash={txHash ?? undefined} error={error ?? undefined} />
+      <TransactionStatus
+        status={status}
+        txHash={txHash ?? undefined}
+        error={error ?? undefined}
+      />
 
       {/* Transaction Details */}
       <div className="mt-6 pt-6 border-t border-[var(--border-default)]">

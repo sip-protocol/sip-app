@@ -81,7 +81,8 @@ export function RecipientInput({
       </div>
       {showError ? (
         <p className="mt-2 text-xs text-red-500">
-          Invalid stealth address format. Expected: sip:solana:&lt;spend&gt;:&lt;view&gt;
+          Invalid stealth address format. Expected:
+          sip:solana:&lt;spend&gt;:&lt;view&gt;
         </p>
       ) : (
         <p className="mt-2 text-xs text-[var(--text-tertiary)]">
