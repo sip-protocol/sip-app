@@ -1,0 +1,237 @@
+@import "tailwindcss";
+
+/* =============================================================================
+   SIP Protocol - Design System
+   World-class privacy app theming
+   ============================================================================= */
+
+/* CSS Custom Properties for theming */
+:root {
+  /* Background & Foreground */
+  --background: #ffffff;
+  --foreground: #0a0a0a;
+
+  /* SIP Brand Colors */
+  --sip-purple-50: #f5f3ff;
+  --sip-purple-100: #ede9fe;
+  --sip-purple-200: #ddd6fe;
+  --sip-purple-300: #c4b5fd;
+  --sip-purple-400: #a78bfa;
+  --sip-purple-500: #8b5cf6;
+  --sip-purple-600: #7c3aed;
+  --sip-purple-700: #6d28d9;
+  --sip-purple-800: #5b21b6;
+  --sip-purple-900: #4c1d95;
+
+  --sip-green-50: #f0fdf4;
+  --sip-green-100: #dcfce7;
+  --sip-green-200: #bbf7d0;
+  --sip-green-300: #86efac;
+  --sip-green-400: #4ade80;
+  --sip-green-500: #22c55e;
+  --sip-green-600: #16a34a;
+  --sip-green-700: #15803d;
+
+  /* Semantic Colors */
+  --color-primary: var(--sip-purple-600);
+  --color-primary-hover: var(--sip-purple-700);
+  --color-success: var(--sip-green-500);
+  --color-success-hover: var(--sip-green-600);
+  --color-error: #ef4444;
+  --color-warning: #f59e0b;
+
+  /* Surface Colors */
+  --surface-primary: #ffffff;
+  --surface-secondary: #f9fafb;
+  --surface-tertiary: #f3f4f6;
+  --surface-elevated: #ffffff;
+
+  /* Border Colors */
+  --border-default: #e5e7eb;
+  --border-hover: #d1d5db;
+  --border-focus: var(--sip-purple-500);
+
+  /* Text Colors */
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --text-tertiary: #9ca3af;
+  --text-inverse: #ffffff;
+
+  /* Shadows (for elevated surfaces) */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+  /* Border Radius */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Dark Mode */
+.dark {
+  --background: #0a0a0a;
+  --foreground: #fafafa;
+
+  /* Semantic Colors - Dark */
+  --color-primary: var(--sip-purple-500);
+  --color-primary-hover: var(--sip-purple-400);
+  --color-success: var(--sip-green-400);
+  --color-success-hover: var(--sip-green-300);
+
+  /* Surface Colors - Dark */
+  --surface-primary: #0a0a0a;
+  --surface-secondary: #171717;
+  --surface-tertiary: #262626;
+  --surface-elevated: #1f1f1f;
+
+  /* Border Colors - Dark */
+  --border-default: #262626;
+  --border-hover: #404040;
+  --border-focus: var(--sip-purple-500);
+
+  /* Text Colors - Dark */
+  --text-primary: #fafafa;
+  --text-secondary: #a1a1aa;
+  --text-tertiary: #71717a;
+  --text-inverse: #0a0a0a;
+
+  /* Shadows - Dark (subtle glow effect) */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.4);
+}
+
+/* Tailwind v4 Theme */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  /* SIP Brand Colors in Tailwind */
+  --color-sip-purple-50: var(--sip-purple-50);
+  --color-sip-purple-100: var(--sip-purple-100);
+  --color-sip-purple-200: var(--sip-purple-200);
+  --color-sip-purple-300: var(--sip-purple-300);
+  --color-sip-purple-400: var(--sip-purple-400);
+  --color-sip-purple-500: var(--sip-purple-500);
+  --color-sip-purple-600: var(--sip-purple-600);
+  --color-sip-purple-700: var(--sip-purple-700);
+  --color-sip-purple-800: var(--sip-purple-800);
+  --color-sip-purple-900: var(--sip-purple-900);
+
+  --color-sip-green-50: var(--sip-green-50);
+  --color-sip-green-100: var(--sip-green-100);
+  --color-sip-green-200: var(--sip-green-200);
+  --color-sip-green-300: var(--sip-green-300);
+  --color-sip-green-400: var(--sip-green-400);
+  --color-sip-green-500: var(--sip-green-500);
+  --color-sip-green-600: var(--sip-green-600);
+  --color-sip-green-700: var(--sip-green-700);
+}
+
+/* Base Styles */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Focus Styles (Accessibility) */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Selection */
+::selection {
+  background: var(--sip-purple-200);
+  color: var(--sip-purple-900);
+}
+
+.dark ::selection {
+  background: var(--sip-purple-800);
+  color: var(--sip-purple-100);
+}
+
+/* Scrollbar Styling (Webkit) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--surface-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-default);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-hover);
+}
+
+/* Utility Classes */
+.glass {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.dark .glass {
+  background: rgba(10, 10, 10, 0.8);
+}
+
+/* Animation Utilities */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(139, 92, 246, 0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn var(--transition-base) ease-out;
+}
+
+.animate-slide-up {
+  animation: slideUp var(--transition-slow) ease-out;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}

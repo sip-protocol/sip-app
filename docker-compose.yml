@@ -1,0 +1,37 @@
+# =============================================================================
+# SIP App - Docker Compose
+# Deployment: app.sip-protocol.org
+# =============================================================================
+
+name: sip-app  # CRITICAL: Isolate from other projects on shared VPS
+
+services:
+  # Blue deployment (production)
+  app-blue:
+    image: ghcr.io/sip-protocol/sip-app:latest
+    container_name: sip-app-blue
+    ports:
+      - "5004:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_TELEMETRY_DISABLED=1
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Green deployment (staging/canary)
+  app-green:
+    image: ghcr.io/sip-protocol/sip-app:green
+    container_name: sip-app-green
+    ports:
+      - "5005:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_TELEMETRY_DISABLED=1
+    restart: unless-stopped
+    profiles:
+      - staging
