@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
 import type { ViewingKey } from "@sip-protocol/types"
 import { generateViewingKey } from "@sip-protocol/sdk"
 import { ViewingKeyDisplay } from "./viewing-key-display"
@@ -48,13 +48,30 @@ export function ViewingKeyPanel({
   const [showShareModal, setShowShareModal] = useState(false)
   const [isGenerating, setIsGenerating] = useState(false)
 
+  // Use ref to track if we've already generated on mount
+  const hasGeneratedRef = useRef(false)
+  const onViewingKeyChangeRef = useRef(onViewingKeyChange)
+  onViewingKeyChangeRef.current = onViewingKeyChange
+
   // Auto-generate viewing key on mount if not provided
   useEffect(() => {
-    if (!viewingKey && !disabled) {
-      handleGenerate()
+    if (hasGeneratedRef.current || disabled || initialViewingKey) return
+    hasGeneratedRef.current = true
+
+    const generate = async () => {
+      setIsGenerating(true)
+      try {
+        const key = generateViewingKey("m/0/compliance")
+        setViewingKey(key)
+        onViewingKeyChangeRef.current?.(key)
+      } catch (err) {
+        console.error("Failed to generate viewing key:", err)
+      } finally {
+        setIsGenerating(false)
+      }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    generate()
+  }, [disabled, initialViewingKey])
 
   const handleGenerate = useCallback(async () => {
     setIsGenerating(true)

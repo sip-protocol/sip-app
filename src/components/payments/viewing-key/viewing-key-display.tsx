@@ -28,7 +28,22 @@ export function ViewingKeyDisplay({
 
   const handleCopy = useCallback(async () => {
     try {
-      await navigator.clipboard.writeText(viewingKey.key)
+      // Try modern Clipboard API first
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(viewingKey.key)
+      } else {
+        // Fallback for non-HTTPS or older browsers
+        const textArea = document.createElement("textarea")
+        textArea.value = viewingKey.key
+        textArea.style.position = "fixed"
+        textArea.style.left = "-999999px"
+        textArea.style.top = "-999999px"
+        document.body.appendChild(textArea)
+        textArea.focus()
+        textArea.select()
+        document.execCommand("copy")
+        document.body.removeChild(textArea)
+      }
       setCopied(true)
       onCopy?.()
       setTimeout(() => setCopied(false), 2000)
@@ -47,13 +62,24 @@ export function ViewingKeyDisplay({
       {/* Key Display */}
       <div className="flex items-center gap-2">
         <div
+          role="button"
+          tabIndex={0}
           className={cn(
             "flex-1 px-3 py-2 rounded-lg font-mono text-sm",
             "bg-[var(--surface-tertiary)] border border-[var(--border-default)]",
             "select-all cursor-pointer transition-colors",
+            "focus:outline-none focus:ring-2 focus:ring-sip-purple-500/50",
             isExpanded ? "break-all" : "truncate"
           )}
           onClick={() => setIsExpanded(!isExpanded)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault()
+              setIsExpanded(!isExpanded)
+            }
+          }}
+          aria-expanded={isExpanded}
+          aria-label={isExpanded ? "Collapse viewing key" : "Expand viewing key"}
           title={isExpanded ? "Click to collapse" : "Click to expand"}
         >
           {isExpanded ? viewingKey.key : truncateKey(viewingKey.key)}

@@ -37,6 +37,26 @@ export function useViewingKeyStorage(walletAddress: string | null) {
     ? `${STORAGE_KEY}-${walletAddress.slice(0, 8)}`
     : null
 
+  // Validate storage data structure
+  const isValidStorage = (data: unknown): data is ViewingKeyStorage => {
+    if (!data || typeof data !== "object") return false
+    const obj = data as Record<string, unknown>
+    if (!Array.isArray(obj.keys)) return false
+    if (typeof obj.lastUpdated !== "number") return false
+    // Validate each key entry
+    return obj.keys.every((entry: unknown) => {
+      if (!entry || typeof entry !== "object") return false
+      const e = entry as Record<string, unknown>
+      if (!e.key || typeof e.key !== "object") return false
+      const key = e.key as Record<string, unknown>
+      return (
+        typeof key.key === "string" &&
+        typeof key.hash === "string" &&
+        typeof e.createdAt === "number"
+      )
+    })
+  }
+
   // Load from localStorage on mount
   useEffect(() => {
     if (!storageKey) {
@@ -48,11 +68,17 @@ export function useViewingKeyStorage(walletAddress: string | null) {
     try {
       const stored = localStorage.getItem(storageKey)
       if (stored) {
-        const parsed = JSON.parse(stored) as ViewingKeyStorage
-        setStorage(parsed)
+        const parsed: unknown = JSON.parse(stored)
+        if (isValidStorage(parsed)) {
+          setStorage(parsed)
+        } else {
+          console.warn("Invalid viewing key storage format, resetting")
+          setStorage({ keys: [], lastUpdated: 0 })
+        }
       }
     } catch (err) {
       console.error("Failed to load viewing keys from storage:", err)
+      setStorage({ keys: [], lastUpdated: 0 })
     }
     setIsLoaded(true)
   }, [storageKey])
@@ -83,10 +109,14 @@ export function useViewingKeyStorage(walletAddress: string | null) {
         createdAt: Date.now(),
       }
 
-      setStorage((prev) => ({
-        keys: [...prev.keys, entry],
-        lastUpdated: Date.now(),
-      }))
+      setStorage((prev) => {
+        // Deduplicate: remove existing key with same hash
+        const filtered = prev.keys.filter((k) => k.key.hash !== viewingKey.hash)
+        return {
+          keys: [...filtered, entry],
+          lastUpdated: Date.now(),
+        }
+      })
 
       return entry
     },

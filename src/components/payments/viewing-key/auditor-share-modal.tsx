@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useCallback, useEffect } from "react"
 import type { ViewingKey } from "@sip-protocol/types"
 import { cn } from "@/lib/utils"
 
@@ -37,6 +37,21 @@ export function AuditorShareModal({
   const [isSharing, setIsSharing] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
+  const [showExportWarning, setShowExportWarning] = useState(false)
+
+  // Handle Escape key to close modal
+  useEffect(() => {
+    if (!isOpen) return
+
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose()
+      }
+    }
+
+    document.addEventListener("keydown", handleEscape)
+    return () => document.removeEventListener("keydown", handleEscape)
+  }, [isOpen, onClose])
 
   const handleShare = useCallback(async () => {
     if (!auditorId.trim()) {
@@ -184,17 +199,49 @@ export function AuditorShareModal({
 
           {/* Export option */}
           <div className="pt-4 border-t border-[var(--border-default)]">
-            <button
-              type="button"
-              onClick={handleExportJSON}
-              className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-medium bg-[var(--surface-tertiary)] hover:bg-[var(--surface-secondary)] transition-colors"
-            >
-              <ExportIcon className="w-4 h-4" />
-              Export as JSON File
-            </button>
-            <p className="mt-2 text-xs text-[var(--text-tertiary)] text-center">
-              For secure offline transfer to compliance systems
-            </p>
+            {showExportWarning ? (
+              <div className="space-y-3">
+                <div className="flex items-start gap-2 p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/20 text-yellow-500 text-xs">
+                  <WarningIcon className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                  <span>
+                    This file contains sensitive cryptographic material. Only share with trusted parties through secure channels.
+                  </span>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowExportWarning(false)}
+                    className="flex-1 px-4 py-2 rounded-lg text-sm font-medium bg-[var(--surface-tertiary)] hover:bg-[var(--surface-secondary)] transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      handleExportJSON()
+                      setShowExportWarning(false)
+                    }}
+                    className="flex-1 px-4 py-2 rounded-lg text-sm font-medium bg-sip-purple-600 text-white hover:bg-sip-purple-700 transition-colors"
+                  >
+                    Download Anyway
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  onClick={() => setShowExportWarning(true)}
+                  className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-medium bg-[var(--surface-tertiary)] hover:bg-[var(--surface-secondary)] transition-colors"
+                >
+                  <ExportIcon className="w-4 h-4" />
+                  Export as JSON File
+                </button>
+                <p className="mt-2 text-xs text-[var(--text-tertiary)] text-center">
+                  For secure offline transfer to compliance systems
+                </p>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -248,6 +295,24 @@ function ExportIcon({ className }: { className?: string }) {
         strokeLinecap="round"
         strokeLinejoin="round"
         d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+      />
+    </svg>
+  )
+}
+
+function WarningIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={2}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
       />
     </svg>
   )

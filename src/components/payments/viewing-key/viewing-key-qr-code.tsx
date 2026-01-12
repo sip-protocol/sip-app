@@ -68,6 +68,12 @@ export function ViewingKeyQRCode({
         setDownloading(false)
       }
 
+      img.onerror = () => {
+        console.error("Failed to load QR code image for download")
+        URL.revokeObjectURL(url)
+        setDownloading(false)
+      }
+
       img.src = url
     } catch (err) {
       console.error("Failed to download QR code:", err)
@@ -94,7 +100,7 @@ export function ViewingKeyQRCode({
           value={qrData}
           size={size}
           level="M"
-          includeMargin={false}
+          marginSize={0}
           bgColor="#ffffff"
           fgColor="#000000"
         />
