@@ -77,7 +77,7 @@ const footerSections = [
     links: [
       {
         label: "Twitter",
-        href: "https://twitter.com/sip_protocol",
+        href: "https://x.com/sipprotocol",
         external: true,
       },
       { label: "Blog", href: "https://blog.sip-protocol.org", external: true },
@@ -88,7 +88,7 @@ const footerSections = [
 const socialLinks = [
   {
     icon: TwitterIcon,
-    href: "https://twitter.com/sip_protocol",
+    href: "https://x.com/sipprotocol",
     label: "Twitter",
   },
   {
