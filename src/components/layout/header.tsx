@@ -41,10 +41,10 @@ export function Header() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
-  // Close mobile menu on route change
-  useEffect(() => {
+  // Close mobile menu handler
+  const closeMobileMenu = useCallback(() => {
     setIsMobileMenuOpen(false)
-  }, [pathname])
+  }, [])
 
   // Prevent body scroll when mobile menu is open
   useEffect(() => {
@@ -169,6 +169,7 @@ export function Header() {
             <Link
               key={item.href}
               href={item.href}
+              onClick={closeMobileMenu}
               className={`block px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
                 isActiveLink(item.href)
                   ? "text-white bg-gray-800"
@@ -187,6 +188,7 @@ export function Header() {
               href={item.href}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={closeMobileMenu}
               className="flex items-center justify-between px-4 py-3 text-sm font-medium text-gray-400 hover:text-white rounded-lg hover:bg-gray-800/50 transition-colors"
             >
               {item.label}
