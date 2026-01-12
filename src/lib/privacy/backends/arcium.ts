@@ -211,14 +211,20 @@ export class ArciumAdapter implements PrivacyBackend {
       }
     }
 
-    emit("status_change", { status: "pending", data: { message: "Preparing confidential instruction" } })
+    emit("status_change", {
+      status: "pending",
+      data: { message: "Preparing confidential instruction" },
+    })
 
     if (this.config.simulate) {
       return this.simulateTransfer(params, emit)
     }
 
     // Production flow (not yet implemented)
-    emit("status_change", { status: "pending", data: { message: "Connecting to MXE cluster" } })
+    emit("status_change", {
+      status: "pending",
+      data: { message: "Connecting to MXE cluster" },
+    })
 
     try {
       // TODO: Implement real Arcium SDK integration
@@ -230,7 +236,8 @@ export class ArciumAdapter implements PrivacyBackend {
 
       throw new Error("Production Arcium integration not yet implemented")
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Unknown error"
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error"
       emit("error", { error: errorMessage })
       return {
         status: "failed",
@@ -249,7 +256,10 @@ export class ArciumAdapter implements PrivacyBackend {
     const { recipient } = params
 
     // Phase 1: Prepare confidential instruction
-    emit("status_change", { status: "pending", data: { message: "Creating confidential instruction" } })
+    emit("status_change", {
+      status: "pending",
+      data: { message: "Creating confidential instruction" },
+    })
     await this.delay(200)
 
     const encryptedAmount = this.generateRandomHex(64)
@@ -262,11 +272,17 @@ export class ArciumAdapter implements PrivacyBackend {
     })
 
     // Phase 2: Submit to MXE
-    emit("status_change", { status: "signing", data: { message: "Signing for MXE submission" } })
+    emit("status_change", {
+      status: "signing",
+      data: { message: "Signing for MXE submission" },
+    })
     await this.delay(300)
 
     // Phase 3: MPC processing (the signature move of Arcium)
-    emit("status_change", { status: "processing", data: { message: "MPC computation in progress..." } })
+    emit("status_change", {
+      status: "processing",
+      data: { message: "MPC computation in progress..." },
+    })
     await this.delay(500)
 
     emit("status_change", {
@@ -302,7 +318,10 @@ export class ArciumAdapter implements PrivacyBackend {
     emit("proof_generated", { data: { proofType: "mpc_computation" } })
 
     // Phase 4: Aggregate and submit
-    emit("status_change", { status: "confirming", data: { message: "Aggregating MPC results" } })
+    emit("status_change", {
+      status: "confirming",
+      data: { message: "Aggregating MPC results" },
+    })
     await this.delay(200)
 
     const txHash = this.generateTxHash()
@@ -314,7 +333,10 @@ export class ArciumAdapter implements PrivacyBackend {
     // Generate commitment (MPC-derived)
     const commitment = `0x${this.generateRandomHex(64)}`
 
-    emit("status_change", { status: "success", data: { message: "Confidential transfer complete" } })
+    emit("status_change", {
+      status: "success",
+      data: { message: "Confidential transfer complete" },
+    })
 
     return {
       status: "success",
@@ -360,7 +382,9 @@ export class ArciumAdapter implements PrivacyBackend {
     // In production, this would:
     // 1. Query C-SPL account for encrypted balance
     // 2. Request decryption from MXE cluster (with proper auth)
-    console.warn("[Arcium] getBalance: Returns encrypted balance. Use MXE to decrypt.")
+    console.warn(
+      "[Arcium] getBalance: Returns encrypted balance. Use MXE to decrypt."
+    )
     return BigInt(0)
   }
 

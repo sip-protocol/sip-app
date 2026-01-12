@@ -99,7 +99,10 @@ export interface PrivacyBackend {
    * @param fromBlock - Optional starting block number
    * @returns Array of scanned payments
    */
-  scanPayments?(viewingKey: string, fromBlock?: number): Promise<ScannedPayment[]>
+  scanPayments?(
+    viewingKey: string,
+    fromBlock?: number
+  ): Promise<ScannedPayment[]>
 
   /**
    * Get the balance of a stealth address
@@ -208,7 +211,9 @@ export class BackendRegistry {
   getDefault(): PrivacyBackend {
     const backend = this.backends.get(this.defaultBackend)
     if (!backend) {
-      throw new Error(`Default backend '${this.defaultBackend}' is not registered`)
+      throw new Error(
+        `Default backend '${this.defaultBackend}' is not registered`
+      )
     }
     return backend
   }
@@ -288,16 +293,28 @@ export async function getBackendByFeatures(
 
   return available.find((backend) => {
     const bf = backend.features
-    if (features.amountHiding !== undefined && bf.amountHiding !== features.amountHiding) {
+    if (
+      features.amountHiding !== undefined &&
+      bf.amountHiding !== features.amountHiding
+    ) {
       return false
     }
-    if (features.recipientHiding !== undefined && bf.recipientHiding !== features.recipientHiding) {
+    if (
+      features.recipientHiding !== undefined &&
+      bf.recipientHiding !== features.recipientHiding
+    ) {
       return false
     }
-    if (features.viewingKeys !== undefined && bf.viewingKeys !== features.viewingKeys) {
+    if (
+      features.viewingKeys !== undefined &&
+      bf.viewingKeys !== features.viewingKeys
+    ) {
       return false
     }
-    if (features.sameChainOnly !== undefined && bf.sameChainOnly !== features.sameChainOnly) {
+    if (
+      features.sameChainOnly !== undefined &&
+      bf.sameChainOnly !== features.sameChainOnly
+    ) {
       return false
     }
     return true

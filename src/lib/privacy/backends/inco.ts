@@ -209,14 +209,20 @@ export class IncoAdapter implements PrivacyBackend {
       }
     }
 
-    emit("status_change", { status: "pending", data: { message: "Preparing encrypted transfer" } })
+    emit("status_change", {
+      status: "pending",
+      data: { message: "Preparing encrypted transfer" },
+    })
 
     if (this.config.simulate) {
       return this.simulateTransfer(params, emit)
     }
 
     // Production flow (not yet implemented)
-    emit("status_change", { status: "pending", data: { message: "Connecting to Inco gateway" } })
+    emit("status_change", {
+      status: "pending",
+      data: { message: "Connecting to Inco gateway" },
+    })
 
     try {
       // TODO: Implement real Inco SDK integration
@@ -227,7 +233,8 @@ export class IncoAdapter implements PrivacyBackend {
 
       throw new Error("Production Inco integration not yet implemented")
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Unknown error"
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error"
       emit("error", { error: errorMessage })
       return {
         status: "failed",
@@ -246,7 +253,10 @@ export class IncoAdapter implements PrivacyBackend {
     const { fromToken: _fromToken, recipient: _recipient } = params
 
     // Phase 1: Encrypt data
-    emit("status_change", { status: "pending", data: { message: "Encrypting transfer data" } })
+    emit("status_change", {
+      status: "pending",
+      data: { message: "Encrypting transfer data" },
+    })
     await this.delay(200)
 
     const encryptedAmount = this.generateRandomHex(64)
@@ -261,28 +271,43 @@ export class IncoAdapter implements PrivacyBackend {
     })
 
     // Phase 2: Sign transaction
-    emit("status_change", { status: "signing", data: { message: "Signing transaction" } })
+    emit("status_change", {
+      status: "signing",
+      data: { message: "Signing transaction" },
+    })
     await this.delay(300)
 
     // Phase 3: Submit to TEE
-    emit("status_change", { status: "processing", data: { message: "Processing in TEE" } })
+    emit("status_change", {
+      status: "processing",
+      data: { message: "Processing in TEE" },
+    })
     const txHash = this.generateTxHash()
     emit("tx_submitted", { txHash })
     await this.delay(800)
 
     // Phase 4: TEE execution
-    emit("status_change", { status: "processing", data: { message: "TEE executing confidential transfer" } })
+    emit("status_change", {
+      status: "processing",
+      data: { message: "TEE executing confidential transfer" },
+    })
     await this.delay(500)
 
     // Phase 5: Confirmation
-    emit("status_change", { status: "confirming", data: { message: "Confirming on-chain" } })
+    emit("status_change", {
+      status: "confirming",
+      data: { message: "Confirming on-chain" },
+    })
     await this.delay(200)
     emit("tx_confirmed", { txHash })
 
     // Generate stealth-like address (Inco uses encrypted recipient internally)
     const stealthAddress = this.createOneTimeAddress()
 
-    emit("status_change", { status: "success", data: { message: "Transfer complete" } })
+    emit("status_change", {
+      status: "success",
+      data: { message: "Transfer complete" },
+    })
 
     return {
       status: "success",
@@ -323,7 +348,9 @@ export class IncoAdapter implements PrivacyBackend {
     // In production, this would:
     // 1. Query encrypted balance from Inco state
     // 2. Use wallet signature to decrypt via attested-decrypt
-    console.warn("[Inco] getBalance returns encrypted handle. Use Inco SDK to decrypt.")
+    console.warn(
+      "[Inco] getBalance returns encrypted handle. Use Inco SDK to decrypt."
+    )
     return BigInt(0)
   }
 
@@ -364,9 +391,15 @@ export class IncoAdapter implements PrivacyBackend {
   }
 
   private encodeBase58(bytes: Uint8Array): string {
-    const ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
+    const ALPHABET =
+      "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
     let result = ""
-    let num = BigInt("0x" + Array.from(bytes).map(b => b.toString(16).padStart(2, "0")).join(""))
+    let num = BigInt(
+      "0x" +
+        Array.from(bytes)
+          .map((b) => b.toString(16).padStart(2, "0"))
+          .join("")
+    )
 
     while (num > 0) {
       const remainder = num % BigInt(58)

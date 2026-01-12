@@ -165,7 +165,8 @@ export class MockBackend implements PrivacyBackend {
 
     // Calculate mock fee (0.3% for mock)
     const feePercent = 0.3
-    const feeAmount = (params.amount * BigInt(Math.floor(feePercent * 100))) / BigInt(10000)
+    const feeAmount =
+      (params.amount * BigInt(Math.floor(feePercent * 100))) / BigInt(10000)
     const outputAmount = params.amount - feeAmount
 
     // Estimate time based on privacy level

@@ -51,18 +51,18 @@ const BASE_FEE_SOL = BigInt(6_000_000) // 0.006 SOL in lamports
 
 // Standard pool sizes for SOL (in lamports)
 const SOL_POOL_SIZES = [
-  BigInt(100_000_000),      // 0.1 SOL
-  BigInt(1_000_000_000),    // 1 SOL
-  BigInt(10_000_000_000),   // 10 SOL
-  BigInt(100_000_000_000),  // 100 SOL
+  BigInt(100_000_000), // 0.1 SOL
+  BigInt(1_000_000_000), // 1 SOL
+  BigInt(10_000_000_000), // 10 SOL
+  BigInt(100_000_000_000), // 100 SOL
 ]
 
 // Standard pool sizes for USDC/USDT (in smallest unit - 6 decimals)
 const STABLE_POOL_SIZES = [
-  BigInt(100_000_000),      // 100 USDC/USDT
-  BigInt(1_000_000_000),    // 1,000 USDC/USDT
-  BigInt(10_000_000_000),   // 10,000 USDC/USDT
-  BigInt(100_000_000_000),  // 100,000 USDC/USDT
+  BigInt(100_000_000), // 100 USDC/USDT
+  BigInt(1_000_000_000), // 1,000 USDC/USDT
+  BigInt(10_000_000_000), // 10,000 USDC/USDT
+  BigInt(100_000_000_000), // 100,000 USDC/USDT
 ]
 
 export interface PrivacyCashConfig {
@@ -232,7 +232,9 @@ export class PrivacyCashAdapter implements PrivacyBackend {
         estimatedAnonymitySet: 100,
         warnings:
           amount > poolSize
-            ? [`Only ${poolSize} will be deposited. Remainder: ${amount - poolSize}`]
+            ? [
+                `Only ${poolSize} will be deposited. Remainder: ${amount - poolSize}`,
+              ]
             : undefined,
       },
     }
@@ -262,7 +264,10 @@ export class PrivacyCashAdapter implements PrivacyBackend {
       }
     }
 
-    emit("status_change", { status: "pending", data: { message: "Preparing deposit" } })
+    emit("status_change", {
+      status: "pending",
+      data: { message: "Preparing deposit" },
+    })
 
     // Find pool size
     const poolSize = findBestPoolSize(amount, fromToken)
@@ -281,7 +286,10 @@ export class PrivacyCashAdapter implements PrivacyBackend {
     }
 
     // Production flow (not yet implemented)
-    emit("status_change", { status: "pending", data: { message: "Connecting to PrivacyCash" } })
+    emit("status_change", {
+      status: "pending",
+      data: { message: "Connecting to PrivacyCash" },
+    })
 
     try {
       // TODO: Implement real PrivacyCash SDK integration
@@ -292,7 +300,8 @@ export class PrivacyCashAdapter implements PrivacyBackend {
 
       throw new Error("Production PrivacyCash integration not yet implemented")
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Unknown error"
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error"
       emit("error", { error: errorMessage })
       return {
         status: "failed",
@@ -312,10 +321,16 @@ export class PrivacyCashAdapter implements PrivacyBackend {
     const { fromToken, recipient } = params
 
     // Phase 1: Deposit
-    emit("status_change", { status: "signing", data: { message: "Signing deposit transaction" } })
+    emit("status_change", {
+      status: "signing",
+      data: { message: "Signing deposit transaction" },
+    })
     await this.delay(500)
 
-    emit("status_change", { status: "confirming", data: { message: "Confirming deposit" } })
+    emit("status_change", {
+      status: "confirming",
+      data: { message: "Confirming deposit" },
+    })
     const depositTxHash = this.generateTxHash()
     emit("tx_submitted", { txHash: depositTxHash })
     await this.delay(1000)
@@ -324,7 +339,11 @@ export class PrivacyCashAdapter implements PrivacyBackend {
     const commitment = `0x${this.generateRandomHex(64)}`
     emit("status_change", {
       status: "confirming",
-      data: { message: "Deposit confirmed. Commitment generated.", commitment, poolSize: poolSize.toString() },
+      data: {
+        message: "Deposit confirmed. Commitment generated.",
+        commitment,
+        poolSize: poolSize.toString(),
+      },
     })
 
     // Phase 2: Pool waiting (simulated as instant for testing)
@@ -343,7 +362,10 @@ export class PrivacyCashAdapter implements PrivacyBackend {
 
     emit("proof_generated", { data: { proofType: "withdrawal" } })
 
-    emit("status_change", { status: "confirming", data: { message: "Submitting withdrawal" } })
+    emit("status_change", {
+      status: "confirming",
+      data: { message: "Submitting withdrawal" },
+    })
     const withdrawTxHash = this.generateTxHash()
     emit("tx_submitted", { txHash: withdrawTxHash })
     await this.delay(1000)
@@ -354,7 +376,10 @@ export class PrivacyCashAdapter implements PrivacyBackend {
     const fee = calculateFee(poolSize, fromToken)
     const outputAmount = poolSize - fee
 
-    emit("status_change", { status: "success", data: { message: "Transfer complete" } })
+    emit("status_change", {
+      status: "success",
+      data: { message: "Transfer complete" },
+    })
 
     return {
       status: "success",
