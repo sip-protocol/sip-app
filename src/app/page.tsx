@@ -10,6 +10,14 @@ const apps = [
     gradient: "from-sip-purple-500 to-sip-purple-700",
   },
   {
+    name: "Privacy Score",
+    description: "Analyze how surveilled your wallet is",
+    href: "/privacy-score",
+    icon: "🔍",
+    status: "live" as const,
+    gradient: "from-red-500 to-orange-500",
+  },
+  {
     name: "Wallet",
     description: "Manage your viewing keys and stealth addresses",
     href: "/wallet",
