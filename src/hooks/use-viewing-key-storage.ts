@@ -17,6 +17,48 @@ interface ViewingKeyStorage {
   lastUpdated: number
 }
 
+const EMPTY_STORAGE: ViewingKeyStorage = { keys: [], lastUpdated: 0 }
+
+// Validate storage data structure
+function isValidStorage(data: unknown): data is ViewingKeyStorage {
+  if (!data || typeof data !== "object") return false
+  const obj = data as Record<string, unknown>
+  if (!Array.isArray(obj.keys)) return false
+  if (typeof obj.lastUpdated !== "number") return false
+  // Validate each key entry
+  return obj.keys.every((entry: unknown) => {
+    if (!entry || typeof entry !== "object") return false
+    const e = entry as Record<string, unknown>
+    if (!e.key || typeof e.key !== "object") return false
+    const key = e.key as Record<string, unknown>
+    return (
+      typeof key.key === "string" &&
+      typeof key.hash === "string" &&
+      typeof e.createdAt === "number"
+    )
+  })
+}
+
+// Load storage from localStorage synchronously
+function loadStorageSync(key: string | null): ViewingKeyStorage {
+  if (!key) return EMPTY_STORAGE
+  if (typeof window === "undefined") return EMPTY_STORAGE
+
+  try {
+    const stored = localStorage.getItem(key)
+    if (stored) {
+      const parsed: unknown = JSON.parse(stored)
+      if (isValidStorage(parsed)) {
+        return parsed
+      }
+      console.warn("Invalid viewing key storage format, resetting")
+    }
+  } catch (err) {
+    console.error("Failed to load viewing keys from storage:", err)
+  }
+  return EMPTY_STORAGE
+}
+
 /**
  * useViewingKeyStorage - Persist viewing keys in localStorage
  *
@@ -26,60 +68,24 @@ interface ViewingKeyStorage {
  * @param walletAddress - The connected wallet address (for isolation)
  */
 export function useViewingKeyStorage(walletAddress: string | null) {
-  const [storage, setStorage] = useState<ViewingKeyStorage>({
-    keys: [],
-    lastUpdated: 0,
-  })
-  const [isLoaded, setIsLoaded] = useState(false)
-
   // Storage key includes wallet address for isolation
   const storageKey = walletAddress
     ? `${STORAGE_KEY}-${walletAddress.slice(0, 8)}`
     : null
 
-  // Validate storage data structure
-  const isValidStorage = (data: unknown): data is ViewingKeyStorage => {
-    if (!data || typeof data !== "object") return false
-    const obj = data as Record<string, unknown>
-    if (!Array.isArray(obj.keys)) return false
-    if (typeof obj.lastUpdated !== "number") return false
-    // Validate each key entry
-    return obj.keys.every((entry: unknown) => {
-      if (!entry || typeof entry !== "object") return false
-      const e = entry as Record<string, unknown>
-      if (!e.key || typeof e.key !== "object") return false
-      const key = e.key as Record<string, unknown>
-      return (
-        typeof key.key === "string" &&
-        typeof key.hash === "string" &&
-        typeof e.createdAt === "number"
-      )
-    })
-  }
+  // Initialize with sync load
+  const [storage, setStorage] = useState<ViewingKeyStorage>(() =>
+    loadStorageSync(storageKey)
+  )
+  const [isLoaded, setIsLoaded] = useState(true)
 
-  // Load from localStorage on mount
+  // Reload when storageKey changes (wallet switch)
+  // This is a valid use case: syncing React state with external localStorage
   useEffect(() => {
-    if (!storageKey) {
-      setStorage({ keys: [], lastUpdated: 0 })
-      setIsLoaded(true)
-      return
-    }
-
-    try {
-      const stored = localStorage.getItem(storageKey)
-      if (stored) {
-        const parsed: unknown = JSON.parse(stored)
-        if (isValidStorage(parsed)) {
-          setStorage(parsed)
-        } else {
-          console.warn("Invalid viewing key storage format, resetting")
-          setStorage({ keys: [], lastUpdated: 0 })
-        }
-      }
-    } catch (err) {
-      console.error("Failed to load viewing keys from storage:", err)
-      setStorage({ keys: [], lastUpdated: 0 })
-    }
+    const loaded = loadStorageSync(storageKey)
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setStorage(loaded)
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsLoaded(true)
   }, [storageKey])
 

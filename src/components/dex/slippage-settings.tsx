@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useMemo } from "react"
 import { useSettingsStore, SLIPPAGE_PRESETS } from "@/stores"
 
 interface SlippageSettingsProps {
@@ -10,20 +10,17 @@ interface SlippageSettingsProps {
 
 export function SlippageSettings({ onClose }: SlippageSettingsProps) {
   const { slippage, setSlippage } = useSettingsStore()
-  const [customValue, setCustomValue] = useState("")
-  const [isCustom, setIsCustom] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
   // Check if current slippage matches a preset
   const isPreset = SLIPPAGE_PRESETS.includes(slippage as (typeof SLIPPAGE_PRESETS)[number])
 
-  // Initialize custom value if not a preset
-  useEffect(() => {
-    if (!isPreset) {
-      setCustomValue(slippage.toString())
-      setIsCustom(true)
-    }
-  }, [slippage, isPreset])
+  // Initialize custom value from slippage if not a preset
+  const initialCustom = useMemo(() => !isPreset, [isPreset])
+  const initialValue = useMemo(() => (!isPreset ? slippage.toString() : ""), [isPreset, slippage])
+
+  const [customValue, setCustomValue] = useState(initialValue)
+  const [isCustom, setIsCustom] = useState(initialCustom)
 
   const handlePresetClick = (preset: number) => {
     setSlippage(preset)

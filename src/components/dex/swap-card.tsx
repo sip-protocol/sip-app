@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo, useCallback, useRef, useEffect, type KeyboardEvent } from "react"
+import { useState, useMemo, useCallback, useRef, type KeyboardEvent } from "react"
 import Image from "next/image"
 import { PrivacyLevel } from "@sip-protocol/types"
 import { useQuote, useSwap, useBalance, getStatusMessage } from "@/hooks"
@@ -935,16 +935,19 @@ function TokenSelector({
   const label = isFrom ? "Source token" : "Destination token"
   const currentTokenIndex = tokens.findIndex((t) => t.symbol === token.symbol)
 
-  useEffect(() => {
-    if (open) {
-      setHighlightedIndex(currentTokenIndex >= 0 ? currentTokenIndex : 0)
+  // Open/close handler that manages highlight state together
+  const handleOpenChange = (isOpen: boolean) => {
+    setOpen(isOpen)
+    if (isOpen) {
+      const initialIndex = currentTokenIndex >= 0 ? currentTokenIndex : 0
+      setHighlightedIndex(initialIndex)
       setTimeout(() => {
-        optionRefs.current[currentTokenIndex >= 0 ? currentTokenIndex : 0]?.focus()
+        optionRefs.current[initialIndex]?.focus()
       }, 0)
     } else {
       setHighlightedIndex(-1)
     }
-  }, [open, currentTokenIndex])
+  }
 
   const handleButtonKeyDown = (e: KeyboardEvent<HTMLButtonElement>) => {
     switch (e.key) {
@@ -953,7 +956,7 @@ function TokenSelector({
       case "ArrowDown":
       case "ArrowUp":
         e.preventDefault()
-        setOpen(true)
+        handleOpenChange(true)
         break
     }
   }
@@ -981,17 +984,17 @@ function TokenSelector({
         e.preventDefault()
         if (highlightedIndex >= 0 && highlightedIndex < tokens.length) {
           onSelect(tokens[highlightedIndex])
-          setOpen(false)
+          handleOpenChange(false)
           buttonRef.current?.focus()
         }
         break
       case "Escape":
         e.preventDefault()
-        setOpen(false)
+        handleOpenChange(false)
         buttonRef.current?.focus()
         break
       case "Tab":
-        setOpen(false)
+        handleOpenChange(false)
         break
       case "Home":
         e.preventDefault()
@@ -1010,7 +1013,7 @@ function TokenSelector({
     <div className="relative flex-shrink-0">
       <button
         ref={buttonRef}
-        onClick={() => setOpen(!open)}
+        onClick={() => handleOpenChange(!open)}
         onKeyDown={handleButtonKeyDown}
         data-testid={testId}
         aria-haspopup="listbox"
@@ -1033,7 +1036,7 @@ function TokenSelector({
         <>
           <div
             className="fixed inset-0 z-10"
-            onClick={() => setOpen(false)}
+            onClick={() => handleOpenChange(false)}
             aria-hidden="true"
           />
           <div
@@ -1060,7 +1063,7 @@ function TokenSelector({
                 tabIndex={highlightedIndex === index ? 0 : -1}
                 onClick={() => {
                   onSelect(t)
-                  setOpen(false)
+                  handleOpenChange(false)
                   buttonRef.current?.focus()
                 }}
                 onMouseEnter={() => setHighlightedIndex(index)}
