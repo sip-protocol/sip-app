@@ -82,11 +82,36 @@ export function useViewingKeyStorage(walletAddress: string | null) {
   // Reload when storageKey changes (wallet switch)
   // This is a valid use case: syncing React state with external localStorage
   useEffect(() => {
-    const loaded = loadStorageSync(storageKey)
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setStorage(loaded)
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setIsLoaded(true)
+    let isMounted = true
+
+    const loadStorage = () => {
+      if (!storageKey) {
+        if (isMounted) setIsLoaded(true)
+        return
+      }
+
+      try {
+        const stored = localStorage.getItem(storageKey)
+        if (stored && isMounted) {
+          const parsed: unknown = JSON.parse(stored)
+          if (isValidStorage(parsed)) {
+            setStorage(parsed)
+          } else {
+            console.warn("Invalid viewing key storage format, resetting")
+          }
+        }
+      } catch (err) {
+        console.error("Failed to load viewing keys from storage:", err)
+      }
+      if (isMounted) setIsLoaded(true)
+    }
+
+    // Defer state updates to next tick to avoid synchronous setState in effect
+    queueMicrotask(loadStorage)
+
+    return () => {
+      isMounted = false
+    }
   }, [storageKey])
 
   // Save to localStorage when storage changes

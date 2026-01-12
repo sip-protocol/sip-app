@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@sip-protocol/react": "^0.1.0",
-    "@sip-protocol/sdk": "^0.7.2",
+    "@sip-protocol/sdk": "^0.7.3",
     "@sip-protocol/types": "^0.2.1",
     "@solana/wallet-adapter-base": "^0.9.27",
     "@solana/wallet-adapter-react": "^0.15.39",
@@ -29,6 +29,7 @@
     "@solana/wallet-adapter-wallets": "^0.19.37",
     "@solana/web3.js": "^1.98.4",
     "clsx": "^2.1.1",
+    "d3": "^7.9.0",
     "framer-motion": "^12.25.0",
     "lucide-react": "^0.562.0",
     "next": "16.1.1",
@@ -36,7 +37,7 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "tailwind-merge": "^3.4.0",
-    "zustand": "^5.0.9"
+    "zustand": "^5.0.10"
   },
   "devDependencies": {
     "@playwright/test": "^1.57.0",
@@ -44,7 +45,8 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.1",
     "@testing-library/user-event": "^14.6.1",
-    "@types/node": "^20",
+    "@types/d3": "^7.4.3",
+    "@types/node": "^25",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitejs/plugin-react": "^5.1.2",
