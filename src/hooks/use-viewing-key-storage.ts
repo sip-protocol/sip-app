@@ -59,28 +59,36 @@ export function useViewingKeyStorage(walletAddress: string | null) {
 
   // Load from localStorage on mount
   useEffect(() => {
-    if (!storageKey) {
-      setStorage({ keys: [], lastUpdated: 0 })
-      setIsLoaded(true)
-      return
+    let isMounted = true
+
+    const loadStorage = () => {
+      if (!storageKey) {
+        if (isMounted) setIsLoaded(true)
+        return
+      }
+
+      try {
+        const stored = localStorage.getItem(storageKey)
+        if (stored && isMounted) {
+          const parsed: unknown = JSON.parse(stored)
+          if (isValidStorage(parsed)) {
+            setStorage(parsed)
+          } else {
+            console.warn("Invalid viewing key storage format, resetting")
+          }
+        }
+      } catch (err) {
+        console.error("Failed to load viewing keys from storage:", err)
+      }
+      if (isMounted) setIsLoaded(true)
     }
 
-    try {
-      const stored = localStorage.getItem(storageKey)
-      if (stored) {
-        const parsed: unknown = JSON.parse(stored)
-        if (isValidStorage(parsed)) {
-          setStorage(parsed)
-        } else {
-          console.warn("Invalid viewing key storage format, resetting")
-          setStorage({ keys: [], lastUpdated: 0 })
-        }
-      }
-    } catch (err) {
-      console.error("Failed to load viewing keys from storage:", err)
-      setStorage({ keys: [], lastUpdated: 0 })
+    // Defer state updates to next tick to avoid synchronous setState in effect
+    queueMicrotask(loadStorage)
+
+    return () => {
+      isMounted = false
     }
-    setIsLoaded(true)
   }, [storageKey])
 
   // Save to localStorage when storage changes
