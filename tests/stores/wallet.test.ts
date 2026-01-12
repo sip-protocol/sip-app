@@ -5,10 +5,18 @@ describe("useWalletStore", () => {
   beforeEach(() => {
     // Reset store state before each test
     useWalletStore.setState({
-      connected: false,
+      isConnected: false,
+      isConnecting: false,
       address: null,
-      balance: null,
-      stealthMetaAddress: null,
+      chain: null,
+      walletType: null,
+      availableWallets: {
+        solana: [],
+        ethereum: [],
+        near: [],
+        hardware: [],
+      },
+      isModalOpen: false,
     })
   })
 
@@ -16,109 +24,147 @@ describe("useWalletStore", () => {
     it("has correct initial values", () => {
       const state = useWalletStore.getState()
 
-      expect(state.connected).toBe(false)
+      expect(state.isConnected).toBe(false)
+      expect(state.isConnecting).toBe(false)
       expect(state.address).toBeNull()
-      expect(state.balance).toBeNull()
-      expect(state.stealthMetaAddress).toBeNull()
+      expect(state.chain).toBeNull()
+      expect(state.walletType).toBeNull()
+      expect(state.isModalOpen).toBe(false)
     })
   })
 
   describe("connect", () => {
-    it("sets connected to true", async () => {
+    it("sets connected state correctly", () => {
       const { connect } = useWalletStore.getState()
 
-      await connect()
+      connect("phantom", "solana", "HN7cABqLq46Es1jh92dQQisAq662SmxELLLsHHe4YWrH")
 
-      expect(useWalletStore.getState().connected).toBe(true)
+      const state = useWalletStore.getState()
+      expect(state.isConnected).toBe(true)
+      expect(state.isConnecting).toBe(false)
+      expect(state.walletType).toBe("phantom")
+      expect(state.chain).toBe("solana")
+      expect(state.address).toBe("HN7cABqLq46Es1jh92dQQisAq662SmxELLLsHHe4YWrH")
+      expect(state.isModalOpen).toBe(false)
+    })
+
+    it("supports ethereum wallets", () => {
+      const { connect } = useWalletStore.getState()
+
+      connect("metamask", "ethereum", "0x1234567890abcdef1234567890abcdef12345678")
+
+      const state = useWalletStore.getState()
+      expect(state.isConnected).toBe(true)
+      expect(state.walletType).toBe("metamask")
+      expect(state.chain).toBe("ethereum")
+    })
+
+    it("supports near wallets", () => {
+      const { connect } = useWalletStore.getState()
+
+      connect("meteor", "near", "user.near")
+
+      const state = useWalletStore.getState()
+      expect(state.isConnected).toBe(true)
+      expect(state.walletType).toBe("meteor")
+      expect(state.chain).toBe("near")
     })
   })
 
   describe("disconnect", () => {
-    it("resets all state to initial values", async () => {
-      // Setup: connect and set values
-      const store = useWalletStore.getState()
-      await store.connect()
-      store.setAddress("0x123")
-      store.setBalance(100)
-      store.setStealthMetaAddress("sip:solana:abc:def")
+    it("resets connection state", () => {
+      // Setup: connect first
+      const { connect } = useWalletStore.getState()
+      connect("phantom", "solana", "abc123")
 
-      // Verify connected state
-      expect(useWalletStore.getState().connected).toBe(true)
-      expect(useWalletStore.getState().address).toBe("0x123")
+      // Verify connected
+      expect(useWalletStore.getState().isConnected).toBe(true)
 
       // Act: disconnect
       useWalletStore.getState().disconnect()
 
       // Assert: all reset
       const state = useWalletStore.getState()
-      expect(state.connected).toBe(false)
+      expect(state.isConnected).toBe(false)
+      expect(state.isConnecting).toBe(false)
       expect(state.address).toBeNull()
-      expect(state.balance).toBeNull()
-      expect(state.stealthMetaAddress).toBeNull()
+      expect(state.chain).toBeNull()
+      expect(state.walletType).toBeNull()
     })
   })
 
-  describe("setAddress", () => {
-    it("sets address correctly", () => {
-      const { setAddress } = useWalletStore.getState()
-      const testAddress = "0xabcdef1234567890"
+  describe("setConnecting", () => {
+    it("sets connecting state", () => {
+      const { setConnecting } = useWalletStore.getState()
 
-      setAddress(testAddress)
+      setConnecting(true)
+      expect(useWalletStore.getState().isConnecting).toBe(true)
 
-      expect(useWalletStore.getState().address).toBe(testAddress)
-    })
-
-    it("can set address to null", () => {
-      const { setAddress } = useWalletStore.getState()
-      setAddress("0x123")
-      setAddress(null)
-
-      expect(useWalletStore.getState().address).toBeNull()
+      setConnecting(false)
+      expect(useWalletStore.getState().isConnecting).toBe(false)
     })
   })
 
-  describe("setBalance", () => {
-    it("sets balance correctly", () => {
-      const { setBalance } = useWalletStore.getState()
+  describe("modal controls", () => {
+    it("opens modal", () => {
+      const { openModal } = useWalletStore.getState()
 
-      setBalance(1234.56)
+      openModal()
 
-      expect(useWalletStore.getState().balance).toBe(1234.56)
+      expect(useWalletStore.getState().isModalOpen).toBe(true)
     })
 
-    it("handles zero balance", () => {
-      const { setBalance } = useWalletStore.getState()
+    it("closes modal", () => {
+      // Setup: open modal first
+      useWalletStore.getState().openModal()
+      expect(useWalletStore.getState().isModalOpen).toBe(true)
 
-      setBalance(0)
+      // Act: close modal
+      useWalletStore.getState().closeModal()
 
-      expect(useWalletStore.getState().balance).toBe(0)
+      expect(useWalletStore.getState().isModalOpen).toBe(false)
     })
 
-    it("can set balance to null", () => {
-      const { setBalance } = useWalletStore.getState()
-      setBalance(100)
-      setBalance(null)
+    it("closes modal on connect", () => {
+      // Setup: open modal
+      useWalletStore.getState().openModal()
+      expect(useWalletStore.getState().isModalOpen).toBe(true)
 
-      expect(useWalletStore.getState().balance).toBeNull()
+      // Act: connect (should close modal)
+      useWalletStore.getState().connect("phantom", "solana", "abc123")
+
+      expect(useWalletStore.getState().isModalOpen).toBe(false)
     })
   })
 
-  describe("setStealthMetaAddress", () => {
-    it("sets stealth meta-address correctly", () => {
-      const { setStealthMetaAddress } = useWalletStore.getState()
-      const testAddress = "sip:solana:02abc123:03def456"
+  describe("setAvailableWallets", () => {
+    it("sets available wallets", () => {
+      const { setAvailableWallets } = useWalletStore.getState()
 
-      setStealthMetaAddress(testAddress)
+      setAvailableWallets({
+        solana: ["phantom", "solflare"],
+        ethereum: ["metamask"],
+        near: ["meteor"],
+        hardware: ["ledger"],
+      })
 
-      expect(useWalletStore.getState().stealthMetaAddress).toBe(testAddress)
+      const state = useWalletStore.getState()
+      expect(state.availableWallets.solana).toEqual(["phantom", "solflare"])
+      expect(state.availableWallets.ethereum).toEqual(["metamask"])
+      expect(state.availableWallets.near).toEqual(["meteor"])
+      expect(state.availableWallets.hardware).toEqual(["ledger"])
     })
 
-    it("can set stealth meta-address to null", () => {
-      const { setStealthMetaAddress } = useWalletStore.getState()
-      setStealthMetaAddress("sip:solana:abc:def")
-      setStealthMetaAddress(null)
+    it("defaults hardware to empty array if not provided", () => {
+      const { setAvailableWallets } = useWalletStore.getState()
 
-      expect(useWalletStore.getState().stealthMetaAddress).toBeNull()
+      setAvailableWallets({
+        solana: ["phantom"],
+        ethereum: ["metamask"],
+        near: ["meteor"],
+      })
+
+      expect(useWalletStore.getState().availableWallets.hardware).toEqual([])
     })
   })
 })
