@@ -22,7 +22,7 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            cd ~/app
-            docker compose pull app
-            docker compose up -d app
+            cd ~/sip-app
+            docker compose pull
+            docker compose up -d
             echo "Deployed sip-app successfully"
