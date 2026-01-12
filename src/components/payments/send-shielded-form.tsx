@@ -3,16 +3,22 @@
 import { useState, useCallback, useEffect } from "react"
 import { useWallet, useConnection } from "@solana/wallet-adapter-react"
 import { LAMPORTS_PER_SOL } from "@solana/web3.js"
+import type { ViewingKey } from "@sip-protocol/types"
 import { RecipientInput, validateRecipient } from "./recipient-input"
 import { AmountInput, type Token } from "./amount-input"
 import { PrivacyToggle, type PrivacyLevel } from "./privacy-toggle"
 import { TransactionStatus } from "./transaction-status"
+import { ViewingKeyPanel } from "./viewing-key"
 import { useSendPayment } from "@/hooks/use-send-payment"
+import { useViewingKeyStorage } from "@/hooks/use-viewing-key-storage"
 import { cn } from "@/lib/utils"
 
 export function SendShieldedForm() {
   const { publicKey, connected } = useWallet()
   const { connection } = useConnection()
+
+  // Viewing key storage
+  const { saveKey } = useViewingKeyStorage(publicKey?.toBase58() ?? null)
 
   // Form state
   const [recipient, setRecipient] = useState("")
@@ -20,6 +26,7 @@ export function SendShieldedForm() {
   const [token, setToken] = useState<Token>("SOL")
   const [privacyLevel, setPrivacyLevel] = useState<PrivacyLevel>("shielded")
   const [balance, setBalance] = useState<number | undefined>(undefined)
+  const [viewingKey, setViewingKey] = useState<ViewingKey | null>(null)
 
   // Transaction state
   const { status, txHash, error, send, reset } = useSendPayment()
@@ -64,9 +71,35 @@ export function SendShieldedForm() {
       e.preventDefault()
       if (!canSubmit) return
 
-      await send({ recipient, amount, token, privacyLevel })
+      // For compliant mode, require viewing key
+      if (privacyLevel === "compliant" && !viewingKey) {
+        console.error("Viewing key required for compliant mode")
+        return
+      }
+
+      const result = await send({
+        recipient,
+        amount,
+        token,
+        privacyLevel,
+        viewingKey: privacyLevel === "compliant" ? viewingKey : undefined,
+      })
+
+      // Save viewing key with transaction hash if successful
+      if (result?.txHash && viewingKey && privacyLevel === "compliant") {
+        saveKey(viewingKey, { transactionHash: result.txHash })
+      }
     },
-    [canSubmit, send, recipient, amount, token, privacyLevel]
+    [
+      canSubmit,
+      send,
+      recipient,
+      amount,
+      token,
+      privacyLevel,
+      viewingKey,
+      saveKey,
+    ]
   )
 
   const handleReset = useCallback(() => {
@@ -74,7 +107,16 @@ export function SendShieldedForm() {
     setRecipient("")
     setAmount("")
     setPrivacyLevel("shielded")
+    setViewingKey(null)
   }, [reset])
+
+  // Clear viewing key when switching away from compliant mode
+  const handlePrivacyChange = useCallback((level: PrivacyLevel) => {
+    setPrivacyLevel(level)
+    if (level !== "compliant") {
+      setViewingKey(null)
+    }
+  }, [])
 
   // If transaction confirmed, show success state
   if (status === "confirmed") {
@@ -119,13 +161,24 @@ export function SendShieldedForm() {
       </div>
 
       {/* Privacy Level */}
-      <div className="mb-8">
+      <div className="mb-6">
         <PrivacyToggle
           value={privacyLevel}
-          onChange={setPrivacyLevel}
+          onChange={handlePrivacyChange}
           disabled={status === "pending"}
         />
       </div>
+
+      {/* Viewing Key Panel (shown for compliant mode) */}
+      {privacyLevel === "compliant" && (
+        <div className="mb-8">
+          <ViewingKeyPanel
+            onViewingKeyChange={setViewingKey}
+            initialViewingKey={viewingKey}
+            disabled={status === "pending"}
+          />
+        </div>
+      )}
 
       {/* Submit Button */}
       <button
