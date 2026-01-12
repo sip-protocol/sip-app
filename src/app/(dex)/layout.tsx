@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { SIPProvider } from "@/contexts"
 
 const navItems = [
   { name: "Swap", href: "/dex" },
@@ -40,7 +41,9 @@ export default function DexLayout({ children }: { children: React.ReactNode }) {
       </div>
 
       {/* Main Content */}
-      <main className="flex-1 bg-gray-900/30">{children}</main>
+      <main className="flex-1 bg-gray-900/30">
+        <SIPProvider>{children}</SIPProvider>
+      </main>
     </div>
   )
 }
