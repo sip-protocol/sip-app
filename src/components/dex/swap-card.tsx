@@ -48,6 +48,10 @@ interface Token {
 const USDC_MINT = "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
 const USDC_DECIMALS = 6
 
+// Minimum SOL gas reserve for SPL token transactions (0.005 SOL = 5,000,000 lamports)
+// This covers transaction fees + potential account creation
+const MIN_SOL_GAS_RESERVE = BigInt(5_000_000)
+
 // Tokens available as SOURCE (chains with wallet deposit support)
 const fromTokens: Token[] = [
   {
@@ -148,6 +152,12 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
     tokenDecimals: fromToken.decimals,
   })
 
+  // Native SOL balance for gas when swapping SPL tokens
+  const isSPLToken = fromToken.chain === "solana" && !!fromToken.mint
+  const { balance: nativeSolBalance } = useBalance(
+    isSPLToken ? { tokenSymbol: "SOL" } : undefined
+  )
+
   const { chain: connectedChain } = useWalletStore()
   const isBalanceForSourceToken = connectedChain === fromToken.chain
 
@@ -171,6 +181,13 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
     fromToken.decimals,
     isBalanceForSourceToken,
   ])
+
+  // Check for insufficient gas (SOL) when swapping SPL tokens
+  const hasInsufficientGas = useMemo(() => {
+    if (!isSPLToken || !isConnected || !isBalanceForSourceToken) return false
+    if (nativeSolBalance === null) return false
+    return nativeSolBalance < MIN_SOL_GAS_RESERVE
+  }, [isSPLToken, isConnected, isBalanceForSourceToken, nativeSolBalance])
 
   // MAX button handler
   const handleMaxClick = useCallback(() => {
@@ -802,6 +819,7 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
             (!amount ||
               isSwapping ||
               hasInsufficientBalance ||
+              hasInsufficientGas ||
               !isZecAddressValid ||
               !isDestinationAddressValid) &&
             isConnected
@@ -812,6 +830,7 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
               ? "bg-purple-600 text-white hover:bg-purple-700 active:bg-purple-800"
               : !amount ||
                   hasInsufficientBalance ||
+                  hasInsufficientGas ||
                   !isZecAddressValid ||
                   !isDestinationAddressValid
                 ? "cursor-not-allowed bg-gray-800 text-gray-500"
@@ -826,6 +845,8 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
             <span>Connect Wallet</span>
           ) : hasInsufficientBalance ? (
             <span>Insufficient Balance</span>
+          ) : hasInsufficientGas ? (
+            <span>Insufficient SOL for Gas</span>
           ) : !isZecAddressValid ? (
             <span>Enter Valid Zcash Address</span>
           ) : !isDestinationAddressValid ? (

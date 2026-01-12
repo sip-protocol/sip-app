@@ -130,36 +130,67 @@ function getSolanaTokenMint(symbol: string): string | null {
 }
 
 /**
- * Get Solana wallet from browser window
+ * Solana wallet provider interface with required methods
  */
-function getSolanaWallet(walletType: string): {
-  signTransaction?: <T extends Transaction | VersionedTransaction>(
+interface SolanaWalletProvider {
+  signTransaction: <T extends Transaction | VersionedTransaction>(
     tx: T
   ) => Promise<T>
   signAllTransactions?: <T extends Transaction | VersionedTransaction>(
     txs: T[]
   ) => Promise<T[]>
-} | null {
+}
+
+/**
+ * Type guard to check if an object is a valid Solana wallet provider
+ */
+function isSolanaWallet(wallet: unknown): wallet is SolanaWalletProvider {
+  if (!wallet || typeof wallet !== "object") return false
+  const w = wallet as Record<string, unknown>
+  return typeof w.signTransaction === "function"
+}
+
+/**
+ * Get Solana wallet from browser window with proper type safety
+ */
+function getSolanaWallet(walletType: string): SolanaWalletProvider | null {
   if (typeof window === "undefined") return null
 
-  // Access wallet provider from window
-  const win = window as {
-    phantom?: { solana?: unknown }
-    solflare?: unknown
-    backpack?: { solana?: unknown }
-  }
+  // Access wallet provider from window using double cast for type safety
+  const win = window as unknown as Record<string, unknown>
+  let walletCandidate: unknown = null
 
   switch (walletType) {
-    case "phantom":
-      return win.phantom?.solana as ReturnType<typeof getSolanaWallet>
+    case "phantom": {
+      const phantom = win.phantom as Record<string, unknown> | undefined
+      walletCandidate = phantom?.solana
+      break
+    }
     case "solflare":
-      return win.solflare as ReturnType<typeof getSolanaWallet>
-    case "backpack":
-      return win.backpack?.solana as ReturnType<typeof getSolanaWallet>
-    default:
+      walletCandidate = win.solflare
+      break
+    case "backpack": {
+      const backpack = win.backpack as Record<string, unknown> | undefined
+      walletCandidate = backpack?.solana
+      break
+    }
+    default: {
       // Try phantom as default
-      return win.phantom?.solana as ReturnType<typeof getSolanaWallet>
+      const defaultPhantom = win.phantom as Record<string, unknown> | undefined
+      walletCandidate = defaultPhantom?.solana
+    }
   }
+
+  // Validate the wallet has the required methods
+  if (isSolanaWallet(walletCandidate)) {
+    return walletCandidate
+  }
+
+  logger.warn(
+    `Wallet "${walletType}" not found or missing signTransaction`,
+    "useSwap"
+  )
+  return null
 }
 
 /**
@@ -311,9 +342,9 @@ export function useSwap(): SwapResult {
             "https://api.mainnet-beta.solana.com"
           const connection = new Connection(rpcUrl, "confirmed")
 
-          // Get wallet adapter for signing
-          const sdkModule = await import("@sip-protocol/sdk")
-          const adapter = sdkModule.createSolanaAdapter({
+          // Get wallet adapter for signing (use singleton SDK)
+          const sdk = await getSDK()
+          const adapter = sdk.createSolanaAdapter({
             wallet: (walletType || "phantom") as
               | "phantom"
               | "solflare"
@@ -364,9 +395,8 @@ export function useSwap(): SwapResult {
             )
           }
 
-          // Decode the string meta-address to object format
-          const sdkModule2 = await import("@sip-protocol/sdk")
-          const recipientMetaAddress = sdkModule2.decodeStealthMetaAddress(
+          // Decode the string meta-address to object format (reuse SDK singleton)
+          const recipientMetaAddress = sdk.decodeStealthMetaAddress(
             params.destinationAddress
           )
 
@@ -554,6 +584,14 @@ export function useSwap(): SwapResult {
 
         // Create deposit callback for production mode
         // Determine effective wallet type (use stored type or fallback to detection)
+        // Valid wallet types for type-safe detection
+        const validSolanaWallets = ["phantom", "solflare", "backpack"] as const
+        const validEthWallets = [
+          "metamask",
+          "walletconnect",
+          "coinbase",
+        ] as const
+
         let effectiveWalletType = walletType
         if (!effectiveWalletType && params.fromChain) {
           // Fallback: detect wallet based on chain if store value is missing
@@ -561,13 +599,33 @@ export function useSwap(): SwapResult {
           if (params.fromChain === "solana") {
             const sdk = await getSDK()
             const detected = sdk.detectSolanaWallets?.() ?? []
-            effectiveWalletType =
-              (detected[0] as typeof walletType) || "phantom" // Default to phantom
+            const firstDetected = detected[0]
+            // Validate detected wallet is in our supported list
+            if (
+              typeof firstDetected === "string" &&
+              validSolanaWallets.includes(
+                firstDetected as (typeof validSolanaWallets)[number]
+              )
+            ) {
+              effectiveWalletType = firstDetected as typeof walletType
+            } else {
+              effectiveWalletType = "phantom" // Safe default
+            }
           } else if (params.fromChain === "ethereum") {
             const sdk = await getSDK()
             const detected = sdk.detectEthereumWallets?.() ?? []
-            effectiveWalletType =
-              (detected[0] as typeof walletType) || "metamask" // Default to metamask
+            const firstDetected = detected[0]
+            // Validate detected wallet is in our supported list
+            if (
+              typeof firstDetected === "string" &&
+              validEthWallets.includes(
+                firstDetected as (typeof validEthWallets)[number]
+              )
+            ) {
+              effectiveWalletType = firstDetected as typeof walletType
+            } else {
+              effectiveWalletType = "metamask" // Safe default
+            }
           }
           logger.debug(
             `Wallet type fallback: detected ${effectiveWalletType} for ${params.fromChain}`,

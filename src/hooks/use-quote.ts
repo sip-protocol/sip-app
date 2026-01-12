@@ -117,9 +117,10 @@ export function useQuote(params: QuoteParams | null): QuoteResult {
   const [freshness, setFreshness] = useState<QuoteFreshness>("fresh")
   const [expiresIn, setExpiresIn] = useState<number | null>(null)
 
-  // Refs for intervals
+  // Refs for intervals and debounce tracking
   const autoRefreshRef = useRef<NodeJS.Timeout | null>(null)
   const freshnessIntervalRef = useRef<NodeJS.Timeout | null>(null)
+  const debounceActiveRef = useRef<boolean>(false)
 
   const fetchQuote = useCallback(async () => {
     if (!params || !params.amount || parseFloat(params.amount) <= 0) {
@@ -345,16 +346,21 @@ export function useQuote(params: QuoteParams | null): QuoteResult {
           "useQuote"
         )
       }
-      // Pass destinationAddress for ALL modes - this is where funds will be sent
-      // SDK signature: getQuotes(params, recipientMetaAddress?, senderAddress?, transparentRecipient?)
-      // Even in shielded mode, we need to tell 1Click API where to send the funds
-      // The "privacy" is on the sender side (hidden identity), recipient is always explicit
-      const recipientAddress = params.destinationAddress || undefined
+      // SDK getQuotes signature explained:
+      //   1. intentParams: Core swap parameters (chains, tokens, amount, privacy level)
+      //   2. stealthRecipient: Meta-address for privacy (generates stealth address)
+      //   3. refundAddress: Where to send refunds if swap fails
+      //   4. transparentRecipient: Explicit destination (bypasses stealth for clarity)
+      //
+      // Even in shielded mode, we pass transparentRecipient so 1Click API knows
+      // where to send funds. Privacy is on SENDER side (hidden identity), not recipient.
+      const stealthRecipient = recipientMetaAddress // For max privacy (random stealth)
+      const transparentRecipient = params.destinationAddress || undefined // Explicit destination
       const quotes = await client.getQuotes(
         intentParams,
-        recipientMetaAddress,
+        stealthRecipient,
         refundAddress,
-        recipientAddress
+        transparentRecipient
       )
 
       if (quotes.length > 0) {
@@ -399,13 +405,20 @@ export function useQuote(params: QuoteParams | null): QuoteResult {
 
   // Fetch quote when params change (debounced)
   useEffect(() => {
-    const timeoutId = setTimeout(fetchQuote, 500) // 500ms debounce
-    return () => clearTimeout(timeoutId)
+    debounceActiveRef.current = true
+    const timeoutId = setTimeout(() => {
+      debounceActiveRef.current = false
+      fetchQuote()
+    }, 500) // 500ms debounce
+    return () => {
+      clearTimeout(timeoutId)
+      debounceActiveRef.current = false
+    }
   }, [fetchQuote])
 
   // Auto-refresh effect
   useEffect(() => {
-    if (!autoRefreshEnabled || !params || !quote) {
+    if (!autoRefreshEnabled || !params || !quote || !client) {
       if (autoRefreshRef.current) {
         clearInterval(autoRefreshRef.current)
         autoRefreshRef.current = null
@@ -415,7 +428,8 @@ export function useQuote(params: QuoteParams | null): QuoteResult {
 
     // Set up auto-refresh interval
     autoRefreshRef.current = setInterval(() => {
-      if (!isLoading) {
+      // Skip if loading or debounce is active (prevents race condition)
+      if (!isLoading && !debounceActiveRef.current) {
         logger.debug("Auto-refreshing quote", "useQuote")
         fetchQuote()
       }
@@ -427,7 +441,7 @@ export function useQuote(params: QuoteParams | null): QuoteResult {
         autoRefreshRef.current = null
       }
     }
-  }, [autoRefreshEnabled, params, quote, isLoading, fetchQuote])
+  }, [autoRefreshEnabled, params, quote, isLoading, fetchQuote, client])
 
   // Freshness tracking effect
   useEffect(() => {
