@@ -37,10 +37,10 @@ const apps = [
 
 export default function HubPage() {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col min-h-[calc(100vh-4rem)]">
       {/* Hero */}
-      <section className="flex flex-col items-center justify-center px-4 py-16 sm:py-24">
-        <div className="text-center max-w-3xl mx-auto mb-12">
+      <section className="flex-1 flex flex-col items-center justify-center px-4 py-20 sm:py-32">
+        <div className="text-center max-w-3xl mx-auto mb-16">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-4">
             Privacy for{" "}
             <span className="bg-gradient-to-r from-sip-purple-600 to-sip-green-500 bg-clip-text text-transparent">
@@ -54,7 +54,7 @@ export default function HubPage() {
         </div>
 
         {/* App Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl w-full mb-8">
           {apps.map((app) => (
             <Link
               key={app.href}
