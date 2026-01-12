@@ -39,7 +39,7 @@ export default function HubPage() {
   return (
     <div className="flex flex-col">
       {/* Hero */}
-      <section className="flex flex-col items-center px-4 pt-24 pb-24 sm:pt-32 sm:pb-32">
+      <section className="flex flex-col items-center px-4 pt-32 pb-24 sm:pt-40 sm:pb-32">
         <div className="text-center max-w-3xl mx-auto mb-12">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-4">
             Privacy for{" "}
