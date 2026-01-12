@@ -69,10 +69,12 @@ export type { MockBackendConfig } from "./backends"
  *
  * Call this at app startup to register all available backends.
  */
-export function initializePrivacy(): void {
-  // Import here to avoid circular dependencies
-  const { backendRegistry } = require("./backend")
-  const { mockBackend } = require("./backends/mock")
+export async function initializePrivacy(): Promise<void> {
+  // Dynamic imports to avoid circular dependencies
+  const [{ backendRegistry }, { mockBackend }] = await Promise.all([
+    import("./backend"),
+    import("./backends/mock"),
+  ])
 
   // Always register mock backend for development
   if (!backendRegistry.has("mock")) {
