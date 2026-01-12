@@ -90,7 +90,7 @@ export default function RootLayout({
       >
         <Providers>
           <Header />
-          <main className="min-h-screen pt-16">{children}</main>
+          <main className="pt-16">{children}</main>
           <Footer />
         </Providers>
       </body>
