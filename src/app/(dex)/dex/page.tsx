@@ -1,5 +1,8 @@
 "use client"
 
+// Disable static generation - this page uses context-dependent hooks
+export const dynamic = "force-dynamic"
+
 import { useState } from "react"
 import { PrivacyLevel } from "@sip-protocol/types"
 import { SwapCard, PrivacyToggle } from "@/components/dex"
