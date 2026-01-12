@@ -98,14 +98,14 @@ export default function PaymentsDashboard() {
       </div>
 
       {/* Info Banner */}
-      <div className="mt-10 p-4 rounded-xl bg-sip-purple-50 dark:bg-sip-purple-900/20 border border-sip-purple-200 dark:border-sip-purple-800">
+      <div className="mt-10 p-4 rounded-xl bg-sip-purple-900/20 border border-sip-purple-800">
         <div className="flex gap-3">
           <span className="text-xl">🔒</span>
           <div>
-            <p className="font-medium text-sip-purple-900 dark:text-sip-purple-100">
+            <p className="font-medium text-sip-purple-100">
               Your privacy is protected
             </p>
-            <p className="text-sm text-sip-purple-700 dark:text-sip-purple-300 mt-1">
+            <p className="text-sm text-sip-purple-300 mt-1">
               Stealth addresses ensure your transactions are unlinkable.
               Pedersen commitments hide the amounts. Viewing keys enable
               selective disclosure for compliance.

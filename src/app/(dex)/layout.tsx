@@ -1,37 +1,50 @@
-import Link from "next/link"
+"use client"
 
-export default function DexLayout({ children }: { children: React.ReactNode }) {
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+
+const navItems = [
+  { name: "Swap", href: "/dex" },
+  { name: "Jupiter", href: "/dex/jupiter" },
+]
+
+export default function DexLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  const pathname = usePathname()
+
+  const isActive = (href: string) => {
+    if (href === "/dex") return pathname === "/dex"
+    return pathname.startsWith(href)
+  }
+
   return (
     <div className="min-h-screen flex flex-col">
-      <header className="border-b border-[var(--border-default)] bg-[var(--surface-primary)] sticky top-0 z-50">
+      {/* DEX Sub-Navigation */}
+      <div className="border-b border-gray-800 bg-gray-950/50 backdrop-blur-sm sticky top-16 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <Link href="/" className="flex items-center gap-2">
-              <span className="text-xl font-bold bg-gradient-to-r from-sip-purple-600 to-sip-purple-400 bg-clip-text text-transparent">
-                SIP
-              </span>
-              <span className="text-xs font-medium text-[var(--text-tertiary)] hidden sm:inline">
-                Private DEX
-              </span>
-            </Link>
-            <nav className="flex items-center gap-1">
+          <nav className="flex overflow-x-auto scrollbar-hide -mb-px">
+            {navItems.map((item) => (
               <Link
-                href="/dex"
-                className="px-3 py-2 text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-secondary)] rounded-lg transition-colors"
+                key={item.href}
+                href={item.href}
+                className={`flex-shrink-0 px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                  isActive(item.href)
+                    ? "border-purple-500 text-white"
+                    : "border-transparent text-gray-400 hover:text-white hover:border-gray-700"
+                }`}
               >
-                Swap
+                {item.name}
               </Link>
-              <Link
-                href="/dex/jupiter"
-                className="px-3 py-2 text-sm font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-secondary)] rounded-lg transition-colors"
-              >
-                Jupiter
-              </Link>
-            </nav>
-          </div>
+            ))}
+          </nav>
         </div>
-      </header>
-      <main className="flex-1 bg-[var(--surface-secondary)]">{children}</main>
+      </div>
+
+      {/* Main Content */}
+      <main className="flex-1 bg-gray-900/30">{children}</main>
     </div>
   )
 }

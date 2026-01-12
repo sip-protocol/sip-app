@@ -21,14 +21,14 @@ export default function SendPaymentPage() {
       <SendShieldedForm />
 
       {/* Info Banner */}
-      <div className="mt-8 p-4 rounded-xl bg-sip-purple-50 dark:bg-sip-purple-900/20 border border-sip-purple-200 dark:border-sip-purple-800">
+      <div className="mt-8 p-4 rounded-xl bg-sip-purple-900/20 border border-sip-purple-800">
         <div className="flex gap-3">
           <span className="text-xl">🔒</span>
           <div>
-            <p className="font-medium text-sip-purple-900 dark:text-sip-purple-100">
+            <p className="font-medium text-sip-purple-100">
               How shielded payments work
             </p>
-            <p className="text-sm text-sip-purple-700 dark:text-sip-purple-300 mt-1">
+            <p className="text-sm text-sip-purple-300 mt-1">
               Your payment is sent to a one-time stealth address derived from
               the recipient&apos;s meta-address. The amount is hidden using a
               Pedersen commitment. Only the recipient can discover and claim the

@@ -1,15 +1,15 @@
 @import "tailwindcss";
 
 /* =============================================================================
-   SIP Protocol - Design System
-   World-class privacy app theming
+   SIP Protocol - Design System (Dark Only)
+   Aligned with sip-protocol.org marketing site
    ============================================================================= */
 
-/* CSS Custom Properties for theming */
+/* CSS Custom Properties - Dark Theme (Always) */
 :root {
-  /* Background & Foreground */
-  --background: #ffffff;
-  --foreground: #0a0a0a;
+  /* Background & Foreground - matches sip-website exactly */
+  --background: #030505;
+  --foreground: #fafafa;
 
   /* SIP Brand Colors */
   --sip-purple-50: #f5f3ff;
@@ -33,35 +33,36 @@
   --sip-green-700: #15803d;
 
   /* Semantic Colors */
-  --color-primary: var(--sip-purple-600);
-  --color-primary-hover: var(--sip-purple-700);
-  --color-success: var(--sip-green-500);
-  --color-success-hover: var(--sip-green-600);
+  --color-primary: var(--sip-purple-500);
+  --color-primary-hover: var(--sip-purple-400);
+  --color-success: var(--sip-green-400);
+  --color-success-hover: var(--sip-green-300);
   --color-error: #ef4444;
   --color-warning: #f59e0b;
 
-  /* Surface Colors */
-  --surface-primary: #ffffff;
-  --surface-secondary: #f9fafb;
-  --surface-tertiary: #f3f4f6;
-  --surface-elevated: #ffffff;
+  /* Surface Colors - Dark (matches gray-900/50 style of sip-website) */
+  --surface-primary: #0d0d0d;
+  --surface-secondary: #111827;
+  --surface-tertiary: #1f2937;
+  --surface-elevated: rgba(17, 24, 39, 0.5);
+  --surface-card: rgba(17, 24, 39, 0.5);
 
-  /* Border Colors */
-  --border-default: #e5e7eb;
-  --border-hover: #d1d5db;
+  /* Border Colors - Dark */
+  --border-default: #1f2937;
+  --border-hover: #374151;
   --border-focus: var(--sip-purple-500);
 
-  /* Text Colors */
-  --text-primary: #111827;
-  --text-secondary: #6b7280;
-  --text-tertiary: #9ca3af;
-  --text-inverse: #ffffff;
+  /* Text Colors - Dark */
+  --text-primary: #ffffff;
+  --text-secondary: #9ca3af;
+  --text-tertiary: #6b7280;
+  --text-inverse: #0a0a0a;
 
-  /* Shadows (for elevated surfaces) */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg:
-    0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  /* Shadows - Dark (subtle glow effect) */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.4);
+  --shadow-purple: 0 4px 14px 0 rgba(139, 92, 246, 0.25);
 
   /* Border Radius */
   --radius-sm: 0.375rem;
@@ -76,47 +77,25 @@
   --transition-slow: 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Dark Mode */
-.dark {
-  --background: #0a0a0a;
-  --foreground: #fafafa;
-
-  /* Semantic Colors - Dark */
-  --color-primary: var(--sip-purple-500);
-  --color-primary-hover: var(--sip-purple-400);
-  --color-success: var(--sip-green-400);
-  --color-success-hover: var(--sip-green-300);
-
-  /* Surface Colors - Dark */
-  --surface-primary: #0a0a0a;
-  --surface-secondary: #171717;
-  --surface-tertiary: #262626;
-  --surface-elevated: #1f1f1f;
-
-  /* Border Colors - Dark */
-  --border-default: #262626;
-  --border-hover: #404040;
-  --border-focus: var(--sip-purple-500);
-
-  /* Text Colors - Dark */
-  --text-primary: #fafafa;
-  --text-secondary: #a1a1aa;
-  --text-tertiary: #71717a;
-  --text-inverse: #0a0a0a;
-
-  /* Shadows - Dark (subtle glow effect) */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.3);
-  --shadow-lg:
-    0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.4);
-}
-
 /* Tailwind v4 Theme */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-sans), system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-mono), ui-monospace, monospace;
+
+  /* Gray scale (matches sip-website) */
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+  --color-gray-950: #030505;
 
   /* SIP Brand Colors in Tailwind */
   --color-sip-purple-50: var(--sip-purple-50);
@@ -143,16 +122,13 @@
 /* Base Styles */
 html {
   scroll-behavior: smooth;
+  color-scheme: dark;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family:
-    var(--font-geist-sans),
-    system-ui,
-    -apple-system,
-    sans-serif;
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -165,11 +141,6 @@ body {
 
 /* Selection */
 ::selection {
-  background: var(--sip-purple-200);
-  color: var(--sip-purple-900);
-}
-
-.dark ::selection {
   background: var(--sip-purple-800);
   color: var(--sip-purple-100);
 }
@@ -193,18 +164,45 @@ body {
   background: var(--border-hover);
 }
 
-/* Utility Classes */
+/* =============================================================================
+   Component Utilities
+   ============================================================================= */
+
+/* Card with backdrop blur (sip-website style) */
+.card {
+  @apply relative rounded-xl border border-gray-800 bg-gray-900/50 p-6 backdrop-blur-sm;
+}
+
+.card-hover {
+  @apply hover:border-gray-700 hover:bg-gray-900/70 transition-all duration-300;
+}
+
+/* Glass morphism effect */
 .glass {
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(10, 10, 10, 0.8);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
 
-.dark .glass {
-  background: rgba(10, 10, 10, 0.8);
+/* Gradient text (for headings) */
+.gradient-text {
+  @apply bg-gradient-to-r from-purple-400 via-pink-500 to-purple-600 bg-clip-text text-transparent;
 }
 
-/* Animation Utilities */
+/* Glow border effect */
+.glow-border {
+  @apply relative;
+}
+
+.glow-border::before {
+  content: "";
+  @apply absolute -inset-0.5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 opacity-75 blur;
+}
+
+/* =============================================================================
+   Animation Utilities
+   ============================================================================= */
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -225,6 +223,17 @@ body {
   }
 }
 
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes pulse-glow {
   0%,
   100% {
@@ -232,6 +241,16 @@ body {
   }
   50% {
     box-shadow: 0 0 0 8px rgba(139, 92, 246, 0);
+  }
+}
+
+@keyframes shield-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
   }
 }
 
@@ -243,6 +262,14 @@ body {
   animation: slideUp var(--transition-slow) ease-out;
 }
 
+.animate-slide-down {
+  animation: slideDown var(--transition-slow) ease-out;
+}
+
 .animate-pulse-glow {
   animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.shield-pulse {
+  animation: shield-pulse 2s ease-in-out infinite;
 }

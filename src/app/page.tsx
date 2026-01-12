@@ -37,39 +37,7 @@ const apps = [
 
 export default function HubPage() {
   return (
-    <main className="min-h-screen flex flex-col">
-      {/* Header */}
-      <header className="border-b border-[var(--border-default)] bg-[var(--surface-primary)]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <span className="text-2xl font-bold bg-gradient-to-r from-sip-purple-600 to-sip-purple-400 bg-clip-text text-transparent">
-              SIP
-            </span>
-            <span className="text-sm font-medium text-[var(--text-secondary)]">
-              Protocol
-            </span>
-          </Link>
-          <nav className="flex items-center gap-4">
-            <a
-              href="https://docs.sip-protocol.org"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
-            >
-              Docs
-            </a>
-            <a
-              href="https://github.com/sip-protocol"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors"
-            >
-              GitHub
-            </a>
-          </nav>
-        </div>
-      </header>
-
+    <div className="flex flex-col">
       {/* Hero */}
       <section className="flex-1 flex flex-col items-center justify-center px-4 py-16">
         <div className="text-center max-w-3xl mx-auto mb-12">
@@ -124,26 +92,6 @@ export default function HubPage() {
           ))}
         </div>
       </section>
-
-      {/* Footer */}
-      <footer className="border-t border-[var(--border-default)] bg-[var(--surface-primary)]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-sm text-[var(--text-secondary)]">
-            Built by{" "}
-            <a
-              href="https://sip-protocol.org"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sip-purple-600 hover:underline"
-            >
-              SIP Protocol
-            </a>
-          </p>
-          <div className="flex items-center gap-4 text-sm text-[var(--text-secondary)]">
-            <span>Privacy is a right, not a privilege.</span>
-          </div>
-        </div>
-      </footer>
-    </main>
+    </div>
   )
 }

@@ -53,7 +53,7 @@ export function PrivacyToggle({
               className={cn(
                 "p-3 rounded-xl border text-left transition-all",
                 isActive
-                  ? "border-sip-purple-500 bg-sip-purple-50 dark:bg-sip-purple-900/20"
+                  ? "border-sip-purple-500 bg-sip-purple-900/20"
                   : "border-[var(--border-default)] hover:border-[var(--border-hover)]",
                 disabled && "opacity-50 cursor-not-allowed"
               )}
@@ -63,7 +63,7 @@ export function PrivacyToggle({
                 <span
                   className={cn(
                     "font-medium text-sm",
-                    isActive && "text-sip-purple-700 dark:text-sip-purple-300"
+                    isActive && "text-sip-purple-300"
                   )}
                 >
                   {option.label}

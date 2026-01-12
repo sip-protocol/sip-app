@@ -22,12 +22,9 @@ export function TransactionStatus({
     <div
       className={cn(
         "mt-6 p-4 rounded-xl border",
-        status === "pending" &&
-          "bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-800",
-        status === "confirmed" &&
-          "bg-sip-green-50 border-sip-green-200 dark:bg-sip-green-900/20 dark:border-sip-green-800",
-        status === "error" &&
-          "bg-red-50 border-red-200 dark:bg-red-900/20 dark:border-red-800"
+        status === "pending" && "bg-blue-900/20 border-blue-800",
+        status === "confirmed" && "bg-sip-green-900/20 border-sip-green-800",
+        status === "error" && "bg-red-900/20 border-red-800"
       )}
     >
       <div className="flex items-start gap-3">
@@ -40,10 +37,9 @@ export function TransactionStatus({
           <p
             className={cn(
               "font-medium",
-              status === "pending" && "text-blue-900 dark:text-blue-100",
-              status === "confirmed" &&
-                "text-sip-green-900 dark:text-sip-green-100",
-              status === "error" && "text-red-900 dark:text-red-100"
+              status === "pending" && "text-blue-100",
+              status === "confirmed" && "text-sip-green-100",
+              status === "error" && "text-red-100"
             )}
           >
             {status === "pending" && "Transaction Pending..."}
@@ -61,9 +57,7 @@ export function TransactionStatus({
             </a>
           )}
           {error && status === "error" && (
-            <p className="text-sm text-red-700 dark:text-red-300 mt-1">
-              {error}
-            </p>
+            <p className="text-sm text-red-300 mt-1">{error}</p>
           )}
         </div>
       </div>
