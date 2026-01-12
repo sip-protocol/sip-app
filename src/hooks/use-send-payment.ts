@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
+import type { ViewingKey } from "@sip-protocol/types"
 import type { PrivacyLevel } from "@/components/payments/privacy-toggle"
 import type { Token } from "@/components/payments/amount-input"
 import type { TxStatus } from "@/components/payments/transaction-status"
@@ -11,13 +12,19 @@ interface SendPaymentParams {
   amount: string
   token: Token
   privacyLevel: PrivacyLevel
+  /** Viewing key for compliant mode (encrypted with transaction) */
+  viewingKey?: ViewingKey | null
+}
+
+interface SendPaymentResult {
+  txHash: string
 }
 
 interface UseSendPaymentResult {
   status: TxStatus
   txHash: string | null
   error: string | null
-  send: (params: SendPaymentParams) => Promise<void>
+  send: (params: SendPaymentParams) => Promise<SendPaymentResult | undefined>
   reset: () => void
 }
 
@@ -35,11 +42,11 @@ export function useSendPayment(): UseSendPaymentResult {
   }, [])
 
   const send = useCallback(
-    async (params: SendPaymentParams) => {
+    async (params: SendPaymentParams): Promise<SendPaymentResult | undefined> => {
       if (!publicKey || !signTransaction) {
         setError("Wallet not connected")
         setStatus("error")
-        return
+        return undefined
       }
 
       try {
@@ -57,6 +64,7 @@ export function useSendPayment(): UseSendPaymentResult {
         //   recipient: params.recipient,
         //   amount: parseUnits(params.amount, params.token === 'SOL' ? 9 : 6),
         //   privacyLevel: params.privacyLevel,
+        //   viewingKey: params.viewingKey, // For compliant mode
         // })
 
         // Simulate network delay
@@ -75,11 +83,15 @@ export function useSendPayment(): UseSendPaymentResult {
           ...params,
           from: publicKey.toBase58(),
           txHash: mockTxHash,
+          viewingKeyHash: params.viewingKey?.hash ?? null,
         })
+
+        return { txHash: mockTxHash }
       } catch (err) {
         console.error("Send payment error:", err)
         setError(err instanceof Error ? err.message : "Transaction failed")
         setStatus("error")
+        return undefined
       }
     },
     [publicKey, signTransaction]
