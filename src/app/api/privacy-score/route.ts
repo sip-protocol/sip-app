@@ -191,7 +191,8 @@ function generateMockResult(walletAddress: string) {
       category: "exchangeExposure",
       currentScore: exchangeExposure,
       projectedScore: projectedExchange,
-      reason: "Viewing keys allow selective disclosure without exposing full history",
+      reason:
+        "Viewing keys allow selective disclosure without exposing full history",
     })
   }
 

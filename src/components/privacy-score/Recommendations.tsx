@@ -99,7 +99,9 @@ export function Recommendations({ recommendations }: RecommendationsProps) {
                   </p>
                   <div className="flex items-center gap-2 text-sm">
                     <span className="text-sip-green-500">→</span>
-                    <span className="text-[var(--text-primary)]">{rec.action}</span>
+                    <span className="text-[var(--text-primary)]">
+                      {rec.action}
+                    </span>
                   </div>
                 </div>
               </div>

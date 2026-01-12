@@ -135,8 +135,14 @@ export function PrivacyScoreInput({
         </p>
         <div className="flex flex-wrap justify-center gap-2">
           {[
-            { label: "Active Trader", addr: "vines1vzrYbzLMRdu58ou5XTby4qAqVRLmqo36NKPTg" },
-            { label: "DeFi User", addr: "9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM" },
+            {
+              label: "Active Trader",
+              addr: "vines1vzrYbzLMRdu58ou5XTby4qAqVRLmqo36NKPTg",
+            },
+            {
+              label: "DeFi User",
+              addr: "9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM",
+            },
           ].map((example) => (
             <button
               key={example.addr}

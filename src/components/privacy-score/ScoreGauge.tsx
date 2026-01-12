@@ -123,7 +123,9 @@ export function ScoreGauge({ score, risk }: ScoreGaugeProps) {
 
           {/* Score text */}
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className={`text-4xl font-bold ${config.color}`}>{score}</span>
+            <span className={`text-4xl font-bold ${config.color}`}>
+              {score}
+            </span>
             <span className="text-sm text-[var(--text-tertiary)]">/100</span>
           </div>
         </div>
@@ -148,7 +150,8 @@ export function ScoreGauge({ score, risk }: ScoreGaugeProps) {
             "Significant privacy vulnerabilities detected. Consider using SIP."}
           {risk === "medium" &&
             "Some privacy concerns found. Room for improvement."}
-          {risk === "low" && "Good privacy practices! Minor improvements possible."}
+          {risk === "low" &&
+            "Good privacy practices! Minor improvements possible."}
         </p>
       </div>
     </div>
