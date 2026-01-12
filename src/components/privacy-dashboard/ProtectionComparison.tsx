@@ -132,11 +132,17 @@ export function ProtectionComparison({
     // Projected score fill (animated)
     projectedG
       .append("path")
-      .attr("d", arcGenerator({
-        startAngle: -Math.PI * 0.75,
-        endAngle: scoreToAngle(currentScore),
-      }))
-      .attr("fill", getScoreColor(showProjected ? projectedScore : currentScore))
+      .attr(
+        "d",
+        arcGenerator({
+          startAngle: -Math.PI * 0.75,
+          endAngle: scoreToAngle(currentScore),
+        })
+      )
+      .attr(
+        "fill",
+        getScoreColor(showProjected ? projectedScore : currentScore)
+      )
       .transition()
       .duration(isAnimating ? 1200 : 0)
       .ease(d3.easeCubicOut)
@@ -146,13 +152,18 @@ export function ProtectionComparison({
           scoreToAngle(showProjected ? projectedScore : currentScore)
         )
         return function (t) {
-          return arcGenerator({
-            startAngle: -Math.PI * 0.75,
-            endAngle: interpolate(t),
-          }) || ""
+          return (
+            arcGenerator({
+              startAngle: -Math.PI * 0.75,
+              endAngle: interpolate(t),
+            }) || ""
+          )
         }
       })
-      .attr("fill", getScoreColor(showProjected ? projectedScore : currentScore))
+      .attr(
+        "fill",
+        getScoreColor(showProjected ? projectedScore : currentScore)
+      )
 
     // Current score text
     currentG
@@ -267,7 +278,9 @@ export function ProtectionComparison({
             <div className="flex items-center gap-2">
               <span
                 className={`text-sm font-mono ${
-                  showProjected ? "line-through text-[var(--text-tertiary)]" : ""
+                  showProjected
+                    ? "line-through text-[var(--text-tertiary)]"
+                    : ""
                 }`}
               >
                 {item.currentScore}

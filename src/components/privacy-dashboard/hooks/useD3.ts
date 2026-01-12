@@ -21,7 +21,12 @@ export function useD3<T extends SVGSVGElement | HTMLDivElement = SVGSVGElement>(
   useEffect(() => {
     const element = ref.current
     if (element) {
-      const selection = d3.select(element) as d3.Selection<T, unknown, null, undefined>
+      const selection = d3.select(element) as d3.Selection<
+        T,
+        unknown,
+        null,
+        undefined
+      >
       renderFn(selection)
     }
 
@@ -49,7 +54,10 @@ export function useForceSimulation<NodeType extends d3.SimulationNodeDatum>(
     onTick?: () => void
   }
 ) {
-  const simulationRef = useRef<d3.Simulation<NodeType, d3.SimulationLinkDatum<NodeType>> | null>(null)
+  const simulationRef = useRef<d3.Simulation<
+    NodeType,
+    d3.SimulationLinkDatum<NodeType>
+  > | null>(null)
   const { width, height, onTick } = options
 
   useEffect(() => {

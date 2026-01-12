@@ -141,10 +141,7 @@ export function RiskHeatmap({
       .attr("transform", (d) => `translate(${d.x},0)`)
       .each(function (d) {
         const marker = d3.select(this)
-        marker
-          .append("circle")
-          .attr("r", 4)
-          .attr("fill", d.color)
+        marker.append("circle").attr("r", 4).attr("fill", d.color)
         marker
           .append("text")
           .attr("x", 8)

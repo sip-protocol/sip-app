@@ -18,7 +18,11 @@ import {
   generateMockTimeline,
   generateNetworkFromCluster,
 } from "@/components/privacy-dashboard"
-import type { GraphNode, GraphEdge, TimelinePoint } from "@/components/privacy-dashboard"
+import type {
+  GraphNode,
+  GraphEdge,
+  TimelinePoint,
+} from "@/components/privacy-dashboard"
 
 export default function PrivacyScorePage() {
   const [walletAddress, setWalletAddress] = useState("")
@@ -38,13 +42,18 @@ export default function PrivacyScorePage() {
     return generateMockTimeline(result.privacyScore.overall, 30)
   }, [result])
 
-  const networkData = useMemo<{ nodes: GraphNode[]; edges: GraphEdge[] }>(() => {
+  const networkData = useMemo<{
+    nodes: GraphNode[]
+    edges: GraphEdge[]
+  }>(() => {
     if (!result || !walletAddress) return { nodes: [], edges: [] }
     // Generate mock network data based on cluster exposure
     const clusterScore = result.privacyScore.breakdown.clusterExposure
     const exchangeScore = result.privacyScore.breakdown.exchangeExposure
     // Use deterministic transaction count based on wallet address
-    const seed = walletAddress.split("").reduce((a, b) => a + b.charCodeAt(0), 0)
+    const seed = walletAddress
+      .split("")
+      .reduce((a, b) => a + b.charCodeAt(0), 0)
     const txCount = (seed % 10) + 1
     return generateNetworkFromCluster(
       walletAddress,
@@ -52,19 +61,26 @@ export default function PrivacyScorePage() {
         linkedAddressCount: 25 - clusterScore,
         clusters: [
           {
-            addresses: Array.from({ length: Math.max(1, Math.floor((25 - clusterScore) / 3)) }, (_, i) =>
-              `${walletAddress.slice(0, 8)}...linked${i + 1}`
+            addresses: Array.from(
+              { length: Math.max(1, Math.floor((25 - clusterScore) / 3)) },
+              (_, i) => `${walletAddress.slice(0, 8)}...linked${i + 1}`
             ),
             linkType: "common-input" as const,
             transactionCount: txCount,
           },
         ],
       },
-      exchangeScore < 15 ? {
-        exchanges: [
-          { address: "BinanceXYZ...abc", name: "Binance", transactionCount: 20 - exchangeScore },
-        ],
-      } : undefined
+      exchangeScore < 15
+        ? {
+            exchanges: [
+              {
+                address: "BinanceXYZ...abc",
+                name: "Binance",
+                transactionCount: 20 - exchangeScore,
+              },
+            ],
+          }
+        : undefined
     )
   }, [result, walletAddress])
 
@@ -190,49 +206,69 @@ export default function PrivacyScorePage() {
             <div className="space-y-8 animate-in fade-in slide-in-from-top-4 duration-500">
               {/* Network Graph */}
               <div className="p-6 rounded-xl bg-[var(--surface-secondary)] border border-[var(--border-default)]">
-                <h3 className="text-lg font-semibold mb-2">Wallet Network Graph</h3>
+                <h3 className="text-lg font-semibold mb-2">
+                  Wallet Network Graph
+                </h3>
                 <p className="text-sm text-[var(--text-tertiary)] mb-4">
-                  Visualize connections between your wallet and linked addresses. Drag nodes to explore.
+                  Visualize connections between your wallet and linked
+                  addresses. Drag nodes to explore.
                 </p>
                 <NetworkGraph
                   nodes={networkData.nodes}
                   edges={networkData.edges}
-                  width={Math.min(800, typeof window !== "undefined" ? window.innerWidth - 80 : 800)}
+                  width={Math.min(
+                    800,
+                    typeof window !== "undefined" ? window.innerWidth - 80 : 800
+                  )}
                   height={400}
                 />
               </div>
 
               {/* Risk Heatmap */}
               <div className="p-6 rounded-xl bg-[var(--surface-secondary)] border border-[var(--border-default)]">
-                <h3 className="text-lg font-semibold mb-2">Risk Category Breakdown</h3>
+                <h3 className="text-lg font-semibold mb-2">
+                  Risk Category Breakdown
+                </h3>
                 <p className="text-sm text-[var(--text-tertiary)] mb-4">
                   Detailed analysis of privacy risks across different categories
                 </p>
                 <RiskHeatmap
                   data={heatmapData}
-                  width={Math.min(600, typeof window !== "undefined" ? window.innerWidth - 80 : 600)}
+                  width={Math.min(
+                    600,
+                    typeof window !== "undefined" ? window.innerWidth - 80 : 600
+                  )}
                   height={280}
                 />
               </div>
 
               {/* Privacy Timeline */}
               <div className="p-6 rounded-xl bg-[var(--surface-secondary)] border border-[var(--border-default)]">
-                <h3 className="text-lg font-semibold mb-2">Privacy Score Over Time</h3>
+                <h3 className="text-lg font-semibold mb-2">
+                  Privacy Score Over Time
+                </h3>
                 <p className="text-sm text-[var(--text-tertiary)] mb-4">
-                  Track how your privacy score has changed based on transaction patterns
+                  Track how your privacy score has changed based on transaction
+                  patterns
                 </p>
                 <PrivacyTimeline
                   data={timelineData}
-                  width={Math.min(700, typeof window !== "undefined" ? window.innerWidth - 80 : 700)}
+                  width={Math.min(
+                    700,
+                    typeof window !== "undefined" ? window.innerWidth - 80 : 700
+                  )}
                   height={250}
                 />
               </div>
 
               {/* Animated Protection Comparison */}
               <div className="p-6 rounded-xl bg-[var(--surface-secondary)] border border-[var(--border-default)]">
-                <h3 className="text-lg font-semibold mb-2">SIP Protection Impact</h3>
+                <h3 className="text-lg font-semibold mb-2">
+                  SIP Protection Impact
+                </h3>
                 <p className="text-sm text-[var(--text-tertiary)] mb-4">
-                  See the animated improvement when using SIP for your transactions
+                  See the animated improvement when using SIP for your
+                  transactions
                 </p>
                 <ProtectionComparison
                   currentScore={result.sipComparison.currentScore}

@@ -140,7 +140,9 @@ export function PrivacyTimeline({
       .attr("cx", (d) => xScale(d.date))
       .attr("cy", (d) => yScale(d.score))
       .attr("r", (d) => (d.event ? 8 : 4))
-      .attr("fill", (d) => (d.event ? eventIcons[d.event.type].color : "#a855f7"))
+      .attr("fill", (d) =>
+        d.event ? eventIcons[d.event.type].color : "#a855f7"
+      )
       .attr("stroke", "white")
       .attr("stroke-width", 2)
       .attr("cursor", "pointer")
@@ -210,7 +212,12 @@ export function PrivacyTimeline({
 
   return (
     <div className="relative">
-      <svg ref={svgRef} width={width} height={height} className="overflow-visible" />
+      <svg
+        ref={svgRef}
+        width={width}
+        height={height}
+        className="overflow-visible"
+      />
 
       {/* Tooltip */}
       {tooltip.visible && (
@@ -259,7 +266,11 @@ export function generateMockTimeline(
   const data: TimelinePoint[] = []
   const now = new Date()
 
-  type EventType = "address_reuse" | "exchange_deposit" | "cluster_link" | "sip_payment"
+  type EventType =
+    | "address_reuse"
+    | "exchange_deposit"
+    | "cluster_link"
+    | "sip_payment"
 
   for (let i = days; i >= 0; i--) {
     const date = new Date(now)
