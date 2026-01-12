@@ -20,7 +20,15 @@ function GithubIcon({ className }: { className?: string }) {
 
 function DocsIcon({ className }: { className?: string }) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
       <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20" />
     </svg>
   )
@@ -47,23 +55,47 @@ const footerSections = [
   {
     title: "Developers",
     links: [
-      { label: "Documentation", href: "https://docs.sip-protocol.org", external: true },
-      { label: "GitHub", href: "https://github.com/sip-protocol", external: true },
-      { label: "SDK", href: "https://www.npmjs.com/package/@sip-protocol/sdk", external: true },
+      {
+        label: "Documentation",
+        href: "https://docs.sip-protocol.org",
+        external: true,
+      },
+      {
+        label: "GitHub",
+        href: "https://github.com/sip-protocol",
+        external: true,
+      },
+      {
+        label: "SDK",
+        href: "https://www.npmjs.com/package/@sip-protocol/sdk",
+        external: true,
+      },
     ],
   },
   {
     title: "Community",
     links: [
-      { label: "Twitter", href: "https://twitter.com/sip_protocol", external: true },
+      {
+        label: "Twitter",
+        href: "https://twitter.com/sip_protocol",
+        external: true,
+      },
       { label: "Blog", href: "https://blog.sip-protocol.org", external: true },
     ],
   },
 ]
 
 const socialLinks = [
-  { icon: TwitterIcon, href: "https://twitter.com/sip_protocol", label: "Twitter" },
-  { icon: GithubIcon, href: "https://github.com/sip-protocol", label: "GitHub" },
+  {
+    icon: TwitterIcon,
+    href: "https://twitter.com/sip_protocol",
+    label: "Twitter",
+  },
+  {
+    icon: GithubIcon,
+    href: "https://github.com/sip-protocol",
+    label: "GitHub",
+  },
   { icon: DocsIcon, href: "https://docs.sip-protocol.org", label: "Docs" },
 ]
 
@@ -80,7 +112,8 @@ export function Footer() {
             <div className="col-span-2 md:col-span-4 lg:col-span-1">
               <Logo size="md" showText={true} href="https://sip-protocol.org" />
               <p className="mt-4 text-sm text-gray-400 max-w-xs">
-                The privacy standard for Web3. Stealth addresses, hidden amounts, and viewing keys for compliance.
+                The privacy standard for Web3. Stealth addresses, hidden
+                amounts, and viewing keys for compliance.
               </p>
               {/* Social Links */}
               <div className="flex gap-3 mt-6">

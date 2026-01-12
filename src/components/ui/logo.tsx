@@ -38,7 +38,10 @@ export function Logo({
 
   if (href) {
     return (
-      <Link href={href} className="focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 rounded-lg">
+      <Link
+        href={href}
+        className="focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 rounded-lg"
+      >
         {content}
       </Link>
     )

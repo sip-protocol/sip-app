@@ -8,11 +8,7 @@ const navItems = [
   { name: "Jupiter", href: "/dex/jupiter" },
 ]
 
-export default function DexLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function DexLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
 
   const isActive = (href: string) => {
