@@ -86,11 +86,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} ${jetbrainsMono.variable} antialiased min-h-screen bg-gray-950 text-white`}
+        className={`${inter.variable} ${jetbrainsMono.variable} antialiased min-h-screen flex flex-col bg-gray-950 text-white`}
       >
         <Providers>
           <Header />
-          <main className="pt-16">{children}</main>
+          <main className="flex-1 pt-16">{children}</main>
           <Footer />
         </Providers>
       </body>
