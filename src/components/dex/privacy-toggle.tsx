@@ -59,7 +59,10 @@ export function PrivacyToggle({ value, onChange }: PrivacyToggleProps) {
   const currentLevel = levels.find((l) => l.value === value)
   const buttonRefs = useRef<(HTMLButtonElement | null)[]>([])
 
-  const handleKeyDown = (e: KeyboardEvent<HTMLButtonElement>, index: number) => {
+  const handleKeyDown = (
+    e: KeyboardEvent<HTMLButtonElement>,
+    index: number
+  ) => {
     let nextIndex = index
 
     switch (e.key) {
@@ -130,10 +133,19 @@ export function PrivacyToggle({ value, onChange }: PrivacyToggleProps) {
                   : "text-gray-400 hover:text-white active:bg-gray-800"
               }`}
             >
-              <span className="flex items-center gap-1.5 sm:gap-2" aria-hidden="true">
-                {level.value === PrivacyLevel.TRANSPARENT && <EyeOpenIcon className="h-4 w-4" />}
-                {level.value === PrivacyLevel.SHIELDED && <ShieldIcon className="h-4 w-4" />}
-                {level.value === PrivacyLevel.COMPLIANT && <KeyIcon className="h-4 w-4" />}
+              <span
+                className="flex items-center gap-1.5 sm:gap-2"
+                aria-hidden="true"
+              >
+                {level.value === PrivacyLevel.TRANSPARENT && (
+                  <EyeOpenIcon className="h-4 w-4" />
+                )}
+                {level.value === PrivacyLevel.SHIELDED && (
+                  <ShieldIcon className="h-4 w-4" />
+                )}
+                {level.value === PrivacyLevel.COMPLIANT && (
+                  <KeyIcon className="h-4 w-4" />
+                )}
                 {level.label}
               </span>
             </button>
@@ -173,7 +185,9 @@ export function PrivacyToggle({ value, onChange }: PrivacyToggleProps) {
             className="flex items-center gap-1 text-xs text-yellow-400/80 hover:text-yellow-400"
           >
             <span aria-hidden="true">💡</span>
-            <span className="underline underline-offset-2">{currentLevel.recommendation}</span>
+            <span className="underline underline-offset-2">
+              {currentLevel.recommendation}
+            </span>
           </button>
         )}
       </div>
@@ -206,13 +220,48 @@ function PrivacyComparisonModal({
   selectedLevel: PrivacyLevel
 }) {
   const features = [
-    { name: "Sender hidden", transparent: false, shielded: true, compliant: true },
-    { name: "Amount hidden", transparent: false, shielded: true, compliant: true },
-    { name: "Recipient hidden", transparent: false, shielded: true, compliant: true },
-    { name: "Auditable", transparent: "✅ (public)", shielded: false, compliant: "✅ (with key)" },
-    { name: "Tax reporting", transparent: "Easy", shielded: "Manual", compliant: "Easy" },
-    { name: "Speed", transparent: "Fast", shielded: "Medium", compliant: "Medium" },
-    { name: "Best for", transparent: "Public txs", shielded: "Max privacy", compliant: "Institutions" },
+    {
+      name: "Sender hidden",
+      transparent: false,
+      shielded: true,
+      compliant: true,
+    },
+    {
+      name: "Amount hidden",
+      transparent: false,
+      shielded: true,
+      compliant: true,
+    },
+    {
+      name: "Recipient hidden",
+      transparent: false,
+      shielded: true,
+      compliant: true,
+    },
+    {
+      name: "Auditable",
+      transparent: "✅ (public)",
+      shielded: false,
+      compliant: "✅ (with key)",
+    },
+    {
+      name: "Tax reporting",
+      transparent: "Easy",
+      shielded: "Manual",
+      compliant: "Easy",
+    },
+    {
+      name: "Speed",
+      transparent: "Fast",
+      shielded: "Medium",
+      compliant: "Medium",
+    },
+    {
+      name: "Best for",
+      transparent: "Public txs",
+      shielded: "Max privacy",
+      compliant: "Institutions",
+    },
   ]
 
   return (
@@ -289,7 +338,9 @@ function PrivacyComparisonModal({
               {features.map((feature, i) => (
                 <tr
                   key={feature.name}
-                  className={i !== features.length - 1 ? "border-b border-gray-800" : ""}
+                  className={
+                    i !== features.length - 1 ? "border-b border-gray-800" : ""
+                  }
                 >
                   <td className="px-2 py-3 text-gray-300">{feature.name}</td>
                   <td className="px-2 py-3 text-center">
@@ -314,21 +365,22 @@ function PrivacyComparisonModal({
             <li className="flex items-center gap-2">
               <ShieldIcon className="h-4 w-4 text-purple-400" />
               <span>
-                <strong className="text-purple-400">Personal use:</strong> Shielded for maximum
-                privacy
+                <strong className="text-purple-400">Personal use:</strong>{" "}
+                Shielded for maximum privacy
               </span>
             </li>
             <li className="flex items-center gap-2">
               <KeyIcon className="h-4 w-4 text-blue-400" />
               <span>
-                <strong className="text-blue-400">Business/DAO:</strong> Compliant for audit trail
+                <strong className="text-blue-400">Business/DAO:</strong>{" "}
+                Compliant for audit trail
               </span>
             </li>
             <li className="flex items-center gap-2">
               <EyeOpenIcon className="h-4 w-4 text-gray-400" />
               <span>
-                <strong className="text-gray-300">Public payments:</strong> Transparent for
-                visibility
+                <strong className="text-gray-300">Public payments:</strong>{" "}
+                Transparent for visibility
               </span>
             </li>
           </ul>
@@ -367,7 +419,11 @@ function CloseIcon({ className }: { className?: string }) {
       stroke="currentColor"
       strokeWidth={2}
     >
-      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M6 18L18 6M6 6l12 12"
+      />
     </svg>
   )
 }
@@ -386,7 +442,11 @@ function EyeOpenIcon({ className }: { className?: string }) {
         strokeLinejoin="round"
         d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
       />
-      <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+      />
     </svg>
   )
 }

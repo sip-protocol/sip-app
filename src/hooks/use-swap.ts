@@ -27,11 +27,7 @@ interface SameChainQuote extends Quote {
 }
 
 import { useSIP } from "@/contexts"
-import {
-  useWalletStore,
-  useSwapModeStore,
-  useSwapHistoryStore,
-} from "@/stores"
+import { useWalletStore, useSwapModeStore, useSwapHistoryStore } from "@/stores"
 import { toast } from "@/stores/toast"
 import {
   parseAmount,
@@ -254,7 +250,8 @@ export function useSwap(): SwapResult {
 
       // Validate chain matches
       if (chain !== params.fromChain) {
-        const networkName = params.fromChain === "solana" ? "Solana" : "Ethereum"
+        const networkName =
+          params.fromChain === "solana" ? "Solana" : "Ethereum"
         const msg = `Please switch to ${networkName} network`
         setError(msg)
         setStatus("error")
@@ -407,7 +404,8 @@ export function useSwap(): SwapResult {
           }
 
           logger.error("Same-chain transfer failed", err, "useSwap")
-          const message = err instanceof Error ? err.message : "Transaction failed"
+          const message =
+            err instanceof Error ? err.message : "Transaction failed"
           setError(message)
           setStatus("error")
           toast.error("Transfer Failed", message)
@@ -563,7 +561,8 @@ export function useSwap(): SwapResult {
           if (params.fromChain === "solana") {
             const sdk = await getSDK()
             const detected = sdk.detectSolanaWallets?.() ?? []
-            effectiveWalletType = (detected[0] as typeof walletType) || "phantom" // Default to phantom
+            effectiveWalletType =
+              (detected[0] as typeof walletType) || "phantom" // Default to phantom
           } else if (params.fromChain === "ethereum") {
             const sdk = await getSDK()
             const detected = sdk.detectEthereumWallets?.() ?? []
@@ -747,7 +746,10 @@ export function useSwap(): SwapResult {
 /**
  * Get status message for display
  */
-export function getStatusMessage(status: SwapStatus, isShielded: boolean): string {
+export function getStatusMessage(
+  status: SwapStatus,
+  isShielded: boolean
+): string {
   switch (status) {
     case "confirming":
       return "Preparing transaction..."

@@ -7,7 +7,13 @@
  * 3. What to do next (actionable recovery)
  */
 
-export type ErrorAction = "retry" | "refresh" | "clear" | "connect" | "switch_network" | "none"
+export type ErrorAction =
+  | "retry"
+  | "refresh"
+  | "clear"
+  | "connect"
+  | "switch_network"
+  | "none"
 
 export interface ErrorInfo {
   title: string
@@ -200,7 +206,10 @@ export function parseError(err: unknown): {
     code = "QUOTE_EXPIRED"
   } else if (message.includes("no quotes") || message.includes("unavailable")) {
     code = "QUOTE_UNAVAILABLE"
-  } else if (message.includes("liquidity") || message.includes("insufficient")) {
+  } else if (
+    message.includes("liquidity") ||
+    message.includes("insufficient")
+  ) {
     if (message.includes("balance")) {
       code = "INSUFFICIENT_BALANCE"
     } else {

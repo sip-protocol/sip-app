@@ -100,7 +100,10 @@ export async function getExchangeRate(
  * Get exchange rate synchronously using cached data
  * Falls back to hardcoded prices if cache is empty
  */
-export function getExchangeRateSync(fromToken: string, toToken: string): number {
+export function getExchangeRateSync(
+  fromToken: string,
+  toToken: string
+): number {
   const prices = priceCache?.prices ?? FALLBACK_PRICES
 
   const fromPrice = prices[fromToken] ?? FALLBACK_PRICES[fromToken] ?? 1

@@ -1,6 +1,12 @@
 "use client"
 
-import { useState, useMemo, useCallback, useRef, type KeyboardEvent } from "react"
+import {
+  useState,
+  useMemo,
+  useCallback,
+  useRef,
+  type KeyboardEvent,
+} from "react"
 import Image from "next/image"
 import { PrivacyLevel } from "@sip-protocol/types"
 import { useQuote, useSwap, useBalance, getStatusMessage } from "@/hooks"
@@ -44,7 +50,12 @@ const USDC_DECIMALS = 6
 
 // Tokens available as SOURCE (chains with wallet deposit support)
 const fromTokens: Token[] = [
-  { symbol: "ETH", name: "Ethereum", chain: "ethereum", logo: "/tokens/eth.png" },
+  {
+    symbol: "ETH",
+    name: "Ethereum",
+    chain: "ethereum",
+    logo: "/tokens/eth.png",
+  },
   { symbol: "SOL", name: "Solana", chain: "solana", logo: "/tokens/sol.png" },
   { symbol: "NEAR", name: "NEAR", chain: "near", logo: "/tokens/near.png" },
 ]
@@ -52,7 +63,12 @@ const fromTokens: Token[] = [
 // Tokens available as DESTINATION (NEAR Intents supported chains)
 const toTokens: Token[] = [
   { symbol: "ZEC", name: "Zcash", chain: "zcash", logo: "/tokens/zec.png" },
-  { symbol: "ETH", name: "Ethereum", chain: "ethereum", logo: "/tokens/eth.png" },
+  {
+    symbol: "ETH",
+    name: "Ethereum",
+    chain: "ethereum",
+    logo: "/tokens/eth.png",
+  },
   { symbol: "SOL", name: "Solana", chain: "solana", logo: "/tokens/sol.png" },
   { symbol: "NEAR", name: "NEAR", chain: "near", logo: "/tokens/near.png" },
   {
@@ -76,14 +92,20 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
 
   // Token selection handlers
   const handleFromTokenSelect = (token: Token) => {
-    if (token.symbol === toToken.symbol && privacyLevel === PrivacyLevel.TRANSPARENT) {
+    if (
+      token.symbol === toToken.symbol &&
+      privacyLevel === PrivacyLevel.TRANSPARENT
+    ) {
       setToToken(fromToken)
     }
     setFromToken(token)
   }
 
   const handleToTokenSelect = (token: Token) => {
-    if (token.symbol === fromToken.symbol && privacyLevel === PrivacyLevel.TRANSPARENT) {
+    if (
+      token.symbol === fromToken.symbol &&
+      privacyLevel === PrivacyLevel.TRANSPARENT
+    ) {
       setFromToken(toToken)
     }
     setToToken(token)
@@ -98,7 +120,8 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
       setFromToken(newFromToken)
       setToToken(newToToken)
     } else if (!newFromToken) {
-      const fallbackFrom = fromTokens.find((t) => t.symbol !== toToken.symbol) || fromTokens[0]
+      const fallbackFrom =
+        fromTokens.find((t) => t.symbol !== toToken.symbol) || fromTokens[0]
       setFromToken(fallbackFrom)
     }
   }, [fromToken, toToken])
@@ -130,30 +153,52 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
 
   // Calculate insufficient balance
   const hasInsufficientBalance = useMemo(() => {
-    if (!isConnected || !rawBalance || !amount || !isBalanceForSourceToken) return false
+    if (!isConnected || !rawBalance || !amount || !isBalanceForSourceToken)
+      return false
     try {
-      const decimals = fromToken.decimals ?? NETWORKS[fromToken.chain]?.decimals ?? 18
+      const decimals =
+        fromToken.decimals ?? NETWORKS[fromToken.chain]?.decimals ?? 18
       const amountBigInt = parseAmount(amount, decimals)
       return amountBigInt > rawBalance
     } catch {
       return false
     }
-  }, [isConnected, rawBalance, amount, fromToken.chain, fromToken.decimals, isBalanceForSourceToken])
+  }, [
+    isConnected,
+    rawBalance,
+    amount,
+    fromToken.chain,
+    fromToken.decimals,
+    isBalanceForSourceToken,
+  ])
 
   // MAX button handler
   const handleMaxClick = useCallback(() => {
     if (!rawBalance || !isBalanceForSourceToken) return
-    const decimals = fromToken.decimals ?? NETWORKS[fromToken.chain]?.decimals ?? 18
+    const decimals =
+      fromToken.decimals ?? NETWORKS[fromToken.chain]?.decimals ?? 18
     const isNativeToken = !fromToken.mint
     const gasReserve = isNativeToken ? BigInt(10 ** (decimals - 2)) : BigInt(0)
-    const maxAmount = rawBalance > gasReserve ? rawBalance - gasReserve : rawBalance
+    const maxAmount =
+      rawBalance > gasReserve ? rawBalance - gasReserve : rawBalance
     const divisor = BigInt(10 ** decimals)
     const whole = maxAmount / divisor
     const fraction = maxAmount % divisor
-    const fractionStr = fraction.toString().padStart(decimals, "0").replace(/0+$/, "")
-    const formattedMax = fractionStr ? `${whole}.${fractionStr}` : whole.toString()
+    const fractionStr = fraction
+      .toString()
+      .padStart(decimals, "0")
+      .replace(/0+$/, "")
+    const formattedMax = fractionStr
+      ? `${whole}.${fractionStr}`
+      : whole.toString()
     setAmount(formattedMax)
-  }, [rawBalance, fromToken.chain, fromToken.decimals, fromToken.mint, isBalanceForSourceToken])
+  }, [
+    rawBalance,
+    fromToken.chain,
+    fromToken.decimals,
+    fromToken.mint,
+    isBalanceForSourceToken,
+  ])
 
   // Build quote params
   const quoteParams = useMemo(() => {
@@ -166,7 +211,9 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
       toToken: toToken.symbol,
       amount,
       privacyLevel,
-      destinationAddress: !isZecDest ? destinationAddress.trim() || undefined : undefined,
+      destinationAddress: !isZecDest
+        ? destinationAddress.trim() || undefined
+        : undefined,
     }
   }, [fromToken, toToken, amount, privacyLevel, destinationAddress])
 
@@ -185,19 +232,14 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
   } = useQuote(quoteParams)
 
   // Swap execution
-  const {
-    status,
-    error: swapError,
-    execute,
-    reset,
-    cancel,
-  } = useSwap()
+  const { status, error: swapError, execute, reset, cancel } = useSwap()
 
   const isTransparent = privacyLevel === PrivacyLevel.TRANSPARENT
   const isShielded = privacyLevel === PrivacyLevel.SHIELDED
   const isCompliant = privacyLevel === PrivacyLevel.COMPLIANT
   const hasPrivacy = !isTransparent
-  const isSwapping = status === "confirming" || status === "signing" || status === "pending"
+  const isSwapping =
+    status === "confirming" || status === "signing" || status === "pending"
   const isSuccess = status === "success"
   const isZecDestination = toToken.symbol === "ZEC"
   const isSameChainPrivacy =
@@ -238,10 +280,12 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
     return validateZcashAddress(zecRecipient)
   }, [isZecDestination, zecRecipient])
 
-  const isZecAddressValid = !isZecDestination || (zecValidation?.isValid ?? false)
+  const isZecAddressValid =
+    !isZecDestination || (zecValidation?.isValid ?? false)
   const isZecTransparent = zecValidation?.type === "transparent"
   const needsDestinationAddress = !isZecDestination
-  const isDestinationAddressValid = !needsDestinationAddress || destinationAddress.trim().length > 0
+  const isDestinationAddressValid =
+    !needsDestinationAddress || destinationAddress.trim().length > 0
 
   const handleSwap = async () => {
     if (!isConnected) {
@@ -254,7 +298,9 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
     await execute({
       ...quoteParams,
       quote,
-      destinationAddress: needsDestinationAddress ? destinationAddress.trim() : undefined,
+      destinationAddress: needsDestinationAddress
+        ? destinationAddress.trim()
+        : undefined,
     })
   }
 
@@ -282,7 +328,9 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
         <div
           data-testid="privacy-badge"
           className={`inline-flex w-fit items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium ${
-            hasPrivacy ? "bg-purple-600/20 text-purple-400" : "bg-gray-700/50 text-gray-400"
+            hasPrivacy
+              ? "bg-purple-600/20 text-purple-400"
+              : "bg-gray-700/50 text-gray-400"
           }`}
         >
           {isShielded ? (
@@ -325,7 +373,9 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
           <div className="flex items-center gap-2 text-sm text-amber-400">
             <PreviewIcon className="h-4 w-4" />
             <span className="font-medium">Preview Mode</span>
-            <span className="text-amber-400/70">— Explore quotes safely, no real transactions</span>
+            <span className="text-amber-400/70">
+              — Explore quotes safely, no real transactions
+            </span>
           </div>
         </div>
       )}
@@ -339,7 +389,9 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
           <div className="flex items-center gap-2 text-sm text-purple-400">
             <LockIcon className="h-4 w-4" />
             <span className="font-medium">Same-Chain Privacy</span>
-            <span className="text-purple-400/70">— Direct stealth transfer on Solana</span>
+            <span className="text-purple-400/70">
+              — Direct stealth transfer on Solana
+            </span>
           </div>
           <p className="mt-1 text-xs text-purple-400/60">
             Funds sent to a one-time stealth address. Faster than cross-chain.
@@ -488,7 +540,10 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
 
       {/* ZEC Recipient Address Input */}
       {isZecDestination && (
-        <div className="mb-4 rounded-xl bg-gray-800/50 p-3 sm:p-4" data-testid="zec-recipient-section">
+        <div
+          className="mb-4 rounded-xl bg-gray-800/50 p-3 sm:p-4"
+          data-testid="zec-recipient-section"
+        >
           <div className="mb-2 flex flex-wrap items-center justify-between gap-1 text-sm text-gray-400">
             <span className="flex items-center gap-1">
               <ZcashIcon className="h-4 w-4 text-yellow-500" />
@@ -536,16 +591,21 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
                     <div className="mt-2 flex items-start gap-2 rounded-lg border border-orange-500/30 bg-orange-500/10 p-2">
                       <WarningIcon className="mt-0.5 h-4 w-4 flex-shrink-0 text-orange-400" />
                       <div className="text-xs text-orange-400">
-                        <strong>Privacy Warning:</strong> Transparent addresses expose transaction
-                        details publicly. Use a <span className="text-yellow-400">zs1...</span>{" "}
-                        (Sapling) or <span className="text-purple-400">u1...</span> (Unified) address
-                        for privacy.
+                        <strong>Privacy Warning:</strong> Transparent addresses
+                        expose transaction details publicly. Use a{" "}
+                        <span className="text-yellow-400">zs1...</span>{" "}
+                        (Sapling) or{" "}
+                        <span className="text-purple-400">u1...</span> (Unified)
+                        address for privacy.
                       </div>
                     </div>
                   )}
                 </>
               ) : (
-                <p className="flex items-center gap-1 text-xs text-red-400" role="alert">
+                <p
+                  className="flex items-center gap-1 text-xs text-red-400"
+                  role="alert"
+                >
                   <XCircleIcon className="h-3 w-3" aria-hidden="true" />
                   {zecValidation.error}
                 </p>
@@ -555,7 +615,8 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
           {!zecRecipient.trim() && (
             <p className="mt-2 text-xs text-gray-500">
               Use a <span className="text-purple-400">u1...</span> (unified) or{" "}
-              <span className="text-yellow-500">zs1...</span> (sapling) for full privacy
+              <span className="text-yellow-500">zs1...</span> (sapling) for full
+              privacy
             </p>
           )}
         </div>
@@ -563,22 +624,31 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
 
       {/* Destination Address Input for non-ZEC swaps */}
       {!isZecDestination && (
-        <div className="mb-4 rounded-xl bg-gray-800/50 p-3 sm:p-4" data-testid="destination-address-section">
+        <div
+          className="mb-4 rounded-xl bg-gray-800/50 p-3 sm:p-4"
+          data-testid="destination-address-section"
+        >
           <div className="mb-2 flex flex-wrap items-center justify-between gap-1 text-sm text-gray-400">
             <span className="flex items-center gap-1">
               {isSameChainPrivacy ? (
                 <>
                   <ShieldIcon className="h-4 w-4 text-purple-500" />
-                  <span className="text-xs sm:text-sm">Recipient SIP Address</span>
+                  <span className="text-xs sm:text-sm">
+                    Recipient SIP Address
+                  </span>
                 </>
               ) : (
                 <>
                   <WalletIcon className="h-4 w-4 text-cyan-500" />
-                  <span className="text-xs sm:text-sm">Destination Address</span>
+                  <span className="text-xs sm:text-sm">
+                    Destination Address
+                  </span>
                 </>
               )}
             </span>
-            <span className={`text-xs ${isSameChainPrivacy ? "text-purple-500" : "text-cyan-500"}`}>
+            <span
+              className={`text-xs ${isSameChainPrivacy ? "text-purple-500" : "text-cyan-500"}`}
+            >
               Required
             </span>
           </div>
@@ -592,7 +662,11 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
                 : `Enter ${toToken.name} address to receive funds`
             }
             data-testid="destination-address-input"
-            aria-label={isSameChainPrivacy ? "Recipient SIP meta-address" : "Destination address"}
+            aria-label={
+              isSameChainPrivacy
+                ? "Recipient SIP meta-address"
+                : "Destination address"
+            }
             className={`w-full rounded-lg bg-gray-700/50 px-3 py-2 text-sm outline-none placeholder:text-gray-500 transition-all ${
               isSameChainPrivacy
                 ? "focus:ring-1 focus:ring-purple-500/50"
@@ -640,47 +714,54 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
       )}
 
       {/* High Price Impact Warning */}
-      {priceImpact && (priceImpact.severity === "high" || priceImpact.severity === "severe") && (
-        <div
-          className={`mb-4 rounded-xl border p-3 ${
-            priceImpact.severity === "severe"
-              ? "border-red-500/30 bg-red-500/10"
-              : "border-orange-500/30 bg-orange-500/10"
-          }`}
-          data-testid="price-impact-warning"
-        >
-          <div className="flex items-start gap-2">
-            <WarningIcon
-              className={`mt-0.5 h-4 w-4 flex-shrink-0 ${
-                priceImpact.severity === "severe" ? "text-red-400" : "text-orange-400"
-              }`}
-            />
-            <div className="text-sm">
-              <p
-                className={
+      {priceImpact &&
+        (priceImpact.severity === "high" ||
+          priceImpact.severity === "severe") && (
+          <div
+            className={`mb-4 rounded-xl border p-3 ${
+              priceImpact.severity === "severe"
+                ? "border-red-500/30 bg-red-500/10"
+                : "border-orange-500/30 bg-orange-500/10"
+            }`}
+            data-testid="price-impact-warning"
+          >
+            <div className="flex items-start gap-2">
+              <WarningIcon
+                className={`mt-0.5 h-4 w-4 flex-shrink-0 ${
                   priceImpact.severity === "severe"
-                    ? "font-medium text-red-300"
-                    : "font-medium text-orange-300"
-                }
-              >
-                {priceImpact.severity === "severe"
-                  ? "Extremely High Price Impact"
-                  : "High Price Impact"}
-              </p>
-              <p
-                className={
-                  priceImpact.severity === "severe" ? "text-red-400/80" : "text-orange-400/80"
-                }
-              >
-                This trade has a {formatImpact(priceImpact.percentage)} price impact.
-                {priceImpact.severity === "severe"
-                  ? " Consider trading a smaller amount or waiting for better liquidity."
-                  : " You may receive less than expected."}
-              </p>
+                    ? "text-red-400"
+                    : "text-orange-400"
+                }`}
+              />
+              <div className="text-sm">
+                <p
+                  className={
+                    priceImpact.severity === "severe"
+                      ? "font-medium text-red-300"
+                      : "font-medium text-orange-300"
+                  }
+                >
+                  {priceImpact.severity === "severe"
+                    ? "Extremely High Price Impact"
+                    : "High Price Impact"}
+                </p>
+                <p
+                  className={
+                    priceImpact.severity === "severe"
+                      ? "text-red-400/80"
+                      : "text-orange-400/80"
+                  }
+                >
+                  This trade has a {formatImpact(priceImpact.percentage)} price
+                  impact.
+                  {priceImpact.severity === "severe"
+                    ? " Consider trading a smaller amount or waiting for better liquidity."
+                    : " You may receive less than expected."}
+                </p>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
       {/* Destination Verification Banner */}
       {!isZecDestination &&
@@ -695,7 +776,9 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
             <div className="flex items-start gap-2">
               <CheckIcon className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-400" />
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-medium text-green-300">Funds will be sent to:</p>
+                <p className="text-sm font-medium text-green-300">
+                  Funds will be sent to:
+                </p>
                 <p
                   className="mt-1 break-all font-mono text-xs text-green-400"
                   data-testid="verified-destination"
@@ -703,7 +786,8 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
                   {destinationAddress.trim()}
                 </p>
                 <p className="mt-1 text-xs text-green-400/70">
-                  Verify this is YOUR {toToken.name} wallet address before swapping
+                  Verify this is YOUR {toToken.name} wallet address before
+                  swapping
                 </p>
               </div>
             </div>
@@ -726,7 +810,10 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
           className={`min-h-[52px] w-full rounded-xl py-3 text-base font-semibold transition-all focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-900 sm:py-4 sm:text-lg ${
             !isConnected
               ? "bg-purple-600 text-white hover:bg-purple-700 active:bg-purple-800"
-              : !amount || hasInsufficientBalance || !isZecAddressValid || !isDestinationAddressValid
+              : !amount ||
+                  hasInsufficientBalance ||
+                  !isZecAddressValid ||
+                  !isDestinationAddressValid
                 ? "cursor-not-allowed bg-gray-800 text-gray-500"
                 : isSwapping
                   ? "cursor-wait bg-purple-600/50 text-white"
@@ -755,7 +842,11 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
             </span>
           ) : (
             <span>
-              {isShielded ? "Shielded Swap" : isCompliant ? "Compliant Swap" : "Swap"}
+              {isShielded
+                ? "Shielded Swap"
+                : isCompliant
+                  ? "Compliant Swap"
+                  : "Swap"}
             </span>
           )}
         </button>
@@ -767,14 +858,15 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
           <div className="flex flex-wrap items-center justify-between gap-1 text-gray-400">
             <span className="flex items-center gap-1">
               Rate
-              {marketComparison && Math.abs(marketComparison.difference) <= 1 && (
-                <span
-                  className="rounded bg-green-500/20 px-1.5 py-0.5 text-[10px] text-green-400"
-                  data-testid="best-rate-badge"
-                >
-                  Best rate
-                </span>
-              )}
+              {marketComparison &&
+                Math.abs(marketComparison.difference) <= 1 && (
+                  <span
+                    className="rounded bg-green-500/20 px-1.5 py-0.5 text-[10px] text-green-400"
+                    data-testid="best-rate-badge"
+                  >
+                    Best rate
+                  </span>
+                )}
             </span>
             <div className="text-right">
               <span>
@@ -783,7 +875,9 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
               {marketComparison && (
                 <span
                   className={`ml-2 text-xs ${
-                    marketComparison.isBetter ? "text-green-400" : "text-red-400"
+                    marketComparison.isBetter
+                      ? "text-green-400"
+                      : "text-red-400"
                   }`}
                   data-testid="market-comparison"
                 >
@@ -800,9 +894,12 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
           {priceImpact && (
             <div className="flex items-center justify-between text-gray-400">
               <span>Price Impact</span>
-              <span className={`flex items-center gap-1 ${getImpactColorClass(priceImpact.severity)}`}>
+              <span
+                className={`flex items-center gap-1 ${getImpactColorClass(priceImpact.severity)}`}
+              >
                 {formatImpact(priceImpact.percentage)}
-                {(priceImpact.severity === "high" || priceImpact.severity === "severe") && (
+                {(priceImpact.severity === "high" ||
+                  priceImpact.severity === "severe") && (
                   <WarningIcon className="h-3 w-3" />
                 )}
               </span>
@@ -825,14 +922,18 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
             <div className="flex flex-wrap items-center justify-between gap-1 text-gray-400">
               <span>Minimum received</span>
               <span className="text-right text-green-400">
-                {(parseFloat(outputAmount) * (1 - slippage / 100)).toFixed(6).replace(/\.?0+$/, "")}{" "}
+                {(parseFloat(outputAmount) * (1 - slippage / 100))
+                  .toFixed(6)
+                  .replace(/\.?0+$/, "")}{" "}
                 {toToken.symbol}
               </span>
             </div>
           )}
           <div className="flex flex-wrap items-center justify-between gap-1 text-gray-400">
             <span>Privacy</span>
-            <span className={`text-right ${isShielded ? "text-purple-400" : "text-gray-500"}`}>
+            <span
+              className={`text-right ${isShielded ? "text-purple-400" : "text-gray-500"}`}
+            >
               {privacyLevel === PrivacyLevel.TRANSPARENT
                 ? "None"
                 : privacyLevel === PrivacyLevel.COMPLIANT
@@ -855,7 +956,10 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
       </div>
 
       {/* Powered By: Zcash + NEAR Intents */}
-      <div className="mt-6 border-t border-gray-800 pt-4" data-testid="powered-by-section">
+      <div
+        className="mt-6 border-t border-gray-800 pt-4"
+        data-testid="powered-by-section"
+      >
         <div className="mb-3 text-center">
           <span className="text-xs font-medium uppercase tracking-wider text-gray-500">
             Powered by
@@ -1044,7 +1148,9 @@ function TokenSelector({
             role="listbox"
             aria-label={`Select ${label.toLowerCase()}`}
             aria-activedescendant={
-              highlightedIndex >= 0 ? `token-option-${tokens[highlightedIndex]?.symbol}` : undefined
+              highlightedIndex >= 0
+                ? `token-option-${tokens[highlightedIndex]?.symbol}`
+                : undefined
             }
             onKeyDown={handleListKeyDown}
             className="absolute right-0 top-full z-20 mt-2 w-44 rounded-xl border border-gray-700 bg-gray-900 p-1.5 shadow-xl sm:w-48 sm:p-2"
@@ -1087,7 +1193,10 @@ function TokenSelector({
                   <div className="truncate text-xs text-gray-400">{t.name}</div>
                 </div>
                 {t.symbol === token.symbol && (
-                  <CheckIcon className="h-4 w-4 text-purple-400" aria-hidden="true" />
+                  <CheckIcon
+                    className="h-4 w-4 text-purple-400"
+                    aria-hidden="true"
+                  />
                 )}
               </button>
             ))}
@@ -1102,15 +1211,31 @@ function TokenSelector({
 
 function CheckIcon({ className }: { className?: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+    <svg
+      className={className}
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={2}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M4.5 12.75l6 6 9-13.5"
+      />
     </svg>
   )
 }
 
 function ShieldIcon({ className }: { className?: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <svg
+      className={className}
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={2}
+    >
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -1122,20 +1247,36 @@ function ShieldIcon({ className }: { className?: string }) {
 
 function EyeIcon({ className }: { className?: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <svg
+      className={className}
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={2}
+    >
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
         d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
       />
-      <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+      />
     </svg>
   )
 }
 
 function KeyIcon({ className }: { className?: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <svg
+      className={className}
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={2}
+    >
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -1147,36 +1288,72 @@ function KeyIcon({ className }: { className?: string }) {
 
 function ArrowDownIcon({ className }: { className?: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3" />
+    <svg
+      className={className}
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={2}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3"
+      />
     </svg>
   )
 }
 
 function ChevronDownIcon({ className }: { className?: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+    <svg
+      className={className}
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={2}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+      />
     </svg>
   )
 }
 
 function PreviewIcon({ className }: { className?: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <svg
+      className={className}
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={2}
+    >
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
         d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
       />
-      <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+      />
     </svg>
   )
 }
 
 function WarningIcon({ className }: { className?: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <svg
+      className={className}
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={2}
+    >
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -1227,7 +1404,14 @@ function NearLogo({ className }: { className?: string }) {
 function LoadingSpinner() {
   return (
     <svg className="h-5 w-5 animate-spin" fill="none" viewBox="0 0 24 24">
-      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+      <circle
+        className="opacity-25"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        strokeWidth="4"
+      />
       <path
         className="opacity-75"
         fill="currentColor"
@@ -1239,7 +1423,13 @@ function LoadingSpinner() {
 
 function CheckCircleIcon({ className }: { className?: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <svg
+      className={className}
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={2}
+    >
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -1251,7 +1441,13 @@ function CheckCircleIcon({ className }: { className?: string }) {
 
 function XCircleIcon({ className }: { className?: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <svg
+      className={className}
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={2}
+    >
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -1263,20 +1459,36 @@ function XCircleIcon({ className }: { className?: string }) {
 
 function SettingsIcon({ className }: { className?: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <svg
+      className={className}
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={2}
+    >
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
         d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"
       />
-      <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+      />
     </svg>
   )
 }
 
 function ClockIcon({ className }: { className?: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <svg
+      className={className}
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={2}
+    >
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -1288,7 +1500,13 @@ function ClockIcon({ className }: { className?: string }) {
 
 function WalletIcon({ className }: { className?: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <svg
+      className={className}
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={2}
+    >
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -1300,7 +1518,13 @@ function WalletIcon({ className }: { className?: string }) {
 
 function LockIcon({ className }: { className?: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <svg
+      className={className}
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={2}
+    >
       <path
         strokeLinecap="round"
         strokeLinejoin="round"

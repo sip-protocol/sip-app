@@ -391,7 +391,10 @@ export function getToken(
 /**
  * Get explorer URL for a transaction
  */
-export function getTransactionUrl(networkId: NetworkId, txHash: string): string {
+export function getTransactionUrl(
+  networkId: NetworkId,
+  txHash: string
+): string {
   const network = NETWORKS[networkId]
   switch (networkId) {
     case "solana":

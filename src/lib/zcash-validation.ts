@@ -88,8 +88,9 @@ function validateTransparent(address: string): ZcashValidationResult {
  */
 function validateSapling(address: string): ZcashValidationResult {
   // Mainnet Sapling: zs1... (78 characters, Bech32 encoded)
-  const isMainnetSapling =
-    /^zs1[qpzry9x8gf2tvdw0s3jn54khce6mua7l]{75}$/.test(address.toLowerCase())
+  const isMainnetSapling = /^zs1[qpzry9x8gf2tvdw0s3jn54khce6mua7l]{75}$/.test(
+    address.toLowerCase()
+  )
 
   // Testnet Sapling: ztestsapling1...
   const isTestnetSapling =
@@ -121,7 +122,8 @@ function validateSapling(address: string): ZcashValidationResult {
     isValid: false,
     type: "sapling",
     isTestnet: false,
-    error: "Invalid Sapling address format. Expected 78 characters starting with zs1",
+    error:
+      "Invalid Sapling address format. Expected 78 characters starting with zs1",
   }
 }
 
@@ -240,7 +242,9 @@ export function validateZcashAddress(address: string): ZcashValidationResult {
  */
 export function isShieldedAddress(address: string): boolean {
   const result = validateZcashAddress(address)
-  return result.isValid && (result.type === "sapling" || result.type === "unified")
+  return (
+    result.isValid && (result.type === "sapling" || result.type === "unified")
+  )
 }
 
 /**

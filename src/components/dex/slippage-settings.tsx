@@ -13,11 +13,16 @@ export function SlippageSettings({ onClose }: SlippageSettingsProps) {
   const inputRef = useRef<HTMLInputElement>(null)
 
   // Check if current slippage matches a preset
-  const isPreset = SLIPPAGE_PRESETS.includes(slippage as (typeof SLIPPAGE_PRESETS)[number])
+  const isPreset = SLIPPAGE_PRESETS.includes(
+    slippage as (typeof SLIPPAGE_PRESETS)[number]
+  )
 
   // Initialize custom value from slippage if not a preset
   const initialCustom = useMemo(() => !isPreset, [isPreset])
-  const initialValue = useMemo(() => (!isPreset ? slippage.toString() : ""), [isPreset, slippage])
+  const initialValue = useMemo(
+    () => (!isPreset ? slippage.toString() : ""),
+    [isPreset, slippage]
+  )
 
   const [customValue, setCustomValue] = useState(initialValue)
   const [isCustom, setIsCustom] = useState(initialCustom)
@@ -55,7 +60,9 @@ export function SlippageSettings({ onClose }: SlippageSettingsProps) {
       aria-label="Slippage settings"
     >
       <div className="mb-3 flex items-center justify-between">
-        <h4 className="text-sm font-medium text-gray-200">Slippage Tolerance</h4>
+        <h4 className="text-sm font-medium text-gray-200">
+          Slippage Tolerance
+        </h4>
         {onClose && (
           <button
             onClick={onClose}
@@ -113,7 +120,9 @@ export function SlippageSettings({ onClose }: SlippageSettingsProps) {
       {isLowSlippage && (
         <div className="mt-3 flex items-start gap-2 text-xs text-yellow-400">
           <WarningIcon className="mt-0.5 h-4 w-4 flex-shrink-0" />
-          <span>Low slippage may cause transaction to fail in volatile markets</span>
+          <span>
+            Low slippage may cause transaction to fail in volatile markets
+          </span>
         </div>
       )}
 
@@ -127,7 +136,9 @@ export function SlippageSettings({ onClose }: SlippageSettingsProps) {
       {isVeryHighSlippage && (
         <div className="mt-3 flex items-start gap-2 text-xs text-red-400">
           <WarningIcon className="mt-0.5 h-4 w-4 flex-shrink-0" />
-          <span>Very high slippage! You may receive significantly less than expected</span>
+          <span>
+            Very high slippage! You may receive significantly less than expected
+          </span>
         </div>
       )}
 
@@ -183,7 +194,11 @@ function CloseIcon({ className }: { className?: string }) {
       stroke="currentColor"
       strokeWidth={2}
     >
-      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M6 18L18 6M6 6l12 12"
+      />
     </svg>
   )
 }

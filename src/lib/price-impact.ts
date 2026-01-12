@@ -75,8 +75,7 @@ function categorizeImpact(percentage: number): PriceImpact {
   return {
     percentage,
     severity: "severe",
-    warning:
-      "Extremely high price impact! Consider swapping a smaller amount.",
+    warning: "Extremely high price impact! Consider swapping a smaller amount.",
   }
 }
 

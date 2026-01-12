@@ -195,8 +195,9 @@ export function useQuote(params: QuoteParams | null): QuoteResult {
           const refundStealth = isInputEd25519
             ? sdk.generateEd25519StealthAddress(refundMetaObj.metaAddress)
             : sdk.generateStealthAddress(refundMetaObj.metaAddress)
-          const rawStealthAddress = refundStealth.stealthAddress
-            ?.address as (string | undefined)
+          const rawStealthAddress = refundStealth.stealthAddress?.address as
+            | string
+            | undefined
 
           // Convert stealth public key to chain-specific address format
           if (rawStealthAddress) {
@@ -339,7 +340,10 @@ export function useQuote(params: QuoteParams | null): QuoteResult {
         logger.debug("Using connected wallet for refunds", "useQuote")
       } else if (refundStealthAddress) {
         refundAddress = refundStealthAddress
-        logger.debug("Using stealth address for cross-curve refunds", "useQuote")
+        logger.debug(
+          "Using stealth address for cross-curve refunds",
+          "useQuote"
+        )
       }
       // Pass destinationAddress for ALL modes - this is where funds will be sent
       // SDK signature: getQuotes(params, recipientMetaAddress?, senderAddress?, transparentRecipient?)
@@ -359,7 +363,10 @@ export function useQuote(params: QuoteParams | null): QuoteResult {
         setFreshness("fresh")
         setExpiresIn(Math.round(QUOTE_EXPIRY_DURATION / 1000))
         if (isProductionMode && "depositAddress" in quotes[0]) {
-          logger.debug("Production quote received with deposit address", "Quote")
+          logger.debug(
+            "Production quote received with deposit address",
+            "Quote"
+          )
         }
       } else {
         setError("No quotes available for this pair")

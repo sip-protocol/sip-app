@@ -17,7 +17,9 @@ export function RecentSwaps() {
       <div className="rounded-xl border border-gray-800 bg-gray-900/50 p-6 text-center">
         <ClockIcon className="mx-auto mb-2 h-8 w-8 text-gray-600" />
         <p className="text-sm text-gray-400">No recent swaps</p>
-        <p className="mt-1 text-xs text-gray-500">Your swap history will appear here</p>
+        <p className="mt-1 text-xs text-gray-500">
+          Your swap history will appear here
+        </p>
       </div>
     )
   }
@@ -51,7 +53,9 @@ function SwapHistoryItem({ swap }: { swap: SwapRecord }) {
         {isShielded && (
           <span className="flex items-center gap-1 rounded bg-purple-500/20 px-1.5 py-0.5 text-[10px] text-purple-400">
             <ShieldIcon className="h-2.5 w-2.5" />
-            {swap.privacyLevel === PrivacyLevel.COMPLIANT ? "Compliant" : "Shielded"}
+            {swap.privacyLevel === PrivacyLevel.COMPLIANT
+              ? "Compliant"
+              : "Shielded"}
           </span>
         )}
       </div>
@@ -62,7 +66,9 @@ function SwapHistoryItem({ swap }: { swap: SwapRecord }) {
           <p className="text-xs text-gray-400">
             {swap.fromAmount} → {swap.toAmount}
           </p>
-          <p className="text-[10px] text-gray-500">{formatRelativeTime(swap.timestamp)}</p>
+          <p className="text-[10px] text-gray-500">
+            {formatRelativeTime(swap.timestamp)}
+          </p>
         </div>
 
         {/* Status badge */}
@@ -107,7 +113,11 @@ function StatusBadge({ status }: { status: SwapRecord["status"] }) {
   const { bg, text, label } = config[status]
 
   return (
-    <span className={`rounded px-1.5 py-0.5 text-[10px] font-medium ${bg} ${text}`}>{label}</span>
+    <span
+      className={`rounded px-1.5 py-0.5 text-[10px] font-medium ${bg} ${text}`}
+    >
+      {label}
+    </span>
   )
 }
 

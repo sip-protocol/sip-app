@@ -162,9 +162,7 @@ export function AuditorShareModal({
               </button>
             </div>
 
-            {error && (
-              <p className="text-sm text-red-500">{error}</p>
-            )}
+            {error && <p className="text-sm text-red-500">{error}</p>}
             {success && (
               <p className="text-sm text-sip-green-500">
                 Successfully shared with auditor
@@ -204,7 +202,8 @@ export function AuditorShareModal({
                 <div className="flex items-start gap-2 p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/20 text-yellow-500 text-xs">
                   <WarningIcon className="w-4 h-4 flex-shrink-0 mt-0.5" />
                   <span>
-                    This file contains sensitive cryptographic material. Only share with trusted parties through secure channels.
+                    This file contains sensitive cryptographic material. Only
+                    share with trusted parties through secure channels.
                   </span>
                 </div>
                 <div className="flex gap-2">
@@ -259,7 +258,11 @@ function CloseIcon({ className }: { className?: string }) {
       stroke="currentColor"
       strokeWidth={2}
     >
-      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M6 18L18 6M6 6l12 12"
+      />
     </svg>
   )
 }

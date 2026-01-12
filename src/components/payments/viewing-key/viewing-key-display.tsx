@@ -79,7 +79,9 @@ export function ViewingKeyDisplay({
             }
           }}
           aria-expanded={isExpanded}
-          aria-label={isExpanded ? "Collapse viewing key" : "Expand viewing key"}
+          aria-label={
+            isExpanded ? "Collapse viewing key" : "Expand viewing key"
+          }
           title={isExpanded ? "Click to collapse" : "Click to expand"}
         >
           {isExpanded ? viewingKey.key : truncateKey(viewingKey.key)}

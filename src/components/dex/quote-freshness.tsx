@@ -139,7 +139,9 @@ export function QuoteFreshnessIndicator({
   }
 
   return (
-    <div className={`flex items-center justify-between rounded-lg border px-3 py-2 ${bgClass}`}>
+    <div
+      className={`flex items-center justify-between rounded-lg border px-3 py-2 ${bgClass}`}
+    >
       <div className="flex items-center gap-2">
         <span
           className={`h-2 w-2 rounded-full ${dotClass} ${freshness === "fresh" ? "animate-pulse" : ""}`}
@@ -158,7 +160,9 @@ export function QuoteFreshnessIndicator({
           className={`flex items-center gap-1.5 text-xs transition-colors hover:text-white ${
             autoRefreshEnabled ? "text-green-400" : "text-gray-500"
           }`}
-          title={autoRefreshEnabled ? "Disable auto-refresh" : "Enable auto-refresh"}
+          title={
+            autoRefreshEnabled ? "Disable auto-refresh" : "Enable auto-refresh"
+          }
         >
           <AutoRefreshIcon className="h-3.5 w-3.5" />
           Auto
@@ -175,7 +179,9 @@ export function QuoteFreshnessIndicator({
                 : "text-gray-300 hover:bg-gray-700/50"
           }`}
         >
-          <RefreshIcon className={`h-3.5 w-3.5 ${isLoading ? "animate-spin" : ""}`} />
+          <RefreshIcon
+            className={`h-3.5 w-3.5 ${isLoading ? "animate-spin" : ""}`}
+          />
           {isLoading ? "Refreshing..." : "Refresh"}
         </button>
       </div>

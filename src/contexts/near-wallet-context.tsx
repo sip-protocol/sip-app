@@ -10,12 +10,7 @@
  * wallet-deposit.ts for cross-chain swaps via NEAR.
  */
 
-import {
-  createContext,
-  useContext,
-  useState,
-  type ReactNode,
-} from "react"
+import { createContext, useContext, useState, type ReactNode } from "react"
 
 interface NearWalletContextValue {
   /** Whether NEAR wallet is connected */
