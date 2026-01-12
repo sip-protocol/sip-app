@@ -3,13 +3,28 @@ import { NextRequest, NextResponse } from "next/server"
 // Mock data for demo - in production, use the SDK's SurveillanceAnalyzer
 // import { createSurveillanceAnalyzer } from '@sip-protocol/sdk'
 
+// Basic Solana address validation (base58, 32-44 chars)
+function isValidSolanaAddress(address: string): boolean {
+  if (typeof address !== "string") return false
+  const base58Regex = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/
+  return base58Regex.test(address)
+}
+
 export async function POST(request: NextRequest) {
   try {
-    const { walletAddress } = await request.json()
+    const body = await request.json()
+    const walletAddress = body?.walletAddress
 
     if (!walletAddress) {
       return NextResponse.json(
         { error: "Wallet address is required" },
+        { status: 400 }
+      )
+    }
+
+    if (!isValidSolanaAddress(walletAddress)) {
+      return NextResponse.json(
+        { error: "Invalid Solana address format" },
         { status: 400 }
       )
     }
