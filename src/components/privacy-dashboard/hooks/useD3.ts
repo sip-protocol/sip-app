@@ -19,15 +19,16 @@ export function useD3<T extends SVGSVGElement | HTMLDivElement = SVGSVGElement>(
   const ref = useRef<T | null>(null)
 
   useEffect(() => {
-    if (ref.current) {
-      const selection = d3.select(ref.current) as d3.Selection<T, unknown, null, undefined>
+    const element = ref.current
+    if (element) {
+      const selection = d3.select(element) as d3.Selection<T, unknown, null, undefined>
       renderFn(selection)
     }
 
-    // Cleanup function
+    // Cleanup function - capture element before cleanup
     return () => {
-      if (ref.current) {
-        d3.select(ref.current).selectAll("*").remove()
+      if (element) {
+        d3.select(element).selectAll("*").remove()
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -49,10 +50,9 @@ export function useForceSimulation<NodeType extends d3.SimulationNodeDatum>(
   }
 ) {
   const simulationRef = useRef<d3.Simulation<NodeType, d3.SimulationLinkDatum<NodeType>> | null>(null)
+  const { width, height, onTick } = options
 
   useEffect(() => {
-    const { width, height, onTick } = options
-
     simulationRef.current = d3
       .forceSimulation(nodes)
       .force(
@@ -73,7 +73,7 @@ export function useForceSimulation<NodeType extends d3.SimulationNodeDatum>(
     return () => {
       simulationRef.current?.stop()
     }
-  }, [nodes, links, options])
+  }, [nodes, links, width, height, onTick])
 
   return simulationRef
 }

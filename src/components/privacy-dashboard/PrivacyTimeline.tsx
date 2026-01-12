@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useEffect, useState } from "react"
+import { useRef, useEffect, useState, useId } from "react"
 import * as d3 from "d3"
 import { getScoreColor, riskColors } from "./utils/colorScales"
 
@@ -34,6 +34,7 @@ export function PrivacyTimeline({
   onPointClick,
 }: PrivacyTimelineProps) {
   const svgRef = useRef<SVGSVGElement>(null)
+  const gradientId = useId().replace(/:/g, "_") // Unique gradient ID for this instance
   const [tooltip, setTooltip] = useState<{
     visible: boolean
     x: number
@@ -64,11 +65,11 @@ export function PrivacyTimeline({
 
     const yScale = d3.scaleLinear().domain([0, 100]).range([innerHeight, 0])
 
-    // Create gradient for area fill
+    // Create gradient for area fill (unique ID per instance)
     const gradient = svg
       .append("defs")
       .append("linearGradient")
-      .attr("id", "areaGradient")
+      .attr("id", `areaGradient-${gradientId}`)
       .attr("x1", "0%")
       .attr("y1", "0%")
       .attr("x2", "0%")
@@ -119,7 +120,7 @@ export function PrivacyTimeline({
     // Add area
     g.append("path")
       .datum(data)
-      .attr("fill", "url(#areaGradient)")
+      .attr("fill", `url(#areaGradient-${gradientId})`)
       .attr("d", area)
 
     // Add line
@@ -205,7 +206,7 @@ export function PrivacyTimeline({
       .attr("fill", "var(--text-secondary)")
       .attr("font-size", "11px")
       .text("Privacy Score")
-  }, [data, width, height, onPointClick])
+  }, [data, width, height, onPointClick, gradientId])
 
   return (
     <div className="relative">
@@ -235,7 +236,7 @@ export function PrivacyTimeline({
 
       {/* Legend */}
       <div className="flex flex-wrap justify-center gap-4 mt-2 text-xs">
-        {Object.entries(eventIcons).map(([type, { emoji, color }]) => (
+        {Object.entries(eventIcons).map(([type, { emoji }]) => (
           <div key={type} className="flex items-center gap-1">
             <span>{emoji}</span>
             <span className="text-[var(--text-tertiary)]">

@@ -43,6 +43,9 @@ export default function PrivacyScorePage() {
     // Generate mock network data based on cluster exposure
     const clusterScore = result.privacyScore.breakdown.clusterExposure
     const exchangeScore = result.privacyScore.breakdown.exchangeExposure
+    // Use deterministic transaction count based on wallet address
+    const seed = walletAddress.split("").reduce((a, b) => a + b.charCodeAt(0), 0)
+    const txCount = (seed % 10) + 1
     return generateNetworkFromCluster(
       walletAddress,
       {
@@ -53,7 +56,7 @@ export default function PrivacyScorePage() {
               `${walletAddress.slice(0, 8)}...linked${i + 1}`
             ),
             linkType: "common-input" as const,
-            transactionCount: Math.floor(Math.random() * 10) + 1,
+            transactionCount: txCount,
           },
         ],
       },

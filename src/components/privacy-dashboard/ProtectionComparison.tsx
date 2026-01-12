@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useEffect, useState } from "react"
+import { useRef, useEffect, useState, useCallback } from "react"
 import * as d3 from "d3"
 import { getScoreColor } from "./utils/colorScales"
 
@@ -39,17 +39,31 @@ export function ProtectionComparison({
   const svgRef = useRef<SVGSVGElement>(null)
   const [isAnimating, setIsAnimating] = useState(false)
   const [showProjected, setShowProjected] = useState(false)
+  const animationTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
-  const handleApply = () => {
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (animationTimeoutRef.current) {
+        clearTimeout(animationTimeoutRef.current)
+      }
+    }
+  }, [])
+
+  const handleApply = useCallback(() => {
     setIsAnimating(true)
     setShowProjected(true)
-    setTimeout(() => setIsAnimating(false), 1500)
+    // Clear any existing timeout
+    if (animationTimeoutRef.current) {
+      clearTimeout(animationTimeoutRef.current)
+    }
+    animationTimeoutRef.current = setTimeout(() => setIsAnimating(false), 1500)
     onApplySIP?.()
-  }
+  }, [onApplySIP])
 
-  const handleReset = () => {
+  const handleReset = useCallback(() => {
     setShowProjected(false)
-  }
+  }, [])
 
   useEffect(() => {
     if (!svgRef.current) return

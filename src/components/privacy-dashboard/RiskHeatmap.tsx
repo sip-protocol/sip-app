@@ -2,7 +2,7 @@
 
 import { useRef, useEffect } from "react"
 import * as d3 from "d3"
-import { categoryColors, getScoreColor } from "./utils/colorScales"
+import { getScoreColor } from "./utils/colorScales"
 
 interface CategoryScore {
   category: string

@@ -1,6 +1,6 @@
 "use client"
 
-import { useRef, useEffect, useState, useCallback } from "react"
+import { useRef, useEffect, useState, useCallback, useId } from "react"
 import * as d3 from "d3"
 import { nodeColors } from "./utils/colorScales"
 
@@ -35,6 +35,7 @@ export function NetworkGraph({
   onNodeClick,
 }: NetworkGraphProps) {
   const svgRef = useRef<SVGSVGElement>(null)
+  const markerId = useId().replace(/:/g, "_") // Unique marker ID for this instance
   const [selectedNode, setSelectedNode] = useState<GraphNode | null>(null)
   const [tooltip, setTooltip] = useState<{
     visible: boolean
@@ -70,11 +71,11 @@ export function NetworkGraph({
 
     svg.call(zoom)
 
-    // Create arrow marker for directed edges
+    // Create arrow marker for directed edges (unique ID per instance)
     svg
       .append("defs")
       .append("marker")
-      .attr("id", "arrowhead")
+      .attr("id", `arrowhead-${markerId}`)
       .attr("viewBox", "-0 -5 10 10")
       .attr("refX", 25)
       .attr("refY", 0)
@@ -110,7 +111,7 @@ export function NetworkGraph({
       .attr("stroke", "#4b5563")
       .attr("stroke-opacity", 0.6)
       .attr("stroke-width", (d) => Math.sqrt(d.weight) * 2)
-      .attr("marker-end", "url(#arrowhead)")
+      .attr("marker-end", `url(#arrowhead-${markerId})`)
 
     // Create node groups
     const node = g
@@ -201,7 +202,7 @@ export function NetworkGraph({
     return () => {
       simulation.stop()
     }
-  }, [nodes, edges, width, height, handleNodeClick, selectedNode])
+  }, [nodes, edges, width, height, handleNodeClick, selectedNode, markerId])
 
   return (
     <div className="relative">
