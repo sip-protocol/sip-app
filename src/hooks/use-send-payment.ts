@@ -42,7 +42,9 @@ export function useSendPayment(): UseSendPaymentResult {
   }, [])
 
   const send = useCallback(
-    async (params: SendPaymentParams): Promise<SendPaymentResult | undefined> => {
+    async (
+      params: SendPaymentParams
+    ): Promise<SendPaymentResult | undefined> => {
       if (!publicKey || !signTransaction) {
         setError("Wallet not connected")
         setStatus("error")

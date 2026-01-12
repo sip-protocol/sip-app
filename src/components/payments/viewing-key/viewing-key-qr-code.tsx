@@ -47,7 +47,9 @@ export function ViewingKeyQRCode({
       // Convert SVG to image
       const svgData = new XMLSerializer().serializeToString(svgElement)
       const img = new Image()
-      const svgBlob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" })
+      const svgBlob = new Blob([svgData], {
+        type: "image/svg+xml;charset=utf-8",
+      })
       const url = URL.createObjectURL(svgBlob)
 
       img.onload = () => {
@@ -92,10 +94,7 @@ export function ViewingKeyQRCode({
   return (
     <div className={cn("flex flex-col items-center gap-4", className)}>
       {/* QR Code */}
-      <div
-        ref={qrRef}
-        className="p-4 bg-white rounded-xl shadow-lg"
-      >
+      <div ref={qrRef} className="p-4 bg-white rounded-xl shadow-lg">
         <QRCodeSVG
           value={qrData}
           size={size}
@@ -108,7 +107,8 @@ export function ViewingKeyQRCode({
 
       {/* Instructions */}
       <p className="text-sm text-[var(--text-secondary)] text-center max-w-xs">
-        Scan this QR code with your auditor&apos;s device to share the viewing key securely
+        Scan this QR code with your auditor&apos;s device to share the viewing
+        key securely
       </p>
 
       {/* Actions */}
@@ -142,7 +142,8 @@ export function ViewingKeyQRCode({
       <div className="flex items-start gap-2 p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/20 text-yellow-500 text-xs max-w-xs">
         <WarningIcon className="w-4 h-4 flex-shrink-0 mt-0.5" />
         <span>
-          This viewing key allows decryption of transaction details. Only share with trusted auditors.
+          This viewing key allows decryption of transaction details. Only share
+          with trusted auditors.
         </span>
       </div>
     </div>

@@ -90,7 +90,16 @@ export function SendShieldedForm() {
         saveKey(viewingKey, { transactionHash: result.txHash })
       }
     },
-    [canSubmit, send, recipient, amount, token, privacyLevel, viewingKey, saveKey]
+    [
+      canSubmit,
+      send,
+      recipient,
+      amount,
+      token,
+      privacyLevel,
+      viewingKey,
+      saveKey,
+    ]
   )
 
   const handleReset = useCallback(() => {
