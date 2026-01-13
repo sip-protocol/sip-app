@@ -186,10 +186,7 @@ export function RiskHeatmap({
         case "Enter":
         case " ":
           event.preventDefault()
-          if (
-            focusedCategoryIndex >= 0 &&
-            focusedCategoryIndex < data.length
-          ) {
+          if (focusedCategoryIndex >= 0 && focusedCategoryIndex < data.length) {
             onCategoryClick?.(data[focusedCategoryIndex].category)
           }
           break

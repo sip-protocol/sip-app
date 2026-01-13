@@ -322,13 +322,19 @@ export function ProtectionComparison({
                     ? "line-through text-[var(--text-tertiary)]"
                     : ""
                 }`}
-                aria-label={showProjected ? `previous score ${item.currentScore}` : undefined}
+                aria-label={
+                  showProjected
+                    ? `previous score ${item.currentScore}`
+                    : undefined
+                }
               >
                 {item.currentScore}
               </span>
               {showProjected && (
                 <>
-                  <span className="text-green-400" aria-hidden="true">→</span>
+                  <span className="text-green-400" aria-hidden="true">
+                    →
+                  </span>
                   <span
                     className="text-sm font-mono text-green-400 font-semibold"
                     aria-label={`new score ${item.projectedScore}`}

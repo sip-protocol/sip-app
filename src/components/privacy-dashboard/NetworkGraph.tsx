@@ -287,11 +287,7 @@ export function NetworkGraph({
       </svg>
 
       {/* Screen reader live region for node selection */}
-      <div
-        role="status"
-        aria-live="polite"
-        className="sr-only"
-      >
+      <div role="status" aria-live="polite" className="sr-only">
         {focusedNodeIndex >= 0 && nodes[focusedNodeIndex] && (
           <>
             Focused on{" "}
