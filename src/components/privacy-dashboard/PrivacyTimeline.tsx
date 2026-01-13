@@ -1,8 +1,9 @@
 "use client"
 
-import { useRef, useEffect, useState, useId } from "react"
+import { useRef, useEffect, useState, useId, useCallback } from "react"
 import * as d3 from "d3"
 import { getScoreColor, riskColors } from "./utils/colorScales"
+import { useContainerSize } from "@/hooks/use-container-size"
 
 export interface TimelinePoint {
   date: Date
@@ -17,6 +18,8 @@ interface PrivacyTimelineProps {
   data: TimelinePoint[]
   width?: number
   height?: number
+  responsive?: boolean
+  ariaLabel?: string
   onPointClick?: (point: TimelinePoint) => void
 }
 
@@ -29,12 +32,17 @@ const eventIcons: Record<string, { emoji: string; color: string }> = {
 
 export function PrivacyTimeline({
   data,
-  width = 600,
-  height = 200,
+  width: propWidth,
+  height: propHeight,
+  responsive = false,
+  ariaLabel = "Privacy score timeline showing historical changes and events",
   onPointClick,
 }: PrivacyTimelineProps) {
+  const containerRef = useRef<HTMLDivElement>(null)
   const svgRef = useRef<SVGSVGElement>(null)
   const gradientId = useId().replace(/:/g, "_") // Unique gradient ID for this instance
+  const descId = useId().replace(/:/g, "_") // Unique desc ID for accessibility
+  const [focusedPointIndex, setFocusedPointIndex] = useState<number>(-1)
   const [tooltip, setTooltip] = useState<{
     visible: boolean
     x: number
@@ -42,6 +50,11 @@ export function PrivacyTimeline({
     content: string
     score: number
   }>({ visible: false, x: 0, y: 0, content: "", score: 0 })
+
+  // Responsive sizing
+  const containerSize = useContainerSize(containerRef, 600, 200)
+  const width = responsive ? containerSize.width : (propWidth ?? 600)
+  const height = responsive ? containerSize.height : (propHeight ?? 200)
 
   useEffect(() => {
     if (!svgRef.current || data.length === 0) return
@@ -210,14 +223,82 @@ export function PrivacyTimeline({
       .text("Privacy Score")
   }, [data, width, height, onPointClick, gradientId])
 
+  // Keyboard navigation handler
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent<SVGSVGElement>) => {
+      if (data.length === 0) return
+
+      switch (event.key) {
+        case "ArrowRight":
+        case "ArrowDown":
+          event.preventDefault()
+          setFocusedPointIndex((prev) => (prev + 1) % data.length)
+          break
+        case "ArrowLeft":
+        case "ArrowUp":
+          event.preventDefault()
+          setFocusedPointIndex((prev) =>
+            prev <= 0 ? data.length - 1 : prev - 1
+          )
+          break
+        case "Enter":
+        case " ":
+          event.preventDefault()
+          if (focusedPointIndex >= 0 && focusedPointIndex < data.length) {
+            onPointClick?.(data[focusedPointIndex])
+          }
+          break
+        case "Escape":
+          event.preventDefault()
+          setFocusedPointIndex(-1)
+          break
+      }
+    },
+    [data, focusedPointIndex, onPointClick]
+  )
+
+  // Generate accessible description
+  const eventsCount = data.filter((d) => d.event).length
+  const minScore = data.length > 0 ? Math.min(...data.map((d) => d.score)) : 0
+  const maxScore = data.length > 0 ? Math.max(...data.map((d) => d.score)) : 100
+  const accessibleDescription = `Privacy timeline spanning ${data.length} data points. Scores range from ${minScore} to ${maxScore}. ${eventsCount} notable events recorded.`
+
   return (
-    <div className="relative">
+    <div
+      ref={containerRef}
+      className={`relative ${responsive ? "w-full min-h-[150px]" : ""}`}
+    >
       <svg
         ref={svgRef}
         width={width}
         height={height}
         className="overflow-visible"
-      />
+        role="img"
+        aria-label={ariaLabel}
+        aria-describedby={`timeline-desc-${descId}`}
+        tabIndex={0}
+        onKeyDown={handleKeyDown}
+        onFocus={() => {
+          if (focusedPointIndex === -1 && data.length > 0) {
+            setFocusedPointIndex(0)
+          }
+        }}
+        onBlur={() => setFocusedPointIndex(-1)}
+      >
+        <desc id={`timeline-desc-${descId}`}>{accessibleDescription}</desc>
+      </svg>
+
+      {/* Screen reader live region for point selection */}
+      <div role="status" aria-live="polite" className="sr-only">
+        {focusedPointIndex >= 0 && data[focusedPointIndex] && (
+          <>
+            {data[focusedPointIndex].date.toLocaleDateString()}, score{" "}
+            {data[focusedPointIndex].score}.
+            {data[focusedPointIndex].event &&
+              ` Event: ${data[focusedPointIndex].event.description}`}
+          </>
+        )}
+      </div>
 
       {/* Tooltip */}
       {tooltip.visible && (
@@ -230,11 +311,13 @@ export function PrivacyTimeline({
             border: "1px solid var(--border-default)",
             color: "var(--text-primary)",
           }}
+          role="tooltip"
         >
           <div className="flex items-center gap-2">
             <div
               className="w-3 h-3 rounded-full"
               style={{ backgroundColor: getScoreColor(tooltip.score) }}
+              aria-hidden="true"
             />
             {tooltip.content}
           </div>
@@ -242,10 +325,14 @@ export function PrivacyTimeline({
       )}
 
       {/* Legend */}
-      <div className="flex flex-wrap justify-center gap-4 mt-2 text-xs">
+      <div
+        className="flex flex-wrap justify-center gap-4 mt-2 text-xs"
+        role="list"
+        aria-label="Event type legend"
+      >
         {Object.entries(eventIcons).map(([type, { emoji }]) => (
-          <div key={type} className="flex items-center gap-1">
-            <span>{emoji}</span>
+          <div key={type} className="flex items-center gap-1" role="listitem">
+            <span aria-hidden="true">{emoji}</span>
             <span className="text-[var(--text-tertiary)]">
               {type.replace(/_/g, " ")}
             </span>

@@ -3,6 +3,7 @@
 import { useRef, useEffect, useState, useCallback, useId } from "react"
 import * as d3 from "d3"
 import { nodeColors } from "./utils/colorScales"
+import { useContainerSize } from "@/hooks/use-container-size"
 
 export interface GraphNode extends d3.SimulationNodeDatum {
   id: string
@@ -24,25 +25,37 @@ interface NetworkGraphProps {
   edges: GraphEdge[]
   width?: number
   height?: number
+  responsive?: boolean
+  ariaLabel?: string
   onNodeClick?: (node: GraphNode) => void
 }
 
 export function NetworkGraph({
   nodes,
   edges,
-  width = 600,
-  height = 400,
+  width: propWidth,
+  height: propHeight,
+  responsive = false,
+  ariaLabel = "Network graph visualization showing wallet connections and transaction relationships",
   onNodeClick,
 }: NetworkGraphProps) {
+  const containerRef = useRef<HTMLDivElement>(null)
   const svgRef = useRef<SVGSVGElement>(null)
   const markerId = useId().replace(/:/g, "_") // Unique marker ID for this instance
+  const descId = useId().replace(/:/g, "_") // Unique desc ID for accessibility
   const [selectedNode, setSelectedNode] = useState<GraphNode | null>(null)
+  const [focusedNodeIndex, setFocusedNodeIndex] = useState<number>(-1)
   const [tooltip, setTooltip] = useState<{
     visible: boolean
     x: number
     y: number
     content: string
   }>({ visible: false, x: 0, y: 0, content: "" })
+
+  // Responsive sizing
+  const containerSize = useContainerSize(containerRef, 600, 400)
+  const width = responsive ? containerSize.width : (propWidth ?? 600)
+  const height = responsive ? containerSize.height : (propHeight ?? 400)
 
   const handleNodeClick = useCallback(
     (node: GraphNode) => {
@@ -204,14 +217,88 @@ export function NetworkGraph({
     }
   }, [nodes, edges, width, height, handleNodeClick, selectedNode, markerId])
 
+  // Keyboard navigation handler
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent<SVGSVGElement>) => {
+      if (nodes.length === 0) return
+
+      switch (event.key) {
+        case "ArrowRight":
+        case "ArrowDown":
+          event.preventDefault()
+          setFocusedNodeIndex((prev) => (prev + 1) % nodes.length)
+          break
+        case "ArrowLeft":
+        case "ArrowUp":
+          event.preventDefault()
+          setFocusedNodeIndex((prev) =>
+            prev <= 0 ? nodes.length - 1 : prev - 1
+          )
+          break
+        case "Enter":
+        case " ":
+          event.preventDefault()
+          if (focusedNodeIndex >= 0 && focusedNodeIndex < nodes.length) {
+            handleNodeClick(nodes[focusedNodeIndex])
+          }
+          break
+        case "Escape":
+          event.preventDefault()
+          setFocusedNodeIndex(-1)
+          setSelectedNode(null)
+          break
+      }
+    },
+    [nodes, focusedNodeIndex, handleNodeClick]
+  )
+
+  // Generate accessible description
+  const accessibleDescription = `Network graph with ${nodes.length} nodes and ${edges.length} connections. ${
+    nodes.filter((n) => n.type === "exchange").length
+  } exchange connections, ${
+    nodes.filter((n) => n.type === "known").length
+  } known addresses, ${
+    nodes.filter((n) => n.type === "unknown").length
+  } unknown addresses.`
+
   return (
-    <div className="relative">
+    <div
+      ref={containerRef}
+      className={`relative ${responsive ? "w-full h-full min-h-[300px]" : ""}`}
+    >
       <svg
         ref={svgRef}
         width={width}
         height={height}
         className="bg-[var(--surface-secondary)] rounded-xl border border-[var(--border-default)]"
-      />
+        role="img"
+        aria-label={ariaLabel}
+        aria-describedby={`network-desc-${descId}`}
+        tabIndex={0}
+        onKeyDown={handleKeyDown}
+        onFocus={() => {
+          if (focusedNodeIndex === -1 && nodes.length > 0) {
+            setFocusedNodeIndex(0)
+          }
+        }}
+        onBlur={() => setFocusedNodeIndex(-1)}
+      >
+        <desc id={`network-desc-${descId}`}>{accessibleDescription}</desc>
+      </svg>
+
+      {/* Screen reader live region for node selection */}
+      <div role="status" aria-live="polite" className="sr-only">
+        {focusedNodeIndex >= 0 && nodes[focusedNodeIndex] && (
+          <>
+            Focused on{" "}
+            {nodes[focusedNodeIndex].label ||
+              nodes[focusedNodeIndex].id.slice(0, 8)}
+            , {nodes[focusedNodeIndex].type} node.
+            {nodes[focusedNodeIndex].transactionCount !== undefined &&
+              ` ${nodes[focusedNodeIndex].transactionCount} transactions.`}
+          </>
+        )}
+      </div>
 
       {/* Tooltip */}
       {tooltip.visible && (
@@ -221,18 +308,24 @@ export function NetworkGraph({
             left: tooltip.x + 10,
             top: tooltip.y + 10,
           }}
+          role="tooltip"
         >
           {tooltip.content}
         </div>
       )}
 
       {/* Legend */}
-      <div className="absolute bottom-3 left-3 flex flex-wrap gap-3 text-xs">
+      <div
+        className="absolute bottom-3 left-3 flex flex-wrap gap-3 text-xs"
+        role="list"
+        aria-label="Node type legend"
+      >
         {Object.entries(nodeColors).map(([type, color]) => (
-          <div key={type} className="flex items-center gap-1.5">
+          <div key={type} className="flex items-center gap-1.5" role="listitem">
             <div
               className="w-3 h-3 rounded-full"
               style={{ backgroundColor: color }}
+              aria-hidden="true"
             />
             <span className="text-[var(--text-secondary)] capitalize">
               {type === "self" ? "You" : type}
@@ -242,7 +335,10 @@ export function NetworkGraph({
       </div>
 
       {/* Instructions */}
-      <div className="absolute top-3 right-3 text-xs text-[var(--text-tertiary)]">
+      <div
+        className="absolute top-3 right-3 text-xs text-[var(--text-tertiary)]"
+        aria-hidden="true"
+      >
         Drag nodes to explore • Scroll to zoom
       </div>
     </div>

@@ -44,3 +44,6 @@ export { useScanPayments, type DetectedPayment } from "./use-scan-payments"
 
 // Send payment hook
 export { useSendPayment } from "./use-send-payment"
+
+// Container size hook for responsive D3 visualizations
+export { useContainerSize } from "./use-container-size"

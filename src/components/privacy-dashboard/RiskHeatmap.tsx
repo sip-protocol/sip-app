@@ -1,8 +1,9 @@
 "use client"
 
-import { useRef, useEffect } from "react"
+import { useRef, useEffect, useState, useCallback, useId } from "react"
 import * as d3 from "d3"
 import { getScoreColor } from "./utils/colorScales"
+import { useContainerSize } from "@/hooks/use-container-size"
 
 interface CategoryScore {
   category: string
@@ -16,16 +17,28 @@ interface RiskHeatmapProps {
   data: CategoryScore[]
   width?: number
   height?: number
+  responsive?: boolean
+  ariaLabel?: string
   onCategoryClick?: (category: string) => void
 }
 
 export function RiskHeatmap({
   data,
-  width = 500,
-  height = 250,
+  width: propWidth,
+  height: propHeight,
+  responsive = false,
+  ariaLabel = "Risk heatmap showing privacy risk breakdown by category",
   onCategoryClick,
 }: RiskHeatmapProps) {
+  const containerRef = useRef<HTMLDivElement>(null)
   const svgRef = useRef<SVGSVGElement>(null)
+  const descId = useId().replace(/:/g, "_") // Unique desc ID for accessibility
+  const [focusedCategoryIndex, setFocusedCategoryIndex] = useState<number>(-1)
+
+  // Responsive sizing
+  const containerSize = useContainerSize(containerRef, 500, 250)
+  const width = responsive ? containerSize.width : (propWidth ?? 500)
+  const height = responsive ? containerSize.height : (propHeight ?? 250)
 
   useEffect(() => {
     if (!svgRef.current || data.length === 0) return
@@ -152,14 +165,81 @@ export function RiskHeatmap({
       })
   }, [data, width, height, onCategoryClick])
 
+  // Keyboard navigation handler
+  const handleKeyDown = useCallback(
+    (event: React.KeyboardEvent<SVGSVGElement>) => {
+      if (data.length === 0) return
+
+      switch (event.key) {
+        case "ArrowRight":
+        case "ArrowDown":
+          event.preventDefault()
+          setFocusedCategoryIndex((prev) => (prev + 1) % data.length)
+          break
+        case "ArrowLeft":
+        case "ArrowUp":
+          event.preventDefault()
+          setFocusedCategoryIndex((prev) =>
+            prev <= 0 ? data.length - 1 : prev - 1
+          )
+          break
+        case "Enter":
+        case " ":
+          event.preventDefault()
+          if (focusedCategoryIndex >= 0 && focusedCategoryIndex < data.length) {
+            onCategoryClick?.(data[focusedCategoryIndex].category)
+          }
+          break
+        case "Escape":
+          event.preventDefault()
+          setFocusedCategoryIndex(-1)
+          break
+      }
+    },
+    [data, focusedCategoryIndex, onCategoryClick]
+  )
+
+  // Generate accessible description
+  const totalScore = data.reduce((sum, d) => sum + d.score, 0)
+  const totalMaxScore = data.reduce((sum, d) => sum + d.maxScore, 0)
+  const accessibleDescription = `Risk heatmap with ${data.length} categories. Total risk score: ${totalScore} out of ${totalMaxScore}. Categories: ${data.map((d) => `${d.label}: ${d.score}/${d.maxScore}`).join(", ")}.`
+
   return (
-    <div className="relative">
+    <div
+      ref={containerRef}
+      className={`relative ${responsive ? "w-full min-h-[200px]" : ""}`}
+    >
       <svg
         ref={svgRef}
         width={width}
         height={height}
         className="overflow-visible"
-      />
+        role="img"
+        aria-label={ariaLabel}
+        aria-describedby={`heatmap-desc-${descId}`}
+        tabIndex={0}
+        onKeyDown={handleKeyDown}
+        onFocus={() => {
+          if (focusedCategoryIndex === -1 && data.length > 0) {
+            setFocusedCategoryIndex(0)
+          }
+        }}
+        onBlur={() => setFocusedCategoryIndex(-1)}
+      >
+        <desc id={`heatmap-desc-${descId}`}>{accessibleDescription}</desc>
+      </svg>
+
+      {/* Screen reader live region for category selection */}
+      <div role="status" aria-live="polite" className="sr-only">
+        {focusedCategoryIndex >= 0 && data[focusedCategoryIndex] && (
+          <>
+            {data[focusedCategoryIndex].label}: score{" "}
+            {data[focusedCategoryIndex].score} out of{" "}
+            {data[focusedCategoryIndex].maxScore}.{" "}
+            {data[focusedCategoryIndex].description}
+          </>
+        )}
+      </div>
     </div>
   )
 }
