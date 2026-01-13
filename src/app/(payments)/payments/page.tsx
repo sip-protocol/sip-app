@@ -36,6 +36,13 @@ const actions = [
     icon: "📜",
     color: "bg-amber-500",
   },
+  {
+    name: "Disclose",
+    description: "Share viewing keys for compliance audits",
+    href: "/payments/disclose",
+    icon: "🔓",
+    color: "bg-teal-500",
+  },
 ]
 
 export default function PaymentsDashboard() {

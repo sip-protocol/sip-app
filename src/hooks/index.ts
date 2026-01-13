@@ -23,3 +23,24 @@ export {
   type SwapResult,
   type SwapParams,
 } from "./use-swap"
+
+// Viewing key disclosure hook
+export {
+  useViewingKeyDisclosure,
+  parseViewingKeyFromJson,
+  isValidViewingKey,
+  type ShareableKey,
+  type DecryptionResult,
+} from "./use-viewing-key-disclosure"
+
+// Viewing key storage hook
+export { useViewingKeyStorage } from "./use-viewing-key-storage"
+
+// Stealth keys hook
+export { useStealthKeys, type StealthKeys } from "./use-stealth-keys"
+
+// Scan payments hook
+export { useScanPayments, type DetectedPayment } from "./use-scan-payments"
+
+// Send payment hook
+export { useSendPayment } from "./use-send-payment"
