@@ -47,7 +47,9 @@ describe("NetworkGraph", () => {
     it("renders legend with all node types", () => {
       render(<NetworkGraph nodes={mockNodes} edges={mockEdges} />)
 
-      expect(screen.getByText("You")).toBeInTheDocument()
+      // "You" appears twice: in SVG node label and in legend
+      const youElements = screen.getAllByText("You")
+      expect(youElements.length).toBeGreaterThanOrEqual(1)
       expect(screen.getByText("exchange")).toBeInTheDocument()
       expect(screen.getByText("known")).toBeInTheDocument()
       expect(screen.getByText("unknown")).toBeInTheDocument()

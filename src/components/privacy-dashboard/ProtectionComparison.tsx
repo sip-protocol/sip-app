@@ -1,8 +1,9 @@
 "use client"
 
-import { useRef, useEffect, useState, useCallback } from "react"
+import { useRef, useEffect, useState, useCallback, useId } from "react"
 import * as d3 from "d3"
 import { getScoreColor } from "./utils/colorScales"
+import { useContainerSize } from "@/hooks/use-container-size"
 
 interface ImprovementItem {
   category: string
@@ -17,6 +18,8 @@ interface ProtectionComparisonProps {
   improvements: ImprovementItem[]
   width?: number
   height?: number
+  responsive?: boolean
+  ariaLabel?: string
   onApplySIP?: () => void
 }
 
@@ -32,14 +35,23 @@ export function ProtectionComparison({
   currentScore,
   projectedScore,
   improvements,
-  width = 500,
-  height = 300,
+  width: propWidth,
+  height: propHeight,
+  responsive = false,
+  ariaLabel = "Privacy score comparison showing current versus projected improvement with SIP protection",
   onApplySIP,
 }: ProtectionComparisonProps) {
+  const containerRef = useRef<HTMLDivElement>(null)
   const svgRef = useRef<SVGSVGElement>(null)
+  const descId = useId().replace(/:/g, "_") // Unique desc ID for accessibility
   const [isAnimating, setIsAnimating] = useState(false)
   const [showProjected, setShowProjected] = useState(false)
   const animationTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+
+  // Responsive sizing
+  const containerSize = useContainerSize(containerRef, 500, 300)
+  const width = responsive ? containerSize.width : (propWidth ?? 500)
+  const height = responsive ? containerSize.height : (propHeight ?? 300)
 
   // Cleanup timeout on unmount
   useEffect(() => {
@@ -247,15 +259,42 @@ export function ProtectionComparison({
     }
   }, [currentScore, projectedScore, width, height, showProjected, isAnimating])
 
+  // Generate accessible description
+  const improvement = projectedScore - currentScore
+  const accessibleDescription = `Privacy score comparison chart. Current score: ${currentScore}. Projected score with SIP protection: ${projectedScore}. Potential improvement: ${improvement} points across ${improvements.length} categories.`
+
   return (
-    <div className="flex flex-col items-center">
-      <svg ref={svgRef} width={width} height={height} />
+    <div
+      ref={containerRef}
+      className={`flex flex-col items-center ${responsive ? "w-full" : ""}`}
+    >
+      <svg
+        ref={svgRef}
+        width={width}
+        height={height}
+        role="img"
+        aria-label={ariaLabel}
+        aria-describedby={`comparison-desc-${descId}`}
+        tabIndex={0}
+      >
+        <desc id={`comparison-desc-${descId}`}>{accessibleDescription}</desc>
+      </svg>
 
       {/* Improvements list */}
-      <div className="w-full max-w-md mt-4 space-y-2">
+      <div
+        className="w-full max-w-md mt-4 space-y-2"
+        role="list"
+        aria-label="Privacy improvement categories"
+      >
         {improvements.map((item, index) => (
           <div
             key={item.category}
+            role="listitem"
+            aria-label={`${categoryLabels[item.category] || item.category}: ${
+              showProjected
+                ? `improved from ${item.currentScore} to ${item.projectedScore}`
+                : `current score ${item.currentScore}`
+            }`}
             className={`flex items-center justify-between p-2 rounded-lg transition-all duration-300 ${
               showProjected
                 ? "bg-green-500/10 border border-green-500/20"
@@ -268,6 +307,7 @@ export function ProtectionComparison({
             <div className="flex items-center gap-2">
               <span
                 className={`text-sm ${showProjected ? "text-green-400" : "text-[var(--text-tertiary)]"}`}
+                aria-hidden="true"
               >
                 {showProjected ? "✓" : "○"}
               </span>
@@ -282,13 +322,17 @@ export function ProtectionComparison({
                     ? "line-through text-[var(--text-tertiary)]"
                     : ""
                 }`}
+                aria-label={showProjected ? `previous score ${item.currentScore}` : undefined}
               >
                 {item.currentScore}
               </span>
               {showProjected && (
                 <>
-                  <span className="text-green-400">→</span>
-                  <span className="text-sm font-mono text-green-400 font-semibold">
+                  <span className="text-green-400" aria-hidden="true">→</span>
+                  <span
+                    className="text-sm font-mono text-green-400 font-semibold"
+                    aria-label={`new score ${item.projectedScore}`}
+                  >
                     {item.projectedScore}
                   </span>
                 </>
