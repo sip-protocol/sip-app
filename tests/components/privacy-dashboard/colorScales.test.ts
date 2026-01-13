@@ -86,15 +86,15 @@ describe("Color Scale Functions", () => {
     it("returns red-ish color for low scores", () => {
       const scale = createScoreColorScale()
       const color = scale(0)
-      // Should be close to red (#ef4444)
-      expect(color.toLowerCase()).toBe("#ef4444")
+      // Should be close to red (D3 returns RGB format)
+      expect(color).toBe("rgb(239, 68, 68)")
     })
 
     it("returns green-ish color for high scores", () => {
       const scale = createScoreColorScale()
       const color = scale(100)
-      // Should be close to green (#22c55e)
-      expect(color.toLowerCase()).toBe("#22c55e")
+      // Should be close to green (D3 returns RGB format)
+      expect(color).toBe("rgb(34, 197, 94)")
     })
 
     it("clamps values outside 0-100 range", () => {
@@ -102,18 +102,18 @@ describe("Color Scale Functions", () => {
       const negativeColor = scale(-10)
       const overColor = scale(150)
 
-      // Should clamp to extremes
-      expect(negativeColor.toLowerCase()).toBe("#ef4444")
-      expect(overColor.toLowerCase()).toBe("#22c55e")
+      // Should clamp to extremes (D3 returns RGB format)
+      expect(negativeColor).toBe("rgb(239, 68, 68)")
+      expect(overColor).toBe("rgb(34, 197, 94)")
     })
 
     it("returns intermediate colors for mid-range scores", () => {
       const scale = createScoreColorScale()
       const color50 = scale(50)
 
-      // Should be somewhere in between (yellow-ish)
-      expect(color50).not.toBe("#ef4444")
-      expect(color50).not.toBe("#22c55e")
+      // Should be somewhere in between (yellow-ish, D3 returns RGB format)
+      expect(color50).not.toBe("rgb(239, 68, 68)")
+      expect(color50).not.toBe("rgb(34, 197, 94)")
     })
   })
 
@@ -162,12 +162,14 @@ describe("Color Scale Functions", () => {
   describe("getScoreColor", () => {
     it("returns red for score 0", () => {
       const color = getScoreColor(0)
-      expect(color.toLowerCase()).toBe("#ef4444")
+      // D3 returns RGB format
+      expect(color).toBe("rgb(239, 68, 68)")
     })
 
     it("returns green for score 100", () => {
       const color = getScoreColor(100)
-      expect(color.toLowerCase()).toBe("#22c55e")
+      // D3 returns RGB format
+      expect(color).toBe("rgb(34, 197, 94)")
     })
 
     it("returns consistent colors for same score", () => {
