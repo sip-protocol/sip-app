@@ -17,7 +17,8 @@ export interface ShareableKey {
   label?: string
   createdAt: number
   qrData: string
-  jsonExport: string
+  /** Generate JSON export with fresh timestamp */
+  getJsonExport: () => string
 }
 
 export interface DecryptionResult {
@@ -81,18 +82,19 @@ export function useViewingKeyDisclosure(): UseViewingKeyDisclosureResult {
         hash: stored.key.hash,
         path: stored.key.path,
       }),
-      jsonExport: JSON.stringify(
-        {
-          type: "sip-viewing-key",
-          version: 1,
-          viewingKey: stored.key,
-          label: stored.label,
-          createdAt: stored.createdAt,
-          exportedAt: Date.now(),
-        },
-        null,
-        2
-      ),
+      getJsonExport: () =>
+        JSON.stringify(
+          {
+            type: "sip-viewing-key",
+            version: 1,
+            viewingKey: stored.key,
+            label: stored.label,
+            createdAt: stored.createdAt,
+            exportedAt: Date.now(),
+          },
+          null,
+          2
+        ),
     }))
   }, [storedKeys])
 

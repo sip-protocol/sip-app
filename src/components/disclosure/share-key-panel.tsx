@@ -57,7 +57,7 @@ export function ShareKeyPanel({ onKeyGenerated }: ShareKeyPanelProps) {
   }, [])
 
   const handleDownloadKey = useCallback((key: ShareableKey) => {
-    const blob = new Blob([key.jsonExport], { type: "application/json" })
+    const blob = new Blob([key.getJsonExport()], { type: "application/json" })
     const url = URL.createObjectURL(blob)
     const a = document.createElement("a")
     a.href = url
@@ -179,7 +179,7 @@ export function ShareKeyPanel({ onKeyGenerated }: ShareKeyPanelProps) {
           {/* Actions */}
           <div className="flex gap-2">
             <button
-              onClick={() => handleCopyKey(selectedKey.jsonExport)}
+              onClick={() => handleCopyKey(selectedKey.getJsonExport())}
               className="flex-1 py-2.5 px-4 rounded-lg border border-[var(--border-default)] text-sm font-medium hover:bg-[var(--surface-secondary)] transition-colors"
             >
               {copySuccess ? "✓ Copied!" : "Copy JSON"}
