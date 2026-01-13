@@ -13,10 +13,12 @@ export default function DexPage() {
   )
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-8 sm:py-12">
-      {/* Privacy Level Toggle */}
-      <div className="mb-8 flex justify-center">
-        <PrivacyToggle value={privacyLevel} onChange={setPrivacyLevel} />
+    <div className="mx-auto max-w-2xl px-3 py-4 pb-safe sm:px-4 sm:py-12">
+      {/* Privacy Level Toggle - sticky on mobile for better UX */}
+      <div className="sticky top-0 z-10 -mx-3 mb-6 bg-[var(--background)]/95 px-3 py-3 backdrop-blur-sm sm:static sm:mx-0 sm:mb-8 sm:bg-transparent sm:px-0 sm:py-0 sm:backdrop-blur-none">
+        <div className="flex justify-center">
+          <PrivacyToggle value={privacyLevel} onChange={setPrivacyLevel} />
+        </div>
       </div>
 
       {/* Swap Card */}
