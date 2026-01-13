@@ -2,7 +2,10 @@
 
 import { useState, useCallback } from "react"
 import type { ViewingKey } from "@sip-protocol/types"
-import { parseViewingKeyFromJson, isValidViewingKey } from "@/hooks/use-viewing-key-disclosure"
+import {
+  parseViewingKeyFromJson,
+  isValidViewingKey,
+} from "@/hooks/use-viewing-key-disclosure"
 
 interface ViewingKeyInputProps {
   onKeyParsed: (key: ViewingKey) => void
@@ -36,7 +39,9 @@ export function ViewingKeyInput({
       const key = parseViewingKeyFromJson(value)
 
       if (!key) {
-        setError("Invalid viewing key format. Please paste a valid JSON export.")
+        setError(
+          "Invalid viewing key format. Please paste a valid JSON export."
+        )
         return
       }
 
@@ -142,7 +147,9 @@ export function ViewingKeyInput({
           <input
             type="file"
             accept=".json"
-            onChange={(e) => e.target.files?.[0] && handleFileUpload(e.target.files[0])}
+            onChange={(e) =>
+              e.target.files?.[0] && handleFileUpload(e.target.files[0])
+            }
             className="hidden"
           />
           <span className="px-3 py-1.5 text-xs font-medium rounded-lg bg-[var(--surface-secondary)] hover:bg-[var(--surface-tertiary)] transition-colors">

@@ -93,8 +93,8 @@ export default function PaymentHistoryPage() {
           <div className="flex items-center gap-2 text-sm text-green-400">
             <span>✓</span>
             <span>
-              {keys.length} viewing key{keys.length > 1 ? "s" : ""} available for
-              decryption
+              {keys.length} viewing key{keys.length > 1 ? "s" : ""} available
+              for decryption
             </span>
           </div>
         </div>
@@ -185,9 +185,7 @@ export default function PaymentHistoryPage() {
                     {tx.decrypted ? (
                       <p
                         className={`font-semibold ${
-                          tx.type === "sent"
-                            ? "text-red-400"
-                            : "text-green-400"
+                          tx.type === "sent" ? "text-red-400" : "text-green-400"
                         }`}
                       >
                         {tx.type === "sent" ? "-" : "+"}
@@ -239,8 +237,8 @@ export default function PaymentHistoryPage() {
           </div>
           <h2 className="text-xl font-semibold mb-2">No transactions yet</h2>
           <p className="text-[var(--text-secondary)] max-w-sm mx-auto mb-6">
-            Your private payment history will appear here once you send or receive
-            payments.
+            Your private payment history will appear here once you send or
+            receive payments.
           </p>
           <div className="flex gap-3 justify-center">
             <Link

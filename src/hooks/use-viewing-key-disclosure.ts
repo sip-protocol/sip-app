@@ -35,7 +35,11 @@ interface UseViewingKeyDisclosureResult {
 
   // Actions
   generateKey: (label?: string, path?: string) => ViewingKey
-  deriveKey: (masterKey: ViewingKey, childPath: string, label?: string) => ViewingKey
+  deriveKey: (
+    masterKey: ViewingKey,
+    childPath: string,
+    label?: string
+  ) => ViewingKey
   getShareableKey: (keyHash: string) => ShareableKey | undefined
   decryptTransaction: (
     viewingKey: ViewingKey,
@@ -113,7 +117,8 @@ export function useViewingKeyDisclosure(): UseViewingKeyDisclosureResult {
 
         return viewingKey
       } catch (err) {
-        const message = err instanceof Error ? err.message : "Failed to generate key"
+        const message =
+          err instanceof Error ? err.message : "Failed to generate key"
         setError(message)
         throw err
       }
@@ -136,7 +141,8 @@ export function useViewingKeyDisclosure(): UseViewingKeyDisclosureResult {
 
         return derivedKey
       } catch (err) {
-        const message = err instanceof Error ? err.message : "Failed to derive key"
+        const message =
+          err instanceof Error ? err.message : "Failed to derive key"
         setError(message)
         throw err
       }
@@ -158,7 +164,10 @@ export function useViewingKeyDisclosure(): UseViewingKeyDisclosureResult {
    * Decrypt an encrypted transaction with a viewing key
    */
   const decryptTransaction = useCallback(
-    (viewingKey: ViewingKey, encrypted: EncryptedTransaction): DecryptionResult => {
+    (
+      viewingKey: ViewingKey,
+      encrypted: EncryptedTransaction
+    ): DecryptionResult => {
       setError(null)
 
       try {
@@ -166,7 +175,9 @@ export function useViewingKeyDisclosure(): UseViewingKeyDisclosureResult {
         return { success: true, data }
       } catch (err) {
         const message =
-          err instanceof Error ? err.message : "Decryption failed - wrong key or tampered data"
+          err instanceof Error
+            ? err.message
+            : "Decryption failed - wrong key or tampered data"
         setError(message)
         return { success: false, error: message }
       }

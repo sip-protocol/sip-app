@@ -57,7 +57,9 @@ export function DecryptedTxCard({ data, keyLabel }: DecryptedTxCardProps) {
         </div>
 
         <div className="flex items-center justify-between py-2 border-b border-[var(--border-default)]">
-          <span className="text-sm text-[var(--text-secondary)]">Recipient</span>
+          <span className="text-sm text-[var(--text-secondary)]">
+            Recipient
+          </span>
           <span className="font-mono text-sm" title={data.recipient}>
             {formatAddress(data.recipient)}
           </span>
@@ -99,8 +101,8 @@ export function DecryptionErrorCard({ error }: { error: string }) {
         </div>
       </div>
       <p className="text-xs text-[var(--text-tertiary)] mt-4">
-        This usually means the viewing key doesn&apos;t match the encrypted data, or the
-        data has been corrupted.
+        This usually means the viewing key doesn&apos;t match the encrypted
+        data, or the data has been corrupted.
       </p>
     </div>
   )

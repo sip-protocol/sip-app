@@ -2,7 +2,11 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { ShareKeyPanel, ViewWithKeyPanel, ExportReportPanel } from "@/components/disclosure"
+import {
+  ShareKeyPanel,
+  ViewWithKeyPanel,
+  ExportReportPanel,
+} from "@/components/disclosure"
 
 type TabId = "share" | "view" | "export"
 
@@ -65,9 +69,10 @@ export default function DisclosePage() {
           <div>
             <p className="font-medium">What are viewing keys?</p>
             <p className="text-sm text-[var(--text-secondary)] mt-1">
-              Viewing keys enable selective disclosure of private transactions without
-              giving spending access. Share them with auditors, accountants, or
-              compliance officers who need to verify your transaction history.
+              Viewing keys enable selective disclosure of private transactions
+              without giving spending access. Share them with auditors,
+              accountants, or compliance officers who need to verify your
+              transaction history.
             </p>
           </div>
         </div>

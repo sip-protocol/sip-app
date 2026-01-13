@@ -19,7 +19,9 @@ interface ExportReportPanelProps {
  * - Export format selection
  * - Generate and download report
  */
-export function ExportReportPanel({ encryptedTransactions = [] }: ExportReportPanelProps) {
+export function ExportReportPanel({
+  encryptedTransactions = [],
+}: ExportReportPanelProps) {
   const { keys, decryptTransaction } = useViewingKeyDisclosure()
 
   const [selectedKeyHash, setSelectedKeyHash] = useState<string>("")
@@ -119,7 +121,14 @@ export function ExportReportPanel({ encryptedTransactions = [] }: ExportReportPa
     } finally {
       setIsGenerating(false)
     }
-  }, [selectedKey, encryptedTransactions, startDate, endDate, format, decryptTransaction])
+  }, [
+    selectedKey,
+    encryptedTransactions,
+    startDate,
+    endDate,
+    format,
+    decryptTransaction,
+  ])
 
   return (
     <div className="space-y-6">
@@ -130,8 +139,8 @@ export function ExportReportPanel({ encryptedTransactions = [] }: ExportReportPa
           <div>
             <p className="font-medium text-amber-400">Generate Audit Report</p>
             <p className="text-sm text-[var(--text-secondary)] mt-1">
-              Export decrypted transaction data for compliance audits, tax reports,
-              or internal accounting.
+              Export decrypted transaction data for compliance audits, tax
+              reports, or internal accounting.
             </p>
           </div>
         </div>
@@ -157,7 +166,8 @@ export function ExportReportPanel({ encryptedTransactions = [] }: ExportReportPa
         ) : (
           <div className="p-4 rounded-xl border border-[var(--border-default)] text-center">
             <p className="text-[var(--text-secondary)]">
-              No viewing keys available. Generate one in the &quot;Share Key&quot; tab first.
+              No viewing keys available. Generate one in the &quot;Share
+              Key&quot; tab first.
             </p>
           </div>
         )}
@@ -165,10 +175,14 @@ export function ExportReportPanel({ encryptedTransactions = [] }: ExportReportPa
 
       {/* Date Range */}
       <div className="space-y-3">
-        <label className="block text-sm font-medium">Date Range (optional)</label>
+        <label className="block text-sm font-medium">
+          Date Range (optional)
+        </label>
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block text-xs text-[var(--text-tertiary)] mb-1">Start Date</label>
+            <label className="block text-xs text-[var(--text-tertiary)] mb-1">
+              Start Date
+            </label>
             <input
               type="date"
               value={startDate}
@@ -177,7 +191,9 @@ export function ExportReportPanel({ encryptedTransactions = [] }: ExportReportPa
             />
           </div>
           <div>
-            <label className="block text-xs text-[var(--text-tertiary)] mb-1">End Date</label>
+            <label className="block text-xs text-[var(--text-tertiary)] mb-1">
+              End Date
+            </label>
             <input
               type="date"
               value={endDate}
@@ -234,7 +250,8 @@ export function ExportReportPanel({ encryptedTransactions = [] }: ExportReportPa
       {encryptedTransactions.length === 0 && (
         <div className="p-4 rounded-xl border border-[var(--border-default)] bg-[var(--surface-secondary)]">
           <p className="text-sm text-[var(--text-secondary)]">
-            No encrypted transactions to export. Send some private payments first!
+            No encrypted transactions to export. Send some private payments
+            first!
           </p>
         </div>
       )}
@@ -250,7 +267,9 @@ export function ExportReportPanel({ encryptedTransactions = [] }: ExportReportPa
       {/* Generate Button */}
       <button
         onClick={handleGenerateReport}
-        disabled={!selectedKeyHash || encryptedTransactions.length === 0 || isGenerating}
+        disabled={
+          !selectedKeyHash || encryptedTransactions.length === 0 || isGenerating
+        }
         className="w-full py-3 px-4 rounded-xl bg-sip-purple-600 text-white font-medium hover:bg-sip-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {isGenerating ? "Generating..." : "📥 Generate & Download Report"}

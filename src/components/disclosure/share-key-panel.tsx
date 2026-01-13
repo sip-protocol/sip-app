@@ -3,7 +3,10 @@
 import { useState, useCallback } from "react"
 import type { ViewingKey } from "@sip-protocol/types"
 import { ViewingKeyQR } from "./viewing-key-qr"
-import { useViewingKeyDisclosure, type ShareableKey } from "@/hooks/use-viewing-key-disclosure"
+import {
+  useViewingKeyDisclosure,
+  type ShareableKey,
+} from "@/hooks/use-viewing-key-disclosure"
 
 interface ShareKeyPanelProps {
   onKeyGenerated?: (key: ViewingKey) => void
@@ -131,7 +134,11 @@ export function ShareKeyPanel({ onKeyGenerated }: ShareKeyPanelProps) {
               <button
                 key={key.viewingKey.hash}
                 onClick={() =>
-                  setSelectedKey(selectedKey?.viewingKey.hash === key.viewingKey.hash ? null : key)
+                  setSelectedKey(
+                    selectedKey?.viewingKey.hash === key.viewingKey.hash
+                      ? null
+                      : key
+                  )
                 }
                 className={`w-full p-4 rounded-xl border text-left transition-all ${
                   selectedKey?.viewingKey.hash === key.viewingKey.hash
@@ -145,11 +152,14 @@ export function ShareKeyPanel({ onKeyGenerated }: ShareKeyPanelProps) {
                       {key.label || `Key ${key.viewingKey.hash.slice(0, 8)}`}
                     </p>
                     <p className="text-xs text-[var(--text-tertiary)] mt-1">
-                      Created {formatDate(key.createdAt)} • Path: {key.viewingKey.path}
+                      Created {formatDate(key.createdAt)} • Path:{" "}
+                      {key.viewingKey.path}
                     </p>
                   </div>
                   <span className="text-lg">
-                    {selectedKey?.viewingKey.hash === key.viewingKey.hash ? "▼" : "▶"}
+                    {selectedKey?.viewingKey.hash === key.viewingKey.hash
+                      ? "▼"
+                      : "▶"}
                   </span>
                 </div>
               </button>
@@ -173,7 +183,9 @@ export function ShareKeyPanel({ onKeyGenerated }: ShareKeyPanelProps) {
           {/* Key Hash */}
           <div className="p-3 rounded-lg bg-[var(--surface-secondary)]">
             <p className="text-xs text-[var(--text-tertiary)] mb-1">Key Hash</p>
-            <p className="font-mono text-xs break-all">{selectedKey.viewingKey.hash}</p>
+            <p className="font-mono text-xs break-all">
+              {selectedKey.viewingKey.hash}
+            </p>
           </div>
 
           {/* Actions */}

@@ -20,7 +20,9 @@ export function ViewWithKeyPanel() {
 
   const [viewingKey, setViewingKey] = useState<ViewingKey | null>(null)
   const [encryptedData, setEncryptedData] = useState("")
-  const [decryptedData, setDecryptedData] = useState<TransactionData | null>(null)
+  const [decryptedData, setDecryptedData] = useState<TransactionData | null>(
+    null
+  )
   const [decryptionError, setDecryptionError] = useState<string | null>(null)
   const [inputError, setInputError] = useState<string | null>(null)
 
@@ -62,7 +64,9 @@ export function ViewWithKeyPanel() {
         setDecryptedData(null)
       }
     } catch {
-      setInputError("Invalid JSON format. Please paste valid encrypted transaction data.")
+      setInputError(
+        "Invalid JSON format. Please paste valid encrypted transaction data."
+      )
     }
   }, [viewingKey, encryptedData, decryptTransaction])
 
@@ -81,10 +85,12 @@ export function ViewWithKeyPanel() {
         <div className="flex gap-3">
           <span className="text-xl">ℹ️</span>
           <div>
-            <p className="font-medium text-blue-400">For Auditors & Compliance Officers</p>
+            <p className="font-medium text-blue-400">
+              For Auditors & Compliance Officers
+            </p>
             <p className="text-sm text-[var(--text-secondary)] mt-1">
-              Use a viewing key shared with you to decrypt and verify transaction details.
-              This does not give you spending access.
+              Use a viewing key shared with you to decrypt and verify
+              transaction details. This does not give you spending access.
             </p>
           </div>
         </div>
@@ -112,7 +118,9 @@ export function ViewWithKeyPanel() {
           <div className="p-4 rounded-xl border border-green-500/30 bg-green-500/10">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-green-400">Viewing Key Loaded</p>
+                <p className="text-sm font-medium text-green-400">
+                  Viewing Key Loaded
+                </p>
                 <p className="text-xs text-[var(--text-tertiary)] mt-1 font-mono">
                   Hash: {viewingKey.hash.slice(0, 16)}...
                 </p>
