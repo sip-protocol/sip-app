@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next"
 import { Inter, JetBrains_Mono } from "next/font/google"
 import { Providers } from "@/providers"
 import { Header, Footer } from "@/components/layout"
+import { AdvisorWidget } from "@/components/advisor"
 import "./globals.css"
 
 const inter = Inter({
@@ -92,6 +93,7 @@ export default function RootLayout({
           <Header />
           <main className="flex-1 pt-16">{children}</main>
           <Footer />
+          <AdvisorWidget />
         </Providers>
       </body>
     </html>

@@ -1,6 +1,7 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
+import { useAdvisor } from "@/hooks/use-advisor"
 import {
   PrivacyScoreInput,
   ScoreGauge,
@@ -30,6 +31,20 @@ export default function PrivacyScorePage() {
   const [result, setResult] = useState<AnalysisResult | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [showAdvanced, setShowAdvanced] = useState(false)
+
+  // Privacy Advisor integration
+  const { setContext, open: openAdvisor } = useAdvisor()
+
+  // Update advisor context when analysis completes
+  useEffect(() => {
+    if (result && walletAddress) {
+      setContext({
+        walletAddress,
+        currentPrivacyScore: result.privacyScore.overall,
+        breakdown: result.privacyScore.breakdown,
+      })
+    }
+  }, [result, walletAddress, setContext])
 
   // Generate D3 visualization data from result
   const heatmapData = useMemo(() => {
@@ -171,6 +186,17 @@ export default function PrivacyScorePage() {
             <Recommendations
               recommendations={result.privacyScore.recommendations}
             />
+            {/* Ask Advisor CTA */}
+            <div className="mt-4 flex justify-center">
+              <button
+                type="button"
+                onClick={openAdvisor}
+                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-sip-purple-600/10 text-sip-purple-400 hover:bg-sip-purple-600/20 transition-colors border border-sip-purple-600/20"
+              >
+                <ChatIcon className="w-4 h-4" />
+                Ask the Privacy Advisor about these risks
+              </button>
+            </div>
           </div>
 
           {/* SIP Comparison */}
@@ -319,4 +345,22 @@ interface AnalysisResult {
       reason: string
     }>
   }
+}
+
+function ChatIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={2}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+      />
+    </svg>
+  )
 }
