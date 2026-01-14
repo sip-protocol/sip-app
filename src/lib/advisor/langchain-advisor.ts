@@ -55,12 +55,12 @@ function addContextToMessages(
     contextParts.push(`Current wallet: ${context.walletAddress}`)
   }
   if (context.currentPrivacyScore !== undefined) {
-    contextParts.push(`Current privacy score: ${context.currentPrivacyScore}/100`)
+    contextParts.push(
+      `Current privacy score: ${context.currentPrivacyScore}/100`
+    )
   }
   if (context.breakdown) {
-    contextParts.push(
-      `Score breakdown: ${JSON.stringify(context.breakdown)}`
-    )
+    contextParts.push(`Score breakdown: ${JSON.stringify(context.breakdown)}`)
   }
 
   if (contextParts.length === 0) return messages
@@ -102,19 +102,22 @@ export class LangChainAdvisor implements AdvisorProvider {
     lcMessages = addContextToMessages(lcMessages, context)
 
     try {
-      const response = await fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${this.apiKey}`,
-        },
-        body: JSON.stringify({
-          model: this.config.model,
-          messages: lcMessages,
-          temperature: this.config.temperature,
-          max_tokens: this.config.maxTokens,
-        }),
-      })
+      const response = await fetch(
+        "https://api.openai.com/v1/chat/completions",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${this.apiKey}`,
+          },
+          body: JSON.stringify({
+            model: this.config.model,
+            messages: lcMessages,
+            temperature: this.config.temperature,
+            max_tokens: this.config.maxTokens,
+          }),
+        }
+      )
 
       if (!response.ok) {
         const error = await response.text()
@@ -122,7 +125,9 @@ export class LangChainAdvisor implements AdvisorProvider {
       }
 
       const data = await response.json()
-      const content = data.choices?.[0]?.message?.content || "I apologize, I couldn't generate a response."
+      const content =
+        data.choices?.[0]?.message?.content ||
+        "I apologize, I couldn't generate a response."
 
       // Extract recommendations if the response contains analysis
       const recommendations = this.extractRecommendations(content)
@@ -131,9 +136,11 @@ export class LangChainAdvisor implements AdvisorProvider {
         message: createAdvisorMessage(content, {
           walletAddress: context?.walletAddress,
           privacyScore: context?.currentPrivacyScore,
-          recommendations: recommendations.length > 0 ? recommendations : undefined,
+          recommendations:
+            recommendations.length > 0 ? recommendations : undefined,
         }),
-        recommendations: recommendations.length > 0 ? recommendations : undefined,
+        recommendations:
+          recommendations.length > 0 ? recommendations : undefined,
       }
     } catch (error) {
       console.error("LangChain advisor error:", error)
@@ -228,7 +235,8 @@ Analysis:
         }
         currentRec = { title: numMatch[2].trim() }
       } else if (currentRec && line.trim() && !line.startsWith("#")) {
-        currentRec.description = (currentRec.description || "") + line.trim() + " "
+        currentRec.description =
+          (currentRec.description || "") + line.trim() + " "
       }
     }
 

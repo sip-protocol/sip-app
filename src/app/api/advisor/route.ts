@@ -54,14 +54,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         {
           error: "Invalid request",
-          details: "Request must include messages array with valid message objects",
+          details:
+            "Request must include messages array with valid message objects",
         },
         { status: 400 }
       )
     }
 
     // Determine which provider to use
-    const providerName = body.provider || (process.env.OPENAI_API_KEY ? "langchain" : "mock")
+    const providerName =
+      body.provider || (process.env.OPENAI_API_KEY ? "langchain" : "mock")
 
     // Get the advisor
     const advisor = getAdvisor(providerName)

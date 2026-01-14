@@ -212,7 +212,9 @@ export default function JupiterPage() {
             SIP Privacy
           </span>
         </div>
-        <h1 className="text-2xl font-bold sm:text-3xl">Private Jupiter Swaps</h1>
+        <h1 className="text-2xl font-bold sm:text-3xl">
+          Private Jupiter Swaps
+        </h1>
         <p className="mt-2 text-sm text-gray-400 sm:text-base">
           Best prices from Jupiter, cryptographic privacy from SIP
         </p>
@@ -577,7 +579,11 @@ function TokenDropdown({
 }) {
   return (
     <>
-      <div className="fixed inset-0 z-10" onClick={onClose} aria-hidden="true" />
+      <div
+        className="fixed inset-0 z-10"
+        onClick={onClose}
+        aria-hidden="true"
+      />
       <div className="absolute right-0 top-full z-20 mt-2 w-40 rounded-lg border border-gray-700 bg-gray-800 shadow-xl">
         {tokens.map((symbol) => (
           <button
@@ -776,7 +782,11 @@ function JupiterIcon({ className }: { className?: string }) {
 
 function LoadingSpinner() {
   return (
-    <svg className="h-6 w-6 animate-spin text-gray-400" fill="none" viewBox="0 0 24 24">
+    <svg
+      className="h-6 w-6 animate-spin text-gray-400"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
       <circle
         className="opacity-25"
         cx="12"

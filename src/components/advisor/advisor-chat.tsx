@@ -11,12 +11,7 @@ interface AdvisorChatProps {
 }
 
 export function AdvisorChat({ className }: AdvisorChatProps) {
-  const {
-    messages,
-    isLoading,
-    sendMessage,
-    clearHistory,
-  } = useAdvisor()
+  const { messages, isLoading, sendMessage, clearHistory } = useAdvisor()
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
@@ -81,9 +76,18 @@ export function AdvisorChat({ className }: AdvisorChatProps) {
 function TypingIndicator() {
   return (
     <div className="flex items-center gap-1">
-      <span className="w-2 h-2 bg-[var(--text-tertiary)] rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-      <span className="w-2 h-2 bg-[var(--text-tertiary)] rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-      <span className="w-2 h-2 bg-[var(--text-tertiary)] rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+      <span
+        className="w-2 h-2 bg-[var(--text-tertiary)] rounded-full animate-bounce"
+        style={{ animationDelay: "0ms" }}
+      />
+      <span
+        className="w-2 h-2 bg-[var(--text-tertiary)] rounded-full animate-bounce"
+        style={{ animationDelay: "150ms" }}
+      />
+      <span
+        className="w-2 h-2 bg-[var(--text-tertiary)] rounded-full animate-bounce"
+        style={{ animationDelay: "300ms" }}
+      />
     </div>
   )
 }

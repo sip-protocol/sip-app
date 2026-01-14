@@ -108,7 +108,12 @@ const KEYWORD_MATCHES: Array<{ keywords: string[]; response: string }> = [
     response: "exchange_exposure",
   },
   {
-    keywords: ["why privacy", "why does privacy", "why should i", "what's the point"],
+    keywords: [
+      "why privacy",
+      "why does privacy",
+      "why should i",
+      "what's the point",
+    ],
     response: "why_privacy",
   },
   {
@@ -133,7 +138,9 @@ function findResponse(input: string): string {
 /** Generate mock wallet analysis */
 function generateMockAnalysis(address: string): WalletAnalysis {
   // Use address hash for deterministic but varied results
-  const hash = address.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0)
+  const hash = address
+    .split("")
+    .reduce((acc, char) => acc + char.charCodeAt(0), 0)
 
   const addressReuse = 5 + (hash % 20)
   const clusterExposure = 3 + ((hash * 7) % 22)
@@ -142,7 +149,11 @@ function generateMockAnalysis(address: string): WalletAnalysis {
   const socialLinks = 1 + ((hash * 23) % 14)
 
   const overallScore =
-    addressReuse + clusterExposure + exchangeExposure + temporalPatterns + socialLinks
+    addressReuse +
+    clusterExposure +
+    exchangeExposure +
+    temporalPatterns +
+    socialLinks
 
   const riskLevel =
     overallScore >= 70
@@ -246,9 +257,13 @@ export class MockAdvisor implements AdvisorProvider {
     context?: AdvisorContext
   ): Promise<AdvisorResponse> {
     // Simulate network delay
-    await new Promise((resolve) => setTimeout(resolve, 500 + Math.random() * 500))
+    await new Promise((resolve) =>
+      setTimeout(resolve, 500 + Math.random() * 500)
+    )
 
-    const lastUserMessage = [...messages].reverse().find((m) => m.role === "user")
+    const lastUserMessage = [...messages]
+      .reverse()
+      .find((m) => m.role === "user")
     const content = lastUserMessage?.content || ""
 
     // Check if asking about a specific wallet
@@ -301,7 +316,9 @@ Would you like me to explain any of these findings in more detail?`
     return generateMockAnalysis(address)
   }
 
-  async getRecommendations(analysis: WalletAnalysis): Promise<AdvisorRecommendation[]> {
+  async getRecommendations(
+    analysis: WalletAnalysis
+  ): Promise<AdvisorRecommendation[]> {
     return generateRecommendations(analysis)
   }
 }
