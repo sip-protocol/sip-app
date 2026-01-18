@@ -29,16 +29,20 @@ export function StealthAddressGenerator({
   const [showWarning, setShowWarning] = useState(false)
   const [showDetails, setShowDetails] = useState(false)
   const [isScanning, setIsScanning] = useState(false)
-  const [expandedNotification, setExpandedNotification] = useState<number | null>(null)
+  const [expandedNotification, setExpandedNotification] = useState<
+    number | null
+  >(null)
 
   // Mock notifications - in production, these come from scanning blockchain
-  const [notifications] = useState<{
-    amount: string
-    token: string
-    timestamp: number
-    status: "pending" | "confirmed" | "failed"
-    txHash?: string
-  }[]>([])
+  const [notifications] = useState<
+    {
+      amount: string
+      token: string
+      timestamp: number
+      status: "pending" | "confirmed" | "failed"
+      txHash?: string
+    }[]
+  >([])
 
   const handleGenerateClick = () => {
     if (!hasBackedUp) {
@@ -264,7 +268,9 @@ export function StealthAddressGenerator({
                 timestamp={notif.timestamp}
                 status={notif.status}
                 txHash={notif.txHash}
-                onExpand={() => setExpandedNotification(expandedNotification === i ? null : i)}
+                onExpand={() =>
+                  setExpandedNotification(expandedNotification === i ? null : i)
+                }
                 isExpanded={expandedNotification === i}
               />
             ))}

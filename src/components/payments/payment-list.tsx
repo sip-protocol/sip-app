@@ -188,7 +188,12 @@ export function PaymentList({
     const received = payments.reduce((sum, p) => sum + p.amount, 0)
     const sent = sentPayments.reduce((sum, p) => sum + p.amount, 0)
     const unclaimed = payments.filter((p) => !p.claimed).length
-    return { received, sent, unclaimed, total: payments.length + sentPayments.length }
+    return {
+      received,
+      sent,
+      unclaimed,
+      total: payments.length + sentPayments.length,
+    }
   }, [payments, sentPayments])
 
   if (payments.length === 0 && sentPayments.length === 0) {
@@ -551,7 +556,12 @@ function StatCard({ label, value, icon, color }: StatCardProps) {
   return (
     <div className="p-3 rounded-xl bg-[var(--surface-secondary)] border border-[var(--border-default)]">
       <div className="flex items-center gap-2 mb-1">
-        <span className={cn("w-6 h-6 rounded-lg flex items-center justify-center text-sm", colors[color])}>
+        <span
+          className={cn(
+            "w-6 h-6 rounded-lg flex items-center justify-center text-sm",
+            colors[color]
+          )}
+        >
           {icon}
         </span>
         <span className="text-xs text-[var(--text-tertiary)]">{label}</span>

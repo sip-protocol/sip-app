@@ -262,27 +262,29 @@ export function TransactionStatus({
       )}
 
       {/* Derivation Progress */}
-      {derivationProgress && status === "pending" && currentStep === "deriving" && (
-        <div className="border-t border-blue-800/50 p-4">
-          <div className="space-y-2">
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-blue-200">{derivationProgress.step}</span>
-              <span className="text-blue-300/70">
-                {derivationProgress.percentage}%
-              </span>
+      {derivationProgress &&
+        status === "pending" &&
+        currentStep === "deriving" && (
+          <div className="border-t border-blue-800/50 p-4">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-blue-200">{derivationProgress.step}</span>
+                <span className="text-blue-300/70">
+                  {derivationProgress.percentage}%
+                </span>
+              </div>
+              <div className="h-2 bg-blue-900/50 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-gradient-to-r from-blue-500 to-sip-purple-500 rounded-full transition-all duration-300"
+                  style={{ width: `${derivationProgress.percentage}%` }}
+                />
+              </div>
+              <p className="text-xs text-blue-300/50">
+                Deriving stealth address using secp256k1 curve...
+              </p>
             </div>
-            <div className="h-2 bg-blue-900/50 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-gradient-to-r from-blue-500 to-sip-purple-500 rounded-full transition-all duration-300"
-                style={{ width: `${derivationProgress.percentage}%` }}
-              />
-            </div>
-            <p className="text-xs text-blue-300/50">
-              Deriving stealth address using secp256k1 curve...
-            </p>
           </div>
-        </div>
-      )}
+        )}
 
       {/* Success Details */}
       {status === "confirmed" && (
