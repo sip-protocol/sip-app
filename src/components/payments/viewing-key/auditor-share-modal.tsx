@@ -129,6 +129,18 @@ export function AuditorShareModal({
 
         {/* Content */}
         <div className="p-6 space-y-6">
+          {/* Revocation Warning Banner */}
+          <div className="flex items-start gap-2 p-3 rounded-lg bg-red-500/10 border border-red-500/20">
+            <LockClosedIcon className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
+            <div className="text-xs text-red-400">
+              <p className="font-medium">Sharing is permanent</p>
+              <p className="mt-1 text-red-400/80">
+                Once shared, this viewing key cannot be revoked. The auditor
+                will be able to view transaction details indefinitely.
+              </p>
+            </div>
+          </div>
+
           {/* Share with auditor */}
           <div className="space-y-3">
             <label className="text-sm font-medium text-[var(--text-secondary)]">
@@ -316,6 +328,24 @@ function WarningIcon({ className }: { className?: string }) {
         strokeLinecap="round"
         strokeLinejoin="round"
         d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+      />
+    </svg>
+  )
+}
+
+function LockClosedIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={2}
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
       />
     </svg>
   )
