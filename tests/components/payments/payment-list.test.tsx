@@ -29,7 +29,7 @@ describe("PaymentList", () => {
 
   it("renders empty state when no payments", () => {
     render(<PaymentList payments={[]} onClaim={mockOnClaim} />)
-    expect(screen.getByText(/No payments found/i)).toBeInTheDocument()
+    expect(screen.getByText(/No transactions yet/i)).toBeInTheDocument()
   })
 
   it("renders payment list with amounts", () => {
