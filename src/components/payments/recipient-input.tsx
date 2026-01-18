@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback, useEffect } from "react"
+import { useState, useCallback } from "react"
 import { cn } from "@/lib/utils"
 
 // SIP stealth address format: sip:<chain>:<spendingKey>:<viewingKey>
@@ -29,24 +29,21 @@ export function RecipientInput({
   const [touched, setTouched] = useState(false)
   const [showQRScanner, setShowQRScanner] = useState(false)
   const [showAddressBook, setShowAddressBook] = useState(false)
-  const [contacts, setContacts] = useState<Contact[]>([])
+  // Load contacts from localStorage using lazy initializer
+  const [contacts, setContacts] = useState<Contact[]>(() => {
+    if (typeof window === "undefined") return []
+    try {
+      const stored = localStorage.getItem(CONTACTS_KEY)
+      return stored ? JSON.parse(stored) : []
+    } catch {
+      return []
+    }
+  })
   const [newContactLabel, setNewContactLabel] = useState("")
   const [showSavePrompt, setShowSavePrompt] = useState(false)
 
   const isValid = value === "" || SIP_ADDRESS_REGEX.test(value)
   const showError = touched && value !== "" && !isValid
-
-  // Load contacts from localStorage
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem(CONTACTS_KEY)
-      if (stored) {
-        setContacts(JSON.parse(stored))
-      }
-    } catch (err) {
-      console.error("Failed to load contacts:", err)
-    }
-  }, [])
 
   // Save contacts to localStorage
   const saveContacts = useCallback((newContacts: Contact[]) => {
@@ -279,16 +276,14 @@ interface QRScannerModalProps {
 
 function QRScannerModal({ onScan, onClose }: QRScannerModalProps) {
   const [manualInput, setManualInput] = useState("")
-  const [cameraError, setCameraError] = useState<string | null>(null)
-
-  // In production, integrate with a QR scanning library like @zxing/browser
-  // For now, show a placeholder with manual input option
-  useEffect(() => {
-    // Check if camera is available
+  // Check camera availability using lazy initializer
+  const [cameraError] = useState<string | null>(() => {
+    if (typeof window === "undefined") return null
     if (!navigator.mediaDevices?.getUserMedia) {
-      setCameraError("Camera not available in this browser")
+      return "Camera not available in this browser"
     }
-  }, [])
+    return null
+  })
 
   const handleManualSubmit = () => {
     if (manualInput.trim()) {

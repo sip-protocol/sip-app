@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { cn } from "@/lib/utils"
 import { truncate } from "@/lib/utils"
 
@@ -75,21 +75,24 @@ export function TransactionStatus({
   className,
 }: TransactionStatusProps) {
   const [elapsedTime, setElapsedTime] = useState(0)
-  const [startTime] = useState(() => (status === "pending" ? Date.now() : 0))
+  const startTimeRef = useRef<number>(0)
 
   // Track elapsed time for pending transactions
   useEffect(() => {
     if (status !== "pending") {
-      setElapsedTime(0)
+      startTimeRef.current = 0
       return
     }
 
+    // Reset start time when entering pending state
+    startTimeRef.current = Date.now()
+
     const interval = setInterval(() => {
-      setElapsedTime(Math.floor((Date.now() - startTime) / 1000))
+      setElapsedTime(Math.floor((Date.now() - startTimeRef.current) / 1000))
     }, 1000)
 
     return () => clearInterval(interval)
-  }, [status, startTime])
+  }, [status])
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60)

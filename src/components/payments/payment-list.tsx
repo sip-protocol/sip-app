@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect, useMemo, useRef } from "react"
 import { ClaimButton } from "./claim-button"
 import type { DetectedPayment } from "@/hooks/use-scan-payments"
 import { cn } from "@/lib/utils"
@@ -62,16 +62,22 @@ export function PaymentList({
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1)
+  // Track previous filter state to reset page when filters change
+  const filterKey = `${txType}-${statusFilter}-${tokenFilter}-${sortOrder}`
+  const prevFilterKeyRef = useRef(filterKey)
 
   // Update time when payments change (deferred to avoid sync setState in effect)
   useEffect(() => {
     queueMicrotask(() => setNow(Date.now()))
   }, [payments, sentPayments])
 
-  // Reset to first page when filters change
+  // Reset page when filters change
   useEffect(() => {
-    setCurrentPage(1)
-  }, [txType, statusFilter, tokenFilter, sortOrder])
+    if (prevFilterKeyRef.current !== filterKey) {
+      prevFilterKeyRef.current = filterKey
+      queueMicrotask(() => setCurrentPage(1))
+    }
+  }, [filterKey])
 
   // Get unique tokens for filter
   const uniqueTokens = useMemo(() => {
