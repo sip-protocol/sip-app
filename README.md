@@ -55,10 +55,10 @@ src/
 
 ## Tech Stack
 
-- **Framework:** Next.js 14 (App Router)
+- **Framework:** Next.js 16 (App Router)
 - **Language:** TypeScript (strict mode)
-- **Styling:** Tailwind CSS
-- **State:** Zustand
+- **Styling:** Tailwind CSS 4
+- **State:** Zustand 5
 - **Testing:** Vitest + Testing Library
 - **SDK:** @sip-protocol/sdk, @sip-protocol/react
 - **Wallet:** @solana/wallet-adapter-react
