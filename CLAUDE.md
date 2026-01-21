@@ -58,16 +58,19 @@ Before building ANY feature, ask:
 
 ## Current Focus
 
-**Status:** Initial Development | Building world-class privacy app
-**Context:** Solana Privacy Hack (Jan 12 - Feb 1, 2026) — bonus opportunity, not primary driver
+**Status:** Live | World-class privacy app deployed
+**Context:** Solana Privacy Hack complete — building toward M17 (Solana Same-Chain)
 
-### Priority: /payments (Privacy Payments App)
-Build the best private payments experience on Solana:
-- [ ] `/payments` - Dashboard for private payments
-- [ ] `/payments/send` - Send shielded payments (beautiful UX)
-- [ ] `/payments/receive` - Generate stealth addresses (one-click)
-- [ ] `/payments/scan` - Scan for incoming payments (real-time)
-- [ ] `/payments/history` - Transaction history (clear, searchable)
+### Live Routes (/payments)
+- [x] `/payments` - Dashboard for private payments
+- [x] `/payments/send` - Send shielded payments
+- [x] `/payments/receive` - Generate stealth addresses
+- [x] `/payments/scan` - Scan for incoming payments
+- [x] `/payments/history` - Transaction history
+- [x] `/payments/disclose` - Viewing key disclosure
+
+### New Feature
+- [x] `/privacy-score` - Wallet surveillance analyzer
 
 **Target UX:** As smooth as Venmo, as private as cash.
 
@@ -79,23 +82,24 @@ Build the best private payments experience on Solana:
 - `sip-protocol.org` = "What is SIP?" (marketing)
 - `app.sip-protocol.org` = "Use SIP now" (THE product)
 
-### App Routes
+### App Routes (14 total)
 
-| Route | Purpose | Status | Priority |
-|-------|---------|--------|----------|
-| `/` | App hub / dashboard | Planned | Medium |
-| `/payments` | Private Payments | **HACKATHON** | Critical |
-| `/payments/send` | Send shielded payment | **HACKATHON** | Critical |
-| `/payments/receive` | Generate stealth address | **HACKATHON** | Critical |
-| `/payments/scan` | Scan for incoming | **HACKATHON** | High |
-| `/payments/history` | Transaction history | Planned | Medium |
-| `/wallet` | Wallet interface | Planned | Medium |
-| `/wallet/keys` | Viewing key management | Planned | Medium |
-| `/dex` | Private DEX (from /demo) | Planned | Medium |
-| `/dex/jupiter` | Jupiter integration | Planned | Medium |
-| `/enterprise` | Enterprise dashboard | Planned | Low |
-| `/enterprise/compliance` | Compliance tools | Planned | Low |
-| `/gaming` | Gaming transactions | Future | Low |
+| Route | Purpose | Status |
+|-------|---------|--------|
+| `/` | App hub / dashboard | ✅ Live |
+| `/payments` | Private Payments dashboard | ✅ Live |
+| `/payments/send` | Send shielded payment | ✅ Live |
+| `/payments/receive` | Generate stealth address | ✅ Live |
+| `/payments/scan` | Scan for incoming | ✅ Live |
+| `/payments/history` | Transaction history | ✅ Live |
+| `/payments/disclose` | Viewing key disclosure | ✅ Live |
+| `/privacy-score` | Wallet surveillance analyzer | ✅ Live |
+| `/wallet` | Wallet interface | Scaffolded |
+| `/wallet/keys` | Viewing key management | Scaffolded |
+| `/dex` | Private DEX | Scaffolded |
+| `/dex/jupiter` | Jupiter integration | Scaffolded |
+| `/enterprise` | Enterprise dashboard | Scaffolded |
+| `/enterprise/compliance` | Compliance tools | Scaffolded |
 
 ### Route Groups Structure
 
@@ -133,8 +137,9 @@ src/app/
 
 ## Quick Reference
 
-**Tech Stack:** Next.js 14 (App Router), React 18, Tailwind CSS, Zustand, Vitest
-**Deployment:** app.sip-protocol.org (Docker + GHCR → VPS port 5004)
+**Tech Stack:** Next.js 16 (App Router), React 19, Tailwind CSS 4, Zustand 5, Vitest
+**Deployment:** app.sip-protocol.org (Docker + GHCR → VPS port 5004 blue / 5005 green)
+**Tests:** 25 test suites
 
 **Key Commands:**
 ```bash
@@ -297,6 +302,6 @@ Study these for quality benchmarks:
 
 ---
 
-**Last Updated:** 2026-01-11
-**Status:** Building World-Class Privacy App
+**Last Updated:** 2026-01-21
+**Status:** Live at app.sip-protocol.org | 14 routes | 25 test suites
 **Philosophy:** THE product, not a demo. Quality over deadlines. User satisfaction first.
