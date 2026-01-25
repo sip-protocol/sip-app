@@ -59,7 +59,7 @@ Before building ANY feature, ask:
 ## Current Focus
 
 **Status:** Live | World-class privacy app deployed
-**Context:** Solana Privacy Hack complete — building toward M17 (Solana Same-Chain)
+**Context:** M17 Complete — building toward M18 (Ethereum Same-Chain)
 
 ### Live Routes (/payments)
 - [x] `/payments` - Dashboard for private payments
@@ -302,6 +302,6 @@ Study these for quality benchmarks:
 
 ---
 
-**Last Updated:** 2026-01-21
+**Last Updated:** 2026-01-25
 **Status:** Live at app.sip-protocol.org | 14 routes | 25 test suites
 **Philosophy:** THE product, not a demo. Quality over deadlines. User satisfaction first.
