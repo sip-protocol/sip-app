@@ -4,29 +4,93 @@
 
 **Repository:** https://github.com/sip-protocol/sip-app
 **Live URL:** https://app.sip-protocol.org
-**Purpose:** THE world-class privacy application for Web3 — powered by SIP Protocol SDK
+**Tagline:** "Privacy Command Center for Web3"
+**Purpose:** Enterprise-grade privacy interface — compliance, analytics, power user workflows
 
 ---
 
-## 🎯 PRODUCT PHILOSOPHY (READ THIS FIRST)
+## 🎯 PRODUCT POSITIONING
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  SIP PRODUCT FAMILY (Jupiter Model)                                         │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  @sip-protocol/sdk — THE PRIVACY STANDARD                                   │
+│  "Any app can add privacy with one line of code"                           │
+│                                                                             │
+│  ┌─────────────────────────────┐   ┌─────────────────────────────┐         │
+│  │  app.sip-protocol.org      │   │  SIP Privacy (Mobile)       │         │
+│  │  ───────────────────────   │   │  ────────────────────────   │         │
+│  │  "Privacy Command Center"  │   │  "Privacy in Your Pocket"   │         │
+│  │                            │   │                             │         │
+│  │  • Power users/Enterprise  │   │  • Consumers                │         │
+│  │  • Complex visualizations  │   │  • Quick payments/swaps     │         │
+│  │  • Compliance dashboards   │   │  • Native key management    │         │
+│  │  • Audit trails/Reports    │   │  • Biometric security       │         │
+│  │  • SDK showcase            │   │  • On-the-go privacy        │         │
+│  │                            │   │                             │         │
+│  │  ← YOU ARE HERE            │   │  → sip-mobile repo          │         │
+│  └─────────────────────────────┘   └─────────────────────────────┘         │
+│                                                                             │
+│  COMPANION PRODUCTS — Same brand, platform-optimized experiences            │
+│  Like jup.ag (web) + Jupiter Mobile (app) — NOT 1:1 clones                 │
+│                                                                             │
+│  BOTH are real products with real users — NOT demos                        │
+│  BOTH showcase SDK capabilities → drive developer adoption                 │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### sip-app Differentiators (Web Strengths)
+
+| Capability | Why Web Excels |
+|------------|----------------|
+| **D3 Visualizations** | Privacy Score heatmaps, network graphs — complex rendering |
+| **Compliance Dashboards** | Multi-monitor workflows for auditors, accountants |
+| **Audit Report Generation** | PDF exports, detailed transaction analysis |
+| **Enterprise Batch Ops** | Multi-transaction batching, power user tools |
+| **SDK Playground** | Interactive code examples, API explorer |
+| **Deep Research** | Transaction deep-dives, surveillance analysis |
+
+### Shared with sip-mobile (Must Be Identical)
+
+- Core privacy primitives (stealth addresses, commitments, viewing keys)
+- Privacy levels (transparent / shielded / compliant)
+- Payment protocol (send / receive / scan / claim / disclose)
+- Viewing key disclosure for compliance
+
+### Feature Parity Matrix
+
+| Feature | sip-app (Web) | sip-mobile | Notes |
+|---------|---------------|------------|-------|
+| Send Payments | ✅ Full | ✅ Full | Same core |
+| Receive (Stealth) | ✅ Full | ✅ Full | Same core |
+| Scan Payments | ✅ Full | ✅ Full | Mobile has native camera |
+| Claim Payments | ✅ Full | ✅ Full | Same core |
+| View History | ✅ Full | ✅ Full | Different viz |
+| Viewing Key Disclosure | ✅ Full | ✅ Full | Compliance-critical |
+| Jupiter DEX | 🔲 Scaffolded | ✅ Full | Mobile-first for swaps |
+| Privacy Score | ✅ Full (D3) | ✅ Basic | Web excels at viz |
+| Compliance Dashboard | 🔲 Scaffolded | ✅ Basic | Web for enterprise |
+| Audit Reports | 🔲 Planned | ✅ Basic | Web for accountants |
+| Native Key Mgmt | ❌ N/A | ✅ Full | Mobile-only |
+| Biometric Auth | ❌ N/A | ✅ Full | Mobile-only |
+| SDK Playground | 🔲 Planned | ❌ N/A | Web-only |
+
+---
+
+## 🎯 QUALITY PHILOSOPHY
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                     THIS IS NOT A DEMO. THIS IS THE PRODUCT.                │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
-│   app.sip-protocol.org = THE Privacy App for Web3 Users                     │
-│                                                                             │
-│   Like jup.ag is to Jupiter SDK:                                            │
-│   • Jupiter SDK → for developers to integrate swaps                         │
-│   • jup.ag → THE best swap interface on Solana (world-class consumer app)   │
-│                                                                             │
-│   SIP follows the same model:                                               │
-│   • @sip-protocol/sdk → for developers to integrate privacy                 │
-│   • app.sip-protocol.org → THE best privacy interface (world-class app)     │
-│                                                                             │
 │   THE APP IS THE PITCH.                                                     │
 │   Developers see the app → impressed → want to use the SDK.                 │
+│                                                                             │
+│   Quality benchmark: "Would this be acceptable on jup.ag?"                  │
+│   If no, raise the bar.                                                     │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
@@ -297,11 +361,13 @@ Study these for quality benchmarks:
 | Repo | Purpose | Relationship |
 |------|---------|--------------|
 | [sip-protocol](https://github.com/sip-protocol/sip-protocol) | Core SDK | Imports SDK |
+| [sip-mobile](https://github.com/sip-protocol/sip-mobile) | **Companion mobile app** | Same product family |
 | [sip-website](https://github.com/sip-protocol/sip-website) | Marketing site | Replaces /demo |
 | [docs-sip](https://github.com/sip-protocol/docs-sip) | Documentation | Documents usage |
 
 ---
 
-**Last Updated:** 2026-01-25
+**Last Updated:** 2026-01-28
 **Status:** Live at app.sip-protocol.org | 14 routes | 25 test suites
-**Philosophy:** THE product, not a demo. Quality over deadlines. User satisfaction first.
+**Positioning:** Privacy Command Center — enterprise, compliance, power users
+**Companion:** sip-mobile ("Privacy in Your Pocket" — consumers, daily use)
