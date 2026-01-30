@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-
-// Mock data for demo - in production, use the SDK's SurveillanceAnalyzer
-// import { createSurveillanceAnalyzer } from '@sip-protocol/sdk'
+import { createSurveillanceAnalyzer } from "@sip-protocol/sdk"
 
 // Basic Solana address validation (base58, 32-44 chars)
 function isValidSolanaAddress(address: string): boolean {
@@ -29,30 +27,38 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // In production, use the real analyzer:
-    // const analyzer = createSurveillanceAnalyzer({
-    //   heliusApiKey: process.env.HELIUS_API_KEY!,
-    // })
-    // const result = await analyzer.analyze(walletAddress)
+    // Check for Helius API key
+    const heliusApiKey = process.env.HELIUS_API_KEY
+    if (!heliusApiKey) {
+      // Fall back to mock data if no API key configured
+      console.warn("HELIUS_API_KEY not set, using mock data")
+      const mockResult = generateMockResult(walletAddress)
+      await new Promise((resolve) => setTimeout(resolve, 1500))
+      return NextResponse.json(mockResult)
+    }
 
-    // For demo, generate mock data based on address hash
-    const mockResult = generateMockResult(walletAddress)
+    // Use real SDK analyzer
+    const analyzer = createSurveillanceAnalyzer({
+      heliusApiKey,
+      cluster: process.env.SOLANA_CLUSTER === "devnet" ? "devnet" : "mainnet-beta",
+      maxTransactions: 500,
+      includeSocialLinks: true,
+    })
 
-    // Simulate network delay
-    await new Promise((resolve) => setTimeout(resolve, 2000))
+    const result = await analyzer.analyze(walletAddress)
 
-    return NextResponse.json(mockResult)
+    return NextResponse.json(result)
   } catch (error) {
     console.error("Privacy score analysis error:", error)
     return NextResponse.json(
-      { error: "Failed to analyze wallet" },
+      { error: error instanceof Error ? error.message : "Failed to analyze wallet" },
       { status: 500 }
     )
   }
 }
 
+// Mock data fallback when HELIUS_API_KEY is not configured
 function generateMockResult(walletAddress: string) {
-  // Use address to seed pseudo-random values for consistent results
   const seed = walletAddress.split("").reduce((a, b) => a + b.charCodeAt(0), 0)
   const random = (min: number, max: number) =>
     min + ((seed * 9301 + 49297) % (max - min + 1))
@@ -64,20 +70,10 @@ function generateMockResult(walletAddress: string) {
   const socialLinks = random(0, 15)
 
   const overall =
-    addressReuse +
-    clusterExposure +
-    exchangeExposure +
-    temporalPatterns +
-    socialLinks
+    addressReuse + clusterExposure + exchangeExposure + temporalPatterns + socialLinks
 
   const risk =
-    overall < 30
-      ? "critical"
-      : overall < 50
-        ? "high"
-        : overall < 70
-          ? "medium"
-          : "low"
+    overall < 30 ? "critical" : overall < 50 ? "high" : overall < 70 ? "medium" : "low"
 
   const recommendations = []
 
@@ -126,7 +122,7 @@ function generateMockResult(walletAddress: string) {
   if (temporalPatterns < 12) {
     recommendations.push({
       id: "temporal-schedule-001",
-      severity: "medium",
+      severity: "medium" as const,
       category: "temporalPatterns",
       title: "Regular transaction schedule detected",
       description:
@@ -151,20 +147,14 @@ function generateMockResult(walletAddress: string) {
     })
   }
 
-  // Sort by potential gain
   recommendations.sort((a, b) => b.potentialGain - a.potentialGain)
 
-  // Calculate SIP improvements
   const projectedAddressReuse = 25
   const projectedCluster = 25
   const projectedExchange = Math.min(exchangeExposure + 10, 20)
   const projectedTemporal = Math.min(temporalPatterns + 5, 15)
   const projectedScore =
-    projectedAddressReuse +
-    projectedCluster +
-    projectedExchange +
-    projectedTemporal +
-    socialLinks
+    projectedAddressReuse + projectedCluster + projectedExchange + projectedTemporal + socialLinks
 
   const improvements = []
 
@@ -191,8 +181,7 @@ function generateMockResult(walletAddress: string) {
       category: "exchangeExposure",
       currentScore: exchangeExposure,
       projectedScore: projectedExchange,
-      reason:
-        "Viewing keys allow selective disclosure without exposing full history",
+      reason: "Viewing keys allow selective disclosure without exposing full history",
     })
   }
 
