@@ -817,19 +817,19 @@ const encryptTradeDeliverables = [
   {
     title: 'Why Privacy Matters on Solana',
     excerpt: 'Understanding the privacy problem in Web3',
-    href: 'https://blog.sip-protocol.org/why-privacy-matters-solana',
+    href: 'https://blog.sip-protocol.org/blog/why-privacy-matters-solana',
     category: 'Track 2',
   },
   {
     title: 'Stealth Addresses Explained',
     excerpt: 'EIP-5564 and one-time addresses without jargon',
-    href: 'https://blog.sip-protocol.org/stealth-addresses-eip-5564',
+    href: 'https://blog.sip-protocol.org/blog/stealth-addresses-eip-5564',
     category: 'Track 2',
   },
   {
     title: 'Viewing Keys for Compliance',
     excerpt: 'How selective disclosure enables institutional adoption',
-    href: 'https://blog.sip-protocol.org/viewing-keys-compliance',
+    href: 'https://blog.sip-protocol.org/blog/viewing-keys-compliance',
     category: 'Track 2',
   },
 ]
