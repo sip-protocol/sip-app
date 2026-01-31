@@ -1,11 +1,11 @@
-'use client'
+"use client"
 
-import { ReactNode } from 'react'
+import { ReactNode } from "react"
 
 interface PhoneMockupProps {
   children: ReactNode
   className?: string
-  variant?: 'seeker' | 'iphone' | 'android'
+  variant?: "seeker" | "iphone" | "android"
 }
 
 /**
@@ -14,27 +14,25 @@ interface PhoneMockupProps {
  */
 export function PhoneMockup({
   children,
-  className = '',
-  variant = 'seeker',
+  className = "",
+  variant = "seeker",
 }: PhoneMockupProps) {
   const widthClass = {
-    seeker: 'w-[280px]',
-    iphone: 'w-[300px]',
-    android: 'w-[290px]',
+    seeker: "w-[280px]",
+    iphone: "w-[300px]",
+    android: "w-[290px]",
   }[variant]
 
   return (
     <div className={`relative mx-auto ${widthClass} ${className}`}>
       {/* Outer frame - device body */}
-      <div
-        className="relative rounded-[3rem] p-3 bg-gradient-to-b from-gray-700 via-gray-800 to-gray-900 shadow-[0_0_0_2px_rgba(255,255,255,0.1),0_0_0_4px_rgba(0,0,0,0.3),0_25px_50px_-12px_rgba(0,0,0,0.5)]"
-      >
+      <div className="relative rounded-[3rem] p-3 bg-gradient-to-b from-gray-700 via-gray-800 to-gray-900 shadow-[0_0_0_2px_rgba(255,255,255,0.1),0_0_0_4px_rgba(0,0,0,0.3),0_25px_50px_-12px_rgba(0,0,0,0.5)]">
         {/* Inner bezel */}
         <div className="relative rounded-[2.25rem] bg-black p-1 overflow-hidden">
           {/* Screen area */}
           <div className="relative rounded-[2rem] overflow-hidden bg-gray-950">
             {/* Status bar notch area (Seeker style - subtle) */}
-            {variant === 'seeker' && (
+            {variant === "seeker" && (
               <div className="absolute top-0 left-1/2 -translate-x-1/2 z-10">
                 <div className="w-20 h-5 bg-black rounded-b-xl flex items-center justify-center">
                   <div className="w-2 h-2 rounded-full bg-gray-800" />
@@ -43,7 +41,7 @@ export function PhoneMockup({
             )}
 
             {/* iPhone style notch */}
-            {variant === 'iphone' && (
+            {variant === "iphone" && (
               <div className="absolute top-0 left-1/2 -translate-x-1/2 z-10">
                 <div className="w-32 h-7 bg-black rounded-b-2xl flex items-center justify-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-gray-700" />
@@ -53,7 +51,7 @@ export function PhoneMockup({
             )}
 
             {/* Android style punch hole */}
-            {variant === 'android' && (
+            {variant === "android" && (
               <div className="absolute top-2 left-1/2 -translate-x-1/2 z-10">
                 <div className="w-3 h-3 rounded-full bg-gray-800 border border-gray-700" />
               </div>
@@ -87,7 +85,7 @@ interface PhoneScreenProps {
   className?: string
 }
 
-export function PhoneScreen({ src, alt, className = '' }: PhoneScreenProps) {
+export function PhoneScreen({ src, alt, className = "" }: PhoneScreenProps) {
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
@@ -106,7 +104,7 @@ interface PhoneVideoProps {
   className?: string
 }
 
-export function PhoneVideo({ src, className = '' }: PhoneVideoProps) {
+export function PhoneVideo({ src, className = "" }: PhoneVideoProps) {
   return (
     <video
       src={src}

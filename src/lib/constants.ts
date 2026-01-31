@@ -7,12 +7,12 @@
  */
 
 // SDK Version - auto-read from package.json dependency
-import packageJson from '../../package.json'
+import packageJson from "../../package.json"
 
 function getSDKVersion(): string {
-  const dep = packageJson.dependencies?.['@sip-protocol/sdk'] || '0.0.0'
+  const dep = packageJson.dependencies?.["@sip-protocol/sdk"] || "0.0.0"
   // Remove ^ or ~ prefix if present
-  return dep.replace(/^[\^~]/, '')
+  return dep.replace(/^[\^~]/, "")
 }
 
 export const SDK_VERSION = {
@@ -27,7 +27,7 @@ export const SDK_VERSION = {
     return `@sip-protocol/sdk v${this.version}`
   },
   /** npm URL */
-  npmUrl: 'https://www.npmjs.com/package/@sip-protocol/sdk',
+  npmUrl: "https://www.npmjs.com/package/@sip-protocol/sdk",
 }
 
 // Test counts - updated 2026-01-31
@@ -39,7 +39,9 @@ export const TEST_COUNTS = {
   reactNative: 10,
   app: 25,
   get total() {
-    return this.sdk + this.react + this.cli + this.api + this.reactNative + this.app
+    return (
+      this.sdk + this.react + this.cli + this.api + this.reactNative + this.app
+    )
   },
   // Formatted strings for display
   get sdkDisplay() {
@@ -56,9 +58,9 @@ export const TEST_COUNTS = {
 // Project status - current phase and milestone
 export const PROJECT_STATUS = {
   currentPhase: 4,
-  currentPhaseName: 'Same-Chain Expansion',
-  currentMilestone: 'M17',
-  currentMilestoneName: 'Solana Same-Chain Privacy',
+  currentPhaseName: "Same-Chain Expansion",
+  currentMilestone: "M17",
+  currentMilestoneName: "Solana Same-Chain Privacy",
   completedMilestones: 17,
   totalMilestones: 22,
   phasesComplete: 3,
@@ -68,32 +70,32 @@ export const PROJECT_STATUS = {
 // Achievements and awards
 export const ACHIEVEMENTS = {
   zypherpunk: {
-    id: 'zypherpunk-2025',
-    title: 'Zypherpunk Hackathon Winner',
-    track: '3 Tracks (NEAR + Tachyon + pumpfun)',
-    ranking: '#9 of 93',
-    date: 'December 2025',
-    link: 'https://zypherpunk.xyz',
-    badge: 'Winner',
+    id: "zypherpunk-2025",
+    title: "Zypherpunk Hackathon Winner",
+    track: "3 Tracks (NEAR + Tachyon + pumpfun)",
+    ranking: "#9 of 93",
+    date: "December 2025",
+    link: "https://zypherpunk.xyz",
+    badge: "Winner",
   },
   superteam: {
-    id: 'superteam-grant-2026',
-    title: 'Superteam Indonesia Grant',
-    badge: 'Approved',
-    date: 'January 2026',
+    id: "superteam-grant-2026",
+    title: "Superteam Indonesia Grant",
+    badge: "Approved",
+    date: "January 2026",
   },
 } as const
 
 // Program deployments
 export const DEPLOYMENTS = {
   mainnet: {
-    programId: 'S1PMFspo4W6BYKHWkHNF7kZ3fnqibEXg3LQjxepS9at',
-    configPda: 'BVawZkppFewygA5nxdrLma4ThKx8Th7bW4KTCkcWTZwZ',
-    date: '2026-01-31',
+    programId: "S1PMFspo4W6BYKHWkHNF7kZ3fnqibEXg3LQjxepS9at",
+    configPda: "BVawZkppFewygA5nxdrLma4ThKx8Th7bW4KTCkcWTZwZ",
+    date: "2026-01-31",
   },
   devnet: {
-    programId: 'S1PMFspo4W6BYKHWkHNF7kZ3fnqibEXg3LQjxepS9at',
-    configPda: 'BVawZkppFewygA5nxdrLma4ThKx8Th7bW4KTCkcWTZwZ',
-    date: '2026-01-24',
+    programId: "S1PMFspo4W6BYKHWkHNF7kZ3fnqibEXg3LQjxepS9at",
+    configPda: "BVawZkppFewygA5nxdrLma4ThKx8Th7bW4KTCkcWTZwZ",
+    date: "2026-01-24",
   },
 } as const

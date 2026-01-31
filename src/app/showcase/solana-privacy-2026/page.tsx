@@ -1,4 +1,4 @@
-'use client'
+"use client"
 
 /**
  * Solana Privacy Hackathon 2026 Showcase Page
@@ -15,7 +15,7 @@
  * 9. LinksSection
  */
 
-import { motion } from 'framer-motion'
+import { motion } from "framer-motion"
 import {
   Shield,
   Lock,
@@ -34,12 +34,18 @@ import {
   ArrowRight,
   Play,
   Key,
-} from 'lucide-react'
-import { TEST_COUNTS, SDK_VERSION, ACHIEVEMENTS, DEPLOYMENTS } from '@/lib/constants'
-import { PhoneMockup, PhoneScreen } from '@/components/ui/PhoneMockup'
+} from "lucide-react"
+import {
+  TEST_COUNTS,
+  SDK_VERSION,
+  ACHIEVEMENTS,
+  DEPLOYMENTS,
+} from "@/lib/constants"
+import { PhoneMockup, PhoneScreen } from "@/components/ui/PhoneMockup"
 
 // CDN base URL for demo videos
-const CDN_BASE = 'https://cdn.sip-protocol.org/videos/showcase/solana-privacy-2026'
+const CDN_BASE =
+  "https://cdn.sip-protocol.org/videos/showcase/solana-privacy-2026"
 
 export default function SolanaPrivacy2026Page() {
   return (
@@ -106,7 +112,7 @@ function HeroSection() {
               transition={{ duration: 0.5, delay: 0.1 }}
               className="mt-6 text-4xl sm:text-5xl font-bold"
             >
-              SIP Privacy{' '}
+              SIP Privacy{" "}
               <span className="bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">
                 Mobile Wallet
               </span>
@@ -119,8 +125,9 @@ function HeroSection() {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="mt-4 text-lg text-gray-400"
             >
-              Privacy-first Solana wallet with compliant privacy. Full stealth address
-              implementation with viewing keys for institutional compliance.
+              Privacy-first Solana wallet with compliant privacy. Full stealth
+              address implementation with viewing keys for institutional
+              compliance.
             </motion.p>
 
             {/* Key Stats */}
@@ -169,7 +176,6 @@ function HeroSection() {
                 Documentation
               </a>
             </motion.div>
-
           </div>
 
           {/* Phone Mockup with App Screenshot */}
@@ -201,7 +207,9 @@ function HeroSection() {
                 className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gray-900/90 border border-green-500/30 shadow-lg"
               >
                 <Shield className="w-4 h-4 text-green-400" />
-                <span className="text-xs font-medium text-white">Stealth Addresses</span>
+                <span className="text-xs font-medium text-white">
+                  Stealth Addresses
+                </span>
               </motion.div>
             </div>
 
@@ -213,7 +221,9 @@ function HeroSection() {
                 className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gray-900/90 border border-cyan-500/30 shadow-lg"
               >
                 <Lock className="w-4 h-4 text-cyan-400" />
-                <span className="text-xs font-medium text-white">Compliant Privacy</span>
+                <span className="text-xs font-medium text-white">
+                  Compliant Privacy
+                </span>
               </motion.div>
             </div>
 
@@ -225,7 +235,9 @@ function HeroSection() {
                 className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gray-900/90 border border-purple-500/30 shadow-lg"
               >
                 <Key className="w-4 h-4 text-purple-400" />
-                <span className="text-xs font-medium text-white">Viewing Keys</span>
+                <span className="text-xs font-medium text-white">
+                  Viewing Keys
+                </span>
               </motion.div>
             </div>
           </motion.div>
@@ -251,65 +263,65 @@ function HeroSection() {
 
 const videos = [
   {
-    id: '01-onboarding',
-    title: 'Onboarding & Education',
-    description: 'Interactive education slides explaining privacy concepts',
+    id: "01-onboarding",
+    title: "Onboarding & Education",
+    description: "Interactive education slides explaining privacy concepts",
     src: `${CDN_BASE}/01-onboarding-education.mp4`,
-    category: 'Getting Started',
+    category: "Getting Started",
   },
   {
-    id: '02-wallet',
-    title: 'Wallet Setup',
-    description: 'Create or import wallet with secure key storage',
+    id: "02-wallet",
+    title: "Wallet Setup",
+    description: "Create or import wallet with secure key storage",
     src: `${CDN_BASE}/02-wallet-setup.mp4`,
-    category: 'Getting Started',
+    category: "Getting Started",
   },
   {
-    id: '03-settings',
-    title: 'Settings & Navigation',
-    description: 'All tabs and settings menu walkthrough',
+    id: "03-settings",
+    title: "Settings & Navigation",
+    description: "All tabs and settings menu walkthrough",
     src: `${CDN_BASE}/03-settings-all-menus.mp4`,
-    category: 'Getting Started',
+    category: "Getting Started",
   },
   {
-    id: '04-devnet',
-    title: 'Devnet E2E Flow',
-    description: 'Send → Scan → Claim cycle on devnet',
+    id: "04-devnet",
+    title: "Devnet E2E Flow",
+    description: "Send → Scan → Claim cycle on devnet",
     src: `${CDN_BASE}/04-devnet-send-scan-claim.mp4`,
-    category: 'Privacy Transactions',
+    category: "Privacy Transactions",
   },
   {
-    id: '05-mainnet',
-    title: 'Mainnet E2E Flow',
-    description: 'Send → Scan → Claim cycle on mainnet',
+    id: "05-mainnet",
+    title: "Mainnet E2E Flow",
+    description: "Send → Scan → Claim cycle on mainnet",
     src: `${CDN_BASE}/05-mainnet-send-scan-claim.mp4`,
-    category: 'Privacy Transactions',
+    category: "Privacy Transactions",
   },
   {
-    id: '06-explorer',
-    title: 'On-Chain Verification',
-    description: 'View transaction on Solscan explorer',
+    id: "06-explorer",
+    title: "On-Chain Verification",
+    description: "View transaction on Solscan explorer",
     src: `${CDN_BASE}/06-view-on-explorer.mp4`,
-    category: 'Privacy Transactions',
+    category: "Privacy Transactions",
   },
   {
-    id: '07-compliant',
-    title: 'Compliant Privacy Flow',
-    description: 'Send → Scan → Claim with Compliant privacy level',
+    id: "07-compliant",
+    title: "Compliant Privacy Flow",
+    description: "Send → Scan → Claim with Compliant privacy level",
     src: `${CDN_BASE}/07-compliant-send-scan-claim.mp4`,
-    category: 'Compliance',
+    category: "Compliance",
   },
   {
-    id: '08-viewing-keys',
-    title: 'Viewing Keys & Compliance',
-    description: 'Export viewing keys and compliance dashboard',
+    id: "08-viewing-keys",
+    title: "Viewing Keys & Compliance",
+    description: "Export viewing keys and compliance dashboard",
     src: `${CDN_BASE}/08-viewing-keys-compliance.mp4`,
-    category: 'Compliance',
+    category: "Compliance",
   },
 ]
 
 function VideoGallerySection() {
-  const categories = [...new Set(videos.map(v => v.category))]
+  const categories = [...new Set(videos.map((v) => v.category))]
 
   return (
     <section className="py-16 border-t border-gray-800/50">
@@ -337,14 +349,20 @@ function VideoGallerySection() {
         {categories.map((category) => (
           <div key={category} className="mb-12">
             <h3 className="text-xl font-semibold text-white mb-6 flex items-center gap-2">
-              {category === 'Getting Started' && <Play className="w-5 h-5 text-green-400" />}
-              {category === 'Privacy Transactions' && <Shield className="w-5 h-5 text-purple-400" />}
-              {category === 'Compliance' && <Lock className="w-5 h-5 text-cyan-400" />}
+              {category === "Getting Started" && (
+                <Play className="w-5 h-5 text-green-400" />
+              )}
+              {category === "Privacy Transactions" && (
+                <Shield className="w-5 h-5 text-purple-400" />
+              )}
+              {category === "Compliance" && (
+                <Lock className="w-5 h-5 text-cyan-400" />
+              )}
               {category}
             </h3>
             <div className="flex flex-wrap gap-8 justify-center">
               {videos
-                .filter(v => v.category === category)
+                .filter((v) => v.category === category)
                 .map((video, index) => (
                   <motion.div
                     key={video.id}
@@ -389,7 +407,9 @@ function VideoGallerySection() {
                     {/* Title below phone */}
                     <div className="mt-4 text-center max-w-[200px]">
                       <h4 className="font-medium text-white">{video.title}</h4>
-                      <p className="text-xs text-gray-500 mt-1">{video.description}</p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        {video.description}
+                      </p>
                     </div>
                   </motion.div>
                 ))}
@@ -408,42 +428,42 @@ function VideoGallerySection() {
 const tracks = [
   {
     icon: Lock,
-    name: 'Private Payments',
-    description: 'Stealth addresses + shielded SOL transfers',
-    color: 'green',
+    name: "Private Payments",
+    description: "Stealth addresses + shielded SOL transfers",
+    color: "green",
   },
   {
     icon: Wrench,
-    name: 'Privacy Tooling',
-    description: 'SDK, React hooks, CLI for developers',
-    color: 'purple',
+    name: "Privacy Tooling",
+    description: "SDK, React hooks, CLI for developers",
+    color: "purple",
   },
   {
     icon: Globe,
-    name: 'Open Track',
-    description: 'Full SIP Protocol as privacy standard',
-    color: 'cyan',
+    name: "Open Track",
+    description: "Full SIP Protocol as privacy standard",
+    color: "cyan",
   },
 ]
 
 const colorClasses = {
   green: {
-    bg: 'bg-green-500/10',
-    border: 'border-green-500/20',
-    icon: 'bg-green-500/20 text-green-400',
-    text: 'text-green-400',
+    bg: "bg-green-500/10",
+    border: "border-green-500/20",
+    icon: "bg-green-500/20 text-green-400",
+    text: "text-green-400",
   },
   purple: {
-    bg: 'bg-purple-500/10',
-    border: 'border-purple-500/20',
-    icon: 'bg-purple-500/20 text-purple-400',
-    text: 'text-purple-400',
+    bg: "bg-purple-500/10",
+    border: "border-purple-500/20",
+    icon: "bg-purple-500/20 text-purple-400",
+    text: "text-purple-400",
   },
   cyan: {
-    bg: 'bg-cyan-500/10',
-    border: 'border-cyan-500/20',
-    icon: 'bg-cyan-500/20 text-cyan-400',
-    text: 'text-cyan-400',
+    bg: "bg-cyan-500/10",
+    border: "border-cyan-500/20",
+    icon: "bg-cyan-500/20 text-cyan-400",
+    text: "text-cyan-400",
   },
 }
 
@@ -477,13 +497,15 @@ function HackathonTracksSection() {
             transition={{ delay: 0.2 }}
             className="mt-4 text-gray-400 max-w-2xl mx-auto"
           >
-            SIP Protocol addresses multiple hackathon tracks with production-ready privacy infrastructure
+            SIP Protocol addresses multiple hackathon tracks with
+            production-ready privacy infrastructure
           </motion.p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-6">
           {tracks.map((track, index) => {
-            const colors = colorClasses[track.color as keyof typeof colorClasses]
+            const colors =
+              colorClasses[track.color as keyof typeof colorClasses]
             return (
               <motion.div
                 key={track.name}
@@ -493,10 +515,14 @@ function HackathonTracksSection() {
                 transition={{ delay: index * 0.1 }}
                 className={`p-6 rounded-2xl ${colors.bg} border ${colors.border}`}
               >
-                <div className={`w-12 h-12 rounded-xl ${colors.icon} flex items-center justify-center mb-4`}>
+                <div
+                  className={`w-12 h-12 rounded-xl ${colors.icon} flex items-center justify-center mb-4`}
+                >
                   <track.icon className="w-6 h-6" />
                 </div>
-                <h3 className={`text-lg font-semibold mb-2 ${colors.text}`}>{track.name}</h3>
+                <h3 className={`text-lg font-semibold mb-2 ${colors.text}`}>
+                  {track.name}
+                </h3>
                 <p className="text-sm text-gray-400">{track.description}</p>
               </motion.div>
             )
@@ -514,55 +540,55 @@ function HackathonTracksSection() {
 const providers = [
   // Privacy Backends
   {
-    name: 'Arcium',
-    type: 'MPC Compute',
-    description: 'Confidential DeFi computations',
-    status: 'integration',
+    name: "Arcium",
+    type: "MPC Compute",
+    description: "Confidential DeFi computations",
+    status: "integration",
   },
   {
-    name: 'ShadowWire',
-    type: 'Bulletproofs',
-    description: 'Radr Labs ZK privacy transfers',
-    status: 'integration',
+    name: "ShadowWire",
+    type: "Bulletproofs",
+    description: "Radr Labs ZK privacy transfers",
+    status: "integration",
   },
   {
-    name: 'Inco',
-    type: 'FHE Encryption',
-    description: 'Fully homomorphic encryption backend',
-    status: 'integration',
+    name: "Inco",
+    type: "FHE Encryption",
+    description: "Fully homomorphic encryption backend",
+    status: "integration",
   },
   {
-    name: 'MagicBlock',
-    type: 'TEE Privacy',
-    description: 'Ephemeral rollups for privacy',
-    status: 'integration',
+    name: "MagicBlock",
+    type: "TEE Privacy",
+    description: "Ephemeral rollups for privacy",
+    status: "integration",
   },
   // RPC Providers
   {
-    name: 'Helius',
-    type: 'RPC + DAS',
-    description: 'Token scanning and subscriptions',
-    status: 'integration',
+    name: "Helius",
+    type: "RPC + DAS",
+    description: "Token scanning and subscriptions",
+    status: "integration",
   },
   {
-    name: 'QuickNode',
-    type: 'Yellowstone gRPC',
-    description: 'Real-time transfer streaming',
-    status: 'integration',
+    name: "QuickNode",
+    type: "Yellowstone gRPC",
+    description: "Real-time transfer streaming",
+    status: "integration",
   },
   // Compliance
   {
-    name: 'Range',
-    type: 'Compliance',
-    description: 'Attestation-gated viewing keys',
-    status: 'integration',
+    name: "Range",
+    type: "Compliance",
+    description: "Attestation-gated viewing keys",
+    status: "integration",
   },
   // ZK
   {
-    name: 'Aztec/Noir',
-    type: 'ZK Circuits',
-    description: 'Browser-based proof generation',
-    status: 'integration',
+    name: "Aztec/Noir",
+    type: "ZK Circuits",
+    description: "Browser-based proof generation",
+    status: "integration",
   },
 ]
 
@@ -596,7 +622,9 @@ function PrivacyProvidersSection() {
             transition={{ delay: 0.2 }}
             className="mt-4 text-gray-400 max-w-2xl mx-auto"
           >
-            SIP is middleware &mdash; we integrate privacy providers, not compete. One API wrapping multiple backends with 3,500+ lines of production code.
+            SIP is middleware &mdash; we integrate privacy providers, not
+            compete. One API wrapping multiple backends with 3,500+ lines of
+            production code.
           </motion.p>
         </div>
 
@@ -614,7 +642,7 @@ function PrivacyProvidersSection() {
                 <span className="text-xs px-2 py-1 rounded-full bg-blue-500/10 text-blue-400">
                   {provider.type}
                 </span>
-                {provider.status === 'planned' && (
+                {provider.status === "planned" && (
                   <span className="text-xs px-2 py-1 rounded-full bg-gray-500/10 text-gray-500">
                     Planned
                   </span>
@@ -637,23 +665,27 @@ function PrivacyProvidersSection() {
 const features = [
   {
     icon: Shield,
-    title: 'Stealth Addresses',
-    description: 'One-time addresses for every transaction. Unlinkable recipients via EIP-5564.',
+    title: "Stealth Addresses",
+    description:
+      "One-time addresses for every transaction. Unlinkable recipients via EIP-5564.",
   },
   {
     icon: Layers,
-    title: 'Pedersen Commitments',
-    description: 'Hide amounts cryptographically. Verify without revealing values.',
+    title: "Pedersen Commitments",
+    description:
+      "Hide amounts cryptographically. Verify without revealing values.",
   },
   {
     icon: Eye,
-    title: 'Viewing Keys',
-    description: 'Selective disclosure for compliance. Privacy + auditability for institutions.',
+    title: "Viewing Keys",
+    description:
+      "Selective disclosure for compliance. Privacy + auditability for institutions.",
   },
   {
     icon: Zap,
-    title: 'Same-Chain Privacy',
-    description: 'Native Solana privacy. No bridges, no delays, no external dependencies.',
+    title: "Same-Chain Privacy",
+    description:
+      "Native Solana privacy. No bridges, no delays, no external dependencies.",
   },
 ]
 
@@ -713,46 +745,46 @@ function TractionSection() {
   const metrics = [
     {
       value: ACHIEVEMENTS.zypherpunk.badge,
-      label: 'Zypherpunk Winner',
+      label: "Zypherpunk Winner",
       detail: `${ACHIEVEMENTS.zypherpunk.ranking}, 3 tracks`,
       icon: Trophy,
-      color: 'yellow',
+      color: "yellow",
     },
     {
       value: TEST_COUNTS.totalDisplay,
-      label: 'Tests Passing',
-      detail: 'SDK + React + CLI + API',
+      label: "Tests Passing",
+      detail: "SDK + React + CLI + API",
       icon: Shield,
-      color: 'cyan',
+      color: "cyan",
     },
     {
-      value: 'Mainnet',
-      label: 'Live Deployment',
-      detail: DEPLOYMENTS.mainnet.programId.slice(0, 8) + '...',
+      value: "Mainnet",
+      label: "Live Deployment",
+      detail: DEPLOYMENTS.mainnet.programId.slice(0, 8) + "...",
       icon: Zap,
-      color: 'green',
+      color: "green",
     },
     {
       value: SDK_VERSION.display,
-      label: 'npm Published',
-      detail: '@sip-protocol/sdk',
+      label: "npm Published",
+      detail: "@sip-protocol/sdk",
       icon: FileText,
-      color: 'purple',
+      color: "purple",
     },
   ]
 
   const metricColors = {
-    yellow: 'from-yellow-900/30 to-amber-900/30 border-yellow-500/20',
-    cyan: 'from-cyan-900/30 to-blue-900/30 border-cyan-500/20',
-    green: 'from-green-900/30 to-emerald-900/30 border-green-500/20',
-    purple: 'from-purple-900/30 to-pink-900/30 border-purple-500/20',
+    yellow: "from-yellow-900/30 to-amber-900/30 border-yellow-500/20",
+    cyan: "from-cyan-900/30 to-blue-900/30 border-cyan-500/20",
+    green: "from-green-900/30 to-emerald-900/30 border-green-500/20",
+    purple: "from-purple-900/30 to-pink-900/30 border-purple-500/20",
   }
 
   const textColors = {
-    yellow: 'from-yellow-400 to-amber-400',
-    cyan: 'from-cyan-400 to-blue-400',
-    green: 'from-green-400 to-emerald-400',
-    purple: 'from-purple-400 to-pink-400',
+    yellow: "from-yellow-400 to-amber-400",
+    cyan: "from-cyan-400 to-blue-400",
+    green: "from-green-400 to-emerald-400",
+    purple: "from-purple-400 to-pink-400",
   }
 
   return (
@@ -789,7 +821,9 @@ function TractionSection() {
               transition={{ delay: index * 0.1 }}
               className={`p-6 rounded-2xl bg-gradient-to-br ${metricColors[metric.color as keyof typeof metricColors]} border text-center`}
             >
-              <div className={`text-3xl font-bold bg-gradient-to-r ${textColors[metric.color as keyof typeof textColors]} bg-clip-text text-transparent`}>
+              <div
+                className={`text-3xl font-bold bg-gradient-to-r ${textColors[metric.color as keyof typeof textColors]} bg-clip-text text-transparent`}
+              >
                 {metric.value}
               </div>
               <div className="mt-2 text-white font-medium">{metric.label}</div>
@@ -808,35 +842,35 @@ function TractionSection() {
 
 const encryptTradeDeliverables = [
   {
-    title: 'Privacy Score Tool',
-    excerpt: 'How exposed is your wallet? Surveillance analyzer.',
-    href: '/privacy-score',
-    category: 'Track 1',
+    title: "Privacy Score Tool",
+    excerpt: "How exposed is your wallet? Surveillance analyzer.",
+    href: "/privacy-score",
+    category: "Track 1",
     isInternal: true,
   },
   {
-    title: 'Privacy Without Jargon',
-    excerpt: 'why your wallet is a glass house, explained simply',
-    href: 'https://blog.sip-protocol.org/blog/privacy-without-jargon',
-    category: 'Track 2',
+    title: "Privacy Without Jargon",
+    excerpt: "why your wallet is a glass house, explained simply",
+    href: "https://blog.sip-protocol.org/blog/privacy-without-jargon",
+    category: "Track 2",
   },
   {
-    title: 'Stealth Addresses for Humans',
-    excerpt: 'one-time addresses without the math',
-    href: 'https://blog.sip-protocol.org/blog/stealth-addresses-for-humans',
-    category: 'Track 2',
+    title: "Stealth Addresses for Humans",
+    excerpt: "one-time addresses without the math",
+    href: "https://blog.sip-protocol.org/blog/stealth-addresses-for-humans",
+    category: "Track 2",
   },
   {
-    title: 'Viewing Keys TL;DR',
-    excerpt: 'how to be private AND compliant',
-    href: 'https://blog.sip-protocol.org/blog/viewing-keys-tldr',
-    category: 'Track 2',
+    title: "Viewing Keys TL;DR",
+    excerpt: "how to be private AND compliant",
+    href: "https://blog.sip-protocol.org/blog/viewing-keys-tldr",
+    category: "Track 2",
   },
 ]
 
 const categoryColors: Record<string, string> = {
-  'Track 1': 'bg-green-500/10 text-green-400',
-  'Track 2': 'bg-orange-500/10 text-orange-400',
+  "Track 1": "bg-green-500/10 text-green-400",
+  "Track 2": "bg-orange-500/10 text-orange-400",
 }
 
 function BlogSection() {
@@ -869,7 +903,8 @@ function BlogSection() {
             transition={{ delay: 0.2 }}
             className="mt-4 text-gray-400 max-w-2xl mx-auto"
           >
-            Track 1: Surveillance analyzer tool &bull; Track 2: Educational content without jargon
+            Track 1: Surveillance analyzer tool &bull; Track 2: Educational
+            content without jargon
           </motion.p>
         </div>
 
@@ -878,23 +913,27 @@ function BlogSection() {
             <motion.a
               key={item.title}
               href={item.href}
-              target={item.isInternal ? undefined : '_blank'}
-              rel={item.isInternal ? undefined : 'noopener noreferrer'}
+              target={item.isInternal ? undefined : "_blank"}
+              rel={item.isInternal ? undefined : "noopener noreferrer"}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className={`group p-6 rounded-2xl bg-gray-900/50 border border-gray-800 hover:border-orange-500/50 transition-colors ${item.category === 'Track 1' ? 'ring-2 ring-green-500/30' : ''}`}
+              className={`group p-6 rounded-2xl bg-gray-900/50 border border-gray-800 hover:border-orange-500/50 transition-colors ${item.category === "Track 1" ? "ring-2 ring-green-500/30" : ""}`}
             >
-              <span className={`text-xs px-2 py-1 rounded-full ${categoryColors[item.category]}`}>
-                {item.category}: {item.category === 'Track 1' ? '$500' : 'Education'}
+              <span
+                className={`text-xs px-2 py-1 rounded-full ${categoryColors[item.category]}`}
+              >
+                {item.category}:{" "}
+                {item.category === "Track 1" ? "$500" : "Education"}
               </span>
               <h3 className="mt-4 text-lg font-semibold group-hover:text-orange-400 transition-colors">
                 {item.title}
               </h3>
               <p className="mt-2 text-sm text-gray-400">{item.excerpt}</p>
               <div className="mt-4 flex items-center gap-1 text-sm text-orange-400">
-                {item.isInternal ? 'Try it' : 'Read more'} <ArrowRight className="w-4 h-4" />
+                {item.isInternal ? "Try it" : "Read more"}{" "}
+                <ArrowRight className="w-4 h-4" />
               </div>
             </motion.a>
           ))}
@@ -909,14 +948,14 @@ function BlogSection() {
 // ============================================================================
 
 const techStack = [
-  { name: 'TypeScript', category: 'Language' },
-  { name: '@noble/curves', category: 'Crypto' },
-  { name: 'Anchor', category: 'Programs' },
-  { name: 'Noir', category: 'ZK Proofs' },
-  { name: 'Vitest', category: 'Testing' },
-  { name: 'React 19', category: 'Frontend' },
-  { name: 'Next.js 16', category: 'Framework' },
-  { name: 'Solana', category: 'Blockchain' },
+  { name: "TypeScript", category: "Language" },
+  { name: "@noble/curves", category: "Crypto" },
+  { name: "Anchor", category: "Programs" },
+  { name: "Noir", category: "ZK Proofs" },
+  { name: "Vitest", category: "Testing" },
+  { name: "React 19", category: "Frontend" },
+  { name: "Next.js 16", category: "Framework" },
+  { name: "Solana", category: "Blockchain" },
 ]
 
 function TechStackSection() {
@@ -975,7 +1014,9 @@ function LinksSection() {
           </div>
 
           <div className="px-8 py-16 sm:px-16 text-center">
-            <h2 className="text-3xl sm:text-4xl font-bold">Ready to Explore?</h2>
+            <h2 className="text-3xl sm:text-4xl font-bold">
+              Ready to Explore?
+            </h2>
             <p className="mt-4 text-lg text-gray-400 max-w-2xl mx-auto">
               Try the live app, read the docs, or dive into the code.
             </p>
@@ -1011,19 +1052,31 @@ function LinksSection() {
             {/* Quick links */}
             <div className="mt-12 pt-8 border-t border-green-500/20">
               <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-400">
-                <a href="https://sip-protocol.org" className="hover:text-white transition-colors flex items-center gap-1">
+                <a
+                  href="https://sip-protocol.org"
+                  className="hover:text-white transition-colors flex items-center gap-1"
+                >
                   <ExternalLink className="w-3 h-3" />
                   sip-protocol.org
                 </a>
-                <a href="https://blog.sip-protocol.org" className="hover:text-white transition-colors flex items-center gap-1">
+                <a
+                  href="https://blog.sip-protocol.org"
+                  className="hover:text-white transition-colors flex items-center gap-1"
+                >
                   <ExternalLink className="w-3 h-3" />
                   blog.sip-protocol.org
                 </a>
-                <a href="https://www.npmjs.com/package/@sip-protocol/sdk" className="hover:text-white transition-colors flex items-center gap-1">
+                <a
+                  href="https://www.npmjs.com/package/@sip-protocol/sdk"
+                  className="hover:text-white transition-colors flex items-center gap-1"
+                >
                   <ExternalLink className="w-3 h-3" />
                   npm: @sip-protocol/sdk
                 </a>
-                <a href={`https://solscan.io/account/${DEPLOYMENTS.mainnet.programId}`} className="hover:text-white transition-colors flex items-center gap-1">
+                <a
+                  href={`https://solscan.io/account/${DEPLOYMENTS.mainnet.programId}`}
+                  className="hover:text-white transition-colors flex items-center gap-1"
+                >
                   <ExternalLink className="w-3 h-3" />
                   Solscan (Mainnet)
                 </a>

@@ -40,7 +40,8 @@ export async function POST(request: NextRequest) {
     // Use real SDK analyzer
     const analyzer = createSurveillanceAnalyzer({
       heliusApiKey,
-      cluster: process.env.SOLANA_CLUSTER === "devnet" ? "devnet" : "mainnet-beta",
+      cluster:
+        process.env.SOLANA_CLUSTER === "devnet" ? "devnet" : "mainnet-beta",
       maxTransactions: 500,
       includeSocialLinks: true,
     })
@@ -51,7 +52,10 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("Privacy score analysis error:", error)
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to analyze wallet" },
+      {
+        error:
+          error instanceof Error ? error.message : "Failed to analyze wallet",
+      },
       { status: 500 }
     )
   }
@@ -70,10 +74,20 @@ function generateMockResult(walletAddress: string) {
   const socialLinks = random(0, 15)
 
   const overall =
-    addressReuse + clusterExposure + exchangeExposure + temporalPatterns + socialLinks
+    addressReuse +
+    clusterExposure +
+    exchangeExposure +
+    temporalPatterns +
+    socialLinks
 
   const risk =
-    overall < 30 ? "critical" : overall < 50 ? "high" : overall < 70 ? "medium" : "low"
+    overall < 30
+      ? "critical"
+      : overall < 50
+        ? "high"
+        : overall < 70
+          ? "medium"
+          : "low"
 
   const recommendations = []
 
@@ -154,7 +168,11 @@ function generateMockResult(walletAddress: string) {
   const projectedExchange = Math.min(exchangeExposure + 10, 20)
   const projectedTemporal = Math.min(temporalPatterns + 5, 15)
   const projectedScore =
-    projectedAddressReuse + projectedCluster + projectedExchange + projectedTemporal + socialLinks
+    projectedAddressReuse +
+    projectedCluster +
+    projectedExchange +
+    projectedTemporal +
+    socialLinks
 
   const improvements = []
 
@@ -181,7 +199,8 @@ function generateMockResult(walletAddress: string) {
       category: "exchangeExposure",
       currentScore: exchangeExposure,
       projectedScore: projectedExchange,
-      reason: "Viewing keys allow selective disclosure without exposing full history",
+      reason:
+        "Viewing keys allow selective disclosure without exposing full history",
     })
   }
 
