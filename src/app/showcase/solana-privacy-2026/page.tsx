@@ -512,12 +512,7 @@ function HackathonTracksSection() {
 // ============================================================================
 
 const providers = [
-  {
-    name: 'Privacy Cash',
-    type: 'Pool Mixing',
-    description: 'Integrated as privacy backend option',
-    status: 'integration',
-  },
+  // Privacy Backends
   {
     name: 'Arcium',
     type: 'MPC Compute',
@@ -527,14 +522,47 @@ const providers = [
   {
     name: 'ShadowWire',
     type: 'Bulletproofs',
-    description: 'SIP adds viewing keys layer',
+    description: 'Radr Labs ZK privacy transfers',
     status: 'integration',
   },
   {
     name: 'Inco',
     type: 'FHE Encryption',
     description: 'Fully homomorphic encryption backend',
-    status: 'planned',
+    status: 'integration',
+  },
+  {
+    name: 'MagicBlock',
+    type: 'TEE Privacy',
+    description: 'Ephemeral rollups for privacy',
+    status: 'integration',
+  },
+  // RPC Providers
+  {
+    name: 'Helius',
+    type: 'RPC + DAS',
+    description: 'Token scanning and subscriptions',
+    status: 'integration',
+  },
+  {
+    name: 'QuickNode',
+    type: 'Yellowstone gRPC',
+    description: 'Real-time transfer streaming',
+    status: 'integration',
+  },
+  // Compliance
+  {
+    name: 'Range',
+    type: 'Compliance',
+    description: 'Attestation-gated viewing keys',
+    status: 'integration',
+  },
+  // ZK
+  {
+    name: 'Aztec/Noir',
+    type: 'ZK Circuits',
+    description: 'Browser-based proof generation',
+    status: 'integration',
   },
 ]
 
@@ -550,7 +578,7 @@ function PrivacyProvidersSection() {
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20"
           >
             <Layers className="w-4 h-4" />
-            Privacy Integrations
+            Sponsor Integrations
           </motion.span>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -559,7 +587,7 @@ function PrivacyProvidersSection() {
             transition={{ delay: 0.1 }}
             className="mt-6 text-3xl sm:text-4xl font-bold"
           >
-            SIP is Middleware
+            8 Sponsor Technologies
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -568,11 +596,11 @@ function PrivacyProvidersSection() {
             transition={{ delay: 0.2 }}
             className="mt-4 text-gray-400 max-w-2xl mx-auto"
           >
-            We integrate privacy providers, not compete. One API wrapping multiple backends &mdash; developers choose their preferred infrastructure.
+            SIP is middleware &mdash; we integrate privacy providers, not compete. One API wrapping multiple backends with 3,500+ lines of production code.
           </motion.p>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {providers.map((provider, index) => (
             <motion.div
               key={provider.name}
@@ -778,38 +806,37 @@ function TractionSection() {
 // Blog Section (Encrypt.trade alignment)
 // ============================================================================
 
-const blogPosts = [
+const encryptTradeDeliverables = [
+  {
+    title: 'Privacy Score Tool',
+    excerpt: 'How exposed is your wallet? Surveillance analyzer.',
+    href: '/privacy-score',
+    category: 'Track 1',
+    isInternal: true,
+  },
   {
     title: 'Why Privacy Matters on Solana',
     excerpt: 'Understanding the privacy problem in Web3',
     href: 'https://blog.sip-protocol.org/why-privacy-matters-solana',
-    category: 'Education',
+    category: 'Track 2',
   },
   {
     title: 'Stealth Addresses Explained',
-    excerpt: 'EIP-5564 and one-time addresses',
+    excerpt: 'EIP-5564 and one-time addresses without jargon',
     href: 'https://blog.sip-protocol.org/stealth-addresses-eip-5564',
-    category: 'Technical',
+    category: 'Track 2',
   },
   {
     title: 'Viewing Keys for Compliance',
     excerpt: 'How selective disclosure enables institutional adoption',
     href: 'https://blog.sip-protocol.org/viewing-keys-compliance',
-    category: 'Compliance',
-  },
-  {
-    title: 'Solana Privacy Landscape 2026',
-    excerpt: 'Overview of privacy solutions on Solana',
-    href: 'https://blog.sip-protocol.org/solana-privacy-landscape-2026',
-    category: 'Research',
+    category: 'Track 2',
   },
 ]
 
 const categoryColors: Record<string, string> = {
-  Education: 'bg-orange-500/10 text-orange-400',
-  Technical: 'bg-cyan-500/10 text-cyan-400',
-  Compliance: 'bg-green-500/10 text-green-400',
-  Research: 'bg-purple-500/10 text-purple-400',
+  'Track 1': 'bg-green-500/10 text-green-400',
+  'Track 2': 'bg-orange-500/10 text-orange-400',
 }
 
 function BlogSection() {
@@ -824,7 +851,7 @@ function BlogSection() {
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium bg-orange-500/10 text-orange-400 border border-orange-500/20"
           >
             <BookOpen className="w-4 h-4" />
-            Privacy Education
+            Encrypt.Trade Bounty
           </motion.span>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -833,7 +860,7 @@ function BlogSection() {
             transition={{ delay: 0.1 }}
             className="mt-6 text-3xl sm:text-4xl font-bold"
           >
-            Learn About Privacy
+            Privacy Education
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -842,32 +869,32 @@ function BlogSection() {
             transition={{ delay: 0.2 }}
             className="mt-4 text-gray-400 max-w-2xl mx-auto"
           >
-            Technical deep-dives and educational content for developers and users
+            Track 1: Surveillance analyzer tool &bull; Track 2: Educational content without jargon
           </motion.p>
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {blogPosts.map((post, index) => (
+          {encryptTradeDeliverables.map((item, index) => (
             <motion.a
-              key={post.title}
-              href={post.href}
-              target="_blank"
-              rel="noopener noreferrer"
+              key={item.title}
+              href={item.href}
+              target={item.isInternal ? undefined : '_blank'}
+              rel={item.isInternal ? undefined : 'noopener noreferrer'}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className="group p-6 rounded-2xl bg-gray-900/50 border border-gray-800 hover:border-orange-500/50 transition-colors"
+              className={`group p-6 rounded-2xl bg-gray-900/50 border border-gray-800 hover:border-orange-500/50 transition-colors ${item.category === 'Track 1' ? 'ring-2 ring-green-500/30' : ''}`}
             >
-              <span className={`text-xs px-2 py-1 rounded-full ${categoryColors[post.category]}`}>
-                {post.category}
+              <span className={`text-xs px-2 py-1 rounded-full ${categoryColors[item.category]}`}>
+                {item.category}: {item.category === 'Track 1' ? '$500' : 'Education'}
               </span>
               <h3 className="mt-4 text-lg font-semibold group-hover:text-orange-400 transition-colors">
-                {post.title}
+                {item.title}
               </h3>
-              <p className="mt-2 text-sm text-gray-400">{post.excerpt}</p>
+              <p className="mt-2 text-sm text-gray-400">{item.excerpt}</p>
               <div className="mt-4 flex items-center gap-1 text-sm text-orange-400">
-                Read more <ArrowRight className="w-4 h-4" />
+                {item.isInternal ? 'Try it' : 'Read more'} <ArrowRight className="w-4 h-4" />
               </div>
             </motion.a>
           ))}
