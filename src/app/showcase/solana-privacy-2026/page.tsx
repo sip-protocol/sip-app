@@ -1047,6 +1047,15 @@ function LinksSection() {
                 <Github className="w-4 h-4" />
                 View Code
               </a>
+              <a
+                href="https://github.com/sip-protocol/sip-mobile/releases/tag/v0.1.6"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-8 py-3 text-gray-300 border border-green-600/50 rounded-lg hover:text-green-400 hover:border-green-500 transition-all font-medium flex items-center gap-2"
+              >
+                <ArrowRight className="w-4 h-4" />
+                Download APK v0.1.6
+              </a>
             </div>
 
             {/* Quick links */}
@@ -1079,6 +1088,13 @@ function LinksSection() {
                 >
                   <ExternalLink className="w-3 h-3" />
                   Solscan (Mainnet)
+                </a>
+                <a
+                  href="https://github.com/sip-protocol/sip-mobile/releases"
+                  className="hover:text-green-400 transition-colors flex items-center gap-1"
+                >
+                  <ExternalLink className="w-3 h-3" />
+                  Mobile Releases
                 </a>
               </div>
             </div>
