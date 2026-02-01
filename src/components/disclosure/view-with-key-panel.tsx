@@ -81,11 +81,11 @@ export function ViewWithKeyPanel() {
   return (
     <div className="space-y-6">
       {/* Info Banner */}
-      <div className="p-4 rounded-xl bg-blue-500/10 border border-blue-500/30">
+      <div className="p-4 rounded-xl bg-purple-500/10 border border-purple-500/30">
         <div className="flex gap-3">
           <span className="text-xl">ℹ️</span>
           <div>
-            <p className="font-medium text-blue-400">
+            <p className="font-medium text-white">
               For Auditors & Compliance Officers
             </p>
             <p className="text-sm text-[var(--text-secondary)] mt-1">

@@ -34,9 +34,9 @@ const severityConfig = {
     icon: "📋",
   },
   low: {
-    color: "text-blue-400",
-    bgColor: "bg-blue-500/10",
-    borderColor: "border-blue-500/30",
+    color: "text-gray-300",
+    bgColor: "bg-gray-500/10",
+    borderColor: "border-gray-500/30",
     icon: "💡",
   },
 }

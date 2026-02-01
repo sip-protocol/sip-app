@@ -229,7 +229,7 @@ function HeroSection() {
                 transition={{ duration: 0.5, delay: 0.7 }}
                 className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gray-900/90 border border-cyan-500/30 shadow-lg"
               >
-                <Lock className="w-4 h-4 text-cyan-400" />
+                <Lock className="w-4 h-4 text-white" />
                 <span className="text-xs font-medium text-white">
                   Compliant Privacy
                 </span>
@@ -365,7 +365,7 @@ function VideoGallerySection() {
                 <Shield className="w-5 h-5 text-purple-400" />
               )}
               {category === "Compliance" && (
-                <Lock className="w-5 h-5 text-cyan-400" />
+                <Lock className="w-5 h-5 text-white" />
               )}
               {category}
             </h3>
@@ -471,8 +471,8 @@ const colorClasses = {
   cyan: {
     bg: "bg-cyan-500/10",
     border: "border-cyan-500/20",
-    icon: "bg-cyan-500/20 text-cyan-400",
-    text: "text-cyan-400",
+    icon: "bg-cyan-500/20 text-white",
+    text: "text-white",
   },
 }
 
@@ -610,7 +610,7 @@ function PrivacyProvidersSection() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium bg-blue-500/10 text-blue-400 border border-blue-500/20"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium bg-purple-500/10 text-white border border-purple-500/20"
           >
             <Layers className="w-4 h-4" />
             Sponsor Integrations
@@ -645,10 +645,10 @@ function PrivacyProvidersSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className="p-6 rounded-2xl bg-gray-900/50 border border-gray-800 hover:border-blue-500/50 transition-colors"
+              className="p-6 rounded-2xl bg-gray-900/50 border border-gray-800 hover:border-purple-500/50 transition-colors"
             >
               <div className="flex items-center justify-between mb-4">
-                <span className="text-xs px-2 py-1 rounded-full bg-blue-500/10 text-blue-400">
+                <span className="text-xs px-2 py-1 rounded-full bg-purple-500/10 text-white">
                   {provider.type}
                 </span>
                 {provider.status === "planned" && (
@@ -784,14 +784,14 @@ function TractionSection() {
 
   const metricColors = {
     yellow: "from-yellow-900/30 to-amber-900/30 border-yellow-500/20",
-    cyan: "from-cyan-900/30 to-blue-900/30 border-cyan-500/20",
+    cyan: "from-green-900/30 to-emerald-900/30 border-green-500/20",
     green: "from-green-900/30 to-emerald-900/30 border-green-500/20",
     purple: "from-purple-900/30 to-pink-900/30 border-purple-500/20",
   }
 
   const textColors = {
     yellow: "from-yellow-400 to-amber-400",
-    cyan: "from-cyan-400 to-blue-400",
+    cyan: "from-green-400 to-emerald-400",
     green: "from-green-400 to-emerald-400",
     purple: "from-purple-400 to-pink-400",
   }
@@ -804,7 +804,7 @@ function TractionSection() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/20"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium bg-green-500/10 text-white border border-green-500/20"
           >
             <Trophy className="w-4 h-4" />
             Traction

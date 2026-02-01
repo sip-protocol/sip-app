@@ -134,7 +134,7 @@ export function TransactionStatus({
               <p
                 className={cn(
                   "font-semibold text-lg",
-                  status === "pending" && "text-blue-100",
+                  status === "pending" && "text-white",
                   status === "confirmed" && "text-sip-green-100",
                   status === "error" && "text-red-100"
                 )}
@@ -144,7 +144,7 @@ export function TransactionStatus({
                 {status === "error" && "Transaction Failed"}
               </p>
               {status === "pending" && (
-                <p className="text-sm text-blue-300/70 mt-0.5">
+                <p className="text-sm text-gray-400 mt-0.5">
                   Elapsed: {formatTime(elapsedTime)}
                 </p>
               )}
@@ -224,7 +224,7 @@ export function TransactionStatus({
                     className={cn(
                       "w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium flex-shrink-0",
                       isComplete && "bg-sip-green-500 text-white",
-                      isCurrent && "bg-blue-500 text-white animate-pulse",
+                      isCurrent && "bg-purple-500 text-white animate-pulse",
                       isPending && "bg-gray-600 text-gray-400"
                     )}
                   >
@@ -237,14 +237,14 @@ export function TransactionStatus({
                       className={cn(
                         "text-sm font-medium",
                         isComplete && "text-sip-green-300",
-                        isCurrent && "text-blue-200",
+                        isCurrent && "text-white",
                         isPending && "text-gray-400"
                       )}
                     >
                       {step.label}
                     </p>
                     {isCurrent && (
-                      <p className="text-xs text-blue-300/70 mt-0.5">
+                      <p className="text-xs text-gray-400 mt-0.5">
                         {step.description}
                       </p>
                     )}
@@ -252,7 +252,7 @@ export function TransactionStatus({
 
                   {/* Loading indicator for current step */}
                   {isCurrent && (
-                    <LoadingSpinner className="w-4 h-4 text-blue-400" />
+                    <LoadingSpinner className="w-4 h-4 text-purple-400" />
                   )}
                 </div>
               )
@@ -268,18 +268,18 @@ export function TransactionStatus({
           <div className="border-t border-blue-800/50 p-4">
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
-                <span className="text-blue-200">{derivationProgress.step}</span>
-                <span className="text-blue-300/70">
+                <span className="text-white">{derivationProgress.step}</span>
+                <span className="text-gray-400">
                   {derivationProgress.percentage}%
                 </span>
               </div>
               <div className="h-2 bg-blue-900/50 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-gradient-to-r from-blue-500 to-sip-purple-500 rounded-full transition-all duration-300"
+                  className="h-full bg-gradient-to-r from-purple-500 to-sip-purple-500 rounded-full transition-all duration-300"
                   style={{ width: `${derivationProgress.percentage}%` }}
                 />
               </div>
-              <p className="text-xs text-blue-300/50">
+              <p className="text-xs text-gray-500">
                 Deriving stealth address using secp256k1 curve...
               </p>
             </div>

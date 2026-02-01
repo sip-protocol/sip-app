@@ -656,7 +656,7 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
                 </>
               ) : (
                 <>
-                  <WalletIcon className="h-4 w-4 text-cyan-500" />
+                  <WalletIcon className="h-4 w-4 text-gray-300" />
                   <span className="text-xs sm:text-sm">
                     Destination Address
                   </span>
@@ -664,7 +664,7 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
               )}
             </span>
             <span
-              className={`text-xs ${isSameChainPrivacy ? "text-purple-500" : "text-cyan-500"}`}
+              className={`text-xs ${isSameChainPrivacy ? "text-purple-400" : "text-gray-300"}`}
             >
               Required
             </span>
@@ -687,7 +687,7 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
             className={`w-full rounded-lg bg-gray-700/50 px-3 py-2 text-sm outline-none placeholder:text-gray-500 transition-all ${
               isSameChainPrivacy
                 ? "focus:ring-1 focus:ring-purple-500/50"
-                : "focus:ring-1 focus:ring-cyan-500/50"
+                : "focus:ring-1 focus:ring-gray-500/50"
             }`}
           />
           <p className="mt-2 text-xs text-gray-500">
@@ -1012,7 +1012,7 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
             className="group flex items-center gap-2 rounded-lg px-3 py-2 transition-colors hover:bg-gray-800/50"
             aria-label="Powered by NEAR Intents settlement"
           >
-            <NearLogo className="h-6 w-6 text-cyan-400 transition-colors group-hover:text-cyan-300" />
+            <NearLogo className="h-6 w-6 text-white transition-colors group-hover:text-gray-200" />
             <div className="text-left">
               <div className="text-sm font-semibold text-gray-300 transition-colors group-hover:text-white">
                 NEAR Intents
@@ -1030,7 +1030,7 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
           <span className="rounded-full border border-purple-500/20 bg-purple-500/10 px-2 py-1 text-[10px] font-medium text-purple-400">
             Stealth Addresses
           </span>
-          <span className="rounded-full border border-cyan-500/20 bg-cyan-500/10 px-2 py-1 text-[10px] font-medium text-cyan-400">
+          <span className="rounded-full border border-green-500/20 bg-green-500/10 px-2 py-1 text-[10px] font-medium text-white">
             Cross-Chain
           </span>
         </div>
