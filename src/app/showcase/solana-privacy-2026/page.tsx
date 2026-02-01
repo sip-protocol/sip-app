@@ -159,10 +159,19 @@ function HeroSection() {
               className="mt-8 flex flex-col sm:flex-row flex-wrap gap-4"
             >
               <a
-                href="https://github.com/sip-protocol/sip-mobile"
+                href="https://github.com/sip-protocol/sip-mobile/releases/tag/v0.1.6"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-6 py-3 text-center text-white bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg hover:from-green-600 hover:to-emerald-600 transition-all font-medium flex items-center justify-center gap-2"
+              >
+                <ArrowRight className="w-4 h-4" />
+                Download APK v0.1.6 (Android/Seeker)
+              </a>
+              <a
+                href="https://github.com/sip-protocol/sip-mobile"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-6 py-3 text-center text-gray-300 border border-gray-700 rounded-lg hover:text-white hover:border-gray-600 transition-all font-medium flex items-center justify-center gap-2"
               >
                 <Github className="w-4 h-4" />
                 View Source
@@ -1015,19 +1024,21 @@ function LinksSection() {
 
           <div className="px-8 py-16 sm:px-16 text-center">
             <h2 className="text-3xl sm:text-4xl font-bold">
-              Ready to Explore?
+              Ready to Try It?
             </h2>
             <p className="mt-4 text-lg text-gray-400 max-w-2xl mx-auto">
-              Try the live app, read the docs, or dive into the code.
+              Download the app on Android/Seeker, read the docs, or explore the code.
             </p>
 
             <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
               <a
-                href="/payments"
+                href="https://github.com/sip-protocol/sip-mobile/releases/tag/v0.1.6"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="px-8 py-3 text-white bg-gradient-to-r from-green-500 to-cyan-500 rounded-lg hover:from-green-600 hover:to-cyan-600 transition-all font-medium flex items-center gap-2"
               >
-                Try Private Payments
                 <ArrowRight className="w-4 h-4" />
+                Download APK v0.1.6
               </a>
               <a
                 href="https://docs.sip-protocol.org"
@@ -1039,22 +1050,13 @@ function LinksSection() {
                 Documentation
               </a>
               <a
-                href="https://github.com/sip-protocol/sip-protocol"
+                href="https://github.com/sip-protocol/sip-mobile"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-8 py-3 text-gray-300 border border-gray-600 rounded-lg hover:text-white hover:border-gray-500 transition-all font-medium flex items-center gap-2"
               >
                 <Github className="w-4 h-4" />
-                View Code
-              </a>
-              <a
-                href="https://github.com/sip-protocol/sip-mobile/releases/tag/v0.1.6"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-8 py-3 text-gray-300 border border-green-600/50 rounded-lg hover:text-green-400 hover:border-green-500 transition-all font-medium flex items-center gap-2"
-              >
-                <ArrowRight className="w-4 h-4" />
-                Download APK v0.1.6
+                View Source
               </a>
             </div>
 
