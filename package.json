@@ -57,7 +57,7 @@
     "eslint-config-prettier": "^10.1.8",
     "happy-dom": "^20.3.3",
     "jsdom": "^27.4.0",
-    "prettier": "^3.8.0",
+    "prettier": "^3.8.1",
     "tailwindcss": "^4",
     "typescript": "^5",
     "vitest": "^4.0.17"

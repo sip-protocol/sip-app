@@ -1023,11 +1023,10 @@ function LinksSection() {
           </div>
 
           <div className="px-8 py-16 sm:px-16 text-center">
-            <h2 className="text-3xl sm:text-4xl font-bold">
-              Ready to Try It?
-            </h2>
+            <h2 className="text-3xl sm:text-4xl font-bold">Ready to Try It?</h2>
             <p className="mt-4 text-lg text-gray-400 max-w-2xl mx-auto">
-              Download the app on Android/Seeker, read the docs, or explore the code.
+              Download the app on Android/Seeker, read the docs, or explore the
+              code.
             </p>
 
             <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
