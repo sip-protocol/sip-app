@@ -22,7 +22,7 @@ const apps = [
     description: "Cross-chain transfers with stealth addresses via Wormhole",
     href: "/bridge",
     icon: "🌉",
-    status: "coming" as const,
+    status: "live" as const,
     gradient: "from-cyan-500 to-cyan-700",
   },
   {
