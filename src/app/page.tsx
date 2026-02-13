@@ -30,7 +30,7 @@ const apps = [
     description: "Commit-reveal voting on Realms DAOs with Pedersen commitments",
     href: "/governance",
     icon: "🗳️",
-    status: "coming" as const,
+    status: "live" as const,
     gradient: "from-blue-500 to-blue-700",
   },
   {
