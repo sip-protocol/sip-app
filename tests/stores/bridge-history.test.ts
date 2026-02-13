@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest"
 import { useBridgeHistoryStore } from "@/stores/bridge-history"
+import { PrivacyLevel } from "@sip-protocol/types"
 import type { BridgeTransfer } from "@/lib/bridge/types"
 
 function makeMockTransfer(overrides?: Partial<BridgeTransfer>): BridgeTransfer {
@@ -11,7 +12,7 @@ function makeMockTransfer(overrides?: Partial<BridgeTransfer>): BridgeTransfer {
     amount: "100",
     stealthAddress: "sip:ethereum:0xstealth",
     stealthMetaAddress: "sip:ethereum:0xspend:0xview",
-    privacyLevel: "shielded",
+    privacyLevel: PrivacyLevel.SHIELDED,
     status: "complete",
     startedAt: Date.now(),
     completedAt: Date.now(),

@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest"
 import { BridgeService } from "@/lib/bridge/bridge-service"
+import { PrivacyLevel } from "@sip-protocol/types"
 import type { BridgeStep, BridgeParams } from "@/lib/bridge/types"
 
 // Mock the stealth-bridge module
@@ -18,7 +19,7 @@ const validParams: BridgeParams = {
   destChain: "ethereum",
   token: "USDC",
   amount: "100",
-  privacyLevel: "shielded",
+  privacyLevel: PrivacyLevel.SHIELDED,
 }
 
 describe("BridgeService", () => {

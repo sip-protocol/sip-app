@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest"
 import { renderHook, act } from "@testing-library/react"
+import { PrivacyLevel } from "@sip-protocol/types"
 import { useBridgeTransfer } from "@/hooks/use-bridge-transfer"
 
 // Mock wallet adapter
@@ -67,7 +68,7 @@ const validParams = {
   destChain: "ethereum" as const,
   token: "USDC",
   amount: "100",
-  privacyLevel: "shielded" as const,
+  privacyLevel: PrivacyLevel.SHIELDED,
 }
 
 describe("useBridgeTransfer", () => {
