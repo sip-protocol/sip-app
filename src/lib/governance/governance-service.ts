@@ -44,7 +44,7 @@ export class GovernanceService {
     }
 
     const weight = BigInt(params.weight || "0")
-    if (weight <= 0n) {
+    if (weight <= BigInt(0)) {
       return "Voting weight must be greater than 0"
     }
 

@@ -54,7 +54,7 @@ export function VoteForm({ proposal, onBack }: VoteFormProps) {
     connected &&
     selectedChoice !== null &&
     weight &&
-    BigInt(weight) > 0n &&
+    BigInt(weight) > BigInt(0) &&
     status === "idle"
 
   const isCommitting =

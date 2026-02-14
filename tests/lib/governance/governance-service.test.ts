@@ -23,7 +23,7 @@ vi.mock("@sip-protocol/sdk", () => {
       return {
         proposalId: "prop-mnde-01",
         choice: 1,
-        weight: 15000n,
+        weight: BigInt(15000),
         voter: "anonymous",
         timestamp: Date.now(),
         encryptedVote: _vote,
