@@ -11,7 +11,7 @@ services:
     image: ghcr.io/sip-protocol/sip-app:latest
     container_name: sip-app-blue
     ports:
-      - "5004:3000"
+      - "5005:3000"
     environment:
       - NODE_ENV=production
       - NEXT_TELEMETRY_DISABLED=1
@@ -28,7 +28,7 @@ services:
     image: ghcr.io/sip-protocol/sip-app:green
     container_name: sip-app-green
     ports:
-      - "5005:3000"
+      - "5004:3000"
     environment:
       - NODE_ENV=production
       - NEXT_TELEMETRY_DISABLED=1
