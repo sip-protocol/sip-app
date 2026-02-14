@@ -32,7 +32,7 @@ export default function LoyaltyLayout({
                 href={item.href}
                 className={`flex-shrink-0 px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
                   isActive(item.href)
-                    ? "border-purple-500 text-white"
+                    ? "border-amber-500 text-white"
                     : "border-transparent text-gray-400 hover:text-white hover:border-gray-700"
                 }`}
               >

@@ -46,7 +46,7 @@ const apps = [
     description: "Earn rewards for privacy actions via Torque campaigns",
     href: "/loyalty",
     icon: "🏆",
-    status: "coming" as const,
+    status: "live" as const,
     gradient: "from-amber-500 to-amber-700",
   },
   {
