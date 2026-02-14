@@ -71,7 +71,7 @@ const apps = [
     description: "Encrypted content drops and privacy education via DRiP",
     href: "/channel",
     icon: "📡",
-    status: "coming" as const,
+    status: "live" as const,
     gradient: "from-violet-500 to-violet-700",
   },
   {
