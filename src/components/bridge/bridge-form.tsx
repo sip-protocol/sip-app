@@ -15,6 +15,7 @@ import { BridgeRouteBadge } from "./bridge-route-badge"
 import { BridgeSummary } from "./bridge-summary"
 import { BridgeStatus } from "./bridge-status"
 import { BridgeStealthReveal } from "./bridge-stealth-reveal"
+import { getTokensForRoute } from "@/lib/bridge/constants"
 import type { BridgeChainId } from "@/lib/bridge/types"
 import type { PrivacyLevel as PrivacyLevelType } from "@/components/payments/privacy-toggle"
 
@@ -50,7 +51,6 @@ export function BridgeForm() {
       setDestChain(chain)
       // Reset token if not available on new route
       if (sourceChain) {
-        const { getTokensForRoute } = require("@/lib/bridge/constants")
         const tokens = getTokensForRoute(sourceChain, chain)
         if (tokens.length > 0 && (!token || !tokens.includes(token))) {
           setToken(tokens[0])
