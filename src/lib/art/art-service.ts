@@ -8,7 +8,11 @@ import type {
   ArtNFT,
 } from "./types"
 import { SIMULATION_DELAYS } from "./constants"
-import { generateArtStealthAddress, generateArtSeed, deriveArtParameters } from "./stealth-art"
+import {
+  generateArtStealthAddress,
+  generateArtSeed,
+  deriveArtParameters,
+} from "./stealth-art"
 import { renderArt } from "./art-engine"
 
 function generateId(prefix: string): string {
@@ -29,7 +33,10 @@ export class ArtService {
     this.onStepChange = options.onStepChange
   }
 
-  validate(type: "generate" | "mint", params: GenerateArtParams | MintArtParams): string | null {
+  validate(
+    type: "generate" | "mint",
+    params: GenerateArtParams | MintArtParams
+  ): string | null {
     switch (type) {
       case "generate": {
         const p = params as GenerateArtParams
@@ -64,7 +71,9 @@ export class ArtService {
    * Generate deterministic art from a stealth address seed.
    * selecting_style (UI) -> generating (real SDK stealth + render) -> generated
    */
-  async generateArt(params: GenerateArtParams): Promise<{ record: ArtActionRecord; art: GeneratedArt }> {
+  async generateArt(
+    params: GenerateArtParams
+  ): Promise<{ record: ArtActionRecord; art: GeneratedArt }> {
     const validationError = this.validate("generate", params)
     if (validationError) {
       throw new Error(validationError)
@@ -87,7 +96,9 @@ export class ArtService {
       this.onStepChange?.("selecting_style", { ...record })
 
       if (this.mode === "simulation") {
-        await new Promise((r) => setTimeout(r, SIMULATION_DELAYS.selecting_style))
+        await new Promise((r) =>
+          setTimeout(r, SIMULATION_DELAYS.selecting_style)
+        )
       }
 
       // Step 2: Generate art (real SDK stealth + seed + render)
@@ -132,7 +143,8 @@ export class ArtService {
       return { record, art }
     } catch (error) {
       record.status = "failed"
-      record.error = error instanceof Error ? error.message : "Art generation failed"
+      record.error =
+        error instanceof Error ? error.message : "Art generation failed"
       record.stepTimestamps.failed = Date.now()
       this.onStepChange?.("failed", { ...record })
       throw error
@@ -143,7 +155,9 @@ export class ArtService {
    * Mint generated art as a compressed NFT (simulated).
    * preparing_nft -> minting -> minted
    */
-  async mintNFT(params: MintArtParams): Promise<{ record: ArtActionRecord; nft: ArtNFT }> {
+  async mintNFT(
+    params: MintArtParams
+  ): Promise<{ record: ArtActionRecord; nft: ArtNFT }> {
     const validationError = this.validate("mint", params)
     if (validationError) {
       throw new Error(validationError)
@@ -205,7 +219,8 @@ export class ArtService {
       return { record, nft }
     } catch (error) {
       record.status = "failed"
-      record.error = error instanceof Error ? error.message : "NFT minting failed"
+      record.error =
+        error instanceof Error ? error.message : "NFT minting failed"
       record.stepTimestamps.failed = Date.now()
       this.onStepChange?.("failed", { ...record })
       throw error

@@ -20,14 +20,14 @@ export const useBridgeHistoryStore = create<BridgeHistoryStore>()(
         set((state) => ({
           transfers: [transfer, ...state.transfers].slice(
             0,
-            MAX_BRIDGE_HISTORY,
+            MAX_BRIDGE_HISTORY
           ),
         })),
 
       updateTransfer: (id, updates) =>
         set((state) => ({
           transfers: state.transfers.map((t) =>
-            t.id === id ? { ...t, ...updates } : t,
+            t.id === id ? { ...t, ...updates } : t
           ),
         })),
 
@@ -37,6 +37,6 @@ export const useBridgeHistoryStore = create<BridgeHistoryStore>()(
     }),
     {
       name: "sip-bridge-history",
-    },
-  ),
+    }
+  )
 )

@@ -12,7 +12,7 @@ interface UseBridgeFeeReturn {
 
 export function useBridgeFee(
   amount: string,
-  token: string | null,
+  token: string | null
 ): UseBridgeFeeReturn {
   const fee = useMemo(() => {
     const numAmount = parseFloat(amount)

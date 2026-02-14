@@ -64,7 +64,8 @@ export const SAMPLE_PROPOSALS: Proposal[] = [
     daoName: "Marinade Finance",
     daoIcon: "/tokens/mnde.png",
     title: "Increase validator set from 400 to 500",
-    description: "Proposal to expand the Marinade validator delegation set to improve decentralization and network resilience.",
+    description:
+      "Proposal to expand the Marinade validator delegation set to improve decentralization and network resilience.",
     choices: ["For", "Against", "Abstain"],
     status: "voting",
     startTime: now - 2 * DAY,
@@ -80,7 +81,8 @@ export const SAMPLE_PROPOSALS: Proposal[] = [
     daoName: "Jupiter",
     daoIcon: "/tokens/jup.png",
     title: "Allocate 10M JUP to liquidity incentives",
-    description: "Deploy 10M JUP tokens from the DAO treasury to incentivize liquidity providers across key trading pairs.",
+    description:
+      "Deploy 10M JUP tokens from the DAO treasury to incentivize liquidity providers across key trading pairs.",
     choices: ["For", "Against", "Abstain"],
     status: "voting",
     startTime: now - 1 * DAY,
@@ -96,7 +98,8 @@ export const SAMPLE_PROPOSALS: Proposal[] = [
     daoName: "Drift Protocol",
     daoIcon: "/tokens/drift.png",
     title: "Launch DRIFT staking with 12% APY",
-    description: "Introduce DRIFT token staking with protocol revenue sharing, targeting 12% APY for long-term stakers.",
+    description:
+      "Introduce DRIFT token staking with protocol revenue sharing, targeting 12% APY for long-term stakers.",
     choices: ["For", "Against", "Abstain"],
     status: "voting",
     startTime: now - 12 * HOUR,
@@ -113,7 +116,8 @@ export const SAMPLE_PROPOSALS: Proposal[] = [
     daoName: "Marinade Finance",
     daoIcon: "/tokens/mnde.png",
     title: "Reduce unstaking period from 2 to 1 epoch",
-    description: "Shorten the mSOL unstaking delay to improve capital efficiency for users.",
+    description:
+      "Shorten the mSOL unstaking delay to improve capital efficiency for users.",
     choices: ["For", "Against", "Abstain"],
     status: "reveal",
     startTime: now - 7 * DAY,
@@ -129,7 +133,8 @@ export const SAMPLE_PROPOSALS: Proposal[] = [
     daoName: "Jupiter",
     daoIcon: "/tokens/jup.png",
     title: "Integrate Pyth price feeds for limit orders",
-    description: "Use Pyth Network oracle feeds instead of on-chain TWAP for limit order execution.",
+    description:
+      "Use Pyth Network oracle feeds instead of on-chain TWAP for limit order execution.",
     choices: ["For", "Against", "Abstain"],
     status: "reveal",
     startTime: now - 6 * DAY,
@@ -145,7 +150,8 @@ export const SAMPLE_PROPOSALS: Proposal[] = [
     daoName: "Mango Markets",
     daoIcon: "/tokens/mngo.png",
     title: "Add SOL-PERP with 20x max leverage",
-    description: "List a SOL perpetual futures market with up to 20x leverage and dynamic funding rates.",
+    description:
+      "List a SOL perpetual futures market with up to 20x leverage and dynamic funding rates.",
     choices: ["For", "Against", "Abstain"],
     status: "reveal",
     startTime: now - 8 * DAY,
@@ -162,7 +168,8 @@ export const SAMPLE_PROPOSALS: Proposal[] = [
     daoName: "Marinade Finance",
     daoIcon: "/tokens/mnde.png",
     title: "Fund bug bounty program with 500K MNDE",
-    description: "Allocate 500K MNDE from treasury for a security bug bounty program on Immunefi.",
+    description:
+      "Allocate 500K MNDE from treasury for a security bug bounty program on Immunefi.",
     choices: ["For", "Against", "Abstain"],
     status: "completed",
     startTime: now - 14 * DAY,
@@ -178,7 +185,8 @@ export const SAMPLE_PROPOSALS: Proposal[] = [
     daoName: "Jito",
     daoIcon: "/tokens/jto.png",
     title: "Approve JTO emissions schedule for Q1 2026",
-    description: "Ratify the quarterly JTO token emissions plan for staking rewards and ecosystem grants.",
+    description:
+      "Ratify the quarterly JTO token emissions plan for staking rewards and ecosystem grants.",
     choices: ["For", "Against", "Abstain"],
     status: "completed",
     startTime: now - 21 * DAY,
@@ -195,7 +203,8 @@ export const SAMPLE_PROPOSALS: Proposal[] = [
     daoName: "Mango Markets",
     daoIcon: "/tokens/mngo.png",
     title: "Migrate to Anchor v0.30 framework",
-    description: "Upgrade the Mango v4 program from Anchor v0.28 to v0.30 for improved tooling.",
+    description:
+      "Upgrade the Mango v4 program from Anchor v0.28 to v0.30 for improved tooling.",
     choices: ["For", "Against", "Abstain"],
     status: "cancelled",
     startTime: now - 10 * DAY,
@@ -212,7 +221,8 @@ export const SAMPLE_PROPOSALS: Proposal[] = [
     daoName: "Drift Protocol",
     daoIcon: "/tokens/drift.png",
     title: "Reduce insurance fund fee from 5% to 3%",
-    description: "Lower the insurance fund contribution fee on profitable trades to attract more volume.",
+    description:
+      "Lower the insurance fund contribution fee on profitable trades to attract more volume.",
     choices: ["For", "Against", "Abstain"],
     status: "voting",
     startTime: now - 6 * HOUR,
@@ -237,9 +247,7 @@ export const MAX_GOVERNANCE_HISTORY = 100
 
 export const VOTE_CHOICES = ["For", "Against", "Abstain"]
 
-export function getProposalsByStatus(
-  status: ProposalStatus,
-): Proposal[] {
+export function getProposalsByStatus(status: ProposalStatus): Proposal[] {
   return SAMPLE_PROPOSALS.filter((p) => p.status === status)
 }
 

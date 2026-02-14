@@ -22,7 +22,7 @@ export function DaoBadge({
       <div
         className={cn(
           "rounded-full bg-[var(--surface-secondary)] flex items-center justify-center overflow-hidden flex-shrink-0",
-          size === "sm" ? "w-6 h-6" : "w-8 h-8",
+          size === "sm" ? "w-6 h-6" : "w-8 h-8"
         )}
       >
         <img
@@ -40,7 +40,7 @@ export function DaoBadge({
         <span
           className={cn(
             "font-medium truncate",
-            size === "sm" ? "text-xs" : "text-sm",
+            size === "sm" ? "text-xs" : "text-sm"
           )}
         >
           {name}
@@ -49,7 +49,7 @@ export function DaoBadge({
           <span
             className={cn(
               "text-[var(--text-tertiary)] flex-shrink-0",
-              size === "sm" ? "text-[10px]" : "text-xs",
+              size === "sm" ? "text-[10px]" : "text-xs"
             )}
           >
             {token}

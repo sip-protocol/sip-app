@@ -91,5 +91,13 @@ export function useTrackEvent(): UseTrackEventReturn {
     [track]
   )
 
-  return { track, trackBridge, trackVote, trackSocial, trackLoyalty, trackArt, trackChannel }
+  return {
+    track,
+    trackBridge,
+    trackVote,
+    trackSocial,
+    trackLoyalty,
+    trackArt,
+    trackChannel,
+  }
 }

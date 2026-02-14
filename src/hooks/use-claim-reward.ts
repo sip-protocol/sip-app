@@ -5,7 +5,11 @@ import { useWallet } from "@solana/wallet-adapter-react"
 import { LoyaltyService } from "@/lib/loyalty/loyalty-service"
 import { useLoyaltyHistoryStore } from "@/stores/loyalty-history"
 import { useTrackEvent } from "@/hooks/useTrackEvent"
-import type { LoyaltyStep, ClaimRewardParams, LoyaltyActionRecord } from "@/lib/loyalty/types"
+import type {
+  LoyaltyStep,
+  ClaimRewardParams,
+  LoyaltyActionRecord,
+} from "@/lib/loyalty/types"
 
 export type ClaimRewardStatus = LoyaltyStep | "idle" | "error"
 
@@ -13,7 +17,9 @@ export interface UseClaimRewardReturn {
   status: ClaimRewardStatus
   activeRecord: LoyaltyActionRecord | null
   error: string | null
-  claimReward: (params: ClaimRewardParams) => Promise<LoyaltyActionRecord | undefined>
+  claimReward: (
+    params: ClaimRewardParams
+  ) => Promise<LoyaltyActionRecord | undefined>
   reset: () => void
 }
 
@@ -23,7 +29,9 @@ export function useClaimReward(): UseClaimRewardReturn {
   const { trackLoyalty } = useTrackEvent()
 
   const [status, setStatus] = useState<ClaimRewardStatus>("idle")
-  const [activeRecord, setActiveRecord] = useState<LoyaltyActionRecord | null>(null)
+  const [activeRecord, setActiveRecord] = useState<LoyaltyActionRecord | null>(
+    null
+  )
   const [error, setError] = useState<string | null>(null)
 
   const reset = useCallback(() => {
@@ -33,7 +41,9 @@ export function useClaimReward(): UseClaimRewardReturn {
   }, [])
 
   const claimReward = useCallback(
-    async (params: ClaimRewardParams): Promise<LoyaltyActionRecord | undefined> => {
+    async (
+      params: ClaimRewardParams
+    ): Promise<LoyaltyActionRecord | undefined> => {
       if (!publicKey) {
         setError("Wallet not connected")
         setStatus("error")
@@ -82,7 +92,7 @@ export function useClaimReward(): UseClaimRewardReturn {
         return undefined
       }
     },
-    [publicKey, addAction, trackLoyalty],
+    [publicKey, addAction, trackLoyalty]
   )
 
   return { status, activeRecord, error, claimReward, reset }

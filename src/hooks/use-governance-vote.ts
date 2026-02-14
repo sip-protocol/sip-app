@@ -5,7 +5,11 @@ import { useWallet } from "@solana/wallet-adapter-react"
 import { GovernanceService } from "@/lib/governance/governance-service"
 import { useGovernanceHistoryStore } from "@/stores/governance-history"
 import { useTrackEvent } from "@/hooks/useTrackEvent"
-import type { VoteStep, VoteParams, PrivateVoteRecord } from "@/lib/governance/types"
+import type {
+  VoteStep,
+  VoteParams,
+  PrivateVoteRecord,
+} from "@/lib/governance/types"
 
 export type GovernanceVoteStatus = VoteStep | "idle" | "error"
 
@@ -81,7 +85,7 @@ export function useGovernanceVote(): UseGovernanceVoteReturn {
         return undefined
       }
     },
-    [publicKey, addVote, trackVote],
+    [publicKey, addVote, trackVote]
   )
 
   const revealVote = useCallback(
@@ -115,7 +119,7 @@ export function useGovernanceVote(): UseGovernanceVoteReturn {
         const result = await service.revealVote(
           voteId,
           existingVote.encryptionKey,
-          existingVote.encryptedVote,
+          existingVote.encryptedVote
         )
 
         setActiveVote(result)
@@ -146,7 +150,7 @@ export function useGovernanceVote(): UseGovernanceVoteReturn {
         return undefined
       }
     },
-    [publicKey, getVote, updateVote, trackVote],
+    [publicKey, getVote, updateVote, trackVote]
   )
 
   return { status, activeVote, error, commitVote, revealVote, reset }

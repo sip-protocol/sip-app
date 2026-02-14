@@ -22,14 +22,17 @@ export function GovernancePageClient() {
     setView("vote")
   }, [])
 
-  const handleReveal = useCallback((proposalId: string) => {
-    const votes = getVotesForProposal(proposalId)
-    const committed = votes.find((v) => v.status === "committed")
-    if (committed) {
-      setActiveVoteId(committed.id)
-      setView("reveal")
-    }
-  }, [getVotesForProposal])
+  const handleReveal = useCallback(
+    (proposalId: string) => {
+      const votes = getVotesForProposal(proposalId)
+      const committed = votes.find((v) => v.status === "committed")
+      if (committed) {
+        setActiveVoteId(committed.id)
+        setView("reveal")
+      }
+    },
+    [getVotesForProposal]
+  )
 
   const handleBack = useCallback(() => {
     setView("dashboard")

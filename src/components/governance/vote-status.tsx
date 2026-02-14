@@ -21,7 +21,8 @@ const COMMIT_STEPS: StepConfig[] = [
   {
     id: "encrypting",
     label: "Encrypt Vote",
-    description: "Creating Pedersen commitment and encrypting with XChaCha20-Poly1305",
+    description:
+      "Creating Pedersen commitment and encrypting with XChaCha20-Poly1305",
     icon: "🔐",
   },
   {
@@ -42,7 +43,8 @@ const REVEAL_STEPS: StepConfig[] = [
   {
     id: "revealing",
     label: "Decrypt Vote",
-    description: "Revealing vote with encryption key — verifying Pedersen commitment",
+    description:
+      "Revealing vote with encryption key — verifying Pedersen commitment",
     icon: "🔓",
   },
   {
@@ -82,8 +84,10 @@ export function VoteStatus({
         "rounded-xl border overflow-hidden",
         isFailed && "bg-red-900/20 border-red-800",
         isComplete && "bg-sip-green-900/20 border-sip-green-800",
-        !isFailed && !isComplete && "bg-sip-purple-900/10 border-sip-purple-800/50",
-        className,
+        !isFailed &&
+          !isComplete &&
+          "bg-sip-purple-900/10 border-sip-purple-800/50",
+        className
       )}
     >
       {/* Header */}
@@ -93,7 +97,7 @@ export function VoteStatus({
             "font-semibold text-sm",
             isFailed && "text-red-300",
             isComplete && "text-sip-green-300",
-            !isFailed && !isComplete && "text-sip-purple-300",
+            !isFailed && !isComplete && "text-sip-purple-300"
           )}
         >
           {isFailed
@@ -131,7 +135,7 @@ export function VoteStatus({
                 className={cn(
                   "flex items-start gap-3 py-2 transition-opacity duration-300",
                   isPending && !isFailed && "opacity-30",
-                  isFailed && "opacity-40",
+                  isFailed && "opacity-40"
                 )}
               >
                 {/* Step indicator */}
@@ -143,7 +147,7 @@ export function VoteStatus({
                         "bg-sip-green-500/20 text-sip-green-400 ring-1 ring-sip-green-500/30",
                       isCurrent &&
                         "bg-sip-purple-500/20 text-sip-purple-300 ring-2 ring-sip-purple-500/40 animate-pulse",
-                      isPending && "bg-gray-800 text-gray-500",
+                      isPending && "bg-gray-800 text-gray-500"
                     )}
                   >
                     {isStepComplete ? (
@@ -161,7 +165,7 @@ export function VoteStatus({
                           ? "bg-sip-green-500/40"
                           : isCurrent
                             ? "bg-sip-purple-500/40"
-                            : "bg-gray-700",
+                            : "bg-gray-700"
                       )}
                     />
                   )}
@@ -174,7 +178,7 @@ export function VoteStatus({
                       "text-sm font-medium leading-tight",
                       isStepComplete && "text-sip-green-300",
                       isCurrent && "text-white",
-                      isPending && "text-gray-500",
+                      isPending && "text-gray-500"
                     )}
                   >
                     {step.label}
@@ -208,11 +212,7 @@ function CheckIcon({ className }: { className?: string }) {
       stroke="currentColor"
       strokeWidth={3}
     >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M5 13l4 4L19 7"
-      />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
     </svg>
   )
 }

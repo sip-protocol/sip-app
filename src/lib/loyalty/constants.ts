@@ -151,7 +151,7 @@ export function getActiveCampaigns(): Campaign[] {
 }
 
 export function getProgressForCampaign(
-  campaignId: string,
+  campaignId: string
 ): CampaignProgress | undefined {
   return SAMPLE_PROGRESS.find((p) => p.campaignId === campaignId)
 }

@@ -1,10 +1,6 @@
 import type { PrivacyLevel } from "@sip-protocol/types"
 
-export type JoinStep =
-  | "selecting_campaign"
-  | "joining"
-  | "joined"
-  | "failed"
+export type JoinStep = "selecting_campaign" | "joining" | "joined" | "failed"
 
 export type ActionStep =
   | "verifying_action"
@@ -12,11 +8,7 @@ export type ActionStep =
   | "recorded"
   | "failed"
 
-export type ClaimStep =
-  | "generating_stealth"
-  | "claiming"
-  | "claimed"
-  | "failed"
+export type ClaimStep = "generating_stealth" | "claiming" | "claimed" | "failed"
 
 export type LoyaltyStep = JoinStep | ActionStep | ClaimStep
 
@@ -109,7 +101,7 @@ export interface ClaimRewardParams {
 
 export type LoyaltyStepChangeCallback = (
   step: LoyaltyStep,
-  record: LoyaltyActionRecord,
+  record: LoyaltyActionRecord
 ) => void
 
 export type LoyaltyMode = "simulation" | "torque"

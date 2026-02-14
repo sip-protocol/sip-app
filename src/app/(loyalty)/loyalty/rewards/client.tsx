@@ -9,7 +9,9 @@ type View = "list" | "claim"
 
 export function RewardsPageClient() {
   const [view, setView] = useState<View>("list")
-  const [selectedReward, setSelectedReward] = useState<LoyaltyReward | null>(null)
+  const [selectedReward, setSelectedReward] = useState<LoyaltyReward | null>(
+    null
+  )
 
   const handleClaim = useCallback((reward: LoyaltyReward) => {
     setSelectedReward(reward)

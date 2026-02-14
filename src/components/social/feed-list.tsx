@@ -21,9 +21,7 @@ export function FeedList({ onViewPost }: FeedListProps) {
     return (
       <div className="text-center py-12">
         <div className="animate-spin w-8 h-8 border-2 border-pink-500 border-t-transparent rounded-full mx-auto mb-4" />
-        <p className="text-sm text-[var(--text-secondary)]">
-          Loading feed...
-        </p>
+        <p className="text-sm text-[var(--text-secondary)]">Loading feed...</p>
       </div>
     )
   }
@@ -41,7 +39,7 @@ export function FeedList({ onViewPost }: FeedListProps) {
               "px-4 py-2 text-sm font-medium rounded-lg transition-colors whitespace-nowrap",
               filter === tab.value
                 ? "bg-pink-600 text-white"
-                : "bg-[var(--surface-secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]",
+                : "bg-[var(--surface-secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
             )}
           >
             {tab.label}
@@ -72,11 +70,7 @@ export function FeedList({ onViewPost }: FeedListProps) {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {posts.map((post) => (
-            <PostCard
-              key={post.id}
-              post={post}
-              onViewPost={onViewPost}
-            />
+            <PostCard key={post.id} post={post} onViewPost={onViewPost} />
           ))}
         </div>
       )}

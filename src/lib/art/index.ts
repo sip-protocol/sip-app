@@ -1,7 +1,12 @@
 export { ArtService } from "./art-service"
 export type { ArtServiceOptions } from "./art-service"
 
-export { renderArt, renderCipherBloom, renderStealthGrid, renderCommitmentFlow } from "./art-engine"
+export {
+  renderArt,
+  renderCipherBloom,
+  renderStealthGrid,
+  renderCommitmentFlow,
+} from "./art-engine"
 
 export {
   generateArtStealthAddress,

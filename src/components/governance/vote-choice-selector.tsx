@@ -46,7 +46,7 @@ export function VoteChoiceSelector({
                 isSelected
                   ? "border-sip-purple-500 bg-sip-purple-900/20 shadow-lg shadow-sip-purple-500/10"
                   : "border-[var(--border-default)] hover:border-[var(--border-hover)] hover:bg-[var(--bg-secondary)]",
-                disabled && "opacity-50 cursor-not-allowed hover:scale-100",
+                disabled && "opacity-50 cursor-not-allowed hover:scale-100"
               )}
             >
               {/* Radio indicator */}
@@ -55,7 +55,7 @@ export function VoteChoiceSelector({
                   "w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0",
                   isSelected
                     ? "border-sip-purple-500"
-                    : "border-[var(--border-default)]",
+                    : "border-[var(--border-default)]"
                 )}
               >
                 {isSelected && (
@@ -68,7 +68,7 @@ export function VoteChoiceSelector({
               <span
                 className={cn(
                   "font-medium text-sm flex-1",
-                  isSelected && "text-sip-purple-300",
+                  isSelected && "text-sip-purple-300"
                 )}
               >
                 {choice}

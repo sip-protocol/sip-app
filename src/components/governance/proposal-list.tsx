@@ -31,9 +31,7 @@ export function ProposalList({ onVote, onReveal }: ProposalListProps) {
   const { votes } = useGovernanceHistoryStore()
 
   const committedProposalIds = new Set(
-    votes
-      .filter((v) => v.status === "committed")
-      .map((v) => v.proposalId),
+    votes.filter((v) => v.status === "committed").map((v) => v.proposalId)
   )
 
   if (isLoading) {
@@ -60,7 +58,7 @@ export function ProposalList({ onVote, onReveal }: ProposalListProps) {
               "px-4 py-2 text-sm font-medium rounded-lg transition-colors whitespace-nowrap",
               filter === tab.value
                 ? "bg-sip-purple-600 text-white"
-                : "bg-[var(--surface-secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]",
+                : "bg-[var(--surface-secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
             )}
           >
             {tab.label}
@@ -77,7 +75,7 @@ export function ProposalList({ onVote, onReveal }: ProposalListProps) {
             "px-3 py-1.5 text-xs font-medium rounded-lg transition-colors whitespace-nowrap",
             !selectedDao
               ? "bg-sip-purple-900/30 text-sip-purple-300 border border-sip-purple-500/30"
-              : "bg-[var(--surface-secondary)] text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]",
+              : "bg-[var(--surface-secondary)] text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]"
           )}
         >
           All DAOs
@@ -91,7 +89,7 @@ export function ProposalList({ onVote, onReveal }: ProposalListProps) {
               "px-3 py-1.5 text-xs font-medium rounded-lg transition-colors whitespace-nowrap",
               selectedDao === dao.id
                 ? "bg-sip-purple-900/30 text-sip-purple-300 border border-sip-purple-500/30"
-                : "bg-[var(--surface-secondary)] text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]",
+                : "bg-[var(--surface-secondary)] text-[var(--text-tertiary)] hover:text-[var(--text-secondary)]"
             )}
           >
             {dao.name}

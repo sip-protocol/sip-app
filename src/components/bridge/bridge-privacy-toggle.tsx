@@ -1,6 +1,9 @@
 "use client"
 
-import { PrivacyToggle, type PrivacyLevel } from "@/components/payments/privacy-toggle"
+import {
+  PrivacyToggle,
+  type PrivacyLevel,
+} from "@/components/payments/privacy-toggle"
 
 interface BridgePrivacyToggleProps {
   value: PrivacyLevel

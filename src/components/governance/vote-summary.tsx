@@ -23,7 +23,7 @@ export function VoteSummary({
     <div
       className={cn(
         "rounded-lg border border-[var(--border-default)] bg-[var(--surface-secondary)] p-4 space-y-2",
-        className,
+        className
       )}
     >
       <p className="text-xs font-medium text-[var(--text-secondary)] uppercase tracking-wider mb-2">
@@ -32,7 +32,9 @@ export function VoteSummary({
 
       <div className="flex justify-between text-sm">
         <span className="text-[var(--text-secondary)]">DAO</span>
-        <span className="text-[var(--text-primary)] font-medium">{daoName}</span>
+        <span className="text-[var(--text-primary)] font-medium">
+          {daoName}
+        </span>
       </div>
 
       <div className="flex justify-between text-sm">

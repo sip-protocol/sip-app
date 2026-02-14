@@ -6,14 +6,21 @@ import { TapestryReader } from "@/lib/social/tapestry-reader"
 import { SocialService } from "@/lib/social/social-service"
 import { useSocialHistoryStore } from "@/stores/social-history"
 import { useTrackEvent } from "@/hooks/useTrackEvent"
-import type { SocialConnection, SocialStep, FollowParams, SocialActionRecord } from "@/lib/social/types"
+import type {
+  SocialConnection,
+  SocialStep,
+  FollowParams,
+  SocialActionRecord,
+} from "@/lib/social/types"
 
 export type ConnectionStatus = SocialStep | "idle" | "error"
 
 export interface UseConnectionsReturn {
   connections: SocialConnection[]
   isLoading: boolean
-  followProfile: (params: FollowParams) => Promise<SocialActionRecord | undefined>
+  followProfile: (
+    params: FollowParams
+  ) => Promise<SocialActionRecord | undefined>
   status: ConnectionStatus
   error: string | null
   reset: () => void
@@ -94,14 +101,13 @@ export function useConnections(profileId: string | null): UseConnectionsReturn {
 
         return result
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : "Follow failed"
+        const message = err instanceof Error ? err.message : "Follow failed"
         setError(message)
         setStatus("error")
         return undefined
       }
     },
-    [publicKey, addAction, trackSocial],
+    [publicKey, addAction, trackSocial]
   )
 
   return { connections, isLoading, followProfile, status, error, reset }

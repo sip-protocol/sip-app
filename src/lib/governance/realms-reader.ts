@@ -16,7 +16,10 @@ export class RealmsReader {
     throw new Error("Realms mode is not yet implemented. Use simulation mode.")
   }
 
-  async getProposals(daoId?: string, status?: ProposalStatus): Promise<Proposal[]> {
+  async getProposals(
+    daoId?: string,
+    status?: ProposalStatus
+  ): Promise<Proposal[]> {
     if (this.mode === "simulation") {
       let proposals = SAMPLE_PROPOSALS
       if (daoId) {

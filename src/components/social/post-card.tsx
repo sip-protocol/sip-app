@@ -39,7 +39,7 @@ export function PostCard({
         "bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-xl p-5",
         "hover:border-[var(--border-hover)] hover:shadow-md transition-all",
         onViewPost && "cursor-pointer",
-        className,
+        className
       )}
       onClick={() => onViewPost?.(post.id)}
     >

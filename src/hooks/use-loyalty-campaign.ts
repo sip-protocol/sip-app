@@ -5,7 +5,12 @@ import { useWallet } from "@solana/wallet-adapter-react"
 import { LoyaltyService } from "@/lib/loyalty/loyalty-service"
 import { useLoyaltyHistoryStore } from "@/stores/loyalty-history"
 import { useTrackEvent } from "@/hooks/useTrackEvent"
-import type { LoyaltyStep, JoinCampaignParams, LoyaltyActionRecord, CampaignProgress } from "@/lib/loyalty/types"
+import type {
+  LoyaltyStep,
+  JoinCampaignParams,
+  LoyaltyActionRecord,
+  CampaignProgress,
+} from "@/lib/loyalty/types"
 
 export type LoyaltyCampaignStatus = LoyaltyStep | "idle" | "error"
 
@@ -13,7 +18,9 @@ export interface UseLoyaltyCampaignReturn {
   status: LoyaltyCampaignStatus
   activeRecord: LoyaltyActionRecord | null
   error: string | null
-  joinCampaign: (params: JoinCampaignParams) => Promise<LoyaltyActionRecord | undefined>
+  joinCampaign: (
+    params: JoinCampaignParams
+  ) => Promise<LoyaltyActionRecord | undefined>
   reset: () => void
 }
 
@@ -23,7 +30,9 @@ export function useLoyaltyCampaign(): UseLoyaltyCampaignReturn {
   const { trackLoyalty } = useTrackEvent()
 
   const [status, setStatus] = useState<LoyaltyCampaignStatus>("idle")
-  const [activeRecord, setActiveRecord] = useState<LoyaltyActionRecord | null>(null)
+  const [activeRecord, setActiveRecord] = useState<LoyaltyActionRecord | null>(
+    null
+  )
   const [error, setError] = useState<string | null>(null)
 
   const reset = useCallback(() => {
@@ -33,7 +42,9 @@ export function useLoyaltyCampaign(): UseLoyaltyCampaignReturn {
   }, [])
 
   const joinCampaign = useCallback(
-    async (params: JoinCampaignParams): Promise<LoyaltyActionRecord | undefined> => {
+    async (
+      params: JoinCampaignParams
+    ): Promise<LoyaltyActionRecord | undefined> => {
       if (!publicKey) {
         setError("Wallet not connected")
         setStatus("error")
@@ -89,7 +100,7 @@ export function useLoyaltyCampaign(): UseLoyaltyCampaignReturn {
         return undefined
       }
     },
-    [publicKey, addAction, addCampaign, trackLoyalty],
+    [publicKey, addAction, addCampaign, trackLoyalty]
   )
 
   return { status, activeRecord, error, joinCampaign, reset }

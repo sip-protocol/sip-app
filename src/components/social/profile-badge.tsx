@@ -11,9 +11,21 @@ interface ProfileBadgeProps {
 
 function avatarEmoji(address: string): string {
   const emojis = [
-    "\u{1F42C}", "\u{1F47B}", "\u{1F525}", "\u{1F30A}", "\u{1F308}",
-    "\u{2B50}", "\u{1F680}", "\u{1F331}", "\u{1F3A8}", "\u{1F3AD}",
-    "\u{1F9CA}", "\u{1F52E}", "\u{1FA90}", "\u{1F30C}", "\u{26A1}",
+    "\u{1F42C}",
+    "\u{1F47B}",
+    "\u{1F525}",
+    "\u{1F30A}",
+    "\u{1F308}",
+    "\u{2B50}",
+    "\u{1F680}",
+    "\u{1F331}",
+    "\u{1F3A8}",
+    "\u{1F3AD}",
+    "\u{1F9CA}",
+    "\u{1F52E}",
+    "\u{1FA90}",
+    "\u{1F30C}",
+    "\u{26A1}",
     "\u{1F48E}",
   ]
   let hash = 0
@@ -54,7 +66,7 @@ export function ProfileBadge({
         className={cn(
           "rounded-full bg-gradient-to-br flex items-center justify-center flex-shrink-0",
           gradient,
-          size === "sm" ? "w-7 h-7 text-sm" : "w-9 h-9 text-lg",
+          size === "sm" ? "w-7 h-7 text-sm" : "w-9 h-9 text-lg"
         )}
       >
         {emoji}
@@ -63,7 +75,7 @@ export function ProfileBadge({
         <p
           className={cn(
             "font-medium truncate",
-            size === "sm" ? "text-xs" : "text-sm",
+            size === "sm" ? "text-xs" : "text-sm"
           )}
         >
           {username}
@@ -71,7 +83,7 @@ export function ProfileBadge({
         <p
           className={cn(
             "text-[var(--text-tertiary)] truncate",
-            size === "sm" ? "text-[10px]" : "text-xs",
+            size === "sm" ? "text-[10px]" : "text-xs"
           )}
         >
           {truncate(stealthAddress, 8, 4)}

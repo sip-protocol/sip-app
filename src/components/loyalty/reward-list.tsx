@@ -38,9 +38,10 @@ export function RewardList({ onClaim }: RewardListProps) {
     load()
   }, [])
 
-  const rewards = filter === "unclaimed"
-    ? allRewards.filter((r) => !r.isClaimed)
-    : allRewards.filter((r) => r.isClaimed)
+  const rewards =
+    filter === "unclaimed"
+      ? allRewards.filter((r) => !r.isClaimed)
+      : allRewards.filter((r) => r.isClaimed)
 
   if (isLoading) {
     return (
@@ -72,7 +73,7 @@ export function RewardList({ onClaim }: RewardListProps) {
               "px-4 py-2 text-sm font-medium rounded-lg transition-colors",
               filter === tab.value
                 ? "bg-amber-500/20 text-amber-300 border border-amber-500/30"
-                : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-secondary)]",
+                : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-secondary)]"
             )}
           >
             {tab.label}
@@ -85,7 +86,9 @@ export function RewardList({ onClaim }: RewardListProps) {
         <div className="bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-xl p-12 text-center">
           <p className="text-4xl mb-4">{"\u{1F381}"}</p>
           <h3 className="text-lg font-semibold mb-2">
-            {filter === "unclaimed" ? "No rewards to claim" : "No claimed rewards"}
+            {filter === "unclaimed"
+              ? "No rewards to claim"
+              : "No claimed rewards"}
           </h3>
           <p className="text-sm text-[var(--text-secondary)] max-w-md mx-auto">
             {filter === "unclaimed"
@@ -96,11 +99,7 @@ export function RewardList({ onClaim }: RewardListProps) {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {rewards.map((reward) => (
-            <RewardCard
-              key={reward.id}
-              reward={reward}
-              onClaim={onClaim}
-            />
+            <RewardCard key={reward.id} reward={reward} onClaim={onClaim} />
           ))}
         </div>
       )}

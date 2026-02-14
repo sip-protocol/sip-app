@@ -15,12 +15,7 @@ interface RevealFormProps {
 }
 
 export function RevealForm({ vote, daoIcon, onComplete }: RevealFormProps) {
-  const {
-    status,
-    activeVote,
-    error,
-    revealVote,
-  } = useGovernanceVote()
+  const { status, activeVote, error, revealVote } = useGovernanceVote()
 
   const isRevealing = status === "revealing"
   const isRevealed = status === "revealed"
@@ -47,9 +42,7 @@ export function RevealForm({ vote, daoIcon, onComplete }: RevealFormProps) {
           </div>
           <div className="flex justify-between">
             <span className="text-[var(--text-secondary)]">Weight</span>
-            <span>
-              {Number(activeVote.weight).toLocaleString()} tokens
-            </span>
+            <span>{Number(activeVote.weight).toLocaleString()} tokens</span>
           </div>
           <div className="flex justify-between">
             <span className="text-[var(--text-secondary)]">Proposal</span>
@@ -83,9 +76,7 @@ export function RevealForm({ vote, daoIcon, onComplete }: RevealFormProps) {
       <div className="rounded-lg border border-[var(--border-default)] bg-[var(--surface-secondary)] p-4 space-y-2 mb-6">
         <div className="flex justify-between text-sm">
           <span className="text-[var(--text-secondary)]">Your Vote</span>
-          <span className="text-sip-purple-400 font-medium">
-            🔒 Hidden
-          </span>
+          <span className="text-sip-purple-400 font-medium">🔒 Hidden</span>
         </div>
         <div className="flex justify-between text-sm">
           <span className="text-[var(--text-secondary)]">Commitment</span>
@@ -129,14 +120,15 @@ export function RevealForm({ vote, daoIcon, onComplete }: RevealFormProps) {
           "w-full py-4 px-6 text-lg font-semibold rounded-xl transition-colors",
           isRevealing
             ? "bg-amber-600/30 text-white/50 cursor-not-allowed"
-            : "bg-gradient-to-r from-amber-600 to-amber-700 text-white hover:from-amber-500 hover:to-amber-600",
+            : "bg-gradient-to-r from-amber-600 to-amber-700 text-white hover:from-amber-500 hover:to-amber-600"
         )}
       >
         {isRevealing ? "Revealing..." : "Reveal Your Vote"}
       </button>
 
       <p className="text-xs text-[var(--text-tertiary)] text-center mt-4">
-        Revealing decrypts your vote and verifies the Pedersen commitment on-chain
+        Revealing decrypts your vote and verifies the Pedersen commitment
+        on-chain
       </p>
     </div>
   )

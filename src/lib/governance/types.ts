@@ -76,7 +76,7 @@ export interface VoteParams {
 
 export type VoteStepChangeCallback = (
   step: VoteStep,
-  vote: PrivateVoteRecord,
+  vote: PrivateVoteRecord
 ) => void
 
 export type GovernanceMode = "simulation" | "realms"

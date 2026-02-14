@@ -31,7 +31,9 @@ export function ProfilePageClient() {
           ) : (
             <div className="bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-xl p-12 text-center">
               <p className="text-4xl mb-4">{"\u{1F464}"}</p>
-              <h3 className="text-lg font-semibold mb-2">No stealth profiles yet</h3>
+              <h3 className="text-lg font-semibold mb-2">
+                No stealth profiles yet
+              </h3>
               <p className="text-sm text-[var(--text-secondary)] max-w-md mx-auto">
                 Create a stealth identity to start interacting socially on-chain
                 without revealing your wallet address.

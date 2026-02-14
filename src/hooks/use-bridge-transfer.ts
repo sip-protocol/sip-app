@@ -37,7 +37,7 @@ export function useBridgeTransfer(): UseBridgeTransferReturn {
 
   const [status, setStatus] = useState<BridgeTransferStatus>("idle")
   const [activeTransfer, setActiveTransfer] = useState<BridgeTransfer | null>(
-    null,
+    null
   )
   const [error, setError] = useState<string | null>(null)
 
@@ -49,7 +49,7 @@ export function useBridgeTransfer(): UseBridgeTransferReturn {
 
   const bridge = useCallback(
     async (
-      params: BridgeTransferParams,
+      params: BridgeTransferParams
     ): Promise<BridgeTransfer | undefined> => {
       if (!publicKey) {
         setError("Wallet not connected")
@@ -106,7 +106,7 @@ export function useBridgeTransfer(): UseBridgeTransferReturn {
         return undefined
       }
     },
-    [publicKey, addTransfer, updateTransfer, trackBridge, activeTransfer],
+    [publicKey, addTransfer, updateTransfer, trackBridge, activeTransfer]
   )
 
   return { status, activeTransfer, error, bridge, reset }

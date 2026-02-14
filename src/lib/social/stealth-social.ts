@@ -40,7 +40,7 @@ export async function generateSocialStealthAddress(): Promise<StealthSocialResul
  */
 export async function encryptSocialContent(
   content: string,
-  _viewingKeyHex: string,
+  _viewingKeyHex: string
 ): Promise<{ ciphertext: string; nonce: string }> {
   const sdk = await getSDK()
 
@@ -68,7 +68,7 @@ export async function encryptSocialContent(
 export async function decryptSocialContent(
   ciphertext: string,
   nonce: string,
-  _viewingKeyHex: string,
+  _viewingKeyHex: string
 ): Promise<string> {
   const sdk = await getSDK()
 
@@ -80,7 +80,7 @@ export async function decryptSocialContent(
       nonce: nonce as `0x${string}`,
       viewingKeyHash: viewingKey.hash,
     },
-    viewingKey,
+    viewingKey
   ) as unknown as { memo?: string }
 
   return decrypted?.memo ?? ""

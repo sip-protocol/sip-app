@@ -18,8 +18,11 @@ export function renderArt(params: ArtParameters): string {
 }
 
 function seedByte(seed: string, index: number): number {
-  const hex = seed.slice((index * 2) % seed.length, (index * 2 + 2) % seed.length)
-  return parseInt(hex, 16) || ((index * 37) % 256)
+  const hex = seed.slice(
+    (index * 2) % seed.length,
+    (index * 2 + 2) % seed.length
+  )
+  return parseInt(hex, 16) || (index * 37) % 256
 }
 
 function seedFloat(seed: string, index: number): number {
@@ -42,16 +45,17 @@ export function renderCipherBloom(seed: string, palette: string[]): string {
 
   // Concentric bloom layers
   for (let i = 0; i < layers; i++) {
-    const r = 30 + i * 25 + seedByte(seed, i + 1) % 15
-    const petals = 3 + seedByte(seed, i + 10) % 6
+    const r = 30 + i * 25 + (seedByte(seed, i + 1) % 15)
+    const petals = 3 + (seedByte(seed, i + 10) % 6)
     const color = palette[i % palette.length]
     const opacity = 0.3 + seedFloat(seed, i + 20) * 0.5
 
     for (let p = 0; p < petals; p++) {
-      const angle = (p / petals) * Math.PI * 2 + seedFloat(seed, i * 10 + p) * 0.5
+      const angle =
+        (p / petals) * Math.PI * 2 + seedFloat(seed, i * 10 + p) * 0.5
       const px = cx + Math.cos(angle) * r
       const py = cy + Math.sin(angle) * r
-      const pr = 8 + seedByte(seed, i + p + 30) % 20
+      const pr = 8 + (seedByte(seed, i + p + 30) % 20)
 
       elements += `<circle cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="${pr}" fill="${color}" opacity="${opacity.toFixed(2)}"/>`
     }
@@ -82,8 +86,8 @@ export function renderCipherBloom(seed: string, palette: string[]): string {
  * Precision-inspired, each cell sized and rotated by seed bytes.
  */
 export function renderStealthGrid(seed: string, palette: string[]): string {
-  const cols = 6 + seedByte(seed, 0) % 4
-  const rows = 6 + seedByte(seed, 1) % 4
+  const cols = 6 + (seedByte(seed, 0) % 4)
+  const rows = 6 + (seedByte(seed, 1) % 4)
   const cellW = 400 / cols
   const cellH = 400 / rows
   let elements = ""
@@ -119,10 +123,10 @@ export function renderStealthGrid(seed: string, palette: string[]): string {
   }
 
   // Accent circles at intersections
-  const accents = 3 + seedByte(seed, 3) % 4
+  const accents = 3 + (seedByte(seed, 3) % 4)
   for (let i = 0; i < accents; i++) {
-    const ax = seedByte(seed, i + 120) % cols * cellW + cellW / 2
-    const ay = seedByte(seed, i + 130) % rows * cellH + cellH / 2
+    const ax = (seedByte(seed, i + 120) % cols) * cellW + cellW / 2
+    const ay = (seedByte(seed, i + 130) % rows) * cellH + cellH / 2
     elements += `<circle cx="${ax.toFixed(1)}" cy="${ay.toFixed(1)}" r="4" fill="${palette[0]}" opacity="0.7"/>`
   }
 
@@ -141,7 +145,7 @@ export function renderCommitmentFlow(seed: string, palette: string[]): string {
   elements += `<rect width="400" height="400" fill="url(#flowbg)"/>`
 
   // Flowing bezier paths
-  const pathCount = 6 + seedByte(seed, 0) % 5
+  const pathCount = 6 + (seedByte(seed, 0) % 5)
   for (let i = 0; i < pathCount; i++) {
     const sx = seedByte(seed, i * 4 + 1) % 400
     const sy = seedByte(seed, i * 4 + 2) % 400
@@ -159,7 +163,7 @@ export function renderCommitmentFlow(seed: string, palette: string[]): string {
   }
 
   // Particle dots along flows
-  const particleCount = 15 + seedByte(seed, 9) % 15
+  const particleCount = 15 + (seedByte(seed, 9) % 15)
   for (let i = 0; i < particleCount; i++) {
     const px = seedByte(seed, i + 70) % 400
     const py = seedByte(seed, i + 90) % 400
@@ -172,9 +176,9 @@ export function renderCommitmentFlow(seed: string, palette: string[]): string {
 
   // Glow circles for depth
   for (let i = 0; i < 3; i++) {
-    const gx = 50 + seedByte(seed, i + 170) % 300
-    const gy = 50 + seedByte(seed, i + 180) % 300
-    const gr = 20 + seedByte(seed, i + 190) % 40
+    const gx = 50 + (seedByte(seed, i + 170) % 300)
+    const gy = 50 + (seedByte(seed, i + 180) % 300)
+    const gr = 20 + (seedByte(seed, i + 190) % 40)
     elements += `<circle cx="${gx}" cy="${gy}" r="${gr}" fill="${palette[i % palette.length]}" opacity="0.1"/>`
   }
 

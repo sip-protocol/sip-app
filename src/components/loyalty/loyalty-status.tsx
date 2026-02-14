@@ -63,7 +63,8 @@ const CLAIM_STEPS: StepConfig[] = [
   {
     id: "generating_stealth",
     label: "Generate Stealth Address",
-    description: "Creating one-time stealth address for private reward delivery",
+    description:
+      "Creating one-time stealth address for private reward delivery",
     icon: "\u{1F510}",
   },
   {
@@ -86,7 +87,10 @@ const STEPS_MAP: Record<string, StepConfig[]> = {
   claim: CLAIM_STEPS,
 }
 
-const HEADERS: Record<string, { active: string; complete: string; failed: string }> = {
+const HEADERS: Record<
+  string,
+  { active: string; complete: string; failed: string }
+> = {
   join: {
     active: "Joining Campaign...",
     complete: "Campaign Joined!",
@@ -136,7 +140,7 @@ export function LoyaltyStatus({
         isFailed && "bg-red-900/20 border-red-800",
         isComplete && "bg-sip-green-900/20 border-sip-green-800",
         !isFailed && !isComplete && "bg-amber-900/10 border-amber-800/50",
-        className,
+        className
       )}
     >
       {/* Header */}
@@ -146,7 +150,7 @@ export function LoyaltyStatus({
             "font-semibold text-sm",
             isFailed && "text-red-300",
             isComplete && "text-sip-green-300",
-            !isFailed && !isComplete && "text-amber-300",
+            !isFailed && !isComplete && "text-amber-300"
           )}
         >
           {isFailed
@@ -178,7 +182,7 @@ export function LoyaltyStatus({
                 className={cn(
                   "flex items-start gap-3 py-2 transition-opacity duration-300",
                   isPending && !isFailed && "opacity-30",
-                  isFailed && "opacity-40",
+                  isFailed && "opacity-40"
                 )}
               >
                 {/* Step indicator */}
@@ -190,7 +194,7 @@ export function LoyaltyStatus({
                         "bg-sip-green-500/20 text-sip-green-400 ring-1 ring-sip-green-500/30",
                       isCurrent &&
                         "bg-amber-500/20 text-amber-300 ring-2 ring-amber-500/40 animate-pulse",
-                      isPending && "bg-gray-800 text-gray-500",
+                      isPending && "bg-gray-800 text-gray-500"
                     )}
                   >
                     {isStepComplete ? (
@@ -208,7 +212,7 @@ export function LoyaltyStatus({
                           ? "bg-sip-green-500/40"
                           : isCurrent
                             ? "bg-amber-500/40"
-                            : "bg-gray-700",
+                            : "bg-gray-700"
                       )}
                     />
                   )}
@@ -221,7 +225,7 @@ export function LoyaltyStatus({
                       "text-sm font-medium leading-tight",
                       isStepComplete && "text-sip-green-300",
                       isCurrent && "text-white",
-                      isPending && "text-gray-500",
+                      isPending && "text-gray-500"
                     )}
                   >
                     {step.label}
@@ -255,11 +259,7 @@ function CheckIcon({ className }: { className?: string }) {
       stroke="currentColor"
       strokeWidth={3}
     >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M5 13l4 4L19 7"
-      />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
     </svg>
   )
 }

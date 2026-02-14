@@ -105,7 +105,7 @@ export interface FollowParams {
 
 export type SocialStepChangeCallback = (
   step: SocialStep,
-  record: SocialActionRecord,
+  record: SocialActionRecord
 ) => void
 
 export type SocialMode = "simulation" | "tapestry"

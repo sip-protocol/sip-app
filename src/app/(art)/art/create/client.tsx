@@ -12,7 +12,7 @@ export function CreateArtClient() {
       void artId
       router.push("/art")
     },
-    [router],
+    [router]
   )
 
   return (

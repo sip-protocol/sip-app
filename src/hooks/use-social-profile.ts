@@ -5,7 +5,12 @@ import { useWallet } from "@solana/wallet-adapter-react"
 import { SocialService } from "@/lib/social/social-service"
 import { useSocialHistoryStore } from "@/stores/social-history"
 import { useTrackEvent } from "@/hooks/useTrackEvent"
-import type { SocialStep, CreateProfileParams, SocialActionRecord, StealthProfile } from "@/lib/social/types"
+import type {
+  SocialStep,
+  CreateProfileParams,
+  SocialActionRecord,
+  StealthProfile,
+} from "@/lib/social/types"
 
 export type SocialProfileStatus = SocialStep | "idle" | "error"
 
@@ -13,7 +18,9 @@ export interface UseSocialProfileReturn {
   status: SocialProfileStatus
   activeRecord: SocialActionRecord | null
   error: string | null
-  createProfile: (params: CreateProfileParams) => Promise<SocialActionRecord | undefined>
+  createProfile: (
+    params: CreateProfileParams
+  ) => Promise<SocialActionRecord | undefined>
   reset: () => void
 }
 
@@ -23,7 +30,9 @@ export function useSocialProfile(): UseSocialProfileReturn {
   const { trackSocial } = useTrackEvent()
 
   const [status, setStatus] = useState<SocialProfileStatus>("idle")
-  const [activeRecord, setActiveRecord] = useState<SocialActionRecord | null>(null)
+  const [activeRecord, setActiveRecord] = useState<SocialActionRecord | null>(
+    null
+  )
   const [error, setError] = useState<string | null>(null)
 
   const reset = useCallback(() => {
@@ -33,7 +42,9 @@ export function useSocialProfile(): UseSocialProfileReturn {
   }, [])
 
   const createProfile = useCallback(
-    async (params: CreateProfileParams): Promise<SocialActionRecord | undefined> => {
+    async (
+      params: CreateProfileParams
+    ): Promise<SocialActionRecord | undefined> => {
       if (!publicKey) {
         setError("Wallet not connected")
         setStatus("error")
@@ -96,7 +107,7 @@ export function useSocialProfile(): UseSocialProfileReturn {
         return undefined
       }
     },
-    [publicKey, addAction, addProfile, trackSocial],
+    [publicKey, addAction, addProfile, trackSocial]
   )
 
   return { status, activeRecord, error, createProfile, reset }

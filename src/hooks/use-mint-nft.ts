@@ -81,7 +81,7 @@ export function useMintNFT(): UseMintNFTReturn {
         return undefined
       }
     },
-    [publicKey, addAction, addMintedNFT, trackArt],
+    [publicKey, addAction, addMintedNFT, trackArt]
   )
 
   return { status, activeRecord, error, mintNFT: mintNFTFn, reset }

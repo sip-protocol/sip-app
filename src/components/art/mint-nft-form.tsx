@@ -56,7 +56,7 @@ export function MintNFTForm({ art, onReset }: MintNFTFormProps) {
         privacyLevel: privacyMap[privacyLevel],
       })
     },
-    [isFormReady, art.id, name, description, privacyLevel, mintNFT, privacyMap],
+    [isFormReady, art.id, name, description, privacyLevel, mintNFT, privacyMap]
   )
 
   const handleCopyMint = async () => {
@@ -89,7 +89,9 @@ export function MintNFTForm({ art, onReset }: MintNFTFormProps) {
         <div className="space-y-2 text-sm">
           <div className="flex justify-between">
             <span className="text-[var(--text-secondary)]">NFT Name</span>
-            <span className="text-rose-400 font-medium">{activeRecord.nftName}</span>
+            <span className="text-rose-400 font-medium">
+              {activeRecord.nftName}
+            </span>
           </div>
           <div className="flex items-center justify-between">
             <span className="text-[var(--text-secondary)]">Mint Address</span>
@@ -161,7 +163,7 @@ export function MintNFTForm({ art, onReset }: MintNFTFormProps) {
             "w-full px-4 py-3 rounded-xl border bg-[var(--bg-secondary)] text-sm",
             "border-[var(--border-default)] focus:border-rose-500 focus:ring-1 focus:ring-rose-500/30",
             "placeholder:text-[var(--text-tertiary)] outline-none transition-colors",
-            isMinting && "opacity-50 cursor-not-allowed",
+            isMinting && "opacity-50 cursor-not-allowed"
           )}
         />
       </div>
@@ -181,7 +183,7 @@ export function MintNFTForm({ art, onReset }: MintNFTFormProps) {
             "w-full px-4 py-3 rounded-xl border bg-[var(--bg-secondary)] text-sm resize-none",
             "border-[var(--border-default)] focus:border-rose-500 focus:ring-1 focus:ring-rose-500/30",
             "placeholder:text-[var(--text-tertiary)] outline-none transition-colors",
-            isMinting && "opacity-50 cursor-not-allowed",
+            isMinting && "opacity-50 cursor-not-allowed"
           )}
         />
       </div>
@@ -220,7 +222,7 @@ export function MintNFTForm({ art, onReset }: MintNFTFormProps) {
           "w-full py-4 px-6 text-lg font-semibold rounded-xl transition-colors",
           isFormReady
             ? "bg-gradient-to-r from-rose-500 to-rose-700 text-white hover:from-rose-400 hover:to-rose-600"
-            : "bg-rose-600/30 text-white/50 cursor-not-allowed",
+            : "bg-rose-600/30 text-white/50 cursor-not-allowed"
         )}
       >
         {!connected

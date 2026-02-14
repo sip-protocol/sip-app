@@ -21,7 +21,8 @@ const GENERATE_STEPS: StepConfig[] = [
   {
     id: "selecting_style",
     label: "Select Art Style",
-    description: "Choosing generative art algorithm from stealth address entropy",
+    description:
+      "Choosing generative art algorithm from stealth address entropy",
     icon: "\u{1F3A8}",
   },
   {
@@ -64,7 +65,10 @@ const STEPS_MAP: Record<string, StepConfig[]> = {
   mint: MINT_STEPS,
 }
 
-const HEADERS: Record<string, { active: string; complete: string; failed: string }> = {
+const HEADERS: Record<
+  string,
+  { active: string; complete: string; failed: string }
+> = {
   generate: {
     active: "Generating Privacy Art...",
     complete: "Art Generated!",
@@ -109,7 +113,7 @@ export function ArtStatus({
         isFailed && "bg-red-900/20 border-red-800",
         isComplete && "bg-sip-green-900/20 border-sip-green-800",
         !isFailed && !isComplete && "bg-rose-900/10 border-rose-800/50",
-        className,
+        className
       )}
     >
       {/* Header */}
@@ -119,7 +123,7 @@ export function ArtStatus({
             "font-semibold text-sm",
             isFailed && "text-red-300",
             isComplete && "text-sip-green-300",
-            !isFailed && !isComplete && "text-rose-300",
+            !isFailed && !isComplete && "text-rose-300"
           )}
         >
           {isFailed
@@ -151,7 +155,7 @@ export function ArtStatus({
                 className={cn(
                   "flex items-start gap-3 py-2 transition-opacity duration-300",
                   isPending && !isFailed && "opacity-30",
-                  isFailed && "opacity-40",
+                  isFailed && "opacity-40"
                 )}
               >
                 {/* Step indicator */}
@@ -163,7 +167,7 @@ export function ArtStatus({
                         "bg-sip-green-500/20 text-sip-green-400 ring-1 ring-sip-green-500/30",
                       isCurrent &&
                         "bg-rose-500/20 text-rose-300 ring-2 ring-rose-500/40 animate-pulse",
-                      isPending && "bg-gray-800 text-gray-500",
+                      isPending && "bg-gray-800 text-gray-500"
                     )}
                   >
                     {isStepComplete ? (
@@ -181,7 +185,7 @@ export function ArtStatus({
                           ? "bg-sip-green-500/40"
                           : isCurrent
                             ? "bg-rose-500/40"
-                            : "bg-gray-700",
+                            : "bg-gray-700"
                       )}
                     />
                   )}
@@ -194,7 +198,7 @@ export function ArtStatus({
                       "text-sm font-medium leading-tight",
                       isStepComplete && "text-sip-green-300",
                       isCurrent && "text-white",
-                      isPending && "text-gray-500",
+                      isPending && "text-gray-500"
                     )}
                   >
                     {step.label}
@@ -228,11 +232,7 @@ function CheckIcon({ className }: { className?: string }) {
       stroke="currentColor"
       strokeWidth={3}
     >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M5 13l4 4L19 7"
-      />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
     </svg>
   )
 }

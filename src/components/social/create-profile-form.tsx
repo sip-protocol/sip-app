@@ -43,9 +43,7 @@ export function CreateProfileForm({ onCreated }: CreateProfileFormProps) {
   }
 
   const isFormReady =
-    connected &&
-    username.trim().length >= 3 &&
-    status === "idle"
+    connected && username.trim().length >= 3 && status === "idle"
 
   const isCreating =
     status === "generating_stealth" || status === "creating_profile"
@@ -63,7 +61,7 @@ export function CreateProfileForm({ onCreated }: CreateProfileFormProps) {
         privacyLevel: privacyMap[privacyLevel],
       })
     },
-    [isFormReady, username, bio, privacyLevel, createProfile, privacyMap],
+    [isFormReady, username, bio, privacyLevel, createProfile, privacyMap]
   )
 
   const handleReset = useCallback(() => {
@@ -138,7 +136,7 @@ export function CreateProfileForm({ onCreated }: CreateProfileFormProps) {
             "w-full px-4 py-3 rounded-xl border bg-[var(--bg-secondary)] text-sm",
             "border-[var(--border-default)] focus:border-pink-500 focus:ring-1 focus:ring-pink-500/30",
             "placeholder:text-[var(--text-tertiary)] outline-none transition-colors",
-            isCreating && "opacity-50 cursor-not-allowed",
+            isCreating && "opacity-50 cursor-not-allowed"
           )}
         />
         {username.length > 0 && username.trim().length < 3 && (
@@ -163,7 +161,7 @@ export function CreateProfileForm({ onCreated }: CreateProfileFormProps) {
             "w-full px-4 py-3 rounded-xl border bg-[var(--bg-secondary)] text-sm resize-none",
             "border-[var(--border-default)] focus:border-pink-500 focus:ring-1 focus:ring-pink-500/30",
             "placeholder:text-[var(--text-tertiary)] outline-none transition-colors",
-            isCreating && "opacity-50 cursor-not-allowed",
+            isCreating && "opacity-50 cursor-not-allowed"
           )}
         />
       </div>
@@ -202,7 +200,7 @@ export function CreateProfileForm({ onCreated }: CreateProfileFormProps) {
           "w-full py-4 px-6 text-lg font-semibold rounded-xl transition-colors",
           isFormReady
             ? "bg-gradient-to-r from-pink-500 to-pink-700 text-white hover:from-pink-400 hover:to-pink-600"
-            : "bg-pink-600/30 text-white/50 cursor-not-allowed",
+            : "bg-pink-600/30 text-white/50 cursor-not-allowed"
         )}
       >
         {!connected

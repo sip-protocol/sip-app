@@ -57,8 +57,7 @@ export function VoteForm({ proposal, onBack }: VoteFormProps) {
     BigInt(weight) > BigInt(0) &&
     status === "idle"
 
-  const isCommitting =
-    status === "encrypting" || status === "committing"
+  const isCommitting = status === "encrypting" || status === "committing"
 
   const isCommitted = status === "committed"
 
@@ -74,7 +73,15 @@ export function VoteForm({ proposal, onBack }: VoteFormProps) {
         privacyLevel: privacyMap[privacyLevel],
       })
     },
-    [isFormReady, selectedChoice, weight, proposal.id, privacyLevel, commitVote, privacyMap],
+    [
+      isFormReady,
+      selectedChoice,
+      weight,
+      proposal.id,
+      privacyLevel,
+      commitVote,
+      privacyMap,
+    ]
   )
 
   const handleReset = useCallback(() => {
@@ -202,7 +209,7 @@ export function VoteForm({ proposal, onBack }: VoteFormProps) {
           "w-full py-4 px-6 text-lg font-semibold rounded-xl transition-colors",
           isFormReady
             ? "bg-gradient-to-r from-sip-purple-600 to-sip-purple-700 text-white hover:from-sip-purple-500 hover:to-sip-purple-600"
-            : "bg-sip-purple-600/30 text-white/50 cursor-not-allowed",
+            : "bg-sip-purple-600/30 text-white/50 cursor-not-allowed"
         )}
       >
         {!connected

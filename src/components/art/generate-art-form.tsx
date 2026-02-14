@@ -18,7 +18,10 @@ interface GenerateArtFormProps {
   onMintRequest?: (artId: string) => void
 }
 
-export function GenerateArtForm({ onGenerated, onMintRequest }: GenerateArtFormProps) {
+export function GenerateArtForm({
+  onGenerated,
+  onMintRequest,
+}: GenerateArtFormProps) {
   const { connected } = useWallet()
 
   const [styleId, setStyleId] = useState<ArtStyleId | null>(null)
@@ -58,7 +61,7 @@ export function GenerateArtForm({ onGenerated, onMintRequest }: GenerateArtFormP
         privacyLevel: privacyMap[privacyLevel],
       })
     },
-    [isFormReady, styleId, privacyLevel, generateArt, privacyMap],
+    [isFormReady, styleId, privacyLevel, generateArt, privacyMap]
   )
 
   const handleReset = useCallback(() => {
@@ -78,16 +81,15 @@ export function GenerateArtForm({ onGenerated, onMintRequest }: GenerateArtFormP
     return (
       <div className="bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-2xl p-6 sm:p-8 space-y-4">
         <ArtStatus currentStep="generated" mode="generate" />
-        <GeneratedArtDisplay
-          art={generatedArt}
-          onMint={handleMintRequest}
-        />
+        <GeneratedArtDisplay art={generatedArt} onMint={handleMintRequest} />
 
         <div className="space-y-2 text-sm">
           <div className="flex justify-between">
             <span className="text-[var(--text-secondary)]">Style</span>
             <span className="text-rose-400 font-medium">
-              {generatedArt.parameters.styleId.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}
+              {generatedArt.parameters.styleId
+                .replace(/_/g, " ")
+                .replace(/\b\w/g, (c) => c.toUpperCase())}
             </span>
           </div>
           <div className="flex justify-between">
@@ -165,7 +167,7 @@ export function GenerateArtForm({ onGenerated, onMintRequest }: GenerateArtFormP
           "w-full py-4 px-6 text-lg font-semibold rounded-xl transition-colors",
           isFormReady
             ? "bg-gradient-to-r from-rose-500 to-rose-700 text-white hover:from-rose-400 hover:to-rose-600"
-            : "bg-rose-600/30 text-white/50 cursor-not-allowed",
+            : "bg-rose-600/30 text-white/50 cursor-not-allowed"
         )}
       >
         {!connected
@@ -187,9 +189,7 @@ export function GenerateArtForm({ onGenerated, onMintRequest }: GenerateArtFormP
         </div>
         <div className="flex justify-between text-sm mt-2">
           <span className="text-[var(--text-secondary)]">Powered by</span>
-          <span className="text-[var(--text-primary)]">
-            Exchange Art
-          </span>
+          <span className="text-[var(--text-primary)]">Exchange Art</span>
         </div>
       </div>
     </form>

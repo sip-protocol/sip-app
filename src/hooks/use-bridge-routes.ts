@@ -21,7 +21,7 @@ interface UseBridgeRoutesReturn {
 
 export function useBridgeRoutes(
   sourceChain: BridgeChainId | null,
-  destChain: BridgeChainId | null,
+  destChain: BridgeChainId | null
 ): UseBridgeRoutesReturn {
   return useMemo(() => {
     if (!sourceChain) {
@@ -36,10 +36,10 @@ export function useBridgeRoutes(
     }
 
     const availableDestChains = getAvailableDestChains(sourceChain)
-    const route =
-      destChain ? getRoute(sourceChain, destChain) : undefined
-    const availableTokens =
-      destChain ? getTokensForRoute(sourceChain, destChain) : []
+    const route = destChain ? getRoute(sourceChain, destChain) : undefined
+    const availableTokens = destChain
+      ? getTokensForRoute(sourceChain, destChain)
+      : []
 
     return {
       availableDestChains,

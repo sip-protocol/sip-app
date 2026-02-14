@@ -53,7 +53,7 @@ export function ClaimRewardForm({ reward, onClaimed }: ClaimRewardFormProps) {
         privacyLevel: privacyMap[privacyLevel],
       })
     },
-    [isFormReady, reward, privacyLevel, claimReward, privacyMap],
+    [isFormReady, reward, privacyLevel, claimReward, privacyMap]
   )
 
   const handleReset = useCallback(() => {
@@ -101,7 +101,9 @@ export function ClaimRewardForm({ reward, onClaimed }: ClaimRewardFormProps) {
       <div className="mb-6 p-4 rounded-xl bg-amber-900/20 border border-amber-800/50">
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm text-[var(--text-secondary)]">{reward.campaignName}</p>
+            <p className="text-sm text-[var(--text-secondary)]">
+              {reward.campaignName}
+            </p>
             <p className="text-2xl font-bold text-amber-400 mt-1">
               {reward.amount} {reward.token}
             </p>
@@ -144,7 +146,7 @@ export function ClaimRewardForm({ reward, onClaimed }: ClaimRewardFormProps) {
           "w-full py-4 px-6 text-lg font-semibold rounded-xl transition-colors",
           isFormReady
             ? "bg-gradient-to-r from-amber-500 to-amber-700 text-white hover:from-amber-400 hover:to-amber-600"
-            : "bg-amber-600/30 text-white/50 cursor-not-allowed",
+            : "bg-amber-600/30 text-white/50 cursor-not-allowed"
         )}
       >
         {!connected
@@ -158,15 +160,11 @@ export function ClaimRewardForm({ reward, onClaimed }: ClaimRewardFormProps) {
       <div className="mt-6 pt-6 border-t border-[var(--border-default)]">
         <div className="flex justify-between text-sm">
           <span className="text-[var(--text-secondary)]">Delivery</span>
-          <span className="text-amber-400 font-medium">
-            Stealth Address
-          </span>
+          <span className="text-amber-400 font-medium">Stealth Address</span>
         </div>
         <div className="flex justify-between text-sm mt-2">
           <span className="text-[var(--text-secondary)]">Powered by</span>
-          <span className="text-[var(--text-primary)]">
-            Torque Protocol
-          </span>
+          <span className="text-[var(--text-primary)]">Torque Protocol</span>
         </div>
       </div>
     </form>

@@ -43,7 +43,7 @@ export function PostStatusBadge({ status, className }: PostStatusBadgeProps) {
         "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border",
         config.bg,
         config.color,
-        className,
+        className
       )}
     >
       {config.label}

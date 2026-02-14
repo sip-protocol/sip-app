@@ -43,7 +43,7 @@ export function VoteCommitmentDisplay({
     <div
       className={cn(
         "rounded-xl border border-sip-purple-800/50 bg-sip-purple-900/10 p-4",
-        className,
+        className
       )}
     >
       {/* Hidden vote callout */}
@@ -82,9 +82,7 @@ export function VoteCommitmentDisplay({
 
         {/* Encryption key hash */}
         <div className="flex items-center justify-between">
-          <span className="text-xs text-[var(--text-secondary)]">
-            Key Hash
-          </span>
+          <span className="text-xs text-[var(--text-secondary)]">Key Hash</span>
           <button
             type="button"
             onClick={() =>
@@ -103,9 +101,7 @@ export function VoteCommitmentDisplay({
 
         {/* Proposal ID */}
         <div className="flex items-center justify-between">
-          <span className="text-xs text-[var(--text-secondary)]">
-            Proposal
-          </span>
+          <span className="text-xs text-[var(--text-secondary)]">Proposal</span>
           <code className="text-xs font-mono text-[var(--text-tertiary)]">
             {encryptedVote.proposalId}
           </code>

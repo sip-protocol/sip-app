@@ -7,7 +7,10 @@ import type {
   FollowParams,
 } from "./types"
 import { SIMULATION_DELAYS, getProfile } from "./constants"
-import { generateSocialStealthAddress, encryptSocialContent } from "./stealth-social"
+import {
+  generateSocialStealthAddress,
+  encryptSocialContent,
+} from "./stealth-social"
 
 function generateId(prefix: string): string {
   return `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`
@@ -27,7 +30,10 @@ export class SocialService {
     this.onStepChange = options.onStepChange
   }
 
-  validate(type: "profile" | "post" | "follow", params: CreateProfileParams | CreatePostParams | FollowParams): string | null {
+  validate(
+    type: "profile" | "post" | "follow",
+    params: CreateProfileParams | CreatePostParams | FollowParams
+  ): string | null {
     switch (type) {
       case "profile": {
         const p = params as CreateProfileParams
@@ -74,7 +80,9 @@ export class SocialService {
    * Create a stealth social profile.
    * generating_stealth (real SDK) -> creating_profile (simulated Tapestry) -> profile_created
    */
-  async createProfile(params: CreateProfileParams): Promise<SocialActionRecord> {
+  async createProfile(
+    params: CreateProfileParams
+  ): Promise<SocialActionRecord> {
     const validationError = this.validate("profile", params)
     if (validationError) {
       throw new Error(validationError)
@@ -103,7 +111,9 @@ export class SocialService {
       record.profileId = generateId("p")
 
       if (this.mode === "simulation") {
-        await new Promise((r) => setTimeout(r, SIMULATION_DELAYS.generating_stealth))
+        await new Promise((r) =>
+          setTimeout(r, SIMULATION_DELAYS.generating_stealth)
+        )
       }
 
       // Step 2: Create Tapestry profile (simulated)
@@ -112,7 +122,9 @@ export class SocialService {
       this.onStepChange?.("creating_profile", { ...record })
 
       if (this.mode === "simulation") {
-        await new Promise((r) => setTimeout(r, SIMULATION_DELAYS.creating_profile))
+        await new Promise((r) =>
+          setTimeout(r, SIMULATION_DELAYS.creating_profile)
+        )
       }
 
       // Step 3: Profile created
@@ -124,7 +136,8 @@ export class SocialService {
       return record
     } catch (error) {
       record.status = "failed"
-      record.error = error instanceof Error ? error.message : "Profile creation failed"
+      record.error =
+        error instanceof Error ? error.message : "Profile creation failed"
       record.stepTimestamps.failed = Date.now()
       this.onStepChange?.("failed", { ...record })
       throw error
@@ -160,13 +173,15 @@ export class SocialService {
 
       const encrypted = await encryptSocialContent(
         params.content,
-        "0x" + "ab".repeat(32),
+        "0x" + "ab".repeat(32)
       )
       record.encryptedContent = encrypted.ciphertext
       record.postId = generateId("sp")
 
       if (this.mode === "simulation") {
-        await new Promise((r) => setTimeout(r, SIMULATION_DELAYS.encrypting_content))
+        await new Promise((r) =>
+          setTimeout(r, SIMULATION_DELAYS.encrypting_content)
+        )
       }
 
       // Step 2: Publish to feed (simulated)
@@ -187,7 +202,8 @@ export class SocialService {
       return record
     } catch (error) {
       record.status = "failed"
-      record.error = error instanceof Error ? error.message : "Post creation failed"
+      record.error =
+        error instanceof Error ? error.message : "Post creation failed"
       record.stepTimestamps.failed = Date.now()
       this.onStepChange?.("failed", { ...record })
       throw error
@@ -228,7 +244,9 @@ export class SocialService {
       record.sharedSecret = stealth.sharedSecret
 
       if (this.mode === "simulation") {
-        await new Promise((r) => setTimeout(r, SIMULATION_DELAYS.generating_stealth))
+        await new Promise((r) =>
+          setTimeout(r, SIMULATION_DELAYS.generating_stealth)
+        )
       }
 
       // Step 2: Create connection (simulated)

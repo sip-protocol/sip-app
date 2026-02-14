@@ -61,7 +61,7 @@ export function VoteHistoryList({ onReveal }: VoteHistoryListProps) {
               "px-4 py-2 text-sm font-medium rounded-lg transition-colors",
               filter === tab.value
                 ? "bg-sip-purple-600 text-white"
-                : "bg-[var(--surface-secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]",
+                : "bg-[var(--surface-secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
             )}
           >
             {tab.label}
@@ -80,11 +80,7 @@ export function VoteHistoryList({ onReveal }: VoteHistoryListProps) {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {filteredVotes.map((vote) => (
-            <VoteHistoryCard
-              key={vote.id}
-              vote={vote}
-              onReveal={onReveal}
-            />
+            <VoteHistoryCard key={vote.id} vote={vote} onReveal={onReveal} />
           ))}
         </div>
       )}

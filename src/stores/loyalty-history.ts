@@ -14,7 +14,10 @@ interface LoyaltyHistoryStore {
 
   addCampaign: (progress: CampaignProgress) => void
   getCampaignProgress: (campaignId: string) => CampaignProgress | undefined
-  updateCampaignProgress: (campaignId: string, updates: Partial<CampaignProgress>) => void
+  updateCampaignProgress: (
+    campaignId: string,
+    updates: Partial<CampaignProgress>
+  ) => void
   getCompletedCampaignCount: () => number
 
   clearHistory: () => void
@@ -34,14 +37,13 @@ export const useLoyaltyHistoryStore = create<LoyaltyHistoryStore>()(
       updateAction: (id, updates) =>
         set((state) => ({
           actions: state.actions.map((a) =>
-            a.id === id ? { ...a, ...updates } : a,
+            a.id === id ? { ...a, ...updates } : a
           ),
         })),
 
       getAction: (id) => get().actions.find((a) => a.id === id),
 
-      getActionsByType: (type) =>
-        get().actions.filter((a) => a.type === type),
+      getActionsByType: (type) => get().actions.filter((a) => a.type === type),
 
       addCampaign: (progress) =>
         set((state) => ({
@@ -54,7 +56,7 @@ export const useLoyaltyHistoryStore = create<LoyaltyHistoryStore>()(
       updateCampaignProgress: (campaignId, updates) =>
         set((state) => ({
           joinedCampaigns: state.joinedCampaigns.map((c) =>
-            c.campaignId === campaignId ? { ...c, ...updates } : c,
+            c.campaignId === campaignId ? { ...c, ...updates } : c
           ),
         })),
 
@@ -65,6 +67,6 @@ export const useLoyaltyHistoryStore = create<LoyaltyHistoryStore>()(
     }),
     {
       name: "sip-loyalty-history",
-    },
-  ),
+    }
+  )
 )

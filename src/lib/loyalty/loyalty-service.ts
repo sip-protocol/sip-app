@@ -29,7 +29,7 @@ export class LoyaltyService {
 
   validate(
     type: "join" | "action" | "claim",
-    params: JoinCampaignParams | CompleteActionParams | ClaimRewardParams,
+    params: JoinCampaignParams | CompleteActionParams | ClaimRewardParams
   ): string | null {
     switch (type) {
       case "join": {
@@ -107,7 +107,9 @@ export class LoyaltyService {
       this.onStepChange?.("selecting_campaign", { ...record })
 
       if (this.mode === "simulation") {
-        await new Promise((r) => setTimeout(r, SIMULATION_DELAYS.selecting_campaign))
+        await new Promise((r) =>
+          setTimeout(r, SIMULATION_DELAYS.selecting_campaign)
+        )
       }
 
       // Step 2: Joining campaign
@@ -139,7 +141,9 @@ export class LoyaltyService {
    * Complete an action for a campaign.
    * verifying_action -> recording (simulated Torque) -> recorded
    */
-  async completeAction(params: CompleteActionParams): Promise<LoyaltyActionRecord> {
+  async completeAction(
+    params: CompleteActionParams
+  ): Promise<LoyaltyActionRecord> {
     const validationError = this.validate("action", params)
     if (validationError) {
       throw new Error(validationError)
@@ -163,7 +167,9 @@ export class LoyaltyService {
       this.onStepChange?.("verifying_action", { ...record })
 
       if (this.mode === "simulation") {
-        await new Promise((r) => setTimeout(r, SIMULATION_DELAYS.verifying_action))
+        await new Promise((r) =>
+          setTimeout(r, SIMULATION_DELAYS.verifying_action)
+        )
       }
 
       // Step 2: Recording to Torque
@@ -184,7 +190,8 @@ export class LoyaltyService {
       return record
     } catch (error) {
       record.status = "failed"
-      record.error = error instanceof Error ? error.message : "Action recording failed"
+      record.error =
+        error instanceof Error ? error.message : "Action recording failed"
       record.stepTimestamps.failed = Date.now()
       this.onStepChange?.("failed", { ...record })
       throw error
@@ -224,7 +231,9 @@ export class LoyaltyService {
       record.stealthMetaAddress = stealth.metaAddress
 
       if (this.mode === "simulation") {
-        await new Promise((r) => setTimeout(r, SIMULATION_DELAYS.generating_stealth))
+        await new Promise((r) =>
+          setTimeout(r, SIMULATION_DELAYS.generating_stealth)
+        )
       }
 
       // Step 2: Claiming reward

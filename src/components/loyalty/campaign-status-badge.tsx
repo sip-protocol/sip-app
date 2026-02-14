@@ -29,7 +29,10 @@ const STATUS_CONFIG: Record<
   },
 }
 
-export function CampaignStatusBadge({ status, className }: CampaignStatusBadgeProps) {
+export function CampaignStatusBadge({
+  status,
+  className,
+}: CampaignStatusBadgeProps) {
   const config = STATUS_CONFIG[status]
 
   return (
@@ -38,7 +41,7 @@ export function CampaignStatusBadge({ status, className }: CampaignStatusBadgePr
         "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border",
         config.bg,
         config.color,
-        className,
+        className
       )}
     >
       {config.label}

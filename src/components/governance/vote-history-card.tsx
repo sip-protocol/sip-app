@@ -24,7 +24,7 @@ export function VoteHistoryCard({
       className={cn(
         "bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-xl p-5",
         "hover:border-[var(--border-hover)] transition-all",
-        className,
+        className
       )}
     >
       {/* Header */}
@@ -34,8 +34,11 @@ export function VoteHistoryCard({
           className={cn(
             "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border",
             isCommitted && "bg-amber-500/20 border-amber-500/30 text-amber-300",
-            isRevealed && "bg-sip-green-500/20 border-sip-green-500/30 text-sip-green-300",
-            !isCommitted && !isRevealed && "bg-gray-500/20 border-gray-500/30 text-gray-400",
+            isRevealed &&
+              "bg-sip-green-500/20 border-sip-green-500/30 text-sip-green-300",
+            !isCommitted &&
+              !isRevealed &&
+              "bg-gray-500/20 border-gray-500/30 text-gray-400"
           )}
         >
           {isCommitted ? "Committed" : isRevealed ? "Revealed" : vote.status}
@@ -51,7 +54,12 @@ export function VoteHistoryCard({
       <div className="space-y-1.5 text-xs">
         <div className="flex justify-between">
           <span className="text-[var(--text-secondary)]">Choice</span>
-          <span className={cn("font-medium", isRevealed ? "text-sip-green-400" : "text-sip-purple-400")}>
+          <span
+            className={cn(
+              "font-medium",
+              isRevealed ? "text-sip-green-400" : "text-sip-purple-400"
+            )}
+          >
             {isRevealed ? vote.choiceLabel : "🔒 Hidden"}
           </span>
         </div>
@@ -78,7 +86,9 @@ export function VoteHistoryCard({
           </span>
           <span className="text-[var(--text-tertiary)]">
             {new Date(
-              isRevealed ? (vote.revealedAt ?? vote.startedAt) : (vote.committedAt ?? vote.startedAt),
+              isRevealed
+                ? (vote.revealedAt ?? vote.startedAt)
+                : (vote.committedAt ?? vote.startedAt)
             ).toLocaleDateString()}
           </span>
         </div>

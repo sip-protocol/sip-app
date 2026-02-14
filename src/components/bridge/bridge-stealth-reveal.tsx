@@ -39,7 +39,7 @@ export function BridgeStealthReveal({
         revealed
           ? "bg-sip-green-900/10 border-sip-green-800/50 opacity-100 translate-y-0"
           : "bg-transparent border-transparent opacity-0 translate-y-2",
-        className,
+        className
       )}
     >
       {/* Header */}
@@ -56,7 +56,7 @@ export function BridgeStealthReveal({
           <code
             className={cn(
               "text-sm font-mono text-sip-green-400 flex-1 break-all transition-all duration-700",
-              revealed ? "opacity-100" : "opacity-0",
+              revealed ? "opacity-100" : "opacity-0"
             )}
           >
             {truncate(stealthAddress, 20, 12)}
@@ -73,9 +73,7 @@ export function BridgeStealthReveal({
 
       {/* Meta-address */}
       <div className="px-4 pb-3">
-        <p className="text-xs text-[var(--text-tertiary)] mb-1">
-          Meta-Address
-        </p>
+        <p className="text-xs text-[var(--text-tertiary)] mb-1">Meta-Address</p>
         <code className="text-xs font-mono text-[var(--text-secondary)] break-all">
           {truncate(stealthMetaAddress, 16, 8)}
         </code>

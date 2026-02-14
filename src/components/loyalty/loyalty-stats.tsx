@@ -10,14 +10,19 @@ export function LoyaltyStats() {
 
   const joined = joinedCampaigns.length
   const completed = joinedCampaigns.filter((c) => c.isComplete).length
-  const rewards = actions.filter((a) => a.type === "claim" && a.status === "claimed").length
+  const rewards = actions.filter(
+    (a) => a.type === "claim" && a.status === "claimed"
+  ).length
   const tierConfig = TIER_CONFIG[tier]
 
   const stats = [
     { label: "Campaigns Joined", value: joined.toString() },
     { label: "Completed", value: completed.toString() },
     { label: "Rewards Earned", value: rewards.toString() },
-    { label: "Tier", value: isLoading ? "..." : `${tierConfig.icon} ${tierConfig.label}` },
+    {
+      label: "Tier",
+      value: isLoading ? "..." : `${tierConfig.icon} ${tierConfig.label}`,
+    },
   ]
 
   return (

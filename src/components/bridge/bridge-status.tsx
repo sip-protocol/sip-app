@@ -71,17 +71,19 @@ export function BridgeStatus({
         isFailed && "bg-red-900/20 border-red-800",
         isComplete && "bg-sip-green-900/20 border-sip-green-800",
         !isFailed && !isComplete && "bg-cyan-900/10 border-cyan-800/50",
-        className,
+        className
       )}
     >
       {/* Header */}
       <div className="px-4 pt-4 pb-2">
-        <p className={cn(
-          "font-semibold text-sm",
-          isFailed && "text-red-300",
-          isComplete && "text-sip-green-300",
-          !isFailed && !isComplete && "text-cyan-300",
-        )}>
+        <p
+          className={cn(
+            "font-semibold text-sm",
+            isFailed && "text-red-300",
+            isComplete && "text-sip-green-300",
+            !isFailed && !isComplete && "text-cyan-300"
+          )}
+        >
           {isFailed
             ? "Bridge Transfer Failed"
             : isComplete
@@ -111,7 +113,7 @@ export function BridgeStatus({
                 className={cn(
                   "flex items-start gap-3 py-2 transition-opacity duration-300",
                   isPending && !isFailed && "opacity-30",
-                  isFailed && "opacity-40",
+                  isFailed && "opacity-40"
                 )}
               >
                 {/* Step indicator */}
@@ -123,7 +125,7 @@ export function BridgeStatus({
                         "bg-sip-green-500/20 text-sip-green-400 ring-1 ring-sip-green-500/30",
                       isCurrent &&
                         "bg-cyan-500/20 text-cyan-300 ring-2 ring-cyan-500/40 animate-pulse",
-                      isPending && "bg-gray-800 text-gray-500",
+                      isPending && "bg-gray-800 text-gray-500"
                     )}
                   >
                     {isStepComplete ? (
@@ -137,9 +139,7 @@ export function BridgeStatus({
                     <div
                       className={cn(
                         "w-0.5 h-4 mt-1 rounded-full transition-colors",
-                        isStepComplete
-                          ? "bg-sip-green-500/40"
-                          : "bg-gray-700",
+                        isStepComplete ? "bg-sip-green-500/40" : "bg-gray-700"
                       )}
                     />
                   )}
@@ -152,7 +152,7 @@ export function BridgeStatus({
                       "text-sm font-medium leading-tight",
                       isStepComplete && "text-sip-green-300",
                       isCurrent && "text-white",
-                      isPending && "text-gray-500",
+                      isPending && "text-gray-500"
                     )}
                   >
                     {step.label}
@@ -186,11 +186,7 @@ function CheckIcon({ className }: { className?: string }) {
       stroke="currentColor"
       strokeWidth={3}
     >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M5 13l4 4L19 7"
-      />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
     </svg>
   )
 }

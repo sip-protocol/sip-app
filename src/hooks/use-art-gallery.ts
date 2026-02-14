@@ -20,12 +20,13 @@ export function useArtGallery(): UseArtGalleryReturn {
 
   const mintedArtIds = useMemo(
     () => new Set(allMintedNFTs.map((n) => n.generatedArtId)),
-    [allMintedNFTs],
+    [allMintedNFTs]
   )
 
   const arts = useMemo(() => {
     if (filter === "all") return generatedArts
-    if (filter === "minted") return generatedArts.filter((a) => mintedArtIds.has(a.id))
+    if (filter === "minted")
+      return generatedArts.filter((a) => mintedArtIds.has(a.id))
     return generatedArts.filter((a) => !mintedArtIds.has(a.id))
   }, [generatedArts, filter, mintedArtIds])
 

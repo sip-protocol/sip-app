@@ -29,9 +29,7 @@ export function BridgeHistoryList() {
   const filtered = useMemo(() => {
     switch (activeTab) {
       case "pending":
-        return transfers.filter((t) =>
-          PENDING_STEPS.includes(t.status),
-        )
+        return transfers.filter((t) => PENDING_STEPS.includes(t.status))
       case "complete":
         return transfers.filter((t) => t.status === "complete")
       case "failed":
@@ -54,7 +52,7 @@ export function BridgeHistoryList() {
               "flex-1 py-2 px-3 text-sm font-medium rounded-lg transition-all",
               activeTab === tab.id
                 ? "bg-[var(--surface-primary)] text-[var(--text-primary)] shadow-sm"
-                : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]",
+                : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
             )}
           >
             {tab.label}

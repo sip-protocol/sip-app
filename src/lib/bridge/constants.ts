@@ -55,18 +55,90 @@ export const BRIDGE_CHAINS: Record<BridgeChainId, ChainInfo> = {
 export const BRIDGE_TOKENS = ["USDC", "SOL", "ETH"] as const
 
 export const BRIDGE_ROUTES: BridgeRoute[] = [
-  { sourceChain: "solana", destChain: "ethereum", tokens: ["USDC"], estimatedTime: 15, available: true },
-  { sourceChain: "solana", destChain: "base", tokens: ["USDC"], estimatedTime: 12, available: true },
-  { sourceChain: "solana", destChain: "arbitrum", tokens: ["USDC"], estimatedTime: 12, available: true },
-  { sourceChain: "solana", destChain: "optimism", tokens: ["USDC"], estimatedTime: 12, available: true },
-  { sourceChain: "ethereum", destChain: "solana", tokens: ["USDC"], estimatedTime: 15, available: true },
-  { sourceChain: "base", destChain: "solana", tokens: ["USDC"], estimatedTime: 12, available: true },
-  { sourceChain: "arbitrum", destChain: "solana", tokens: ["USDC"], estimatedTime: 12, available: true },
-  { sourceChain: "optimism", destChain: "solana", tokens: ["USDC"], estimatedTime: 12, available: true },
-  { sourceChain: "ethereum", destChain: "base", tokens: ["USDC", "ETH"], estimatedTime: 10, available: true },
-  { sourceChain: "ethereum", destChain: "arbitrum", tokens: ["USDC", "ETH"], estimatedTime: 10, available: true },
-  { sourceChain: "base", destChain: "ethereum", tokens: ["USDC", "ETH"], estimatedTime: 10, available: true },
-  { sourceChain: "arbitrum", destChain: "ethereum", tokens: ["USDC", "ETH"], estimatedTime: 10, available: true },
+  {
+    sourceChain: "solana",
+    destChain: "ethereum",
+    tokens: ["USDC"],
+    estimatedTime: 15,
+    available: true,
+  },
+  {
+    sourceChain: "solana",
+    destChain: "base",
+    tokens: ["USDC"],
+    estimatedTime: 12,
+    available: true,
+  },
+  {
+    sourceChain: "solana",
+    destChain: "arbitrum",
+    tokens: ["USDC"],
+    estimatedTime: 12,
+    available: true,
+  },
+  {
+    sourceChain: "solana",
+    destChain: "optimism",
+    tokens: ["USDC"],
+    estimatedTime: 12,
+    available: true,
+  },
+  {
+    sourceChain: "ethereum",
+    destChain: "solana",
+    tokens: ["USDC"],
+    estimatedTime: 15,
+    available: true,
+  },
+  {
+    sourceChain: "base",
+    destChain: "solana",
+    tokens: ["USDC"],
+    estimatedTime: 12,
+    available: true,
+  },
+  {
+    sourceChain: "arbitrum",
+    destChain: "solana",
+    tokens: ["USDC"],
+    estimatedTime: 12,
+    available: true,
+  },
+  {
+    sourceChain: "optimism",
+    destChain: "solana",
+    tokens: ["USDC"],
+    estimatedTime: 12,
+    available: true,
+  },
+  {
+    sourceChain: "ethereum",
+    destChain: "base",
+    tokens: ["USDC", "ETH"],
+    estimatedTime: 10,
+    available: true,
+  },
+  {
+    sourceChain: "ethereum",
+    destChain: "arbitrum",
+    tokens: ["USDC", "ETH"],
+    estimatedTime: 10,
+    available: true,
+  },
+  {
+    sourceChain: "base",
+    destChain: "ethereum",
+    tokens: ["USDC", "ETH"],
+    estimatedTime: 10,
+    available: true,
+  },
+  {
+    sourceChain: "arbitrum",
+    destChain: "ethereum",
+    tokens: ["USDC", "ETH"],
+    estimatedTime: 10,
+    available: true,
+  },
 ]
 
 export const SIMULATION_DELAYS: Record<BridgeStep, number> = {
@@ -84,10 +156,10 @@ export const MAX_BRIDGE_HISTORY = 50
 
 export function getRoute(
   source: BridgeChainId,
-  dest: BridgeChainId,
+  dest: BridgeChainId
 ): BridgeRoute | undefined {
   return BRIDGE_ROUTES.find(
-    (r) => r.sourceChain === source && r.destChain === dest,
+    (r) => r.sourceChain === source && r.destChain === dest
   )
 }
 
@@ -101,7 +173,7 @@ export function getAvailableDestChains(source: BridgeChainId): BridgeChainId[] {
 
 export function getTokensForRoute(
   source: BridgeChainId,
-  dest: BridgeChainId,
+  dest: BridgeChainId
 ): string[] {
   return getRoute(source, dest)?.tokens ?? []
 }

@@ -32,7 +32,7 @@ export function StealthRewardDisplay({
     <div
       className={cn(
         "rounded-xl border border-amber-800/50 bg-amber-900/10 p-4",
-        className,
+        className
       )}
     >
       {/* Reward callout */}

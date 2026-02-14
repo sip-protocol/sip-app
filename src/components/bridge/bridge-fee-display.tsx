@@ -13,7 +13,7 @@ export function BridgeFeeDisplay({ fee, className }: BridgeFeeDisplayProps) {
     <div
       className={cn(
         "rounded-xl border border-[var(--border-default)] bg-[var(--surface-secondary)] p-4 space-y-2",
-        className,
+        className
       )}
     >
       <div className="flex justify-between text-sm">

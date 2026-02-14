@@ -23,14 +23,12 @@ export function BridgeForm() {
   const { connected } = useWallet()
 
   // Form state
-  const [sourceChain, setSourceChain] = useState<BridgeChainId | null>(
-    "solana",
-  )
+  const [sourceChain, setSourceChain] = useState<BridgeChainId | null>("solana")
   const [destChain, setDestChain] = useState<BridgeChainId | null>(null)
   const [amount, setAmount] = useState("")
   const [token, setToken] = useState<string | null>(null)
   const [privacyLevel, setPrivacyLevel] = useState<PrivacyLevel>(
-    PrivacyLevel.SHIELDED,
+    PrivacyLevel.SHIELDED
   )
 
   // Hooks
@@ -57,7 +55,7 @@ export function BridgeForm() {
         }
       }
     },
-    [sourceChain, token],
+    [sourceChain, token]
   )
 
   const handleSourceChange = useCallback(
@@ -69,7 +67,7 @@ export function BridgeForm() {
         setToken(null)
       }
     },
-    [destChain],
+    [destChain]
   )
 
   const handleSwapChains = useCallback(() => {
@@ -115,7 +113,7 @@ export function BridgeForm() {
         privacyLevel,
       })
     },
-    [isFormReady, sourceChain, destChain, token, amount, privacyLevel, bridge],
+    [isFormReady, sourceChain, destChain, token, amount, privacyLevel, bridge]
   )
 
   const handleReset = useCallback(() => {
@@ -248,7 +246,9 @@ export function BridgeForm() {
       {/* Bridge Status (during transfer) */}
       {isBridging && (
         <div className="mb-6 space-y-4">
-          <BridgeStatus currentStep={activeTransfer?.status ?? "generating_stealth"} />
+          <BridgeStatus
+            currentStep={activeTransfer?.status ?? "generating_stealth"}
+          />
           {activeTransfer?.stealthAddress && (
             <BridgeStealthReveal
               stealthAddress={activeTransfer.stealthAddress}
@@ -273,7 +273,7 @@ export function BridgeForm() {
           "w-full py-4 px-6 text-lg font-semibold rounded-xl transition-colors",
           isFormReady
             ? "bg-gradient-to-r from-cyan-600 to-cyan-700 text-white hover:from-cyan-500 hover:to-cyan-600"
-            : "bg-cyan-600/30 text-white/50 cursor-not-allowed",
+            : "bg-cyan-600/30 text-white/50 cursor-not-allowed"
         )}
       >
         {!connected

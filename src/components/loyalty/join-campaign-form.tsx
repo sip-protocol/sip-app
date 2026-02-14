@@ -16,17 +16,15 @@ interface JoinCampaignFormProps {
   onJoined?: () => void
 }
 
-export function JoinCampaignForm({ campaign, onJoined }: JoinCampaignFormProps) {
+export function JoinCampaignForm({
+  campaign,
+  onJoined,
+}: JoinCampaignFormProps) {
   const { connected } = useWallet()
 
   const [privacyLevel, setPrivacyLevel] = useState<PrivacyOption>("shielded")
 
-  const {
-    status,
-    error,
-    joinCampaign,
-    reset: resetJoin,
-  } = useLoyaltyCampaign()
+  const { status, error, joinCampaign, reset: resetJoin } = useLoyaltyCampaign()
 
   const privacyMap: Record<PrivacyOption, PrivacyLevel> = {
     shielded: PrivacyLevel.SHIELDED,
@@ -54,7 +52,7 @@ export function JoinCampaignForm({ campaign, onJoined }: JoinCampaignFormProps) 
         privacyLevel: privacyMap[privacyLevel],
       })
     },
-    [isFormReady, campaign.id, privacyLevel, joinCampaign, privacyMap],
+    [isFormReady, campaign.id, privacyLevel, joinCampaign, privacyMap]
   )
 
   const handleReset = useCallback(() => {
@@ -139,7 +137,9 @@ export function JoinCampaignForm({ campaign, onJoined }: JoinCampaignFormProps) 
           </div>
           <div>
             <p className="text-[var(--text-tertiary)]">Status</p>
-            <p className="font-semibold text-sip-green-400">{campaign.status}</p>
+            <p className="font-semibold text-sip-green-400">
+              {campaign.status}
+            </p>
           </div>
         </div>
       </div>
@@ -178,7 +178,7 @@ export function JoinCampaignForm({ campaign, onJoined }: JoinCampaignFormProps) 
           "w-full py-4 px-6 text-lg font-semibold rounded-xl transition-colors",
           isFormReady
             ? "bg-gradient-to-r from-amber-500 to-amber-700 text-white hover:from-amber-400 hover:to-amber-600"
-            : "bg-amber-600/30 text-white/50 cursor-not-allowed",
+            : "bg-amber-600/30 text-white/50 cursor-not-allowed"
         )}
       >
         {!connected
@@ -198,9 +198,7 @@ export function JoinCampaignForm({ campaign, onJoined }: JoinCampaignFormProps) 
         </div>
         <div className="flex justify-between text-sm mt-2">
           <span className="text-[var(--text-secondary)]">Powered by</span>
-          <span className="text-[var(--text-primary)]">
-            Torque Protocol
-          </span>
+          <span className="text-[var(--text-primary)]">Torque Protocol</span>
         </div>
       </div>
     </form>

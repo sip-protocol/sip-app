@@ -38,7 +38,7 @@ export function GalleryList({
               "px-4 py-2 text-sm font-medium rounded-lg transition-colors",
               filter === f.value
                 ? "bg-rose-500/20 text-rose-300 border border-rose-500/30"
-                : "border border-[var(--border-default)] text-[var(--text-secondary)] hover:bg-[var(--surface-secondary)]",
+                : "border border-[var(--border-default)] text-[var(--text-secondary)] hover:bg-[var(--surface-secondary)]"
             )}
           >
             {f.label}
@@ -52,7 +52,8 @@ export function GalleryList({
           <span className="text-4xl block mb-3">{"\u{1F3A8}"}</span>
           <h3 className="text-lg font-semibold mb-2">No art yet</h3>
           <p className="text-sm text-[var(--text-secondary)] max-w-md mx-auto">
-            Generate your first privacy art from the Create tab. Each piece is deterministically derived from stealth address entropy.
+            Generate your first privacy art from the Create tab. Each piece is
+            deterministically derived from stealth address entropy.
           </p>
         </div>
       ) : (

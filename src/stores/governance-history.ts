@@ -26,7 +26,7 @@ export const useGovernanceHistoryStore = create<GovernanceHistoryStore>()(
       updateVote: (id, updates) =>
         set((state) => ({
           votes: state.votes.map((v) =>
-            v.id === id ? { ...v, ...updates } : v,
+            v.id === id ? { ...v, ...updates } : v
           ),
         })),
 
@@ -42,6 +42,6 @@ export const useGovernanceHistoryStore = create<GovernanceHistoryStore>()(
     }),
     {
       name: "sip-governance-history",
-    },
-  ),
+    }
+  )
 )

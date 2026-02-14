@@ -8,9 +8,7 @@ export function BridgePageClient() {
     <div className="max-w-2xl mx-auto px-4 py-8 sm:py-12">
       {/* Hero */}
       <div className="text-center mb-8">
-        <h1 className="text-3xl sm:text-4xl font-bold mb-3">
-          Private Bridge
-        </h1>
+        <h1 className="text-3xl sm:text-4xl font-bold mb-3">Private Bridge</h1>
         <p className="text-[var(--text-secondary)] max-w-lg mx-auto">
           Bridge tokens cross-chain to a stealth address. The bridge relayer
           cannot link sender to receiver.
@@ -35,9 +33,7 @@ export function BridgePageClient() {
         <div className="flex gap-3">
           <span className="text-xl">{"\uD83C\uDF09"}</span>
           <div>
-            <p className="font-medium text-cyan-100">
-              Powered by Wormhole NTT
-            </p>
+            <p className="font-medium text-cyan-100">Powered by Wormhole NTT</p>
             <p className="text-sm text-cyan-300 mt-1">
               Native Token Transfers enable cross-chain bridging directly to
               stealth addresses. Your destination address stays private — even

@@ -30,9 +30,18 @@ export function GeneratedArtDisplay({
   }
 
   const privacyBadge: Record<string, { label: string; color: string }> = {
-    shielded: { label: "\u{1F512} Shielded", color: "bg-rose-500/20 text-rose-300 border-rose-500/30" },
-    compliant: { label: "\u{1F441}\uFE0F Compliant", color: "bg-amber-500/20 text-amber-300 border-amber-500/30" },
-    transparent: { label: "\u{1F513} Transparent", color: "bg-gray-500/20 text-gray-300 border-gray-500/30" },
+    shielded: {
+      label: "\u{1F512} Shielded",
+      color: "bg-rose-500/20 text-rose-300 border-rose-500/30",
+    },
+    compliant: {
+      label: "\u{1F441}\uFE0F Compliant",
+      color: "bg-amber-500/20 text-amber-300 border-amber-500/30",
+    },
+    transparent: {
+      label: "\u{1F513} Transparent",
+      color: "bg-gray-500/20 text-gray-300 border-gray-500/30",
+    },
   }
 
   const badge = privacyBadge[art.privacyLevel] ?? privacyBadge.shielded
@@ -41,7 +50,7 @@ export function GeneratedArtDisplay({
     <div
       className={cn(
         "rounded-xl border border-rose-800/50 bg-rose-900/10 p-4",
-        className,
+        className
       )}
     >
       {/* Art preview */}
@@ -56,7 +65,12 @@ export function GeneratedArtDisplay({
             {style.emoji} {style.name}
           </span>
         )}
-        <span className={cn("inline-flex items-center gap-1 px-2 py-1 rounded-full border text-xs font-medium", badge.color)}>
+        <span
+          className={cn(
+            "inline-flex items-center gap-1 px-2 py-1 rounded-full border text-xs font-medium",
+            badge.color
+          )}
+        >
           {badge.label}
         </span>
       </div>

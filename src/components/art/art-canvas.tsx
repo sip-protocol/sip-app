@@ -14,11 +14,7 @@ const SIZE_MAP = {
   lg: "w-full max-w-[400px] aspect-square",
 }
 
-export function ArtCanvas({
-  svgData,
-  size = "md",
-  className,
-}: ArtCanvasProps) {
+export function ArtCanvas({ svgData, size = "md", className }: ArtCanvasProps) {
   if (!svgData) {
     return (
       <div
@@ -26,7 +22,7 @@ export function ArtCanvas({
           SIZE_MAP[size],
           "rounded-xl border border-dashed border-[var(--border-default)]",
           "flex items-center justify-center bg-[var(--bg-secondary)]",
-          className,
+          className
         )}
       >
         <div className="text-center">
@@ -44,7 +40,7 @@ export function ArtCanvas({
       className={cn(
         SIZE_MAP[size],
         "rounded-xl overflow-hidden border border-[var(--border-default)]",
-        className,
+        className
       )}
       dangerouslySetInnerHTML={{ __html: svgData }}
     />

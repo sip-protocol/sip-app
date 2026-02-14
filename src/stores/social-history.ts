@@ -10,7 +10,9 @@ interface SocialHistoryStore {
   addAction: (record: SocialActionRecord) => void
   updateAction: (id: string, updates: Partial<SocialActionRecord>) => void
   getAction: (id: string) => SocialActionRecord | undefined
-  getActionsByType: (type: "profile" | "post" | "follow") => SocialActionRecord[]
+  getActionsByType: (
+    type: "profile" | "post" | "follow"
+  ) => SocialActionRecord[]
 
   addProfile: (profile: StealthProfile) => void
   getActiveProfile: () => StealthProfile | undefined
@@ -33,14 +35,13 @@ export const useSocialHistoryStore = create<SocialHistoryStore>()(
       updateAction: (id, updates) =>
         set((state) => ({
           actions: state.actions.map((a) =>
-            a.id === id ? { ...a, ...updates } : a,
+            a.id === id ? { ...a, ...updates } : a
           ),
         })),
 
       getAction: (id) => get().actions.find((a) => a.id === id),
 
-      getActionsByType: (type) =>
-        get().actions.filter((a) => a.type === type),
+      getActionsByType: (type) => get().actions.filter((a) => a.type === type),
 
       addProfile: (profile) =>
         set((state) => ({
@@ -55,6 +56,6 @@ export const useSocialHistoryStore = create<SocialHistoryStore>()(
     }),
     {
       name: "sip-social-history",
-    },
-  ),
+    }
+  )
 )

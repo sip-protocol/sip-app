@@ -37,9 +37,7 @@ export default function ChannelPage() {
     <div className="max-w-4xl mx-auto px-4 py-8 sm:py-12">
       {/* Hero */}
       <div className="text-center mb-10">
-        <h1 className="text-3xl sm:text-4xl font-bold mb-3">
-          Privacy Channel
-        </h1>
+        <h1 className="text-3xl sm:text-4xl font-bold mb-3">Privacy Channel</h1>
         <p className="text-[var(--text-secondary)] max-w-lg mx-auto">
           Encrypted content distribution powered by DRiP. Subscribe with your
           viewing key to access privacy education content and exclusive drops.
@@ -96,9 +94,9 @@ export default function ChannelPage() {
               Powered by DRiP Protocol
             </p>
             <p className="text-sm text-purple-300 mt-1">
-              Content is encrypted with viewing key-gated access. Free, subscriber,
-              and premium tiers. Drops are distributed as compressed NFTs — privacy
-              education delivered directly to your wallet.
+              Content is encrypted with viewing key-gated access. Free,
+              subscriber, and premium tiers. Drops are distributed as compressed
+              NFTs — privacy education delivered directly to your wallet.
             </p>
           </div>
         </div>

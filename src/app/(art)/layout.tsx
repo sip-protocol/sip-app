@@ -9,11 +9,7 @@ const navItems = [
   { name: "Mint", href: "/art/mint" },
 ]
 
-export default function ArtLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function ArtLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
 
   const isActive = (href: string) => {

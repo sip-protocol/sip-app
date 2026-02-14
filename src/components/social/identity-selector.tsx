@@ -13,9 +13,21 @@ interface IdentitySelectorProps {
 
 function avatarEmoji(address: string): string {
   const emojis = [
-    "\u{1F42C}", "\u{1F47B}", "\u{1F525}", "\u{1F30A}", "\u{1F308}",
-    "\u{2B50}", "\u{1F680}", "\u{1F331}", "\u{1F3A8}", "\u{1F3AD}",
-    "\u{1F9CA}", "\u{1F52E}", "\u{1FA90}", "\u{1F30C}", "\u{26A1}",
+    "\u{1F42C}",
+    "\u{1F47B}",
+    "\u{1F525}",
+    "\u{1F30A}",
+    "\u{1F308}",
+    "\u{2B50}",
+    "\u{1F680}",
+    "\u{1F331}",
+    "\u{1F3A8}",
+    "\u{1F3AD}",
+    "\u{1F9CA}",
+    "\u{1F52E}",
+    "\u{1FA90}",
+    "\u{1F30C}",
+    "\u{26A1}",
     "\u{1F48E}",
   ]
   let hash = 0
@@ -55,7 +67,7 @@ export function IdentitySelector({
                 isSelected
                   ? "border-pink-500 bg-pink-900/20 shadow-lg shadow-pink-500/10"
                   : "border-[var(--border-default)] hover:border-[var(--border-hover)] hover:bg-[var(--bg-secondary)]",
-                disabled && "opacity-50 cursor-not-allowed hover:scale-100",
+                disabled && "opacity-50 cursor-not-allowed hover:scale-100"
               )}
             >
               {/* Radio indicator */}
@@ -64,7 +76,7 @@ export function IdentitySelector({
                   "w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0",
                   isSelected
                     ? "border-pink-500"
-                    : "border-[var(--border-default)]",
+                    : "border-[var(--border-default)]"
                 )}
               >
                 {isSelected && (
@@ -78,7 +90,7 @@ export function IdentitySelector({
                 <span
                   className={cn(
                     "font-medium text-sm block truncate",
-                    isSelected && "text-pink-300",
+                    isSelected && "text-pink-300"
                   )}
                 >
                   {profile.username}
@@ -106,7 +118,7 @@ export function IdentitySelector({
               "w-full flex items-center justify-center gap-2 p-3 rounded-xl border border-dashed",
               "border-[var(--border-default)] hover:border-pink-500/50 hover:bg-pink-900/10",
               "transition-all duration-200 text-sm text-[var(--text-secondary)]",
-              disabled && "opacity-50 cursor-not-allowed",
+              disabled && "opacity-50 cursor-not-allowed"
             )}
           >
             <span>+</span>

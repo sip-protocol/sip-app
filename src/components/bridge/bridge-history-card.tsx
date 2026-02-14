@@ -73,7 +73,9 @@ export function BridgeHistoryCard({ transfer }: BridgeHistoryCardProps) {
           <span className="text-sm font-medium text-[var(--text-primary)]">
             {source.name}
           </span>
-          <span className="text-xs text-[var(--text-tertiary)]">{"\u2192"}</span>
+          <span className="text-xs text-[var(--text-tertiary)]">
+            {"\u2192"}
+          </span>
           <span className="text-sm font-medium text-[var(--text-primary)]">
             {dest.name}
           </span>
@@ -91,7 +93,7 @@ export function BridgeHistoryCard({ transfer }: BridgeHistoryCardProps) {
           className={cn(
             "text-xs font-medium px-2.5 py-1 rounded-full",
             statusConfig.color,
-            statusConfig.bgColor,
+            statusConfig.bgColor
           )}
         >
           {statusConfig.label}
@@ -101,7 +103,7 @@ export function BridgeHistoryCard({ transfer }: BridgeHistoryCardProps) {
         <span
           className={cn(
             "text-[var(--text-tertiary)] text-xs transition-transform",
-            expanded && "rotate-180",
+            expanded && "rotate-180"
           )}
         >
           {"\u25BC"}

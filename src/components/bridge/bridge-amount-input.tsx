@@ -29,7 +29,7 @@ export function BridgeAmountInput({
         onValueChange(input)
       }
     },
-    [onValueChange],
+    [onValueChange]
   )
 
   const handleTokenSelect = useCallback(
@@ -37,7 +37,7 @@ export function BridgeAmountInput({
       onTokenChange(t)
       setShowTokenMenu(false)
     },
-    [onTokenChange],
+    [onTokenChange]
   )
 
   return (
@@ -61,7 +61,7 @@ export function BridgeAmountInput({
             "w-full px-4 py-4 text-3xl font-semibold bg-[var(--surface-secondary)] border rounded-xl transition-all",
             "focus:outline-none focus:ring-2 focus:ring-cyan-500/20",
             "border-[var(--border-default)] focus:border-cyan-500",
-            disabled && "opacity-50 cursor-not-allowed",
+            disabled && "opacity-50 cursor-not-allowed"
           )}
         />
         <div className="absolute right-3 top-1/2 -translate-y-1/2">
@@ -87,7 +87,7 @@ export function BridgeAmountInput({
                   onClick={() => handleTokenSelect(t)}
                   className={cn(
                     "w-full px-3 py-2 text-left text-sm hover:bg-[var(--surface-secondary)] transition-colors",
-                    t === token && "text-cyan-400 font-medium",
+                    t === token && "text-cyan-400 font-medium"
                   )}
                 >
                   {t}

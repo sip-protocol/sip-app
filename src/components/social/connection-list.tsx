@@ -63,7 +63,7 @@ export function ConnectionList({ profileId, onFollow }: ConnectionListProps) {
               "px-4 py-2 text-sm font-medium rounded-lg transition-colors",
               tab === t.value
                 ? "bg-pink-600 text-white"
-                : "bg-[var(--surface-secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]",
+                : "bg-[var(--surface-secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
             )}
           >
             {t.label}

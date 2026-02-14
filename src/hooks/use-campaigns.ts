@@ -42,8 +42,10 @@ export function useCampaigns(): UseCampaignsReturn {
 
   const campaigns = useMemo(() => {
     if (filter === "all") return allCampaigns
-    if (filter === "active") return allCampaigns.filter((c) => c.status === "active")
-    if (filter === "completed") return allCampaigns.filter((c) => c.status === "completed")
+    if (filter === "active")
+      return allCampaigns.filter((c) => c.status === "active")
+    if (filter === "completed")
+      return allCampaigns.filter((c) => c.status === "completed")
     // "joined" — show all for now (would check user progress in real mode)
     return allCampaigns
   }, [allCampaigns, filter])

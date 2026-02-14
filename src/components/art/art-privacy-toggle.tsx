@@ -79,7 +79,7 @@ export function ArtPrivacyToggle({
                 isActive
                   ? "border-rose-500 bg-rose-900/20 shadow-lg shadow-rose-500/10"
                   : "border-[var(--border-default)] hover:border-[var(--border-hover)] hover:bg-[var(--bg-secondary)]",
-                disabled && "opacity-50 cursor-not-allowed hover:scale-100",
+                disabled && "opacity-50 cursor-not-allowed hover:scale-100"
               )}
             >
               {isActive && (
@@ -93,7 +93,7 @@ export function ArtPrivacyToggle({
                 <span
                   className={cn(
                     "text-lg transition-transform duration-200",
-                    isActive && "scale-110",
+                    isActive && "scale-110"
                   )}
                 >
                   {option.icon}
@@ -101,7 +101,7 @@ export function ArtPrivacyToggle({
                 <span
                   className={cn(
                     "font-medium text-sm transition-colors duration-200",
-                    isActive && "text-rose-300",
+                    isActive && "text-rose-300"
                   )}
                 >
                   {option.label}
@@ -122,7 +122,7 @@ export function ArtPrivacyToggle({
           "transition-all duration-300 ease-out",
           hoveredOption || activeOption
             ? "opacity-100 translate-y-0"
-            : "opacity-0 -translate-y-1",
+            : "opacity-0 -translate-y-1"
         )}
       >
         <div className="flex items-start gap-2">

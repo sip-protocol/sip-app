@@ -8,11 +8,13 @@ export function GovernanceStats() {
   const { votes } = useGovernanceHistoryStore()
 
   const activeDaos = new Set(
-    proposals.filter((p) => p.status === "voting" || p.status === "reveal").map((p) => p.daoId),
+    proposals
+      .filter((p) => p.status === "voting" || p.status === "reveal")
+      .map((p) => p.daoId)
   ).size
 
   const openProposals = proposals.filter(
-    (p) => p.status === "voting" || p.status === "reveal",
+    (p) => p.status === "voting" || p.status === "reveal"
   ).length
 
   const yourVotes = votes.length
@@ -20,7 +22,10 @@ export function GovernanceStats() {
 
   const stats = [
     { label: "Active DAOs", value: isLoading ? "..." : activeDaos.toString() },
-    { label: "Open Proposals", value: isLoading ? "..." : openProposals.toString() },
+    {
+      label: "Open Proposals",
+      value: isLoading ? "..." : openProposals.toString(),
+    },
     { label: "Your Votes", value: yourVotes.toString() },
     { label: "Unrevealed", value: unrevealed.toString() },
   ]

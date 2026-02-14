@@ -20,7 +20,10 @@ export function CampaignCard({
   className,
 }: CampaignCardProps) {
   const progressPercent = progress
-    ? Math.min(100, Math.round((progress.completedActions / progress.requiredActions) * 100))
+    ? Math.min(
+        100,
+        Math.round((progress.completedActions / progress.requiredActions) * 100)
+      )
     : 0
   const isJoined = !!progress
   const isComplete = progress?.isComplete ?? false
@@ -30,7 +33,7 @@ export function CampaignCard({
       className={cn(
         "bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-xl p-5",
         "hover:border-[var(--border-hover)] hover:shadow-md transition-all",
-        className,
+        className
       )}
     >
       {/* Header */}
@@ -100,7 +103,7 @@ export function CampaignCard({
               "px-4 py-2 text-sm font-medium rounded-lg transition-colors",
               campaign.status === "active"
                 ? "bg-gradient-to-r from-amber-500 to-amber-700 text-white hover:from-amber-400 hover:to-amber-600"
-                : "bg-gray-700 text-gray-400 cursor-not-allowed",
+                : "bg-gray-700 text-gray-400 cursor-not-allowed"
             )}
           >
             Join

@@ -35,7 +35,7 @@ export function ProposalCard({
 }: ProposalCardProps) {
   const quorumPercent = Math.min(
     100,
-    Math.round((proposal.totalVotes / proposal.quorum) * 100),
+    Math.round((proposal.totalVotes / proposal.quorum) * 100)
   )
 
   const deadlineTime =
@@ -46,16 +46,12 @@ export function ProposalCard({
       className={cn(
         "bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-xl p-5",
         "hover:border-[var(--border-hover)] hover:shadow-md transition-all",
-        className,
+        className
       )}
     >
       {/* Header: DAO badge + status */}
       <div className="flex items-start justify-between gap-3 mb-3">
-        <DaoBadge
-          name={proposal.daoName}
-          icon={proposal.daoIcon}
-          size="sm"
-        />
+        <DaoBadge name={proposal.daoName} icon={proposal.daoIcon} size="sm" />
         <ProposalStatusBadge status={proposal.status} />
       </div>
 

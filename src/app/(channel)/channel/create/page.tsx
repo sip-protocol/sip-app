@@ -19,7 +19,9 @@ export default function ChannelCreatePage() {
       {/* Empty State */}
       <div className="bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-xl p-12 text-center">
         <p className="text-4xl mb-4">✍️</p>
-        <h2 className="text-lg font-semibold mb-2">Content creator coming soon</h2>
+        <h2 className="text-lg font-semibold mb-2">
+          Content creator coming soon
+        </h2>
         <p className="text-sm text-[var(--text-secondary)] max-w-md mx-auto">
           The encrypted content creation interface with DRiP integration will be
           built here.

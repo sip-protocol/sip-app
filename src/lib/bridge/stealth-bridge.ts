@@ -28,7 +28,7 @@ function toSdkChainId(chain: BridgeChainId): string {
  *    and the recipient can derive the private key to claim
  */
 export async function generateBridgeStealthAddress(
-  destChain: BridgeChainId,
+  destChain: BridgeChainId
 ): Promise<StealthBridgeResult> {
   const sdk = await getSDK()
 
@@ -36,7 +36,9 @@ export async function generateBridgeStealthAddress(
 
   // Generate recipient keypair (meta-address) on dest chain
   const { metaAddress, spendingPrivateKey, viewingPrivateKey } =
-    sdk.generateStealthMetaAddress(sdkChain as Parameters<typeof sdk.generateStealthMetaAddress>[0])
+    sdk.generateStealthMetaAddress(
+      sdkChain as Parameters<typeof sdk.generateStealthMetaAddress>[0]
+    )
 
   // Generate one-time stealth address from the meta-address
   const { stealthAddress, sharedSecret } =
@@ -62,7 +64,7 @@ export async function generateBridgeStealthAddress(
  */
 export function estimateBridgeFee(
   amount: string,
-  feeBps: number,
+  feeBps: number
 ): { bridgeFee: string; gasFee: string; totalFee: string } {
   const numAmount = parseFloat(amount)
   if (isNaN(numAmount) || numAmount <= 0) {

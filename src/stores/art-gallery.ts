@@ -38,22 +38,23 @@ export const useArtGalleryStore = create<ArtGalleryStore>()(
       updateAction: (id, updates) =>
         set((state) => ({
           actions: state.actions.map((a) =>
-            a.id === id ? { ...a, ...updates } : a,
+            a.id === id ? { ...a, ...updates } : a
           ),
         })),
 
       getAction: (id) => get().actions.find((a) => a.id === id),
 
-      getActionsByType: (type) =>
-        get().actions.filter((a) => a.type === type),
+      getActionsByType: (type) => get().actions.filter((a) => a.type === type),
 
       addGeneratedArt: (art) =>
         set((state) => ({
-          generatedArts: [art, ...state.generatedArts].slice(0, MAX_ART_HISTORY),
+          generatedArts: [art, ...state.generatedArts].slice(
+            0,
+            MAX_ART_HISTORY
+          ),
         })),
 
-      getGeneratedArt: (id) =>
-        get().generatedArts.find((a) => a.id === id),
+      getGeneratedArt: (id) => get().generatedArts.find((a) => a.id === id),
 
       getGeneratedArts: () => get().generatedArts,
 
@@ -69,6 +70,6 @@ export const useArtGalleryStore = create<ArtGalleryStore>()(
     }),
     {
       name: "sip-art-gallery",
-    },
-  ),
+    }
+  )
 )

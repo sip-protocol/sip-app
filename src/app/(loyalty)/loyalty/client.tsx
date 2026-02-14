@@ -10,7 +10,9 @@ type View = "dashboard" | "join-campaign"
 
 export function LoyaltyPageClient() {
   const [view, setView] = useState<View>("dashboard")
-  const [selectedCampaign, setSelectedCampaign] = useState<Campaign | null>(null)
+  const [selectedCampaign, setSelectedCampaign] = useState<Campaign | null>(
+    null
+  )
 
   const handleJoin = useCallback((campaign: Campaign) => {
     setSelectedCampaign(campaign)
@@ -43,9 +45,7 @@ export function LoyaltyPageClient() {
     <div className="max-w-4xl mx-auto px-4 py-8 sm:py-12">
       {/* Hero */}
       <div className="text-center mb-10">
-        <h1 className="text-3xl sm:text-4xl font-bold mb-3">
-          Privacy Loyalty
-        </h1>
+        <h1 className="text-3xl sm:text-4xl font-bold mb-3">Privacy Loyalty</h1>
         <p className="text-[var(--text-secondary)] max-w-lg mx-auto">
           Earn rewards for using privacy features. Complete campaigns, build
           your tier, and claim rewards — all without surveillance.

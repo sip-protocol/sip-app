@@ -30,7 +30,7 @@ export function StealthIdentityDisplay({
     <div
       className={cn(
         "rounded-xl border border-pink-800/50 bg-pink-900/10 p-4",
-        className,
+        className
       )}
     >
       {/* Identity callout */}
@@ -111,8 +111,9 @@ export function StealthIdentityDisplay({
       {/* Warning */}
       <div className="mt-4 p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
         <p className="text-xs text-amber-300/80 leading-relaxed">
-          {"\u26A0\uFE0F"} Save your viewing key — it proves your identity without revealing your wallet.
-          Anyone with this key can verify you authored content under this persona.
+          {"\u26A0\uFE0F"} Save your viewing key — it proves your identity
+          without revealing your wallet. Anyone with this key can verify you
+          authored content under this persona.
         </p>
       </div>
     </div>

@@ -21,9 +21,7 @@ export function ConnectionsPageClient() {
       </div>
 
       {/* Connection List */}
-      <ConnectionList
-        profileId={activeProfile?.id ?? "profile-dolphin"}
-      />
+      <ConnectionList profileId={activeProfile?.id ?? "profile-dolphin"} />
     </div>
   )
 }

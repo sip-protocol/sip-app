@@ -27,7 +27,8 @@ const apps = [
   },
   {
     name: "Private Governance",
-    description: "Commit-reveal voting on Realms DAOs with Pedersen commitments",
+    description:
+      "Commit-reveal voting on Realms DAOs with Pedersen commitments",
     href: "/governance",
     icon: "🗳️",
     status: "live" as const,

@@ -40,7 +40,7 @@ export function ConnectionCard({
       className={cn(
         "bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-xl p-4",
         "hover:border-[var(--border-hover)] transition-all",
-        className,
+        className
       )}
     >
       <div className="flex items-start justify-between gap-3">

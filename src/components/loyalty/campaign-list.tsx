@@ -51,7 +51,7 @@ export function CampaignList({ onJoin, onClaim }: CampaignListProps) {
               "flex-shrink-0 px-4 py-2 text-sm font-medium rounded-lg transition-colors",
               filter === tab.value
                 ? "bg-amber-500/20 text-amber-300 border border-amber-500/30"
-                : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-secondary)]",
+                : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-secondary)]"
             )}
           >
             {tab.label}
@@ -74,7 +74,7 @@ export function CampaignList({ onJoin, onClaim }: CampaignListProps) {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {campaigns.map((campaign) => {
             const progress = SAMPLE_PROGRESS.find(
-              (p) => p.campaignId === campaign.id,
+              (p) => p.campaignId === campaign.id
             )
             return (
               <CampaignCard

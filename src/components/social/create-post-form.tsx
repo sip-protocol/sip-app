@@ -21,10 +21,15 @@ interface CreatePostFormProps {
 
 const MAX_CONTENT_LENGTH = 500
 
-export function CreatePostForm({ onPublished, onCreateIdentity }: CreatePostFormProps) {
+export function CreatePostForm({
+  onPublished,
+  onCreateIdentity,
+}: CreatePostFormProps) {
   const { connected } = useWallet()
 
-  const [selectedProfileId, setSelectedProfileId] = useState<string | null>(null)
+  const [selectedProfileId, setSelectedProfileId] = useState<string | null>(
+    null
+  )
   const [content, setContent] = useState("")
   const [privacyLevel, setPrivacyLevel] = useState<PrivacyOption>("shielded")
   const [status, setStatus] = useState<SocialStep | "idle" | "error">("idle")
@@ -91,13 +96,20 @@ export function CreatePostForm({ onPublished, onCreateIdentity }: CreatePostForm
           privacyLevel: privacyMap[privacyLevel],
         })
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : "Post failed"
+        const message = err instanceof Error ? err.message : "Post failed"
         setError(message)
         setStatus("error")
       }
     },
-    [isFormReady, selectedProfileId, content, privacyLevel, addAction, trackSocial, privacyMap],
+    [
+      isFormReady,
+      selectedProfileId,
+      content,
+      privacyLevel,
+      addAction,
+      trackSocial,
+      privacyMap,
+    ]
   )
 
   const handleReset = useCallback(() => {
@@ -188,7 +200,7 @@ export function CreatePostForm({ onPublished, onCreateIdentity }: CreatePostForm
             "w-full px-4 py-3 rounded-xl border bg-[var(--bg-secondary)] text-sm resize-none",
             "border-[var(--border-default)] focus:border-pink-500 focus:ring-1 focus:ring-pink-500/30",
             "placeholder:text-[var(--text-tertiary)] outline-none transition-colors",
-            isPublishing && "opacity-50 cursor-not-allowed",
+            isPublishing && "opacity-50 cursor-not-allowed"
           )}
         />
         <div className="flex justify-end mt-1">
@@ -197,7 +209,7 @@ export function CreatePostForm({ onPublished, onCreateIdentity }: CreatePostForm
               "text-xs",
               content.length > MAX_CONTENT_LENGTH
                 ? "text-red-400"
-                : "text-[var(--text-tertiary)]",
+                : "text-[var(--text-tertiary)]"
             )}
           >
             {content.length}/{MAX_CONTENT_LENGTH}
@@ -239,7 +251,7 @@ export function CreatePostForm({ onPublished, onCreateIdentity }: CreatePostForm
           "w-full py-4 px-6 text-lg font-semibold rounded-xl transition-colors",
           isFormReady
             ? "bg-gradient-to-r from-pink-500 to-pink-700 text-white hover:from-pink-400 hover:to-pink-600"
-            : "bg-pink-600/30 text-white/50 cursor-not-allowed",
+            : "bg-pink-600/30 text-white/50 cursor-not-allowed"
         )}
       >
         {!connected

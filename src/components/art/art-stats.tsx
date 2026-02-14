@@ -7,7 +7,8 @@ export function ArtStats() {
 
   const generated = generatedArts.length
   const minted = mintedNFTs.length
-  const stylesUsed = new Set(generatedArts.map((a) => a.parameters.styleId)).size
+  const stylesUsed = new Set(generatedArts.map((a) => a.parameters.styleId))
+    .size
   const latestStyle = generatedArts[0]?.parameters.styleId ?? "—"
 
   const styleLabel: Record<string, string> = {

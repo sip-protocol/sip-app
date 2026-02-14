@@ -1,4 +1,9 @@
-import type { StealthProfile, SocialPost, SocialConnection, SocialStep } from "./types"
+import type {
+  StealthProfile,
+  SocialPost,
+  SocialConnection,
+  SocialStep,
+} from "./types"
 import { PrivacyLevel } from "@sip-protocol/types"
 
 function deterministicStealthAddress(seed: string): string {
@@ -96,7 +101,8 @@ export const SAMPLE_POSTS: SocialPost[] = [
     id: "post-001",
     authorProfileId: "profile-dolphin",
     authorUsername: "anon_dolphin",
-    content: "Just discovered stealth addresses on Solana. This changes everything for on-chain privacy.",
+    content:
+      "Just discovered stealth addresses on Solana. This changes everything for on-chain privacy.",
     timestamp: now - 13 * DAY,
     likeCount: 24,
     commentCount: 5,
@@ -107,7 +113,8 @@ export const SAMPLE_POSTS: SocialPost[] = [
     id: "post-002",
     authorProfileId: "profile-shadow",
     authorUsername: "shadow_dev",
-    content: "Shipped a new privacy feature today. Stealth identities mean you can post without linking to your wallet.",
+    content:
+      "Shipped a new privacy feature today. Stealth identities mean you can post without linking to your wallet.",
     timestamp: now - 10 * DAY,
     likeCount: 18,
     commentCount: 3,
@@ -130,7 +137,8 @@ export const SAMPLE_POSTS: SocialPost[] = [
     id: "post-004",
     authorProfileId: "profile-dolphin",
     authorUsername: "anon_dolphin",
-    content: "Privacy is not about hiding. It's about choosing what to reveal and to whom.",
+    content:
+      "Privacy is not about hiding. It's about choosing what to reveal and to whom.",
     timestamp: now - 7 * DAY,
     likeCount: 42,
     commentCount: 11,
@@ -153,7 +161,8 @@ export const SAMPLE_POSTS: SocialPost[] = [
     id: "post-006",
     authorProfileId: "profile-artist",
     authorUsername: "stealth_artist",
-    content: "New generative art drop — each piece is tied to a stealth address. Collectors stay anonymous.",
+    content:
+      "New generative art drop — each piece is tied to a stealth address. Collectors stay anonymous.",
     timestamp: now - 4 * DAY,
     likeCount: 55,
     commentCount: 14,
@@ -176,7 +185,8 @@ export const SAMPLE_POSTS: SocialPost[] = [
     id: "post-008",
     authorProfileId: "profile-cipher",
     authorUsername: "cipher_punk",
-    content: "Viewing keys are the compromise between full privacy and regulation. Choose compliant mode when needed.",
+    content:
+      "Viewing keys are the compromise between full privacy and regulation. Choose compliant mode when needed.",
     timestamp: now - 2 * DAY,
     likeCount: 38,
     commentCount: 9,
@@ -187,7 +197,8 @@ export const SAMPLE_POSTS: SocialPost[] = [
     id: "post-009",
     authorProfileId: "profile-shadow",
     authorUsername: "shadow_dev",
-    content: "Hot take: every social platform will need stealth identities within 5 years.",
+    content:
+      "Hot take: every social platform will need stealth identities within 5 years.",
     timestamp: now - 1 * DAY,
     likeCount: 73,
     commentCount: 19,
@@ -198,7 +209,8 @@ export const SAMPLE_POSTS: SocialPost[] = [
     id: "post-010",
     authorProfileId: "profile-dolphin",
     authorUsername: "anon_dolphin",
-    content: "The beauty of Tapestry + SIP: social without surveillance. Your follow graph is yours alone.",
+    content:
+      "The beauty of Tapestry + SIP: social without surveillance. Your follow graph is yours alone.",
     timestamp: now - 6 * HOUR,
     likeCount: 15,
     commentCount: 4,
@@ -309,9 +321,11 @@ export function getPostsByProfile(profileId: string): SocialPost[] {
   return SAMPLE_POSTS.filter((p) => p.authorProfileId === profileId)
 }
 
-export function getConnectionsForProfile(profileId: string): SocialConnection[] {
+export function getConnectionsForProfile(
+  profileId: string
+): SocialConnection[] {
   return SAMPLE_CONNECTIONS.filter(
-    (c) => c.fromProfileId === profileId || c.toProfileId === profileId,
+    (c) => c.fromProfileId === profileId || c.toProfileId === profileId
   )
 }
 

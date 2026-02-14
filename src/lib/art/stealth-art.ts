@@ -62,15 +62,21 @@ export function generateArtSeed(stealthAddress: string): string {
  * Derive art parameters from a seed and style ID.
  * Maps seed bytes to palette, shapes, and transforms.
  */
-export function deriveArtParameters(seed: string, styleId: ArtStyleId): ArtParameters {
+export function deriveArtParameters(
+  seed: string,
+  styleId: ArtStyleId
+): ArtParameters {
   const palette = deriveColorPalette(seed, styleId)
 
   const byte = (index: number) => {
-    const hex = seed.slice((index * 2) % seed.length, (index * 2 + 2) % seed.length)
-    return parseInt(hex, 16) || ((index * 37) % 256)
+    const hex = seed.slice(
+      (index * 2) % seed.length,
+      (index * 2 + 2) % seed.length
+    )
+    return parseInt(hex, 16) || (index * 37) % 256
   }
 
-  const shapeCount = 8 + byte(10) % 20
+  const shapeCount = 8 + (byte(10) % 20)
   const shapeTypes: ("circle" | "rect" | "path")[] = []
   const typeMap: ("circle" | "rect" | "path")[] = ["circle", "rect", "path"]
   for (let i = 0; i < 3; i++) {

@@ -11,11 +11,7 @@ interface MintedNFTCardProps {
   className?: string
 }
 
-export function MintedNFTCard({
-  nft,
-  art,
-  className,
-}: MintedNFTCardProps) {
+export function MintedNFTCard({ nft, art, className }: MintedNFTCardProps) {
   const [copied, setCopied] = useState(false)
 
   const handleCopy = async () => {
@@ -38,12 +34,16 @@ export function MintedNFTCard({
       className={cn(
         "bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-xl overflow-hidden",
         "hover:border-[var(--border-hover)] hover:shadow-md transition-all",
-        className,
+        className
       )}
     >
       {/* Art thumbnail */}
       <div className="aspect-square">
-        <ArtCanvas svgData={art?.svgData ?? ""} size="lg" className="w-full h-full rounded-none border-0" />
+        <ArtCanvas
+          svgData={art?.svgData ?? ""}
+          size="lg"
+          className="w-full h-full rounded-none border-0"
+        />
       </div>
 
       {/* Card info */}

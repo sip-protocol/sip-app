@@ -31,7 +31,7 @@ export function ArtCard({
       className={cn(
         "group bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-xl overflow-hidden",
         "hover:border-[var(--border-hover)] hover:shadow-md transition-all",
-        className,
+        className
       )}
     >
       {/* Art thumbnail */}
@@ -40,7 +40,11 @@ export function ArtCard({
         onClick={onSelect}
         className="w-full aspect-square relative"
       >
-        <ArtCanvas svgData={art.svgData} size="lg" className="w-full h-full rounded-none border-0" />
+        <ArtCanvas
+          svgData={art.svgData}
+          size="lg"
+          className="w-full h-full rounded-none border-0"
+        />
         {isMinted && (
           <span className="absolute top-2 right-2 px-2 py-1 rounded-full bg-sip-green-500/20 border border-sip-green-500/30 text-[10px] font-medium text-sip-green-300">
             Minted

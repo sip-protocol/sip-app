@@ -5,7 +5,12 @@ import { useWallet } from "@solana/wallet-adapter-react"
 import { ArtService } from "@/lib/art/art-service"
 import { useArtGalleryStore } from "@/stores/art-gallery"
 import { useTrackEvent } from "@/hooks/useTrackEvent"
-import type { ArtStep, GenerateArtParams, ArtActionRecord, GeneratedArt } from "@/lib/art/types"
+import type {
+  ArtStep,
+  GenerateArtParams,
+  ArtActionRecord,
+  GeneratedArt,
+} from "@/lib/art/types"
 
 export type GenerateArtStatus = ArtStep | "idle" | "error"
 
@@ -14,7 +19,9 @@ export interface UseGenerateArtReturn {
   activeRecord: ArtActionRecord | null
   generatedArt: GeneratedArt | null
   error: string | null
-  generateArt: (params: GenerateArtParams) => Promise<ArtActionRecord | undefined>
+  generateArt: (
+    params: GenerateArtParams
+  ) => Promise<ArtActionRecord | undefined>
   reset: () => void
 }
 
@@ -85,8 +92,15 @@ export function useGenerateArt(): UseGenerateArtReturn {
         return undefined
       }
     },
-    [publicKey, addAction, addGeneratedArt, trackArt],
+    [publicKey, addAction, addGeneratedArt, trackArt]
   )
 
-  return { status, activeRecord, generatedArt, error, generateArt: generateArtFn, reset }
+  return {
+    status,
+    activeRecord,
+    generatedArt,
+    error,
+    generateArt: generateArtFn,
+    reset,
+  }
 }

@@ -59,7 +59,7 @@ export interface BridgeParams {
 
 export type BridgeStepChangeCallback = (
   step: BridgeStep,
-  transfer: BridgeTransfer,
+  transfer: BridgeTransfer
 ) => void
 
 export type BridgeMode = "simulation" | "ntt"

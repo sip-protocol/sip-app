@@ -38,7 +38,7 @@ function ChainDropdown({
       onSelect(chain)
       setOpen(false)
     },
-    [onSelect],
+    [onSelect]
   )
 
   return (
@@ -55,7 +55,7 @@ function ChainDropdown({
           "bg-[var(--surface-secondary)] border-[var(--border-default)]",
           "hover:border-[var(--border-hover)]",
           open && "border-cyan-500 ring-2 ring-cyan-500/20",
-          disabled && "opacity-50 cursor-not-allowed",
+          disabled && "opacity-50 cursor-not-allowed"
         )}
       >
         {selected ? (
@@ -83,7 +83,7 @@ function ChainDropdown({
               className={cn(
                 "w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors",
                 "hover:bg-[var(--surface-secondary)]",
-                selected?.id === chain.id && "text-cyan-400 font-medium",
+                selected?.id === chain.id && "text-cyan-400 font-medium"
               )}
             >
               <span className="text-lg">{getChainEmoji(chain.id)}</span>
@@ -145,9 +145,12 @@ export function ChainSelector({
             "border-[var(--border-default)] bg-[var(--surface-secondary)]",
             "hover:border-cyan-500 hover:bg-cyan-900/20 hover:rotate-180",
             "active:scale-90",
-            "disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:rotate-0",
+            "disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:rotate-0"
           )}
-          style={{ transition: "transform 0.3s ease, border-color 0.2s, background 0.2s" }}
+          style={{
+            transition:
+              "transform 0.3s ease, border-color 0.2s, background 0.2s",
+          }}
           title="Swap chains"
         >
           <SwapIcon className="w-4 h-4 text-[var(--text-secondary)]" />

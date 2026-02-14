@@ -21,7 +21,7 @@ export function BridgeRouteBadge({
       className={cn(
         "flex items-center gap-3 px-4 py-2.5 rounded-xl",
         "bg-[var(--surface-secondary)] border border-[var(--border-default)]",
-        className,
+        className
       )}
     >
       <div className="flex items-center gap-1.5">
@@ -39,7 +39,11 @@ export function BridgeRouteBadge({
 
       {isPrivate && (
         <span className="ml-auto flex items-center gap-1 text-xs font-medium text-sip-green-500">
-          <span>{privacyLevel === "shielded" ? "\uD83D\uDD12" : "\uD83D\uDC41\uFE0F"}</span>
+          <span>
+            {privacyLevel === "shielded"
+              ? "\uD83D\uDD12"
+              : "\uD83D\uDC41\uFE0F"}
+          </span>
           {privacyLevel === "shielded" ? "Stealth" : "Compliant"}
         </span>
       )}

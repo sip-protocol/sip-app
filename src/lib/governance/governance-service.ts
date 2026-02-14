@@ -39,7 +39,11 @@ export class GovernanceService {
       return "Proposal is not in voting phase"
     }
 
-    if (typeof params.choice !== "number" || params.choice < 0 || params.choice >= proposal.choices.length) {
+    if (
+      typeof params.choice !== "number" ||
+      params.choice < 0 ||
+      params.choice >= proposal.choices.length
+    ) {
       return `Invalid choice. Must be 0-${proposal.choices.length - 1}`
     }
 
@@ -129,7 +133,7 @@ export class GovernanceService {
   async revealVote(
     voteId: string,
     encryptionKey: string,
-    encryptedVote: SerializedEncryptedVote,
+    encryptedVote: SerializedEncryptedVote
   ): Promise<PrivateVoteRecord> {
     const proposal = getProposal(encryptedVote.proposalId)
     if (!proposal) {
@@ -162,7 +166,8 @@ export class GovernanceService {
       vote.revealedChoice = revealed.choice
       vote.revealedWeight = revealed.weight
       vote.choice = revealed.choice
-      vote.choiceLabel = proposal.choices[revealed.choice] ?? `Choice ${revealed.choice}`
+      vote.choiceLabel =
+        proposal.choices[revealed.choice] ?? `Choice ${revealed.choice}`
       vote.weight = revealed.weight
 
       if (this.mode === "simulation") {
@@ -187,7 +192,7 @@ export class GovernanceService {
 
   private async encryptVote(
     params: VoteParams,
-    encryptionKey: string,
+    encryptionKey: string
   ): Promise<SerializedEncryptedVote> {
     try {
       const { createPrivateVoting } = await import("@sip-protocol/sdk")
@@ -210,14 +215,14 @@ export class GovernanceService {
       }
     } catch (error) {
       throw new Error(
-        `Encryption failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+        `Encryption failed: ${error instanceof Error ? error.message : "Unknown error"}`
       )
     }
   }
 
   private async decryptVote(
     encryptedVote: SerializedEncryptedVote,
-    encryptionKey: string,
+    encryptionKey: string
   ): Promise<{ choice: number; weight: string }> {
     try {
       const { createPrivateVoting } = await import("@sip-protocol/sdk")
@@ -240,7 +245,7 @@ export class GovernanceService {
       }
     } catch (error) {
       throw new Error(
-        `Decryption failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+        `Decryption failed: ${error instanceof Error ? error.message : "Unknown error"}`
       )
     }
   }

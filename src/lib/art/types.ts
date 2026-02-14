@@ -6,11 +6,7 @@ export type GenerateStep =
   | "generated"
   | "failed"
 
-export type MintStep =
-  | "preparing_nft"
-  | "minting"
-  | "minted"
-  | "failed"
+export type MintStep = "preparing_nft" | "minting" | "minted" | "failed"
 
 export type ArtStep = GenerateStep | MintStep
 
@@ -98,7 +94,7 @@ export interface MintArtParams {
 
 export type ArtStepChangeCallback = (
   step: ArtStep,
-  record: ArtActionRecord,
+  record: ArtActionRecord
 ) => void
 
 export type ArtMode = "simulation" | "metaplex"

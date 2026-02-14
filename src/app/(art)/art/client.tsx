@@ -23,21 +23,15 @@ export function ArtPageClient() {
     setView("generate")
   }, [])
 
-  const handleMint = useCallback(
-    (artId: string) => {
-      setSelectedArtId(artId)
-      setView("mint")
-    },
-    [],
-  )
+  const handleMint = useCallback((artId: string) => {
+    setSelectedArtId(artId)
+    setView("mint")
+  }, [])
 
-  const handleSelectArt = useCallback(
-    (artId: string) => {
-      setSelectedArtId(artId)
-      setView("mint")
-    },
-    [],
-  )
+  const handleSelectArt = useCallback((artId: string) => {
+    setSelectedArtId(artId)
+    setView("mint")
+  }, [])
 
   // Generate view
   if (view === "generate") {

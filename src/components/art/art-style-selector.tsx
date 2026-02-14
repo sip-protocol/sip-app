@@ -36,7 +36,7 @@ export function ArtStyleSelector({
                 isActive
                   ? "border-rose-500 bg-rose-900/20 shadow-lg shadow-rose-500/10"
                   : "border-[var(--border-default)] hover:border-[var(--border-hover)] hover:bg-[var(--bg-secondary)]",
-                disabled && "opacity-50 cursor-not-allowed hover:scale-100",
+                disabled && "opacity-50 cursor-not-allowed hover:scale-100"
               )}
             >
               {isActive && (
@@ -50,7 +50,7 @@ export function ArtStyleSelector({
               <p
                 className={cn(
                   "font-medium text-sm transition-colors",
-                  isActive && "text-rose-300",
+                  isActive && "text-rose-300"
                 )}
               >
                 {style.name}
