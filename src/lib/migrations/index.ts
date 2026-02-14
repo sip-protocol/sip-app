@@ -1,9 +1,7 @@
 export { MigrationService } from "./migration-service"
 export type { MigrationServiceOptions } from "./migration-service"
 
-export {
-  generateMigrationStealthAddress,
-} from "./stealth-migration"
+export { generateMigrationStealthAddress } from "./stealth-migration"
 export type { StealthMigrationResult } from "./stealth-migration"
 
 export {

@@ -67,10 +67,12 @@ export class SunriseClient {
     const carbonOffsetKg = this.estimateCarbonOffset(solAmount)
 
     // Mock transaction hash
-    const txHash = Array.from({ length: 88 }, () =>
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"[
-        Math.floor(Math.random() * 62)
-      ]
+    const txHash = Array.from(
+      { length: 88 },
+      () =>
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"[
+          Math.floor(Math.random() * 62)
+        ]
     ).join("")
 
     return { gsolAmount, carbonOffsetKg, txHash }

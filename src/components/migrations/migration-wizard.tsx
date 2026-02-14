@@ -6,7 +6,10 @@ import { PrivacyLevel } from "@sip-protocol/types"
 import { cn } from "@/lib/utils"
 import { useMigrationExecute } from "@/hooks/use-migration-execute"
 import { useDeadProtocolScan } from "@/hooks/use-dead-protocol-scan"
-import { createProtocolSource, createManualSource } from "@/lib/migrations/dead-protocol-scanner"
+import {
+  createProtocolSource,
+  createManualSource,
+} from "@/lib/migrations/dead-protocol-scanner"
 import { ProtocolSelector } from "./protocol-selector"
 import { MigrationAmountInput } from "./migration-amount-input"
 import { MigrationPrivacyToggle } from "./migration-privacy-toggle"
@@ -21,7 +24,9 @@ export function MigrationWizard() {
   const { connected } = useWallet()
 
   // Form state
-  const [selectedProtocol, setSelectedProtocol] = useState<DeadProtocol | null>(null)
+  const [selectedProtocol, setSelectedProtocol] = useState<DeadProtocol | null>(
+    null
+  )
   const [amount, setAmount] = useState("")
   const [privacyLevel, setPrivacyLevel] = useState<PrivacyLevel>(
     PrivacyLevel.SHIELDED
@@ -93,12 +98,13 @@ export function MigrationWizard() {
           />
         )}
 
-        {activeMigration.gsolAmount && activeMigration.carbonOffsetKg != null && (
-          <CarbonImpactDisplay
-            gsolAmount={activeMigration.gsolAmount}
-            carbonOffsetKg={activeMigration.carbonOffsetKg}
-          />
-        )}
+        {activeMigration.gsolAmount &&
+          activeMigration.carbonOffsetKg != null && (
+            <CarbonImpactDisplay
+              gsolAmount={activeMigration.gsolAmount}
+              carbonOffsetKg={activeMigration.carbonOffsetKg}
+            />
+          )}
 
         {/* Transaction details */}
         <div className="space-y-2 text-sm">
@@ -176,7 +182,11 @@ export function MigrationWizard() {
       {isFormReady && selectedProtocol && (
         <div className="mb-6">
           <MigrationSummary
-            source={selectedProtocol.id === "manual" ? "Manual SOL" : selectedProtocol.name}
+            source={
+              selectedProtocol.id === "manual"
+                ? "Manual SOL"
+                : selectedProtocol.name
+            }
             amount={amount}
             privacyLevel={privacyLevel}
           />

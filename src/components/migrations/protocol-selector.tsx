@@ -1,7 +1,10 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import { DEAD_PROTOCOLS, getSelectableProtocols } from "@/lib/migrations/constants"
+import {
+  DEAD_PROTOCOLS,
+  getSelectableProtocols,
+} from "@/lib/migrations/constants"
 import type { DeadProtocol } from "@/lib/migrations/types"
 
 interface ProtocolSelectorProps {
@@ -10,7 +13,10 @@ interface ProtocolSelectorProps {
   disabled?: boolean
 }
 
-const STATUS_BADGES: Record<DeadProtocol["status"], { label: string; color: string }> = {
+const STATUS_BADGES: Record<
+  DeadProtocol["status"],
+  { label: string; color: string }
+> = {
   dead: { label: "Dead", color: "text-red-400 bg-red-500/10" },
   rugged: { label: "Rugged", color: "text-red-400 bg-red-500/10" },
   deprecated: { label: "Deprecated", color: "text-amber-400 bg-amber-500/10" },
@@ -80,7 +86,9 @@ export function ProtocolSelector({
         {/* Manual entry option */}
         <button
           type="button"
-          onClick={() => onSelect(selected?.id === "manual" ? null : manualEntry)}
+          onClick={() =>
+            onSelect(selected?.id === "manual" ? null : manualEntry)
+          }
           disabled={disabled}
           className={cn(
             "w-full flex items-center gap-3 p-3 rounded-xl border text-left transition-all border-dashed",

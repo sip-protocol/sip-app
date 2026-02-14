@@ -49,8 +49,7 @@ export function MigrationHistoryCard({ migration }: MigrationHistoryCardProps) {
   const [expanded, setExpanded] = useState(false)
   const statusConfig = getStatusConfig(migration.status)
 
-  const sourceName =
-    migration.source.protocol?.name ?? "Manual SOL"
+  const sourceName = migration.source.protocol?.name ?? "Manual SOL"
 
   const timestamp = new Date(migration.startedAt).toLocaleDateString("en-US", {
     month: "short",
@@ -75,9 +74,7 @@ export function MigrationHistoryCard({ migration }: MigrationHistoryCardProps) {
           <span className="text-xs text-[var(--text-tertiary)]">
             {"\u2192"}
           </span>
-          <span className="text-sm font-medium text-green-400">
-            Sunrise
-          </span>
+          <span className="text-sm font-medium text-green-400">Sunrise</span>
         </div>
 
         {/* Amount */}
@@ -130,7 +127,9 @@ export function MigrationHistoryCard({ migration }: MigrationHistoryCardProps) {
 
           {migration.gsolAmount && (
             <div className="flex justify-between">
-              <span className="text-[var(--text-secondary)]">gSOL Received</span>
+              <span className="text-[var(--text-secondary)]">
+                gSOL Received
+              </span>
               <span className="text-green-400 font-medium">
                 {migration.gsolAmount} gSOL
               </span>
@@ -139,7 +138,9 @@ export function MigrationHistoryCard({ migration }: MigrationHistoryCardProps) {
 
           {migration.carbonOffsetKg != null && (
             <div className="flex justify-between">
-              <span className="text-[var(--text-secondary)]">Carbon Offset</span>
+              <span className="text-[var(--text-secondary)]">
+                Carbon Offset
+              </span>
               <span className="text-green-400 font-medium">
                 {migration.carbonOffsetKg.toFixed(4)} kg/year
               </span>

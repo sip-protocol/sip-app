@@ -44,9 +44,7 @@ export function useMigrationExecute(): UseMigrationExecuteReturn {
   }, [])
 
   const migrate = useCallback(
-    async (
-      params: MigrationExecuteParams
-    ): Promise<Migration | undefined> => {
+    async (params: MigrationExecuteParams): Promise<Migration | undefined> => {
       if (!publicKey) {
         setError("Wallet not connected")
         setStatus("error")
@@ -86,8 +84,7 @@ export function useMigrationExecute(): UseMigrationExecuteReturn {
 
         return result
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : "Migration failed"
+        const message = err instanceof Error ? err.message : "Migration failed"
         setError(message)
         setStatus("error")
 

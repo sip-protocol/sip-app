@@ -14,10 +14,12 @@ function generateId(): string {
 }
 
 function generateMockTxHash(): string {
-  return Array.from({ length: 88 }, () =>
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"[
-      Math.floor(Math.random() * 62)
-    ]
+  return Array.from(
+    { length: 88 },
+    () =>
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"[
+        Math.floor(Math.random() * 62)
+      ]
   ).join("")
 }
 

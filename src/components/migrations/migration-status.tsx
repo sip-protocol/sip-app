@@ -44,7 +44,8 @@ const STEPS: StepConfig[] = [
   {
     id: "complete",
     label: "Complete",
-    description: "Migration complete \u2014 gSOL received, carbon offset active",
+    description:
+      "Migration complete \u2014 gSOL received, carbon offset active",
     icon: "\u2705",
   },
 ]
