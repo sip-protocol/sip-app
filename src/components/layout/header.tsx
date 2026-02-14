@@ -16,9 +16,12 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { label: "Payments", href: "/payments" },
-  { label: "Wallet", href: "/wallet" },
-  { label: "DEX", href: "/dex" },
-  { label: "Enterprise", href: "/enterprise" },
+  { label: "Bridge", href: "/bridge" },
+  { label: "Governance", href: "/governance" },
+  { label: "Social", href: "/social" },
+  { label: "Loyalty", href: "/loyalty" },
+  { label: "Art", href: "/art" },
+  { label: "Channel", href: "/channel" },
 ]
 
 const externalLinks: NavItem[] = [
