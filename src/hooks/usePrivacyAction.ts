@@ -13,6 +13,7 @@ export type PrivacyActionType =
   | "art_mint"
   | "channel_subscribe"
   | "channel_publish"
+  | "migration"
 
 export type PrivacyActionStatus =
   | "idle"

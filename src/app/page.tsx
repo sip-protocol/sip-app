@@ -59,6 +59,14 @@ const apps = [
     gradient: "from-rose-500 to-rose-700",
   },
   {
+    name: "Green Migration",
+    description: "Migrate dead protocols to Sunrise Stake with privacy",
+    href: "/migrations",
+    icon: "🌱",
+    status: "live" as const,
+    gradient: "from-green-500 to-green-700",
+  },
+  {
     name: "Privacy Channel",
     description: "Encrypted content drops and privacy education via DRiP",
     href: "/channel",

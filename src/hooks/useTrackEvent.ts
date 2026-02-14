@@ -18,6 +18,7 @@ interface UseTrackEventReturn {
   trackLoyalty: (metadata?: Record<string, string | number | boolean>) => void
   trackArt: (metadata?: Record<string, string | number | boolean>) => void
   trackChannel: (metadata?: Record<string, string | number | boolean>) => void
+  trackMigration: (metadata?: Record<string, string | number | boolean>) => void
 }
 
 /**
@@ -91,6 +92,13 @@ export function useTrackEvent(): UseTrackEventReturn {
     [track]
   )
 
+  const trackMigration = useCallback(
+    (metadata?: Record<string, string | number | boolean>) => {
+      track({ action: "migration", label: "Green migration", metadata })
+    },
+    [track]
+  )
+
   return {
     track,
     trackBridge,
@@ -99,5 +107,6 @@ export function useTrackEvent(): UseTrackEventReturn {
     trackLoyalty,
     trackArt,
     trackChannel,
+    trackMigration,
   }
 }
