@@ -38,7 +38,7 @@ const apps = [
     description: "Privacy-first social with stealth identities on Tapestry",
     href: "/social",
     icon: "🎭",
-    status: "coming" as const,
+    status: "live" as const,
     gradient: "from-pink-500 to-pink-700",
   },
   {
