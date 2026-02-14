@@ -54,7 +54,7 @@ const apps = [
     description: "Generate unique art from transactions, mint as NFTs",
     href: "/art",
     icon: "🎨",
-    status: "coming" as const,
+    status: "live" as const,
     gradient: "from-rose-500 to-rose-700",
   },
   {
