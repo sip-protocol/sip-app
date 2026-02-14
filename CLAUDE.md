@@ -203,7 +203,7 @@ src/app/
 
 **Tech Stack:** Next.js 16 (App Router), React 19, Tailwind CSS 4, Zustand 5, Vitest
 **Deployment:** app.sip-protocol.org (Docker + GHCR → VPS port 5004 blue / 5005 green)
-**Tests:** 25 test suites
+**Tests:** 82 test suites, 727 tests
 
 **Key Commands:**
 ```bash
@@ -367,7 +367,7 @@ Study these for quality benchmarks:
 
 ---
 
-**Last Updated:** 2026-01-28
-**Status:** Live at app.sip-protocol.org | 14 routes | 25 test suites
+**Last Updated:** 2026-02-14
+**Status:** Live at app.sip-protocol.org | 14 routes | 82 test suites, 727 tests
 **Positioning:** Privacy Command Center — enterprise, compliance, power users
 **Companion:** sip-mobile ("Privacy in Your Pocket" — consumers, daily use)
