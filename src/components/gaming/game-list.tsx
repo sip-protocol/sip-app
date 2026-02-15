@@ -63,11 +63,7 @@ export function GameList({ onPlay }: GameListProps) {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {games.map((game) => (
-            <GameCard
-              key={game.id}
-              game={game}
-              onPlay={onPlay}
-            />
+            <GameCard key={game.id} game={game} onPlay={onPlay} />
           ))}
         </div>
       )}

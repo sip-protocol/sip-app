@@ -55,7 +55,9 @@ export function StealthRewardDisplay({
       {/* Reward details */}
       <div className="flex items-center justify-between mb-4 p-3 rounded-lg bg-orange-500/10 border border-orange-500/20">
         <div>
-          <span className="text-sm text-[var(--text-secondary)]">{gameTitle}</span>
+          <span className="text-sm text-[var(--text-secondary)]">
+            {gameTitle}
+          </span>
           <p className="text-xs mt-0.5">
             <span className={cn("font-medium", tierConfig.color)}>
               {tierConfig.label} Reward

@@ -84,8 +84,7 @@ export function usePublishDrop(): UsePublishDropReturn {
 
         return result
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : "Publish failed"
+        const message = err instanceof Error ? err.message : "Publish failed"
         setError(message)
         setStatus("error")
         return undefined

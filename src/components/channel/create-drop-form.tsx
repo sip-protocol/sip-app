@@ -52,7 +52,8 @@ export function CreateDropForm({ onPublished }: CreateDropFormProps) {
     transparent: PrivacyLevel.TRANSPARENT,
   }
 
-  const isFormReady = connected && status === "idle" && title.trim() && content.trim()
+  const isFormReady =
+    connected && status === "idle" && title.trim() && content.trim()
   const isPublishing =
     status === "encrypting_content" ||
     status === "generating_stealth" ||
@@ -72,7 +73,16 @@ export function CreateDropForm({ onPublished }: CreateDropFormProps) {
         privacyLevel: privacyMap[privacyLevel],
       })
     },
-    [isFormReady, title, content, contentType, accessTier, privacyLevel, publishDrop, privacyMap]
+    [
+      isFormReady,
+      title,
+      content,
+      contentType,
+      accessTier,
+      privacyLevel,
+      publishDrop,
+      privacyMap,
+    ]
   )
 
   const handleReset = useCallback(() => {
@@ -201,7 +211,12 @@ export function CreateDropForm({ onPublished }: CreateDropFormProps) {
       {isPublishing && (
         <div className="mb-6">
           <ChannelStatus
-            currentStep={status as "encrypting_content" | "generating_stealth" | "publishing"}
+            currentStep={
+              status as
+                | "encrypting_content"
+                | "generating_stealth"
+                | "publishing"
+            }
             mode="publish"
           />
         </div>

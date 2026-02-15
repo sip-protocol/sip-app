@@ -18,9 +18,7 @@ export interface UsePlayGameReturn {
   status: PlayGameStatus
   activeRecord: GamingActionRecord | null
   error: string | null
-  playGame: (
-    params: PlayGameParams
-  ) => Promise<GamingActionRecord | undefined>
+  playGame: (params: PlayGameParams) => Promise<GamingActionRecord | undefined>
   reset: () => void
 }
 
@@ -42,9 +40,7 @@ export function usePlayGame(): UsePlayGameReturn {
   }, [])
 
   const playGame = useCallback(
-    async (
-      params: PlayGameParams
-    ): Promise<GamingActionRecord | undefined> => {
+    async (params: PlayGameParams): Promise<GamingActionRecord | undefined> => {
       if (!publicKey) {
         setError("Wallet not connected")
         setStatus("error")
@@ -80,7 +76,12 @@ export function usePlayGame(): UsePlayGameReturn {
           const gameResult: GameResult = {
             gameId: params.gameId,
             won: result.won,
-            rewardTier: result.difficulty === "tournament" ? "diamond" : result.difficulty === "ranked" ? "silver" : "bronze",
+            rewardTier:
+              result.difficulty === "tournament"
+                ? "diamond"
+                : result.difficulty === "ranked"
+                  ? "silver"
+                  : "bronze",
             commitmentHash: result.commitmentHash ?? "",
             revealedAt: Date.now(),
           }
@@ -97,8 +98,7 @@ export function usePlayGame(): UsePlayGameReturn {
 
         return result
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : "Play failed"
+        const message = err instanceof Error ? err.message : "Play failed"
         setError(message)
         setStatus("error")
         return undefined

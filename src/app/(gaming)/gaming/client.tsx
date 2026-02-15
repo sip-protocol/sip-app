@@ -63,9 +63,7 @@ export function GamingPageClient() {
         <div className="flex gap-3">
           <span className="text-xl">{"\u{1F3AE}"}</span>
           <div>
-            <p className="font-medium text-orange-100">
-              Powered by MagicBlock
-            </p>
+            <p className="font-medium text-orange-100">Powered by MagicBlock</p>
             <p className="text-sm text-orange-300 mt-1">
               Games use Pedersen commitments for hidden moves, viewing keys for
               fog-of-war, and stealth addresses for private reward claims. All

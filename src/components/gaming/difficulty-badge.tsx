@@ -9,7 +9,10 @@ interface DifficultyBadgeProps {
   className?: string
 }
 
-export function DifficultyBadge({ difficulty, className }: DifficultyBadgeProps) {
+export function DifficultyBadge({
+  difficulty,
+  className,
+}: DifficultyBadgeProps) {
   const config = DIFFICULTY_COLORS[difficulty]
 
   return (

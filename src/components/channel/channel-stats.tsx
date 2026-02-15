@@ -9,13 +9,14 @@ export function ChannelStats() {
   const subscribed = subscriptions.filter((s) => s.isActive).length
   const drops = SAMPLE_DROPS.length
   const encrypted = SAMPLE_DROPS.filter((d) => d.isEncrypted).length
-  const highestTier = subscriptions.length > 0
-    ? subscriptions.some((s) => s.accessTier === "premium")
-      ? "Premium"
-      : subscriptions.some((s) => s.accessTier === "subscriber")
-        ? "Subscriber"
-        : "Free"
-    : "None"
+  const highestTier =
+    subscriptions.length > 0
+      ? subscriptions.some((s) => s.accessTier === "premium")
+        ? "Premium"
+        : subscriptions.some((s) => s.accessTier === "subscriber")
+          ? "Subscriber"
+          : "Free"
+      : "None"
 
   const stats = [
     { label: "Subscribed", value: subscribed.toString() },

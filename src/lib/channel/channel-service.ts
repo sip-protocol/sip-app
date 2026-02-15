@@ -117,8 +117,7 @@ export class ChannelService {
       return record
     } catch (error) {
       record.status = "failed"
-      record.error =
-        error instanceof Error ? error.message : "Subscribe failed"
+      record.error = error instanceof Error ? error.message : "Subscribe failed"
       record.stepTimestamps.failed = Date.now()
       this.onStepChange?.("failed", { ...record })
       throw error

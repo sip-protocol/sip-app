@@ -23,7 +23,12 @@ export function SubscribeForm({ drop, onSubscribed }: SubscribeFormProps) {
 
   const [privacyLevel, setPrivacyLevel] = useState<PrivacyOption>("shielded")
 
-  const { status, error, subscribe, reset: resetSubscribe } = useChannelSubscribe()
+  const {
+    status,
+    error,
+    subscribe,
+    reset: resetSubscribe,
+  } = useChannelSubscribe()
 
   const privacyMap: Record<PrivacyOption, PrivacyLevel> = {
     shielded: PrivacyLevel.SHIELDED,
@@ -38,7 +43,8 @@ export function SubscribeForm({ drop, onSubscribed }: SubscribeFormProps) {
   }
 
   const isFormReady = connected && status === "idle"
-  const isSubscribing = status === "selecting_channel" || status === "subscribing"
+  const isSubscribing =
+    status === "selecting_channel" || status === "subscribing"
   const isSubscribed = status === "subscribed"
 
   const handleSubmit = useCallback(

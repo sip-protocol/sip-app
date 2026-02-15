@@ -11,11 +11,7 @@ interface GameCardProps {
   className?: string
 }
 
-export function GameCard({
-  game,
-  onPlay,
-  className,
-}: GameCardProps) {
+export function GameCard({ game, onPlay, className }: GameCardProps) {
   return (
     <div
       className={cn(

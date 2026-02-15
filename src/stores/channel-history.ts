@@ -1,6 +1,9 @@
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
-import type { ChannelActionRecord, ChannelSubscription } from "@/lib/channel/types"
+import type {
+  ChannelActionRecord,
+  ChannelSubscription,
+} from "@/lib/channel/types"
 import { MAX_CHANNEL_HISTORY } from "@/lib/channel/constants"
 
 interface ChannelHistoryStore {

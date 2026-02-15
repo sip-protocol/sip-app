@@ -1,13 +1,5 @@
-import type {
-  Game,
-  GameResult,
-  GameType,
-  GamingMode,
-} from "./types"
-import {
-  SAMPLE_GAMES,
-  SAMPLE_RESULTS,
-} from "./constants"
+import type { Game, GameResult, GameType, GamingMode } from "./types"
+import { SAMPLE_GAMES, SAMPLE_RESULTS } from "./constants"
 
 export class MagicBlockReader {
   private mode: GamingMode
@@ -20,31 +12,41 @@ export class MagicBlockReader {
     if (this.mode === "simulation") {
       return SAMPLE_GAMES
     }
-    throw new Error("MagicBlock mode is not yet implemented. Use simulation mode.")
+    throw new Error(
+      "MagicBlock mode is not yet implemented. Use simulation mode."
+    )
   }
 
   async getGame(id: string): Promise<Game | undefined> {
     if (this.mode === "simulation") {
       return SAMPLE_GAMES.find((g) => g.id === id)
     }
-    throw new Error("MagicBlock mode is not yet implemented. Use simulation mode.")
+    throw new Error(
+      "MagicBlock mode is not yet implemented. Use simulation mode."
+    )
   }
 
   async getResults(): Promise<GameResult[]> {
     if (this.mode === "simulation") {
       return SAMPLE_RESULTS
     }
-    throw new Error("MagicBlock mode is not yet implemented. Use simulation mode.")
+    throw new Error(
+      "MagicBlock mode is not yet implemented. Use simulation mode."
+    )
   }
 
   async getGamesByType(type: GameType): Promise<Game[]> {
     if (this.mode === "simulation") {
       return SAMPLE_GAMES.filter((g) => g.gameType === type)
     }
-    throw new Error("MagicBlock mode is not yet implemented. Use simulation mode.")
+    throw new Error(
+      "MagicBlock mode is not yet implemented. Use simulation mode."
+    )
   }
 
-  async getLeaderboard(): Promise<{ address: string; wins: number; tier: string }[]> {
+  async getLeaderboard(): Promise<
+    { address: string; wins: number; tier: string }[]
+  > {
     if (this.mode === "simulation") {
       return [
         { address: "S1P...x7a", wins: 42, tier: "diamond" },
@@ -54,6 +56,8 @@ export class MagicBlockReader {
         { address: "Qm5...r4e", wins: 19, tier: "bronze" },
       ]
     }
-    throw new Error("MagicBlock mode is not yet implemented. Use simulation mode.")
+    throw new Error(
+      "MagicBlock mode is not yet implemented. Use simulation mode."
+    )
   }
 }

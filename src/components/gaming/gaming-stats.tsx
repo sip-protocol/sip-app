@@ -9,15 +9,16 @@ export function GamingStats() {
   const gamesPlayed = results.length
   const wins = results.filter((r) => r.won).length
   const activeGames = SAMPLE_GAMES.filter((g) => g.isActive).length
-  const bestReward = results.length > 0
-    ? results.some((r) => r.rewardTier === "diamond")
-      ? "Diamond"
-      : results.some((r) => r.rewardTier === "gold")
-        ? "Gold"
-        : results.some((r) => r.rewardTier === "silver")
-          ? "Silver"
-          : "Bronze"
-    : "None"
+  const bestReward =
+    results.length > 0
+      ? results.some((r) => r.rewardTier === "diamond")
+        ? "Diamond"
+        : results.some((r) => r.rewardTier === "gold")
+          ? "Gold"
+          : results.some((r) => r.rewardTier === "silver")
+            ? "Silver"
+            : "Bronze"
+      : "None"
 
   const stats = [
     { label: "Games Played", value: gamesPlayed.toString() },

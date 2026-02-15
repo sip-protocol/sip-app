@@ -46,11 +46,9 @@ export const useGamingHistoryStore = create<GamingHistoryStore>()(
           results: [result, ...state.results].slice(0, MAX_GAMING_HISTORY),
         })),
 
-      getResult: (gameId) =>
-        get().results.find((r) => r.gameId === gameId),
+      getResult: (gameId) => get().results.find((r) => r.gameId === gameId),
 
-      getWinsCount: () =>
-        get().results.filter((r) => r.won).length,
+      getWinsCount: () => get().results.filter((r) => r.won).length,
 
       clearHistory: () => set({ actions: [], results: [] }),
     }),

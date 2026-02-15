@@ -108,7 +108,11 @@ export class GamingService {
       // Generate a simulated commitment hash
       const commitBytes = new Uint8Array(32)
       crypto.getRandomValues(commitBytes)
-      record.commitmentHash = `0x${Array.from(commitBytes.slice(0, 4)).map((b) => b.toString(16).padStart(2, "0")).join("")}...${Array.from(commitBytes.slice(28)).map((b) => b.toString(16).padStart(2, "0")).join("")}`
+      record.commitmentHash = `0x${Array.from(commitBytes.slice(0, 4))
+        .map((b) => b.toString(16).padStart(2, "0"))
+        .join("")}...${Array.from(commitBytes.slice(28))
+        .map((b) => b.toString(16).padStart(2, "0"))
+        .join("")}`
 
       if (this.mode === "simulation") {
         await new Promise((r) =>

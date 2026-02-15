@@ -92,8 +92,7 @@ export function useChannelSubscribe(): UseChannelSubscribeReturn {
 
         return result
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : "Subscribe failed"
+        const message = err instanceof Error ? err.message : "Subscribe failed"
         setError(message)
         setStatus("error")
         return undefined

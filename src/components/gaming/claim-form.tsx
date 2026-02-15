@@ -63,7 +63,14 @@ export function ClaimForm({ onClaimed }: ClaimFormProps) {
         privacyLevel: privacyMap[privacyLevel],
       })
     },
-    [isFormReady, claimableResult, rewardTier, privacyLevel, claimReward, privacyMap]
+    [
+      isFormReady,
+      claimableResult,
+      rewardTier,
+      privacyLevel,
+      claimReward,
+      privacyMap,
+    ]
   )
 
   const handleReset = useCallback(() => {
@@ -117,14 +124,17 @@ export function ClaimForm({ onClaimed }: ClaimFormProps) {
                 Victory Available
               </p>
               <p className="text-xs text-[var(--text-tertiary)] mt-1">
-                Game: {claimableResult.gameId.replace("game-", "").replace(/-/g, " ")}
+                Game:{" "}
+                {claimableResult.gameId.replace("game-", "").replace(/-/g, " ")}
               </p>
             </div>
-            <span className={cn(
-              "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border",
-              REWARD_TIER_COLORS[claimableResult.rewardTier].bg,
-              REWARD_TIER_COLORS[claimableResult.rewardTier].color,
-            )}>
+            <span
+              className={cn(
+                "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border",
+                REWARD_TIER_COLORS[claimableResult.rewardTier].bg,
+                REWARD_TIER_COLORS[claimableResult.rewardTier].color
+              )}
+            >
               {REWARD_TIER_COLORS[claimableResult.rewardTier].label}
             </span>
           </div>

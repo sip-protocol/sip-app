@@ -144,6 +144,8 @@ export function getAllDrops(): Drop[] {
   return SAMPLE_DROPS
 }
 
-export function getSubscription(dropId: string): ChannelSubscription | undefined {
+export function getSubscription(
+  dropId: string
+): ChannelSubscription | undefined {
   return SAMPLE_SUBSCRIPTIONS.find((s) => s.dropId === dropId)
 }

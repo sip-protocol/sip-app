@@ -4,10 +4,7 @@ import type {
   AccessTier,
   ChannelMode,
 } from "./types"
-import {
-  SAMPLE_DROPS,
-  SAMPLE_SUBSCRIPTIONS,
-} from "./constants"
+import { SAMPLE_DROPS, SAMPLE_SUBSCRIPTIONS } from "./constants"
 
 export class DripReader {
   private mode: ChannelMode

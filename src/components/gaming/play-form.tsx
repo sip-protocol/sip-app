@@ -24,7 +24,13 @@ export function PlayForm({ game, onResolved }: PlayFormProps) {
   const [move, setMove] = useState("")
   const [privacyLevel, setPrivacyLevel] = useState<PrivacyOption>("shielded")
 
-  const { status, activeRecord, error, playGame, reset: resetPlay } = usePlayGame()
+  const {
+    status,
+    activeRecord,
+    error,
+    playGame,
+    reset: resetPlay,
+  } = usePlayGame()
 
   const privacyMap: Record<PrivacyOption, PrivacyLevel> = {
     shielded: PrivacyLevel.SHIELDED,
@@ -88,10 +94,12 @@ export function PlayForm({ game, onResolved }: PlayFormProps) {
           </div>
           <div className="flex justify-between">
             <span className="text-[var(--text-secondary)]">Outcome</span>
-            <span className={cn(
-              "font-medium",
-              activeRecord.won ? "text-sip-green-500" : "text-red-400"
-            )}>
+            <span
+              className={cn(
+                "font-medium",
+                activeRecord.won ? "text-sip-green-500" : "text-red-400"
+              )}
+            >
               {activeRecord.won ? "Victory!" : "Defeated"}
             </span>
           </div>
@@ -143,9 +151,7 @@ export function PlayForm({ game, onResolved }: PlayFormProps) {
         <div className="grid grid-cols-2 gap-3 text-sm">
           <div>
             <p className="text-[var(--text-tertiary)]">Game Type</p>
-            <p className="font-semibold">
-              {GAME_TYPE_LABELS[game.gameType]}
-            </p>
+            <p className="font-semibold">{GAME_TYPE_LABELS[game.gameType]}</p>
           </div>
           <div>
             <p className="text-[var(--text-tertiary)]">Difficulty</p>
@@ -158,7 +164,8 @@ export function PlayForm({ game, onResolved }: PlayFormProps) {
           <div>
             <p className="text-[var(--text-tertiary)]">Reward</p>
             <p className="font-semibold text-orange-400">
-              {game.rewardTier.charAt(0).toUpperCase() + game.rewardTier.slice(1)}
+              {game.rewardTier.charAt(0).toUpperCase() +
+                game.rewardTier.slice(1)}
             </p>
           </div>
         </div>
@@ -173,7 +180,15 @@ export function PlayForm({ game, onResolved }: PlayFormProps) {
           type="text"
           value={move}
           onChange={(e) => setMove(e.target.value)}
-          placeholder={game.gameType === "commit_reveal" ? "Rock, Paper, or Scissors..." : game.gameType === "sealed_bid" ? "Enter bid amount..." : game.gameType === "number_guess" ? "Guess a number (1-100)..." : "Enter your move..."}
+          placeholder={
+            game.gameType === "commit_reveal"
+              ? "Rock, Paper, or Scissors..."
+              : game.gameType === "sealed_bid"
+                ? "Enter bid amount..."
+                : game.gameType === "number_guess"
+                  ? "Guess a number (1-100)..."
+                  : "Enter your move..."
+          }
           disabled={isPlaying}
           className="w-full px-4 py-3 rounded-xl bg-[var(--bg-secondary)] border border-[var(--border-default)] text-[var(--text-primary)] placeholder:text-[var(--text-tertiary)] focus:outline-none focus:border-orange-500 transition-colors"
         />
@@ -192,7 +207,12 @@ export function PlayForm({ game, onResolved }: PlayFormProps) {
       {isPlaying && (
         <div className="mb-6">
           <GamingStatus
-            currentStep={status as "committing_move" | "generating_commitment" | "revealing"}
+            currentStep={
+              status as
+                | "committing_move"
+                | "generating_commitment"
+                | "revealing"
+            }
             mode="play"
           />
         </div>

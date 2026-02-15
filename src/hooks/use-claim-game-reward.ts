@@ -84,8 +84,7 @@ export function useClaimGameReward(): UseClaimGameRewardReturn {
 
         return result
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : "Claim failed"
+        const message = err instanceof Error ? err.message : "Claim failed"
         setError(message)
         setStatus("error")
         return undefined
