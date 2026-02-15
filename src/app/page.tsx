@@ -92,6 +92,15 @@ const apps = [
     gradient: "from-teal-500 to-teal-700",
   },
   {
+    name: "Privacy Metaverse",
+    description:
+      "Stealth avatars, private teleportation, anonymous exploration via Portals",
+    href: "/metaverse",
+    icon: "\u{1F310}",
+    status: "live" as const,
+    gradient: "from-indigo-500 to-indigo-700",
+  },
+  {
     name: "Wallet",
     description: "Manage your viewing keys and stealth addresses",
     href: "/wallet",

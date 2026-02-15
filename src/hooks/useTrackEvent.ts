@@ -21,6 +21,8 @@ interface UseTrackEventReturn {
   trackMigration: (metadata?: Record<string, string | number | boolean>) => void
   trackGaming: (metadata?: Record<string, string | number | boolean>) => void
   trackTicketing: (metadata?: Record<string, string | number | boolean>) => void
+  trackMetaverse: (metadata?: Record<string, string | number | boolean>) => void
+  trackDeSci: (metadata?: Record<string, string | number | boolean>) => void
 }
 
 /**
@@ -119,6 +121,28 @@ export function useTrackEvent(): UseTrackEventReturn {
     [track]
   )
 
+  const trackMetaverse = useCallback(
+    (metadata?: Record<string, string | number | boolean>) => {
+      track({
+        action: "world_explore",
+        label: "Metaverse action",
+        metadata,
+      })
+    },
+    [track]
+  )
+
+  const trackDeSci = useCallback(
+    (metadata?: Record<string, string | number | boolean>) => {
+      track({
+        action: "project_fund",
+        label: "DeSci action",
+        metadata,
+      })
+    },
+    [track]
+  )
+
   return {
     track,
     trackBridge,
@@ -130,5 +154,7 @@ export function useTrackEvent(): UseTrackEventReturn {
     trackMigration,
     trackGaming,
     trackTicketing,
+    trackMetaverse,
+    trackDeSci,
   }
 }

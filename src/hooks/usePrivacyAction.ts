@@ -18,6 +18,10 @@ export type PrivacyActionType =
   | "game_claim"
   | "ticket_purchase"
   | "ticket_verify"
+  | "world_explore"
+  | "world_teleport"
+  | "project_fund"
+  | "project_review"
 
 export type PrivacyActionStatus =
   | "idle"
