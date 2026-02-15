@@ -19,6 +19,7 @@ interface UseTrackEventReturn {
   trackArt: (metadata?: Record<string, string | number | boolean>) => void
   trackChannel: (metadata?: Record<string, string | number | boolean>) => void
   trackMigration: (metadata?: Record<string, string | number | boolean>) => void
+  trackGaming: (metadata?: Record<string, string | number | boolean>) => void
 }
 
 /**
@@ -99,6 +100,13 @@ export function useTrackEvent(): UseTrackEventReturn {
     [track]
   )
 
+  const trackGaming = useCallback(
+    (metadata?: Record<string, string | number | boolean>) => {
+      track({ action: "game_play", label: "Gaming action", metadata })
+    },
+    [track]
+  )
+
   return {
     track,
     trackBridge,
@@ -108,5 +116,6 @@ export function useTrackEvent(): UseTrackEventReturn {
     trackArt,
     trackChannel,
     trackMigration,
+    trackGaming,
   }
 }

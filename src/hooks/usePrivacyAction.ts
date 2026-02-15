@@ -14,6 +14,8 @@ export type PrivacyActionType =
   | "channel_subscribe"
   | "channel_publish"
   | "migration"
+  | "game_play"
+  | "game_claim"
 
 export type PrivacyActionStatus =
   | "idle"

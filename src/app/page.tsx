@@ -75,6 +75,14 @@ const apps = [
     gradient: "from-violet-500 to-violet-700",
   },
   {
+    name: "Privacy Arena",
+    description: "Commit-reveal games with Pedersen commitments via MagicBlock",
+    href: "/gaming",
+    icon: "🎮",
+    status: "live" as const,
+    gradient: "from-orange-500 to-orange-700",
+  },
+  {
     name: "Wallet",
     description: "Manage your viewing keys and stealth addresses",
     href: "/wallet",
