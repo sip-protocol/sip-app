@@ -101,6 +101,15 @@ const apps = [
     gradient: "from-indigo-500 to-indigo-700",
   },
   {
+    name: "Privacy DeSci",
+    description:
+      "Anonymous research funding, private peer review, stealth contributions via BIO Protocol",
+    href: "/desci",
+    icon: "\u{1F9EC}",
+    status: "live" as const,
+    gradient: "from-lime-500 to-lime-700",
+  },
+  {
     name: "Wallet",
     description: "Manage your viewing keys and stealth addresses",
     href: "/wallet",
