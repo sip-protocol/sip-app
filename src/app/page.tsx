@@ -83,6 +83,15 @@ const apps = [
     gradient: "from-orange-500 to-orange-700",
   },
   {
+    name: "Privacy Ticketing",
+    description:
+      "Anti-scalping stealth tickets and private attendance via KYD Labs",
+    href: "/ticketing",
+    icon: "🎫",
+    status: "live" as const,
+    gradient: "from-teal-500 to-teal-700",
+  },
+  {
     name: "Wallet",
     description: "Manage your viewing keys and stealth addresses",
     href: "/wallet",

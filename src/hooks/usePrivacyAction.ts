@@ -16,6 +16,8 @@ export type PrivacyActionType =
   | "migration"
   | "game_play"
   | "game_claim"
+  | "ticket_purchase"
+  | "ticket_verify"
 
 export type PrivacyActionStatus =
   | "idle"

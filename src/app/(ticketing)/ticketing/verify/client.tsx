@@ -1,0 +1,20 @@
+"use client"
+
+import { VerifyForm } from "@/components/ticketing/verify-form"
+
+export function VerifyClient() {
+  return (
+    <div className="max-w-2xl mx-auto px-4 py-8 sm:py-12">
+      {/* Hero */}
+      <div className="text-center mb-10">
+        <h1 className="text-3xl sm:text-4xl font-bold mb-3">Verify Ticket</h1>
+        <p className="text-[var(--text-secondary)] max-w-lg mx-auto">
+          Prove event attendance privately. Viewing key proofs verify your
+          ticket without revealing your wallet identity.
+        </p>
+      </div>
+
+      <VerifyForm />
+    </div>
+  )
+}
