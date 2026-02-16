@@ -15,7 +15,7 @@ export const SAMPLE_GAMES: Game[] = [
     id: "game-stealth-showdown",
     title: "Stealth Showdown",
     description:
-      "Rock-paper-scissors with Pedersen commitments. Commit your move, reveal after opponent commits. No cheating possible.",
+      "Rock-paper-scissors with cryptographic commitments. Commit your move, reveal after opponent commits. No cheating possible.",
     gameType: "commit_reveal",
     difficulty: "casual",
     rewardTier: "bronze",
@@ -27,7 +27,7 @@ export const SAMPLE_GAMES: Game[] = [
     id: "game-sealed-auction",
     title: "Sealed Auction",
     description:
-      "Place hidden bids using Pedersen commitments. Highest bid wins without revealing losing bids. True sealed-bid privacy.",
+      "Place hidden bids using cryptographic commitments. Highest bid wins without revealing losing bids. True sealed-bid privacy.",
     gameType: "sealed_bid",
     difficulty: "ranked",
     rewardTier: "silver",
@@ -39,7 +39,7 @@ export const SAMPLE_GAMES: Game[] = [
     id: "game-number-oracle",
     title: "Number Oracle",
     description:
-      "Guess the hidden number. Your guess is committed via Pedersen — prove you knew it without revealing early.",
+      "Guess the hidden number. Your guess is cryptographically committed — prove you knew it without revealing early.",
     gameType: "number_guess",
     difficulty: "casual",
     rewardTier: "bronze",

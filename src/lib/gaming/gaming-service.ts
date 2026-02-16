@@ -100,7 +100,7 @@ export class GamingService {
         )
       }
 
-      // Step 2: Generating commitment (Pedersen)
+      // Step 2: Generating cryptographic commitment
       record.status = "generating_commitment"
       record.stepTimestamps.generating_commitment = Date.now()
       this.onStepChange?.("generating_commitment", { ...record })

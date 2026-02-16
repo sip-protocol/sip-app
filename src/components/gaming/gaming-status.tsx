@@ -21,7 +21,7 @@ const PLAY_STEPS: StepConfig[] = [
   {
     id: "committing_move",
     label: "Commit Move",
-    description: "Hashing your move with Pedersen commitment",
+    description: "Hashing your move with cryptographic commitment",
     icon: "\u{1F94A}",
   },
   {

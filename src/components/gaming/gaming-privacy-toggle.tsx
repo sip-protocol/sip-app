@@ -24,7 +24,7 @@ const OPTIONS: {
     desc: "Hidden moves & rewards",
     icon: "\u{1F512}",
     tooltip:
-      "Your moves are committed with Pedersen commitments. Rewards claimed via stealth addresses. No one can link your gameplay to your wallet.",
+      "Your moves are cryptographically committed. Rewards claimed via stealth addresses. No one can link your gameplay to your wallet.",
   },
   {
     level: "compliant",

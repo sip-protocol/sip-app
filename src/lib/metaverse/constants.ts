@@ -25,7 +25,7 @@ export const SAMPLE_WORLDS: World[] = [
     id: "world-battle-arena",
     title: "Battle Arena",
     description:
-      "Compete in PvP games with hidden identity. Pedersen commitments protect game state — opponents can't scout your wallet history.",
+      "Compete in PvP games with hidden identity. Cryptographic commitments protect game state — opponents can't scout your wallet history.",
     category: "game_room",
     tier: "warrior",
     visitorCount: 1800,

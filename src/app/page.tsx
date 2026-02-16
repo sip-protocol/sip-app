@@ -76,7 +76,7 @@ const apps = [
   },
   {
     name: "Privacy Arena",
-    description: "Commit-reveal games with Pedersen commitments via MagicBlock",
+    description: "Commit-reveal games with cryptographic commitments via MagicBlock",
     href: "/gaming",
     icon: "🎮",
     status: "live" as const,
