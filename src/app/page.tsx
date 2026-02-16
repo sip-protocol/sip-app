@@ -76,7 +76,8 @@ const apps = [
   },
   {
     name: "Privacy Arena",
-    description: "Commit-reveal games with cryptographic commitments via MagicBlock",
+    description:
+      "Commit-reveal games with cryptographic commitments via MagicBlock",
     href: "/gaming",
     icon: "🎮",
     status: "live" as const,
@@ -108,6 +109,15 @@ const apps = [
     icon: "\u{1F9EC}",
     status: "live" as const,
     gradient: "from-lime-500 to-lime-700",
+  },
+  {
+    name: "Privacy Music",
+    description:
+      "Private streaming, stealth royalty payments, encrypted playlists via Audius",
+    href: "/music",
+    icon: "\u{1F3B5}",
+    status: "live" as const,
+    gradient: "from-pink-500 to-pink-700",
   },
   {
     name: "Wallet",

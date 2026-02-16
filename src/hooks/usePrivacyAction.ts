@@ -22,6 +22,8 @@ export type PrivacyActionType =
   | "world_teleport"
   | "project_fund"
   | "project_review"
+  | "track_stream"
+  | "playlist_create"
 
 export type PrivacyActionStatus =
   | "idle"

@@ -23,6 +23,7 @@ interface UseTrackEventReturn {
   trackTicketing: (metadata?: Record<string, string | number | boolean>) => void
   trackMetaverse: (metadata?: Record<string, string | number | boolean>) => void
   trackDeSci: (metadata?: Record<string, string | number | boolean>) => void
+  trackMusic: (metadata?: Record<string, string | number | boolean>) => void
 }
 
 /**
@@ -143,6 +144,17 @@ export function useTrackEvent(): UseTrackEventReturn {
     [track]
   )
 
+  const trackMusic = useCallback(
+    (metadata?: Record<string, string | number | boolean>) => {
+      track({
+        action: "track_stream",
+        label: "Music action",
+        metadata,
+      })
+    },
+    [track]
+  )
+
   return {
     track,
     trackBridge,
@@ -156,5 +168,6 @@ export function useTrackEvent(): UseTrackEventReturn {
     trackTicketing,
     trackMetaverse,
     trackDeSci,
+    trackMusic,
   }
 }

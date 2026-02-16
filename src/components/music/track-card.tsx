@@ -1,0 +1,61 @@
+"use client"
+
+import { cn } from "@/lib/utils"
+import { ListenerTierBadge } from "./listener-tier-badge"
+import { MUSIC_GENRE_LABELS } from "@/lib/music/constants"
+import type { Track } from "@/lib/music/types"
+
+interface TrackCardProps {
+  track: Track
+  onStream?: (track: Track) => void
+  className?: string
+}
+
+export function TrackCard({ track, onStream, className }: TrackCardProps) {
+  return (
+    <div
+      className={cn(
+        "bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-xl p-5",
+        "hover:border-[var(--border-hover)] hover:shadow-md transition-all",
+        className
+      )}
+    >
+      {/* Header */}
+      <div className="flex items-start justify-between mb-3">
+        <div className="flex items-center gap-3">
+          <span className="text-2xl">{track.icon}</span>
+          <div>
+            <h3 className="font-semibold text-sm">{track.title}</h3>
+            <p className="text-xs text-[var(--text-tertiary)]">
+              {track.listenerCount} listeners
+            </p>
+          </div>
+        </div>
+        <ListenerTierBadge tier={track.tier} />
+      </div>
+
+      {/* Description */}
+      <p className="text-sm text-[var(--text-secondary)] mb-4 line-clamp-2">
+        {track.description}
+      </p>
+
+      {/* Meta */}
+      <div className="flex items-center justify-between">
+        <span className="text-xs text-[var(--text-tertiary)]">
+          {MUSIC_GENRE_LABELS[track.genre]}
+        </span>
+
+        <button
+          type="button"
+          onClick={() => onStream?.(track)}
+          className={cn(
+            "px-4 py-2 text-sm font-medium rounded-lg transition-colors",
+            "bg-gradient-to-r from-pink-500 to-pink-700 text-white hover:from-pink-400 hover:to-pink-600"
+          )}
+        >
+          Stream
+        </button>
+      </div>
+    </div>
+  )
+}
