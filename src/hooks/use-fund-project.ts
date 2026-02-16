@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
+import { useDemoModeStore } from "@/stores/demo-mode"
 import { DeSciService } from "@/lib/desci/desci-service"
 import { useDeSciHistoryStore } from "@/stores/desci-history"
 import { useTrackEvent } from "@/hooks/useTrackEvent"
@@ -26,6 +27,7 @@ export interface UseFundProjectReturn {
 
 export function useFundProject(): UseFundProjectReturn {
   const { publicKey } = useWallet()
+  const isDemoMode = useDemoModeStore((s) => s.isDemoMode)
   const { addAction, addContribution } = useDeSciHistoryStore()
   const { trackDeSci } = useTrackEvent()
 
@@ -45,7 +47,7 @@ export function useFundProject(): UseFundProjectReturn {
     async (
       params: FundProjectParams
     ): Promise<DeSciActionRecord | undefined> => {
-      if (!publicKey) {
+      if (!publicKey && !isDemoMode) {
         setError("Wallet not connected")
         setStatus("error")
         return undefined
@@ -101,7 +103,7 @@ export function useFundProject(): UseFundProjectReturn {
         return undefined
       }
     },
-    [publicKey, addAction, addContribution, trackDeSci]
+    [publicKey, isDemoMode, addAction, addContribution, trackDeSci]
   )
 
   return { status, activeRecord, error, fundProject, reset }

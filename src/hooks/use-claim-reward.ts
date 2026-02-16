@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
+import { useDemoModeStore } from "@/stores/demo-mode"
 import { LoyaltyService } from "@/lib/loyalty/loyalty-service"
 import { useLoyaltyHistoryStore } from "@/stores/loyalty-history"
 import { useTrackEvent } from "@/hooks/useTrackEvent"
@@ -25,6 +26,7 @@ export interface UseClaimRewardReturn {
 
 export function useClaimReward(): UseClaimRewardReturn {
   const { publicKey } = useWallet()
+  const isDemoMode = useDemoModeStore((s) => s.isDemoMode)
   const { addAction } = useLoyaltyHistoryStore()
   const { trackLoyalty } = useTrackEvent()
 
@@ -44,7 +46,7 @@ export function useClaimReward(): UseClaimRewardReturn {
     async (
       params: ClaimRewardParams
     ): Promise<LoyaltyActionRecord | undefined> => {
-      if (!publicKey) {
+      if (!publicKey && !isDemoMode) {
         setError("Wallet not connected")
         setStatus("error")
         return undefined
@@ -92,7 +94,7 @@ export function useClaimReward(): UseClaimRewardReturn {
         return undefined
       }
     },
-    [publicKey, addAction, trackLoyalty]
+    [publicKey, isDemoMode, addAction, trackLoyalty]
   )
 
   return { status, activeRecord, error, claimReward, reset }

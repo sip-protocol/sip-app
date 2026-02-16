@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
+import { useDemoModeStore } from "@/stores/demo-mode"
 import { BridgeService } from "@/lib/bridge/bridge-service"
 import { useBridgeHistoryStore } from "@/stores/bridge-history"
 import { useTrackEvent } from "@/hooks/useTrackEvent"
@@ -32,6 +33,7 @@ export interface UseBridgeTransferReturn {
 
 export function useBridgeTransfer(): UseBridgeTransferReturn {
   const { publicKey } = useWallet()
+  const isDemoMode = useDemoModeStore((s) => s.isDemoMode)
   const { addTransfer, updateTransfer } = useBridgeHistoryStore()
   const { trackBridge } = useTrackEvent()
 
@@ -51,7 +53,7 @@ export function useBridgeTransfer(): UseBridgeTransferReturn {
     async (
       params: BridgeTransferParams
     ): Promise<BridgeTransfer | undefined> => {
-      if (!publicKey) {
+      if (!publicKey && !isDemoMode) {
         setError("Wallet not connected")
         setStatus("error")
         return undefined
@@ -106,7 +108,7 @@ export function useBridgeTransfer(): UseBridgeTransferReturn {
         return undefined
       }
     },
-    [publicKey, addTransfer, updateTransfer, trackBridge, activeTransfer]
+    [publicKey, isDemoMode, addTransfer, updateTransfer, trackBridge, activeTransfer]
   )
 
   return { status, activeTransfer, error, bridge, reset }

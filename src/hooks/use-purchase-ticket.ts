@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
+import { useDemoModeStore } from "@/stores/demo-mode"
 import { TicketingService } from "@/lib/ticketing/ticketing-service"
 import { useTicketingHistoryStore } from "@/stores/ticketing-history"
 import { useTrackEvent } from "@/hooks/useTrackEvent"
@@ -26,6 +27,7 @@ export interface UsePurchaseTicketReturn {
 
 export function usePurchaseTicket(): UsePurchaseTicketReturn {
   const { publicKey } = useWallet()
+  const isDemoMode = useDemoModeStore((s) => s.isDemoMode)
   const { addAction, addTicket } = useTicketingHistoryStore()
   const { trackTicketing } = useTrackEvent()
 
@@ -44,7 +46,7 @@ export function usePurchaseTicket(): UsePurchaseTicketReturn {
     async (
       params: PurchaseTicketParams
     ): Promise<TicketingActionRecord | undefined> => {
-      if (!publicKey) {
+      if (!publicKey && !isDemoMode) {
         setError("Wallet not connected")
         setStatus("error")
         return undefined
@@ -100,7 +102,7 @@ export function usePurchaseTicket(): UsePurchaseTicketReturn {
         return undefined
       }
     },
-    [publicKey, addAction, addTicket, trackTicketing]
+    [publicKey, isDemoMode, addAction, addTicket, trackTicketing]
   )
 
   return { status, activeRecord, error, purchaseTicket, reset }

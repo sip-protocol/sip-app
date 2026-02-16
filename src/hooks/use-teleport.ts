@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
+import { useDemoModeStore } from "@/stores/demo-mode"
 import { MetaverseService } from "@/lib/metaverse/metaverse-service"
 import { useMetaverseHistoryStore } from "@/stores/metaverse-history"
 import { useTrackEvent } from "@/hooks/useTrackEvent"
@@ -25,6 +26,7 @@ export interface UseTeleportReturn {
 
 export function useTeleport(): UseTeleportReturn {
   const { publicKey } = useWallet()
+  const isDemoMode = useDemoModeStore((s) => s.isDemoMode)
   const { addAction } = useMetaverseHistoryStore()
   const { trackMetaverse } = useTrackEvent()
 
@@ -43,7 +45,7 @@ export function useTeleport(): UseTeleportReturn {
     async (
       params: TeleportParams
     ): Promise<MetaverseActionRecord | undefined> => {
-      if (!publicKey) {
+      if (!publicKey && !isDemoMode) {
         setError("Wallet not connected")
         setStatus("error")
         return undefined
@@ -89,7 +91,7 @@ export function useTeleport(): UseTeleportReturn {
         return undefined
       }
     },
-    [publicKey, addAction, trackMetaverse]
+    [publicKey, isDemoMode, addAction, trackMetaverse]
   )
 
   return { status, activeRecord, error, teleport, reset }

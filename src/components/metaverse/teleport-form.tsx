@@ -2,6 +2,8 @@
 
 import { useState, useCallback } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
+import { useDemoModeStore } from "@/stores/demo-mode"
+import { DemoBanner } from "@/components/ui/demo-banner"
 import { PrivacyLevel } from "@sip-protocol/types"
 import { cn } from "@/lib/utils"
 import { useTeleport } from "@/hooks/use-teleport"
@@ -27,6 +29,7 @@ interface TeleportFormProps {
 
 export function TeleportForm({ onTeleported }: TeleportFormProps) {
   const { connected } = useWallet()
+  const { isDemoMode, enableDemo } = useDemoModeStore()
 
   const [tier, setTier] = useState<AvatarTier>("explorer")
   const [privacyLevel, setPrivacyLevel] = useState<PrivacyOption>("shielded")
@@ -48,7 +51,7 @@ export function TeleportForm({ onTeleported }: TeleportFormProps) {
   // Use the first world as the teleport destination
   const destination = SAMPLE_WORLDS[0]
 
-  const isFormReady = connected && status === "idle" && destination
+  const isFormReady = (connected || isDemoMode) && status === "idle" && destination
   const isTeleporting =
     status === "generating_proof" || status === "teleporting"
   const isArrived = status === "arrived"
@@ -101,6 +104,7 @@ export function TeleportForm({ onTeleported }: TeleportFormProps) {
       onSubmit={handleSubmit}
       className="bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-2xl p-6 sm:p-8"
     >
+      {isDemoMode && <DemoBanner />}
       {/* Header */}
       <div className="mb-6">
         <h2 className="text-lg font-semibold mb-1">Private Teleport</h2>
@@ -197,12 +201,22 @@ export function TeleportForm({ onTeleported }: TeleportFormProps) {
             : "bg-indigo-600/30 text-white/50 cursor-not-allowed"
         )}
       >
-        {!connected
+        {!connected && !isDemoMode
           ? "Connect Wallet"
           : isTeleporting
             ? "Teleporting..."
             : "Teleport"}
       </button>
+
+      {!connected && !isDemoMode && (
+        <button
+          type="button"
+          onClick={enableDemo}
+          className="w-full mt-3 py-3 px-6 text-sm font-medium rounded-xl border border-amber-500/30 text-amber-400 hover:bg-amber-500/10 transition-colors"
+        >
+          Try Demo
+        </button>
+      )}
 
       {/* Footer */}
       <div className="mt-6 pt-6 border-t border-[var(--border-default)]">

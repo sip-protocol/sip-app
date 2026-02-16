@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
+import { useDemoModeStore } from "@/stores/demo-mode"
 import { ArtService } from "@/lib/art/art-service"
 import { useArtGalleryStore } from "@/stores/art-gallery"
 import { useTrackEvent } from "@/hooks/useTrackEvent"
@@ -27,6 +28,7 @@ export interface UseGenerateArtReturn {
 
 export function useGenerateArt(): UseGenerateArtReturn {
   const { publicKey } = useWallet()
+  const isDemoMode = useDemoModeStore((s) => s.isDemoMode)
   const { addAction, addGeneratedArt } = useArtGalleryStore()
   const { trackArt } = useTrackEvent()
 
@@ -44,7 +46,7 @@ export function useGenerateArt(): UseGenerateArtReturn {
 
   const generateArtFn = useCallback(
     async (params: GenerateArtParams): Promise<ArtActionRecord | undefined> => {
-      if (!publicKey) {
+      if (!publicKey && !isDemoMode) {
         setError("Wallet not connected")
         setStatus("error")
         return undefined
@@ -92,7 +94,7 @@ export function useGenerateArt(): UseGenerateArtReturn {
         return undefined
       }
     },
-    [publicKey, addAction, addGeneratedArt, trackArt]
+    [publicKey, isDemoMode, addAction, addGeneratedArt, trackArt]
   )
 
   return {

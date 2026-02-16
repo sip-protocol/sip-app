@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
+import { useDemoModeStore } from "@/stores/demo-mode"
 import { ChannelService } from "@/lib/channel/channel-service"
 import { useChannelHistoryStore } from "@/stores/channel-history"
 import { useTrackEvent } from "@/hooks/useTrackEvent"
@@ -25,6 +26,7 @@ export interface UsePublishDropReturn {
 
 export function usePublishDrop(): UsePublishDropReturn {
   const { publicKey } = useWallet()
+  const isDemoMode = useDemoModeStore((s) => s.isDemoMode)
   const { addAction } = useChannelHistoryStore()
   const { trackChannel } = useTrackEvent()
 
@@ -44,7 +46,7 @@ export function usePublishDrop(): UsePublishDropReturn {
     async (
       params: PublishDropParams
     ): Promise<ChannelActionRecord | undefined> => {
-      if (!publicKey) {
+      if (!publicKey && !isDemoMode) {
         setError("Wallet not connected")
         setStatus("error")
         return undefined
@@ -90,7 +92,7 @@ export function usePublishDrop(): UsePublishDropReturn {
         return undefined
       }
     },
-    [publicKey, addAction, trackChannel]
+    [publicKey, isDemoMode, addAction, trackChannel]
   )
 
   return { status, activeRecord, error, publishDrop, reset }

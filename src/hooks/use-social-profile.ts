@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
+import { useDemoModeStore } from "@/stores/demo-mode"
 import { SocialService } from "@/lib/social/social-service"
 import { useSocialHistoryStore } from "@/stores/social-history"
 import { useTrackEvent } from "@/hooks/useTrackEvent"
@@ -26,6 +27,7 @@ export interface UseSocialProfileReturn {
 
 export function useSocialProfile(): UseSocialProfileReturn {
   const { publicKey } = useWallet()
+  const isDemoMode = useDemoModeStore((s) => s.isDemoMode)
   const { addAction, addProfile } = useSocialHistoryStore()
   const { trackSocial } = useTrackEvent()
 
@@ -45,7 +47,7 @@ export function useSocialProfile(): UseSocialProfileReturn {
     async (
       params: CreateProfileParams
     ): Promise<SocialActionRecord | undefined> => {
-      if (!publicKey) {
+      if (!publicKey && !isDemoMode) {
         setError("Wallet not connected")
         setStatus("error")
         return undefined
@@ -107,7 +109,7 @@ export function useSocialProfile(): UseSocialProfileReturn {
         return undefined
       }
     },
-    [publicKey, addAction, addProfile, trackSocial]
+    [publicKey, isDemoMode, addAction, addProfile, trackSocial]
   )
 
   return { status, activeRecord, error, createProfile, reset }

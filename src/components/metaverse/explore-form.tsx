@@ -2,6 +2,8 @@
 
 import { useState, useCallback } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
+import { useDemoModeStore } from "@/stores/demo-mode"
+import { DemoBanner } from "@/components/ui/demo-banner"
 import { PrivacyLevel } from "@sip-protocol/types"
 import { cn } from "@/lib/utils"
 import { useExploreWorld } from "@/hooks/use-explore-world"
@@ -29,6 +31,7 @@ interface ExploreFormProps {
 
 export function ExploreForm({ world, onExplored }: ExploreFormProps) {
   const { connected } = useWallet()
+  const { isDemoMode, enableDemo } = useDemoModeStore()
 
   const [tier, setTier] = useState<AvatarTier>(world.tier)
   const [privacyLevel, setPrivacyLevel] = useState<PrivacyOption>("shielded")
@@ -53,7 +56,7 @@ export function ExploreForm({ world, onExplored }: ExploreFormProps) {
     transparent: "\u{1F513} Transparent",
   }
 
-  const isFormReady = connected && status === "idle"
+  const isFormReady = (connected || isDemoMode) && status === "idle"
   const isExploring =
     status === "selecting_world" ||
     status === "generating_stealth_avatar" ||
@@ -138,6 +141,7 @@ export function ExploreForm({ world, onExplored }: ExploreFormProps) {
       onSubmit={handleSubmit}
       className="bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-2xl p-6 sm:p-8"
     >
+      {isDemoMode && <DemoBanner />}
       {/* Header */}
       <div className="mb-6">
         <div className="flex items-center gap-3 mb-2">
@@ -236,12 +240,22 @@ export function ExploreForm({ world, onExplored }: ExploreFormProps) {
             : "bg-indigo-600/30 text-white/50 cursor-not-allowed"
         )}
       >
-        {!connected
+        {!connected && !isDemoMode
           ? "Connect Wallet"
           : isExploring
             ? "Exploring..."
             : "Explore World"}
       </button>
+
+      {!connected && !isDemoMode && (
+        <button
+          type="button"
+          onClick={enableDemo}
+          className="w-full mt-3 py-3 px-6 text-sm font-medium rounded-xl border border-amber-500/30 text-amber-400 hover:bg-amber-500/10 transition-colors"
+        >
+          Try Demo
+        </button>
+      )}
 
       {/* Footer */}
       <div className="mt-6 pt-6 border-t border-[var(--border-default)]">

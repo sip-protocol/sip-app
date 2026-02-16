@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
+import { useDemoModeStore } from "@/stores/demo-mode"
 import { scanWallet } from "@/lib/migrations/dead-protocol-scanner"
 import type { WalletScanResult } from "@/lib/migrations/dead-protocol-scanner"
 
@@ -14,17 +15,19 @@ export interface UseDeadProtocolScanReturn {
 
 export function useDeadProtocolScan(): UseDeadProtocolScanReturn {
   const { publicKey } = useWallet()
+  const isDemoMode = useDemoModeStore((s) => s.isDemoMode)
   const [scanResult, setScanResult] = useState<WalletScanResult | null>(null)
   const [isScanning, setIsScanning] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const scan = async () => {
-    if (!publicKey) return
+    if (!publicKey && !isDemoMode) return
 
     try {
       setIsScanning(true)
       setError(null)
-      const result = await scanWallet(publicKey.toBase58())
+      const address = publicKey?.toBase58() ?? "demo"
+      const result = await scanWallet(address)
       setScanResult(result)
     } catch (err) {
       setError(err instanceof Error ? err.message : "Scan failed")

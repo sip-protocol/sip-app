@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
+import { useDemoModeStore } from "@/stores/demo-mode"
 
 export interface UseSunriseBalanceReturn {
   gsolBalance: number | null
@@ -16,12 +17,13 @@ export interface UseSunriseBalanceReturn {
  */
 export function useSunriseBalance(): UseSunriseBalanceReturn {
   const { publicKey } = useWallet()
+  const isDemoMode = useDemoModeStore((s) => s.isDemoMode)
   const [gsolBalance, setGsolBalance] = useState<number | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const fetchBalance = async () => {
-    if (!publicKey) {
+    if (!publicKey && !isDemoMode) {
       setGsolBalance(null)
       return
     }

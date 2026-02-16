@@ -2,6 +2,8 @@
 
 import { useState, useCallback } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
+import { useDemoModeStore } from "@/stores/demo-mode"
+import { DemoBanner } from "@/components/ui/demo-banner"
 import { PrivacyLevel } from "@sip-protocol/types"
 import { cn } from "@/lib/utils"
 import { usePublishDrop } from "@/hooks/use-publish-drop"
@@ -31,6 +33,7 @@ interface CreateDropFormProps {
 
 export function CreateDropForm({ onPublished }: CreateDropFormProps) {
   const { connected } = useWallet()
+  const { isDemoMode, enableDemo } = useDemoModeStore()
 
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
@@ -53,7 +56,7 @@ export function CreateDropForm({ onPublished }: CreateDropFormProps) {
   }
 
   const isFormReady =
-    connected && status === "idle" && title.trim() && content.trim()
+    (connected || isDemoMode) && status === "idle" && title.trim() && content.trim()
   const isPublishing =
     status === "encrypting_content" ||
     status === "generating_stealth" ||
@@ -122,6 +125,7 @@ export function CreateDropForm({ onPublished }: CreateDropFormProps) {
       onSubmit={handleSubmit}
       className="bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-2xl p-6 sm:p-8"
     >
+      {isDemoMode && <DemoBanner />}
       {/* Header */}
       <div className="mb-6">
         <h2 className="text-lg font-semibold mb-1">Create Drop</h2>
@@ -240,12 +244,22 @@ export function CreateDropForm({ onPublished }: CreateDropFormProps) {
             : "bg-purple-600/30 text-white/50 cursor-not-allowed"
         )}
       >
-        {!connected
+        {!connected && !isDemoMode
           ? "Connect Wallet"
           : isPublishing
             ? "Publishing..."
             : "Publish Drop"}
       </button>
+
+      {!connected && !isDemoMode && (
+        <button
+          type="button"
+          onClick={enableDemo}
+          className="w-full mt-3 py-3 px-6 text-sm font-medium rounded-xl border border-amber-500/30 text-amber-400 hover:bg-amber-500/10 transition-colors"
+        >
+          Try Demo
+        </button>
+      )}
 
       {/* Footer */}
       <div className="mt-6 pt-6 border-t border-[var(--border-default)]">

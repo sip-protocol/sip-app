@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
+import { useDemoModeStore } from "@/stores/demo-mode"
 import { GovernanceService } from "@/lib/governance/governance-service"
 import { useGovernanceHistoryStore } from "@/stores/governance-history"
 import { useTrackEvent } from "@/hooks/useTrackEvent"
@@ -24,6 +25,7 @@ export interface UseGovernanceVoteReturn {
 
 export function useGovernanceVote(): UseGovernanceVoteReturn {
   const { publicKey } = useWallet()
+  const isDemoMode = useDemoModeStore((s) => s.isDemoMode)
   const { addVote, updateVote, getVote } = useGovernanceHistoryStore()
   const { trackVote } = useTrackEvent()
 
@@ -39,7 +41,7 @@ export function useGovernanceVote(): UseGovernanceVoteReturn {
 
   const commitVote = useCallback(
     async (params: VoteParams): Promise<PrivateVoteRecord | undefined> => {
-      if (!publicKey) {
+      if (!publicKey && !isDemoMode) {
         setError("Wallet not connected")
         setStatus("error")
         return undefined
@@ -85,12 +87,12 @@ export function useGovernanceVote(): UseGovernanceVoteReturn {
         return undefined
       }
     },
-    [publicKey, addVote, trackVote]
+    [publicKey, isDemoMode, addVote, trackVote]
   )
 
   const revealVote = useCallback(
     async (voteId: string): Promise<PrivateVoteRecord | undefined> => {
-      if (!publicKey) {
+      if (!publicKey && !isDemoMode) {
         setError("Wallet not connected")
         setStatus("error")
         return undefined
@@ -150,7 +152,7 @@ export function useGovernanceVote(): UseGovernanceVoteReturn {
         return undefined
       }
     },
-    [publicKey, getVote, updateVote, trackVote]
+    [publicKey, isDemoMode, getVote, updateVote, trackVote]
   )
 
   return { status, activeVote, error, commitVote, revealVote, reset }

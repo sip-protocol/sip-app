@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
+import { useDemoModeStore } from "@/stores/demo-mode"
 import { ArtService } from "@/lib/art/art-service"
 import { useArtGalleryStore } from "@/stores/art-gallery"
 import { useTrackEvent } from "@/hooks/useTrackEvent"
@@ -19,6 +20,7 @@ export interface UseMintNFTReturn {
 
 export function useMintNFT(): UseMintNFTReturn {
   const { publicKey } = useWallet()
+  const isDemoMode = useDemoModeStore((s) => s.isDemoMode)
   const { addAction, addMintedNFT } = useArtGalleryStore()
   const { trackArt } = useTrackEvent()
 
@@ -34,7 +36,7 @@ export function useMintNFT(): UseMintNFTReturn {
 
   const mintNFTFn = useCallback(
     async (params: MintArtParams): Promise<ArtActionRecord | undefined> => {
-      if (!publicKey) {
+      if (!publicKey && !isDemoMode) {
         setError("Wallet not connected")
         setStatus("error")
         return undefined
@@ -81,7 +83,7 @@ export function useMintNFT(): UseMintNFTReturn {
         return undefined
       }
     },
-    [publicKey, addAction, addMintedNFT, trackArt]
+    [publicKey, isDemoMode, addAction, addMintedNFT, trackArt]
   )
 
   return { status, activeRecord, error, mintNFT: mintNFTFn, reset }

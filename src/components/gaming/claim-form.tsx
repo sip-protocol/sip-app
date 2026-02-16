@@ -2,6 +2,8 @@
 
 import { useState, useCallback } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
+import { useDemoModeStore } from "@/stores/demo-mode"
+import { DemoBanner } from "@/components/ui/demo-banner"
 import { PrivacyLevel } from "@sip-protocol/types"
 import { cn } from "@/lib/utils"
 import { useClaimGameReward } from "@/hooks/use-claim-game-reward"
@@ -26,6 +28,7 @@ interface ClaimFormProps {
 
 export function ClaimForm({ onClaimed }: ClaimFormProps) {
   const { connected } = useWallet()
+  const { isDemoMode, enableDemo } = useDemoModeStore()
 
   const [rewardTier, setRewardTier] = useState<RewardTier>("bronze")
   const [privacyLevel, setPrivacyLevel] = useState<PrivacyOption>("shielded")
@@ -47,7 +50,7 @@ export function ClaimForm({ onClaimed }: ClaimFormProps) {
   // Use the first won result as the claimable game
   const claimableResult = SAMPLE_RESULTS.find((r) => r.won)
 
-  const isFormReady = connected && status === "idle" && claimableResult
+  const isFormReady = (connected || isDemoMode) && status === "idle" && claimableResult
   const isClaiming =
     status === "generating_stealth" || status === "claiming_reward"
   const isClaimed = status === "claimed"
@@ -107,6 +110,7 @@ export function ClaimForm({ onClaimed }: ClaimFormProps) {
       onSubmit={handleSubmit}
       className="bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-2xl p-6 sm:p-8"
     >
+      {isDemoMode && <DemoBanner />}
       {/* Header */}
       <div className="mb-6">
         <h2 className="text-lg font-semibold mb-1">Claim Reward</h2>
@@ -203,12 +207,22 @@ export function ClaimForm({ onClaimed }: ClaimFormProps) {
             : "bg-orange-600/30 text-white/50 cursor-not-allowed"
         )}
       >
-        {!connected
+        {!connected && !isDemoMode
           ? "Connect Wallet"
           : isClaiming
             ? "Claiming..."
             : "Claim Reward"}
       </button>
+
+      {!connected && !isDemoMode && (
+        <button
+          type="button"
+          onClick={enableDemo}
+          className="w-full mt-3 py-3 px-6 text-sm font-medium rounded-xl border border-amber-500/30 text-amber-400 hover:bg-amber-500/10 transition-colors"
+        >
+          Try Demo
+        </button>
+      )}
 
       {/* Footer */}
       <div className="mt-6 pt-6 border-t border-[var(--border-default)]">

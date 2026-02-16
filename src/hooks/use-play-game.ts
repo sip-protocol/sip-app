@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
+import { useDemoModeStore } from "@/stores/demo-mode"
 import { GamingService } from "@/lib/gaming/gaming-service"
 import { useGamingHistoryStore } from "@/stores/gaming-history"
 import { useTrackEvent } from "@/hooks/useTrackEvent"
@@ -24,6 +25,7 @@ export interface UsePlayGameReturn {
 
 export function usePlayGame(): UsePlayGameReturn {
   const { publicKey } = useWallet()
+  const isDemoMode = useDemoModeStore((s) => s.isDemoMode)
   const { addAction, addResult } = useGamingHistoryStore()
   const { trackGaming } = useTrackEvent()
 
@@ -41,7 +43,7 @@ export function usePlayGame(): UsePlayGameReturn {
 
   const playGame = useCallback(
     async (params: PlayGameParams): Promise<GamingActionRecord | undefined> => {
-      if (!publicKey) {
+      if (!publicKey && !isDemoMode) {
         setError("Wallet not connected")
         setStatus("error")
         return undefined
@@ -104,7 +106,7 @@ export function usePlayGame(): UsePlayGameReturn {
         return undefined
       }
     },
-    [publicKey, addAction, addResult, trackGaming]
+    [publicKey, isDemoMode, addAction, addResult, trackGaming]
   )
 
   return { status, activeRecord, error, playGame, reset }

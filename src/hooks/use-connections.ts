@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
+import { useDemoModeStore } from "@/stores/demo-mode"
 import { TapestryReader } from "@/lib/social/tapestry-reader"
 import { SocialService } from "@/lib/social/social-service"
 import { useSocialHistoryStore } from "@/stores/social-history"
@@ -28,6 +29,7 @@ export interface UseConnectionsReturn {
 
 export function useConnections(profileId: string | null): UseConnectionsReturn {
   const { publicKey } = useWallet()
+  const isDemoMode = useDemoModeStore((s) => s.isDemoMode)
   const { addAction } = useSocialHistoryStore()
   const { trackSocial } = useTrackEvent()
 
@@ -64,7 +66,7 @@ export function useConnections(profileId: string | null): UseConnectionsReturn {
 
   const followProfile = useCallback(
     async (params: FollowParams): Promise<SocialActionRecord | undefined> => {
-      if (!publicKey) {
+      if (!publicKey && !isDemoMode) {
         setError("Wallet not connected")
         setStatus("error")
         return undefined
@@ -107,7 +109,7 @@ export function useConnections(profileId: string | null): UseConnectionsReturn {
         return undefined
       }
     },
-    [publicKey, addAction, trackSocial]
+    [publicKey, isDemoMode, addAction, trackSocial]
   )
 
   return { connections, isLoading, followProfile, status, error, reset }

@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
+import { useDemoModeStore } from "@/stores/demo-mode"
 import { ChannelService } from "@/lib/channel/channel-service"
 import { useChannelHistoryStore } from "@/stores/channel-history"
 import { useTrackEvent } from "@/hooks/useTrackEvent"
@@ -26,6 +27,7 @@ export interface UseChannelSubscribeReturn {
 
 export function useChannelSubscribe(): UseChannelSubscribeReturn {
   const { publicKey } = useWallet()
+  const isDemoMode = useDemoModeStore((s) => s.isDemoMode)
   const { addAction, addSubscription } = useChannelHistoryStore()
   const { trackChannel } = useTrackEvent()
 
@@ -45,7 +47,7 @@ export function useChannelSubscribe(): UseChannelSubscribeReturn {
     async (
       params: SubscribeParams
     ): Promise<ChannelActionRecord | undefined> => {
-      if (!publicKey) {
+      if (!publicKey && !isDemoMode) {
         setError("Wallet not connected")
         setStatus("error")
         return undefined
@@ -98,7 +100,7 @@ export function useChannelSubscribe(): UseChannelSubscribeReturn {
         return undefined
       }
     },
-    [publicKey, addAction, addSubscription, trackChannel]
+    [publicKey, isDemoMode, addAction, addSubscription, trackChannel]
   )
 
   return { status, activeRecord, error, subscribe, reset }

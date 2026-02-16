@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
+import { useDemoModeStore } from "@/stores/demo-mode"
 import { GamingService } from "@/lib/gaming/gaming-service"
 import { useGamingHistoryStore } from "@/stores/gaming-history"
 import { useTrackEvent } from "@/hooks/useTrackEvent"
@@ -25,6 +26,7 @@ export interface UseClaimGameRewardReturn {
 
 export function useClaimGameReward(): UseClaimGameRewardReturn {
   const { publicKey } = useWallet()
+  const isDemoMode = useDemoModeStore((s) => s.isDemoMode)
   const { addAction } = useGamingHistoryStore()
   const { trackGaming } = useTrackEvent()
 
@@ -44,7 +46,7 @@ export function useClaimGameReward(): UseClaimGameRewardReturn {
     async (
       params: ClaimRewardParams
     ): Promise<GamingActionRecord | undefined> => {
-      if (!publicKey) {
+      if (!publicKey && !isDemoMode) {
         setError("Wallet not connected")
         setStatus("error")
         return undefined
@@ -90,7 +92,7 @@ export function useClaimGameReward(): UseClaimGameRewardReturn {
         return undefined
       }
     },
-    [publicKey, addAction, trackGaming]
+    [publicKey, isDemoMode, addAction, trackGaming]
   )
 
   return { status, activeRecord, error, claimReward, reset }

@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
+import { useDemoModeStore } from "@/stores/demo-mode"
 import { MigrationService } from "@/lib/migrations/migration-service"
 import { useMigrationHistoryStore } from "@/stores/migration-history"
 import { useTrackEvent } from "@/hooks/useTrackEvent"
@@ -30,6 +31,7 @@ export interface UseMigrationExecuteReturn {
 
 export function useMigrationExecute(): UseMigrationExecuteReturn {
   const { publicKey } = useWallet()
+  const isDemoMode = useDemoModeStore((s) => s.isDemoMode)
   const { addMigration, updateMigration } = useMigrationHistoryStore()
   const { trackMigration } = useTrackEvent()
 
@@ -45,7 +47,7 @@ export function useMigrationExecute(): UseMigrationExecuteReturn {
 
   const migrate = useCallback(
     async (params: MigrationExecuteParams): Promise<Migration | undefined> => {
-      if (!publicKey) {
+      if (!publicKey && !isDemoMode) {
         setError("Wallet not connected")
         setStatus("error")
         return undefined
@@ -98,7 +100,14 @@ export function useMigrationExecute(): UseMigrationExecuteReturn {
         return undefined
       }
     },
-    [publicKey, addMigration, updateMigration, trackMigration, activeMigration]
+    [
+      publicKey,
+      isDemoMode,
+      addMigration,
+      updateMigration,
+      trackMigration,
+      activeMigration,
+    ]
   )
 
   return { status, activeMigration, error, migrate, reset }

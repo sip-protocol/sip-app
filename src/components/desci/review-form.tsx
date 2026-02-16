@@ -2,6 +2,8 @@
 
 import { useState, useCallback } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
+import { useDemoModeStore } from "@/stores/demo-mode"
+import { DemoBanner } from "@/components/ui/demo-banner"
 import { PrivacyLevel } from "@sip-protocol/types"
 import { cn } from "@/lib/utils"
 import { useReviewProject } from "@/hooks/use-review-project"
@@ -29,6 +31,7 @@ interface ReviewFormProps {
 
 export function ReviewForm({ onReviewed }: ReviewFormProps) {
   const { connected } = useWallet()
+  const { isDemoMode, enableDemo } = useDemoModeStore()
 
   const [tier, setTier] = useState<FundingTier>("micro")
   const [privacyLevel, setPrivacyLevel] = useState<PrivacyOption>("shielded")
@@ -50,7 +53,7 @@ export function ReviewForm({ onReviewed }: ReviewFormProps) {
   // Use the first contribution as the reviewable project
   const reviewableProject = SAMPLE_CONTRIBUTIONS[0]
 
-  const isFormReady = connected && status === "idle" && reviewableProject
+  const isFormReady = (connected || isDemoMode) && status === "idle" && reviewableProject
   const isReviewing =
     status === "generating_proof" || status === "submitting_review"
   const isReviewed = status === "reviewed"
@@ -110,6 +113,7 @@ export function ReviewForm({ onReviewed }: ReviewFormProps) {
       onSubmit={handleSubmit}
       className="bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-2xl p-6 sm:p-8"
     >
+      {isDemoMode && <DemoBanner />}
       {/* Header */}
       <div className="mb-6">
         <h2 className="text-lg font-semibold mb-1">Anonymous Peer Review</h2>
@@ -209,12 +213,22 @@ export function ReviewForm({ onReviewed }: ReviewFormProps) {
             : "bg-lime-600/30 text-white/50 cursor-not-allowed"
         )}
       >
-        {!connected
+        {!connected && !isDemoMode
           ? "Connect Wallet"
           : isReviewing
             ? "Reviewing..."
             : "Submit Review"}
       </button>
+
+      {!connected && !isDemoMode && (
+        <button
+          type="button"
+          onClick={enableDemo}
+          className="w-full mt-3 py-3 px-6 text-sm font-medium rounded-xl border border-amber-500/30 text-amber-400 hover:bg-amber-500/10 transition-colors"
+        >
+          Try Demo
+        </button>
+      )}
 
       {/* Footer */}
       <div className="mt-6 pt-6 border-t border-[var(--border-default)]">

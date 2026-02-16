@@ -2,6 +2,8 @@
 
 import { useState, useCallback } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
+import { useDemoModeStore } from "@/stores/demo-mode"
+import { DemoBanner } from "@/components/ui/demo-banner"
 import { PrivacyLevel } from "@sip-protocol/types"
 import { cn } from "@/lib/utils"
 import { useLoyaltyCampaign } from "@/hooks/use-loyalty-campaign"
@@ -21,6 +23,7 @@ export function JoinCampaignForm({
   onJoined,
 }: JoinCampaignFormProps) {
   const { connected } = useWallet()
+  const { isDemoMode, enableDemo } = useDemoModeStore()
 
   const [privacyLevel, setPrivacyLevel] = useState<PrivacyOption>("shielded")
 
@@ -38,7 +41,7 @@ export function JoinCampaignForm({
     transparent: "\u{1F513} Transparent",
   }
 
-  const isFormReady = connected && status === "idle"
+  const isFormReady = (connected || isDemoMode) && status === "idle"
   const isJoining = status === "selecting_campaign" || status === "joining"
   const isJoined = status === "joined"
 
@@ -107,6 +110,7 @@ export function JoinCampaignForm({
       onSubmit={handleSubmit}
       className="bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-2xl p-6 sm:p-8"
     >
+      {isDemoMode && <DemoBanner />}
       {/* Header */}
       <div className="mb-6">
         <div className="flex items-center gap-3 mb-2">
@@ -181,12 +185,22 @@ export function JoinCampaignForm({
             : "bg-amber-600/30 text-white/50 cursor-not-allowed"
         )}
       >
-        {!connected
+        {!connected && !isDemoMode
           ? "Connect Wallet"
           : isJoining
             ? "Joining..."
             : "Join Campaign"}
       </button>
+
+      {!connected && !isDemoMode && (
+        <button
+          type="button"
+          onClick={enableDemo}
+          className="w-full mt-3 py-3 px-6 text-sm font-medium rounded-xl border border-amber-500/30 text-amber-400 hover:bg-amber-500/10 transition-colors"
+        >
+          Try Demo
+        </button>
+      )}
 
       {/* Footer */}
       <div className="mt-6 pt-6 border-t border-[var(--border-default)]">

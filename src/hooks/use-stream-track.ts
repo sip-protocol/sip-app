@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
+import { useDemoModeStore } from "@/stores/demo-mode"
 import { MusicService } from "@/lib/music/music-service"
 import { useMusicHistoryStore } from "@/stores/music-history"
 import { useTrackEvent } from "@/hooks/useTrackEvent"
@@ -26,6 +27,7 @@ export interface UseStreamTrackReturn {
 
 export function useStreamTrack(): UseStreamTrackReturn {
   const { publicKey } = useWallet()
+  const isDemoMode = useDemoModeStore((s) => s.isDemoMode)
   const { addAction, addStream } = useMusicHistoryStore()
   const { trackMusic } = useTrackEvent()
 
@@ -45,7 +47,7 @@ export function useStreamTrack(): UseStreamTrackReturn {
     async (
       params: StreamTrackParams
     ): Promise<MusicActionRecord | undefined> => {
-      if (!publicKey) {
+      if (!publicKey && !isDemoMode) {
         setError("Wallet not connected")
         setStatus("error")
         return undefined
@@ -101,7 +103,7 @@ export function useStreamTrack(): UseStreamTrackReturn {
         return undefined
       }
     },
-    [publicKey, addAction, addStream, trackMusic]
+    [publicKey, isDemoMode, addAction, addStream, trackMusic]
   )
 
   return { status, activeRecord, error, streamTrack, reset }

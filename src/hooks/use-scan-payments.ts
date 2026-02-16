@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
+import { useDemoModeStore } from "@/stores/demo-mode"
 import { useStealthKeys } from "./use-stealth-keys"
 
 export interface DetectedPayment {
@@ -25,6 +26,7 @@ interface UseScanPaymentsResult {
 
 export function useScanPayments(): UseScanPaymentsResult {
   const { publicKey } = useWallet()
+  const isDemoMode = useDemoModeStore((s) => s.isDemoMode)
   const { keys } = useStealthKeys()
 
   const [payments, setPayments] = useState<DetectedPayment[]>([])
@@ -33,7 +35,7 @@ export function useScanPayments(): UseScanPaymentsResult {
   const [progress, setProgress] = useState(0)
 
   const scan = useCallback(async () => {
-    if (!publicKey || !keys) {
+    if ((!publicKey && !isDemoMode) || !keys) {
       setError("Wallet not connected or stealth keys not generated")
       return
     }
@@ -93,11 +95,11 @@ export function useScanPayments(): UseScanPaymentsResult {
     } finally {
       setIsScanning(false)
     }
-  }, [publicKey, keys])
+  }, [publicKey, isDemoMode, keys])
 
   const claim = useCallback(
     async (paymentId: string) => {
-      if (!publicKey) {
+      if (!publicKey && !isDemoMode) {
         setError("Wallet not connected")
         return
       }
@@ -120,7 +122,7 @@ export function useScanPayments(): UseScanPaymentsResult {
         setError(err instanceof Error ? err.message : "Claim failed")
       }
     },
-    [publicKey]
+    [publicKey, isDemoMode]
   )
 
   return {

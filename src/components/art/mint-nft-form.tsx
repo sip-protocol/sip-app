@@ -2,6 +2,8 @@
 
 import { useState, useCallback } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
+import { useDemoModeStore } from "@/stores/demo-mode"
+import { DemoBanner } from "@/components/ui/demo-banner"
 import { PrivacyLevel } from "@sip-protocol/types"
 import { cn, truncate, copyToClipboard } from "@/lib/utils"
 import { useMintNFT } from "@/hooks/use-mint-nft"
@@ -20,6 +22,7 @@ interface MintNFTFormProps {
 
 export function MintNFTForm({ art, onReset }: MintNFTFormProps) {
   const { connected } = useWallet()
+  const { isDemoMode, enableDemo } = useDemoModeStore()
 
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")
@@ -40,7 +43,7 @@ export function MintNFTForm({ art, onReset }: MintNFTFormProps) {
     transparent: PrivacyLevel.TRANSPARENT,
   }
 
-  const isFormReady = connected && name.trim().length >= 1 && status === "idle"
+  const isFormReady = (connected || isDemoMode) && name.trim().length >= 1 && status === "idle"
   const isMinting = status === "preparing_nft" || status === "minting"
   const isMinted = status === "minted"
 
@@ -135,6 +138,7 @@ export function MintNFTForm({ art, onReset }: MintNFTFormProps) {
       onSubmit={handleSubmit}
       className="bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-2xl p-6 sm:p-8"
     >
+      {isDemoMode && <DemoBanner />}
       {/* Header */}
       <div className="mb-6">
         <h2 className="text-lg font-semibold mb-1">Mint as NFT</h2>
@@ -225,7 +229,7 @@ export function MintNFTForm({ art, onReset }: MintNFTFormProps) {
             : "bg-rose-600/30 text-white/50 cursor-not-allowed"
         )}
       >
-        {!connected
+        {!connected && !isDemoMode
           ? "Connect Wallet"
           : isMinting
             ? "Minting..."
@@ -233,6 +237,16 @@ export function MintNFTForm({ art, onReset }: MintNFTFormProps) {
               ? "Enter NFT Name"
               : "Mint NFT (~$0.001)"}
       </button>
+
+      {!connected && !isDemoMode && (
+        <button
+          type="button"
+          onClick={enableDemo}
+          className="w-full mt-3 py-3 px-6 text-sm font-medium rounded-xl border border-amber-500/30 text-amber-400 hover:bg-amber-500/10 transition-colors"
+        >
+          Try Demo
+        </button>
+      )}
     </form>
   )
 }

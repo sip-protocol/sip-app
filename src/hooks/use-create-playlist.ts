@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
+import { useDemoModeStore } from "@/stores/demo-mode"
 import { MusicService } from "@/lib/music/music-service"
 import { useMusicHistoryStore } from "@/stores/music-history"
 import { useTrackEvent } from "@/hooks/useTrackEvent"
@@ -25,6 +26,7 @@ export interface UseCreatePlaylistReturn {
 
 export function useCreatePlaylist(): UseCreatePlaylistReturn {
   const { publicKey } = useWallet()
+  const isDemoMode = useDemoModeStore((s) => s.isDemoMode)
   const { addAction } = useMusicHistoryStore()
   const { trackMusic } = useTrackEvent()
 
@@ -44,7 +46,7 @@ export function useCreatePlaylist(): UseCreatePlaylistReturn {
     async (
       params: CreatePlaylistParams
     ): Promise<MusicActionRecord | undefined> => {
-      if (!publicKey) {
+      if (!publicKey && !isDemoMode) {
         setError("Wallet not connected")
         setStatus("error")
         return undefined
@@ -91,7 +93,7 @@ export function useCreatePlaylist(): UseCreatePlaylistReturn {
         return undefined
       }
     },
-    [publicKey, addAction, trackMusic]
+    [publicKey, isDemoMode, addAction, trackMusic]
   )
 
   return { status, activeRecord, error, createPlaylist, reset }
