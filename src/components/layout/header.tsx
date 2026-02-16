@@ -14,15 +14,7 @@ interface NavItem {
   external?: boolean
 }
 
-const navItems: NavItem[] = [
-  { label: "Payments", href: "/payments" },
-  { label: "Bridge", href: "/bridge" },
-  { label: "Governance", href: "/governance" },
-  { label: "Social", href: "/social" },
-  { label: "Loyalty", href: "/loyalty" },
-  { label: "Art", href: "/art" },
-  { label: "Channel", href: "/channel" },
-]
+const navItems: NavItem[] = [{ label: "Home", href: "/" }]
 
 const externalLinks: NavItem[] = [
   { label: "Docs", href: "https://docs.sip-protocol.org", external: true },
