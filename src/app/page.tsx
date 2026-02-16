@@ -1,205 +1,371 @@
+"use client"
+
+import { useState } from "react"
 import Link from "next/link"
 
-const apps = [
+type AppCategory = "hackathon" | "core" | "coming"
+type FilterTab = "all" | "hackathon" | "coming"
+
+interface AppCard {
+  name: string
+  description: string
+  href: string
+  icon: string
+  gradient: string
+  category: AppCategory
+  sponsor?: string
+}
+
+const apps: AppCard[] = [
+  // Core apps (not hackathon-specific)
   {
     name: "Private Payments",
     description: "Send and receive shielded payments with stealth addresses",
     href: "/payments",
-    icon: "💸",
-    status: "live" as const,
+    icon: "\u{1F4B8}",
     gradient: "from-sip-purple-500 to-sip-purple-700",
+    category: "core",
   },
   {
     name: "Privacy Score",
     description: "Analyze how surveilled your wallet is",
     href: "/privacy-score",
-    icon: "🔍",
-    status: "live" as const,
+    icon: "\u{1F50D}",
     gradient: "from-red-500 to-orange-500",
+    category: "core",
   },
+  // Hackathon sponsor tracks (12)
   {
     name: "Private Bridge",
-    description: "Cross-chain transfers with stealth addresses via Wormhole",
+    description: "Cross-chain transfers with stealth addresses",
     href: "/bridge",
-    icon: "🌉",
-    status: "live" as const,
+    icon: "\u{1F309}",
     gradient: "from-cyan-500 to-cyan-700",
+    category: "hackathon",
+    sponsor: "Wormhole",
   },
   {
     name: "Private Governance",
-    description:
-      "Commit-reveal voting on Realms DAOs with Pedersen commitments",
+    description: "Commit-reveal voting on DAOs with Pedersen commitments",
     href: "/governance",
-    icon: "🗳️",
-    status: "live" as const,
+    icon: "\u{1F5F3}\uFE0F",
     gradient: "from-blue-500 to-blue-700",
+    category: "hackathon",
+    sponsor: "Realms",
   },
   {
     name: "Anonymous Social",
-    description: "Privacy-first social with stealth identities on Tapestry",
+    description: "Privacy-first social with stealth identities",
     href: "/social",
-    icon: "🎭",
-    status: "live" as const,
+    icon: "\u{1F3AD}",
     gradient: "from-pink-500 to-pink-700",
+    category: "hackathon",
+    sponsor: "Tapestry",
   },
   {
     name: "Privacy Loyalty",
-    description: "Earn rewards for privacy actions via Torque campaigns",
+    description: "Earn rewards for privacy actions via campaigns",
     href: "/loyalty",
-    icon: "🏆",
-    status: "live" as const,
+    icon: "\u{1F3C6}",
     gradient: "from-amber-500 to-amber-700",
+    category: "hackathon",
+    sponsor: "Torque",
   },
   {
     name: "Privacy Art",
     description: "Generate unique art from transactions, mint as NFTs",
     href: "/art",
-    icon: "🎨",
-    status: "live" as const,
+    icon: "\u{1F3A8}",
     gradient: "from-rose-500 to-rose-700",
+    category: "hackathon",
+    sponsor: "Metaplex",
   },
   {
     name: "Green Migration",
-    description: "Migrate dead protocols to Sunrise Stake with privacy",
+    description: "Migrate dead protocols with privacy-preserving staking",
     href: "/migrations",
-    icon: "🌱",
-    status: "live" as const,
+    icon: "\u{1F331}",
     gradient: "from-green-500 to-green-700",
+    category: "hackathon",
+    sponsor: "Sunrise Stake",
   },
   {
     name: "Privacy Channel",
-    description: "Encrypted content drops and privacy education via DRiP",
+    description: "Encrypted content drops and privacy education",
     href: "/channel",
-    icon: "📡",
-    status: "live" as const,
+    icon: "\u{1F4E1}",
     gradient: "from-violet-500 to-violet-700",
+    category: "hackathon",
+    sponsor: "DRiP",
   },
   {
     name: "Privacy Arena",
-    description:
-      "Commit-reveal games with cryptographic commitments via MagicBlock",
+    description: "Commit-reveal games with cryptographic commitments",
     href: "/gaming",
-    icon: "🎮",
-    status: "live" as const,
+    icon: "\u{1F3AE}",
     gradient: "from-orange-500 to-orange-700",
+    category: "hackathon",
+    sponsor: "MagicBlock",
   },
   {
     name: "Privacy Ticketing",
-    description:
-      "Anti-scalping stealth tickets and private attendance via KYD Labs",
+    description: "Anti-scalping stealth tickets and private attendance",
     href: "/ticketing",
-    icon: "🎫",
-    status: "live" as const,
+    icon: "\u{1F3AB}",
     gradient: "from-teal-500 to-teal-700",
+    category: "hackathon",
+    sponsor: "KYD Labs",
   },
   {
     name: "Privacy Metaverse",
     description:
-      "Stealth avatars, private teleportation, anonymous exploration via Portals",
+      "Stealth avatars, private teleportation, anonymous exploration",
     href: "/metaverse",
     icon: "\u{1F310}",
-    status: "live" as const,
     gradient: "from-indigo-500 to-indigo-700",
+    category: "hackathon",
+    sponsor: "Portals",
   },
   {
     name: "Privacy DeSci",
     description:
-      "Anonymous research funding, private peer review, stealth contributions via BIO Protocol",
+      "Anonymous research funding, private peer review, stealth contributions",
     href: "/desci",
     icon: "\u{1F9EC}",
-    status: "live" as const,
     gradient: "from-lime-500 to-lime-700",
+    category: "hackathon",
+    sponsor: "BIO Protocol",
   },
   {
     name: "Privacy Music",
     description:
-      "Private streaming, stealth royalty payments, encrypted playlists via Audius",
+      "Private streaming, stealth royalty payments, encrypted playlists",
     href: "/music",
     icon: "\u{1F3B5}",
-    status: "live" as const,
     gradient: "from-pink-500 to-pink-700",
+    category: "hackathon",
+    sponsor: "Audius",
   },
+  // Coming soon
   {
     name: "Wallet",
     description: "Manage your viewing keys and stealth addresses",
     href: "/wallet",
-    icon: "👛",
-    status: "coming" as const,
+    icon: "\u{1F45B}",
     gradient: "from-slate-500 to-slate-700",
+    category: "coming",
   },
   {
     name: "Private DEX",
     description: "Swap tokens with cryptographic privacy",
     href: "/dex",
-    icon: "🔄",
-    status: "coming" as const,
+    icon: "\u{1F504}",
     gradient: "from-emerald-500 to-emerald-700",
+    category: "coming",
   },
   {
     name: "Enterprise",
     description: "Compliance dashboard and audit tools",
     href: "/enterprise",
-    icon: "🏢",
-    status: "coming" as const,
+    icon: "\u{1F3E2}",
     gradient: "from-gray-500 to-gray-700",
+    category: "coming",
+  },
+]
+
+const FILTER_TABS: { value: FilterTab; label: string; count: number }[] = [
+  { value: "all", label: "All", count: apps.length },
+  {
+    value: "hackathon",
+    label: "Hackathon Tracks",
+    count: apps.filter((a) => a.category === "hackathon").length,
+  },
+  {
+    value: "coming",
+    label: "Coming Soon",
+    count: apps.filter((a) => a.category === "coming").length,
+  },
+]
+
+const STATS = [
+  { label: "Categories", value: "12" },
+  { label: "Tests", value: "820+" },
+  { label: "Status", value: "Mainnet" },
+  { label: "Cryptography", value: "Real" },
+]
+
+const HOW_IT_WORKS = [
+  {
+    icon: "\u{1F3AD}",
+    title: "Stealth Addresses",
+    description: "Unlinkable recipients",
+    detail:
+      "One-time addresses generated per transaction. No one can link sender to receiver.",
+  },
+  {
+    icon: "\u{1F510}",
+    title: "Cryptographic Commitments",
+    description: "Hidden amounts",
+    detail:
+      "Pedersen commitments hide transaction amounts while remaining mathematically verifiable.",
+  },
+  {
+    icon: "\u{1F441}\uFE0F",
+    title: "Viewing Keys",
+    description: "Compliance without surveillance",
+    detail:
+      "Selective disclosure lets auditors verify without exposing data to the public.",
   },
 ]
 
 export default function HubPage() {
+  const [filter, setFilter] = useState<FilterTab>("all")
+
+  const filteredApps =
+    filter === "all" ? apps : apps.filter((a) => a.category === filter)
+
   return (
     <div className="flex flex-col">
       {/* Hero */}
-      <section className="flex flex-col items-center px-4 pt-32 pb-24 sm:pt-40 sm:pb-32">
-        <div className="text-center max-w-3xl mx-auto mb-12">
+      <section className="flex flex-col items-center px-4 pt-32 pb-16 sm:pt-40 sm:pb-20">
+        <div className="text-center max-w-3xl mx-auto mb-8">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-4">
-            Privacy for{" "}
+            Privacy for Every{" "}
             <span className="bg-gradient-to-r from-sip-purple-600 to-sip-green-500 bg-clip-text text-transparent">
-              Everyone
-            </span>
+              Dead Category
+            </span>{" "}
+            on Solana
           </h1>
           <p className="text-lg sm:text-xl text-[var(--text-secondary)] max-w-2xl mx-auto">
-            The world-class privacy application for Web3. Stealth addresses,
-            hidden amounts, and viewing keys for compliance.
+            12 categories died because users were exposed. SIP resurrects them
+            with one privacy layer.
           </p>
         </div>
 
-        {/* App Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl w-full">
-          {apps.map((app) => (
-            <Link
-              key={app.href}
-              href={app.href}
-              className={`
-                group relative overflow-hidden rounded-xl p-6
-                border border-[var(--border-default)]
-                bg-[var(--surface-primary)]
-                hover:border-[var(--border-hover)]
-                hover:shadow-lg
-                transition-all duration-200
-                ${app.status === "coming" ? "opacity-60 pointer-events-none" : ""}
-              `}
+        {/* Stat Pills */}
+        <div className="flex flex-wrap justify-center gap-3 mb-12">
+          {STATS.map((stat) => (
+            <div
+              key={stat.label}
+              className="px-4 py-2 rounded-full border border-[var(--border-default)] bg-[var(--surface-primary)]"
             >
-              {app.status === "coming" && (
-                <span className="absolute top-3 right-3 text-xs font-medium px-2 py-1 rounded-full bg-[var(--surface-tertiary)] text-[var(--text-secondary)]">
-                  Coming Soon
-                </span>
-              )}
+              <span className="font-semibold text-sm text-[var(--text-primary)]">
+                {stat.value}
+              </span>{" "}
+              <span className="text-sm text-[var(--text-tertiary)]">
+                {stat.label}
+              </span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* How It Works */}
+      <section className="px-4 pb-16 sm:pb-20">
+        <div className="max-w-4xl mx-auto">
+          <h2 className="text-center text-sm font-semibold text-[var(--text-tertiary)] uppercase tracking-wider mb-6">
+            How It Works
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {HOW_IT_WORKS.map((item) => (
               <div
+                key={item.title}
+                className="p-6 rounded-xl border border-[var(--border-default)] bg-[var(--surface-primary)] text-center"
+              >
+                <span className="text-3xl mb-3 block">{item.icon}</span>
+                <h3 className="font-semibold text-sm mb-1">{item.title}</h3>
+                <p className="text-sm text-sip-green-500 font-medium mb-2">
+                  {item.description}
+                </p>
+                <p className="text-xs text-[var(--text-tertiary)] leading-relaxed">
+                  {item.detail}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Track Grid */}
+      <section className="px-4 pb-16 sm:pb-20">
+        <div className="max-w-6xl mx-auto">
+          {/* Filter Tabs */}
+          <div className="flex gap-2 mb-6 overflow-x-auto scrollbar-hide">
+            {FILTER_TABS.map((tab) => (
+              <button
+                key={tab.value}
+                type="button"
+                onClick={() => setFilter(tab.value)}
+                className={`flex-shrink-0 px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                  filter === tab.value
+                    ? "bg-sip-purple-500/20 text-sip-purple-300 border border-sip-purple-500/30"
+                    : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-secondary)]"
+                }`}
+              >
+                {tab.label}
+                <span className="ml-1.5 text-xs opacity-60">{tab.count}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* Cards Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {filteredApps.map((app) => (
+              <Link
+                key={app.href}
+                href={app.href}
                 className={`
-                  w-12 h-12 rounded-lg flex items-center justify-center text-2xl mb-4
-                  bg-gradient-to-br ${app.gradient} text-white
+                  group relative overflow-hidden rounded-xl p-6
+                  border border-[var(--border-default)]
+                  bg-[var(--surface-primary)]
+                  hover:border-[var(--border-hover)]
+                  hover:shadow-lg
+                  transition-all duration-200
+                  ${app.category === "coming" ? "opacity-60 pointer-events-none" : ""}
                 `}
               >
-                {app.icon}
-              </div>
-              <h2 className="text-lg font-semibold mb-2 group-hover:text-sip-purple-600 transition-colors">
-                {app.name}
-              </h2>
-              <p className="text-sm text-[var(--text-secondary)]">
-                {app.description}
-              </p>
-            </Link>
-          ))}
+                {app.category === "coming" && (
+                  <span className="absolute top-3 right-3 text-xs font-medium px-2 py-1 rounded-full bg-[var(--surface-tertiary)] text-[var(--text-secondary)]">
+                    Coming Soon
+                  </span>
+                )}
+                <div
+                  className={`
+                    w-12 h-12 rounded-lg flex items-center justify-center text-2xl mb-4
+                    bg-gradient-to-br ${app.gradient} text-white
+                  `}
+                >
+                  {app.icon}
+                </div>
+                <h2 className="text-lg font-semibold mb-2 group-hover:text-sip-purple-600 transition-colors">
+                  {app.name}
+                </h2>
+                <p className="text-sm text-[var(--text-secondary)] mb-3">
+                  {app.description}
+                </p>
+                {app.sponsor && (
+                  <span className="inline-flex items-center text-xs font-medium text-[var(--text-tertiary)] bg-[var(--surface-secondary)] px-2 py-1 rounded-md border border-[var(--border-default)]">
+                    {app.sponsor}
+                  </span>
+                )}
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Footer Banner */}
+      <section className="px-4 pb-16 sm:pb-20">
+        <div className="max-w-6xl mx-auto">
+          <div className="p-4 rounded-xl bg-[var(--surface-primary)] border border-[var(--border-default)] text-center">
+            <p className="text-sm text-[var(--text-tertiary)]">
+              Built with{" "}
+              <code className="text-sip-purple-400 font-mono text-xs">
+                @sip-protocol/sdk v0.7.3
+              </code>{" "}
+              &mdash; Anchor program live on mainnet
+            </p>
+          </div>
         </div>
       </section>
     </div>
