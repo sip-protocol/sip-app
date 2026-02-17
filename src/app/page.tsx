@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 
-type AppCategory = "hackathon" | "core" | "coming"
+type AppCategory = "hackathon" | "core" | "coming" | "bonus"
 type FilterTab = "all" | "hackathon" | "coming"
 
 interface AppCard {
@@ -34,14 +34,14 @@ const apps: AppCard[] = [
     gradient: "from-red-500 to-orange-500",
     category: "core",
   },
-  // Hackathon sponsor tracks (12)
+  // Hackathon sponsor tracks (11)
   {
     name: "Private Bridge",
     description: "Cross-chain transfers with stealth addresses",
     href: "/bridge",
     icon: "\u{1F309}",
     gradient: "from-cyan-500 to-cyan-700",
-    category: "hackathon",
+    category: "bonus",
     sponsor: "Wormhole",
   },
   {
@@ -78,7 +78,7 @@ const apps: AppCard[] = [
     icon: "\u{1F3A8}",
     gradient: "from-rose-500 to-rose-700",
     category: "hackathon",
-    sponsor: "Metaplex",
+    sponsor: "Exchange Art",
   },
   {
     name: "Green Migration",
@@ -90,8 +90,8 @@ const apps: AppCard[] = [
     sponsor: "Sunrise Stake",
   },
   {
-    name: "Privacy Channel",
-    description: "Encrypted content drops and privacy education",
+    name: "Privacy NFTs",
+    description: "Encrypted NFT drops and privacy education",
     href: "/channel",
     icon: "\u{1F4E1}",
     gradient: "from-violet-500 to-violet-700",
@@ -188,7 +188,7 @@ const FILTER_TABS: { value: FilterTab; label: string; count: number }[] = [
 ]
 
 const STATS = [
-  { label: "Categories", value: "12" },
+  { label: "Categories", value: "11+" },
   { label: "Tests", value: "820+" },
   { label: "Status", value: "Mainnet" },
   { label: "Cryptography", value: "Real" },

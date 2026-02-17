@@ -3,7 +3,7 @@ import type { Metadata } from "next"
 export const metadata: Metadata = {
   title: "Mint Privacy NFT",
   description:
-    "Mint your privacy art as compressed NFTs via Metaplex Bubblegum.",
+    "Mint your privacy art as compressed NFTs via Exchange Art.",
 }
 
 export default function ArtMintPage() {

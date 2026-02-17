@@ -21,14 +21,6 @@ import { DEPLOYMENTS } from "@/lib/constants"
 
 const SPONSOR_TRACKS = [
   {
-    name: "Private Bridge",
-    sponsor: "Wormhole",
-    href: "/bridge",
-    icon: "\u{1F309}",
-    gradient: "from-cyan-500 to-cyan-700",
-    primitive: "Stealth cross-chain transfers",
-  },
-  {
     name: "Private Governance",
     sponsor: "Realms",
     href: "/governance",
@@ -54,7 +46,7 @@ const SPONSOR_TRACKS = [
   },
   {
     name: "Privacy Art",
-    sponsor: "Metaplex",
+    sponsor: "Exchange Art",
     href: "/art",
     icon: "\u{1F3A8}",
     gradient: "from-rose-500 to-rose-700",
@@ -69,12 +61,12 @@ const SPONSOR_TRACKS = [
     primitive: "Private protocol migration",
   },
   {
-    name: "Privacy Channel",
+    name: "Privacy NFTs",
     sponsor: "DRiP",
     href: "/channel",
     icon: "\u{1F4E1}",
     gradient: "from-violet-500 to-violet-700",
-    primitive: "Encrypted content drops",
+    primitive: "Encrypted NFT drops",
   },
   {
     name: "Privacy Arena",
@@ -146,7 +138,7 @@ const CRYPTO_PRIMITIVES = [
 ]
 
 const STATS = [
-  { value: "12", label: "Sponsor Tracks" },
+  { value: "11", label: "Sponsor Tracks" },
   { value: "820+", label: "Tests Passing" },
   { value: "Mainnet", label: "Anchor Program" },
   { value: "v0.7.3", label: "SDK Version" },
@@ -220,7 +212,7 @@ function HeroSection() {
             transition={{ delay: 0.2 }}
             className="mt-6 text-lg text-gray-400 max-w-2xl mx-auto"
           >
-            12 categories died because users were exposed. SIP resurrects them
+            11 categories died because users were exposed. SIP resurrects them
             with one privacy layer &mdash; stealth addresses, hidden amounts,
             and viewing keys for compliance.
           </motion.p>
@@ -370,7 +362,7 @@ function TracksSection() {
             viewport={{ once: true }}
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-medium bg-purple-500/10 text-purple-400 border border-purple-500/20"
           >
-            12 Sponsor Tracks
+            11 Sponsor Tracks
           </motion.span>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
@@ -530,7 +522,7 @@ function LinksSection() {
           <div className="px-8 py-12 sm:px-16 text-center">
             <h2 className="text-2xl sm:text-3xl font-bold">Try It Live</h2>
             <p className="mt-3 text-gray-400 max-w-xl mx-auto">
-              All 12 tracks are live at app.sip-protocol.org. Real cryptography,
+              All 11 tracks are live at app.sip-protocol.org. Real cryptography,
               real stealth addresses, real Anchor program on mainnet.
             </p>
 

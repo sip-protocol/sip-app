@@ -49,7 +49,7 @@ const MINT_STEPS: StepConfig[] = [
   {
     id: "minting",
     label: "Mint NFT",
-    description: "Minting compressed NFT via Metaplex Bubblegum",
+    description: "Minting compressed NFT via Exchange Art",
     icon: "\u{1F48E}",
   },
   {
