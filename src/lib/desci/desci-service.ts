@@ -16,15 +16,26 @@ function generateId(prefix: string): string {
 export interface DeSciServiceOptions {
   mode?: DeSciMode
   onStepChange?: DeSciStepChangeCallback
+  onFundTransaction?: (
+    projectId: string,
+    tier: string,
+    projectTitle?: string
+  ) => Promise<string | null>
 }
 
 export class DeSciService {
   private mode: DeSciMode
   private onStepChange?: DeSciStepChangeCallback
+  private onFundTransaction?: (
+    projectId: string,
+    tier: string,
+    projectTitle?: string
+  ) => Promise<string | null>
 
   constructor(options: DeSciServiceOptions = {}) {
     this.mode = options.mode ?? "simulation"
     this.onStepChange = options.onStepChange
+    this.onFundTransaction = options.onFundTransaction
   }
 
   validate(
@@ -132,12 +143,21 @@ export class DeSciService {
         )
       }
 
-      // Step 3: Funding
+      // Step 3: Funding (on-chain if callback provided, else simulation)
       record.status = "funding"
       record.stepTimestamps.funding = Date.now()
       this.onStepChange?.("funding", { ...record })
 
-      if (this.mode === "simulation") {
+      if (this.onFundTransaction) {
+        const txSig = await this.onFundTransaction(
+          params.projectId,
+          params.tier,
+          project?.title
+        )
+        if (txSig) {
+          record.txSignature = txSig
+        }
+      } else if (this.mode === "simulation") {
         await new Promise((r) => setTimeout(r, SIMULATION_DELAYS.funding))
       }
 

@@ -63,3 +63,6 @@ export {
 
 // Stealth tipping hook
 export { useStealthTip, type TipResult } from "./use-stealth-tip"
+
+// Stealth research funding hook
+export { useStealthFund, type FundResult } from "./use-stealth-fund"

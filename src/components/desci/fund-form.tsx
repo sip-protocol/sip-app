@@ -7,6 +7,7 @@ import { DemoBanner } from "@/components/ui/demo-banner"
 import { PrivacyLevel } from "@sip-protocol/types"
 import { cn } from "@/lib/utils"
 import { useFundProject } from "@/hooks/use-fund-project"
+import { TransactionStatus } from "@/components/solana/transaction-status"
 import { DeSciPrivacyToggle } from "./desci-privacy-toggle"
 import { DeSciStatus } from "./desci-status"
 import { StealthFundingDisplay } from "./stealth-funding-display"
@@ -125,6 +126,15 @@ export function FundForm({ project, onFunded }: FundFormProps) {
             </div>
           )}
         </div>
+
+        {activeRecord.txSignature && (
+          <TransactionStatus
+            status="confirmed"
+            txSignature={activeRecord.txSignature}
+            explorerUrl={`https://solscan.io/tx/${activeRecord.txSignature}?cluster=devnet`}
+            error={null}
+          />
+        )}
 
         <button
           type="button"
