@@ -1,5 +1,4 @@
 import { describe, it, expect, vi, beforeEach } from "vitest"
-import type { createStealthTransfer as CreateStealthTransferFn } from "@/lib/solana/stealth-transfer"
 
 // Track calls for assertions
 const mockAdd = vi.fn().mockReturnThis()

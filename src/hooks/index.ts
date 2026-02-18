@@ -45,5 +45,12 @@ export { useScanPayments, type DetectedPayment } from "./use-scan-payments"
 // Send payment hook
 export { useSendPayment } from "./use-send-payment"
 
+// Solana transaction hook for wallet signing lifecycle
+export {
+  useSolanaTransaction,
+  type SolanaTxStatus,
+  type UseSolanaTransactionReturn,
+} from "./use-solana-transaction"
+
 // Container size hook for responsive D3 visualizations
 export { useContainerSize } from "./use-container-size"
