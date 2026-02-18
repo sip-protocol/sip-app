@@ -14,15 +14,18 @@ function generateId(): string {
 export interface GovernanceServiceOptions {
   mode?: GovernanceMode
   onStepChange?: VoteStepChangeCallback
+  onCommitTransaction?: (proposalId: string, choice: number, weight: string) => Promise<string | null>
 }
 
 export class GovernanceService {
   private mode: GovernanceMode
   private onStepChange?: VoteStepChangeCallback
+  private onCommitTransaction?: (proposalId: string, choice: number, weight: string) => Promise<string | null>
 
   constructor(options: GovernanceServiceOptions = {}) {
     this.mode = options.mode ?? "simulation"
     this.onStepChange = options.onStepChange
+    this.onCommitTransaction = options.onCommitTransaction
   }
 
   validate(params: VoteParams): string | null {
@@ -107,7 +110,16 @@ export class GovernanceService {
       vote.stepTimestamps.committing = Date.now()
       this.onStepChange?.("committing", { ...vote })
 
-      if (this.mode === "simulation") {
+      if (this.onCommitTransaction) {
+        const signature = await this.onCommitTransaction(
+          params.proposalId,
+          params.choice,
+          params.weight
+        )
+        if (signature) {
+          vote.txSignature = signature
+        }
+      } else if (this.mode === "simulation") {
         await new Promise((r) => setTimeout(r, SIMULATION_DELAYS.committing))
       }
 

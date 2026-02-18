@@ -8,6 +8,8 @@ import type { SerializedEncryptedVote } from "@/lib/governance/types"
 interface VoteCommitmentDisplayProps {
   encryptedVote: SerializedEncryptedVote
   revealDeadline?: number
+  txSignature?: string
+  explorerUrl?: string
   className?: string
 }
 
@@ -27,6 +29,8 @@ function formatCountdown(targetTime: number): string {
 export function VoteCommitmentDisplay({
   encryptedVote,
   revealDeadline,
+  txSignature,
+  explorerUrl,
   className,
 }: VoteCommitmentDisplayProps) {
   const [copied, setCopied] = useState<string | null>(null)
@@ -106,6 +110,23 @@ export function VoteCommitmentDisplay({
             {encryptedVote.proposalId}
           </code>
         </div>
+
+        {/* On-chain transaction link */}
+        {txSignature && (
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-[var(--text-secondary)]">
+              Transaction
+            </span>
+            <a
+              href={explorerUrl ?? `https://solscan.io/tx/${txSignature}?cluster=devnet`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs font-medium text-sip-purple-400 hover:text-sip-purple-300 transition-colors"
+            >
+              View on Solscan
+            </a>
+          </div>
+        )}
 
         {/* Reveal countdown */}
         {revealDeadline && (

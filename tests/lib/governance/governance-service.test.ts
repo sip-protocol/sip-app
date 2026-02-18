@@ -209,4 +209,27 @@ describe("GovernanceService", () => {
       ).rejects.toThrow("Proposal not found")
     })
   })
+
+  describe("commitVote (with on-chain callback)", () => {
+    it("calls onCommitTransaction and stores txSignature", async () => {
+      const mockTxCallback = vi.fn().mockResolvedValue("5xMockSig123")
+      const service = new GovernanceService({
+        mode: "simulation",
+        onCommitTransaction: mockTxCallback,
+      })
+
+      const result = await service.commitVote(validParams)
+
+      expect(mockTxCallback).toHaveBeenCalledWith("prop-mnde-01", 0, "15000")
+      expect(result.txSignature).toBe("5xMockSig123")
+    })
+
+    it("falls back to simulation when no callback", async () => {
+      const service = new GovernanceService({ mode: "simulation" })
+      const result = await service.commitVote(validParams)
+
+      expect(result.txSignature).toBeUndefined()
+      expect(result.status).toBe("committed")
+    })
+  })
 })

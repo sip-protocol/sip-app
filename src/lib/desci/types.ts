@@ -62,6 +62,8 @@ export interface DeSciActionRecord {
   encryptedForAuditor?: string
   encryptedContent?: string
   encryptionNonce?: string
+  // On-chain transaction
+  txSignature?: string
   // Timestamps
   startedAt: number
   completedAt?: number

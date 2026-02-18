@@ -150,6 +150,47 @@ describe("DeSciService", () => {
     })
   })
 
+  describe("fundProject (with on-chain callback)", () => {
+    it("calls onFundTransaction and stores txSignature", async () => {
+      const mockTxCallback = vi.fn().mockResolvedValue("5xMockFundSig")
+      const service = new DeSciService({
+        mode: "simulation",
+        onFundTransaction: mockTxCallback,
+      })
+
+      const result = await service.fundProject(validFundParams)
+
+      expect(mockTxCallback).toHaveBeenCalledWith(
+        validFundParams.projectId,
+        validFundParams.tier,
+        expect.any(String)
+      )
+      expect(result.txSignature).toBe("5xMockFundSig")
+    })
+
+    it("falls back to simulation when no callback", async () => {
+      const service = new DeSciService({ mode: "simulation" })
+      const result = await service.fundProject(validFundParams)
+
+      expect(result.txSignature).toBeUndefined()
+      expect(result.status).toBe("funded")
+    })
+
+    it("handles null return from callback gracefully", async () => {
+      const mockTxCallback = vi.fn().mockResolvedValue(null)
+      const service = new DeSciService({
+        mode: "simulation",
+        onFundTransaction: mockTxCallback,
+      })
+
+      const result = await service.fundProject(validFundParams)
+
+      expect(mockTxCallback).toHaveBeenCalled()
+      expect(result.txSignature).toBeUndefined()
+      expect(result.status).toBe("funded")
+    })
+  })
+
   describe("reviewProject (simulation)", () => {
     it("progresses through 3 steps in order", async () => {
       const steps: DeSciStep[] = []

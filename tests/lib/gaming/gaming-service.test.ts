@@ -168,4 +168,54 @@ describe("GamingService", () => {
       expect(result.stepTimestamps.claimed).toBeDefined()
     })
   })
+
+  describe("onCommitTransaction callback", () => {
+    it("calls onCommitTransaction callback during committing_move step", async () => {
+      const mockCallback = vi.fn().mockResolvedValue("mock-tx-signature")
+      const service = new GamingService({
+        mode: "simulation",
+        onCommitTransaction: mockCallback,
+      })
+
+      const result = await service.playGame(validPlayParams)
+
+      expect(mockCallback).toHaveBeenCalledWith("game-stealth-showdown", "rock")
+      expect(result.txSignature).toBe("mock-tx-signature")
+    })
+
+    it("does not set txSignature when callback returns null", async () => {
+      const mockCallback = vi.fn().mockResolvedValue(null)
+      const service = new GamingService({
+        mode: "simulation",
+        onCommitTransaction: mockCallback,
+      })
+
+      const result = await service.playGame(validPlayParams)
+
+      expect(mockCallback).toHaveBeenCalled()
+      expect(result.txSignature).toBeUndefined()
+    })
+
+    it("still resolves the game when callback is provided", async () => {
+      const mockCallback = vi.fn().mockResolvedValue("mock-sig")
+      const steps: GamingStep[] = []
+      const service = new GamingService({
+        mode: "simulation",
+        onCommitTransaction: mockCallback,
+        onStepChange: (step) => steps.push(step),
+      })
+
+      const result = await service.playGame(validPlayParams)
+
+      // All steps should still fire in order
+      expect(steps).toEqual([
+        "committing_move",
+        "generating_commitment",
+        "revealing",
+        "resolved",
+      ])
+      expect(result.status).toBe("resolved")
+      expect(result.txSignature).toBe("mock-sig")
+    })
+  })
 })
