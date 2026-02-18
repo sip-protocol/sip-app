@@ -14,6 +14,8 @@
 - [ ] Open app.sip-protocol.org in Chrome (clean profile, no extensions visible)
 - [ ] Enable Demo Mode on one track beforehand so you can show the flow
 - [ ] Have a second tab open on `/showcase/graveyard-2026` for the showcase page
+- [ ] Pre-navigate to `/gaming` and play one round of RPS to warm up the demo
+- [ ] Verify DRiP channel card shows on `/channel` page
 - [ ] Close all other tabs, notifications off, Do Not Disturb on
 - [ ] Browser zoom at 100%, dark mode (default)
 - [ ] Practice the full run once before recording
@@ -28,11 +30,11 @@
 
 > "SIP Protocol — the privacy standard for Web3."
 >
-> "We believe every category that died on Solana — governance, social, gaming, art, DeFi — died because users were exposed. Their wallets were tracked, their activity was surveilled, their identities were linked."
+> "Every category that died on Solana — governance, social, gaming, art, DeFi — died because users were exposed. Their wallets were tracked, their activity was surveilled, their identities were linked."
 >
 > "SIP fixes this with one privacy layer: stealth addresses for unlinkable identities, Pedersen commitments for hidden amounts, and viewing keys for compliance."
 >
-> "We built 11 dedicated privacy applications — one for every sponsor track — all powered by the same production SDK deployed on mainnet."
+> "We built 11 dedicated privacy applications — one for every sponsor track — with real sponsor API integrations, real cryptography, and a playable commit-reveal game. All powered by the same production SDK deployed on mainnet."
 
 **[ACTION: Slowly scroll down the hub page showing all cards]**
 
@@ -42,11 +44,11 @@
 
 **[SCREEN: Click into any track (e.g., /payments/send), scroll to privacy toggle]**
 
-> "Every track uses the same three cryptographic primitives."
+> "Every track uses real cryptographic primitives — not mocks."
 >
-> "Stealth addresses — one-time recipient addresses that prevent linkability. Pedersen commitments — hiding amounts while keeping them mathematically verifiable. And viewing keys — selective disclosure so auditors can verify without exposing data to the public."
+> "Stealth addresses via our SDK's EIP-5564 implementation. Real Pedersen commitments — not random hex strings. And viewing keys with XChaCha20-Poly1305 encryption for compliance."
 
-**[ACTION: Click through the three privacy levels: Shielded → Compliant → Transparent to show the toggle]**
+**[ACTION: Click through the three privacy levels: Shielded → Compliant → Transparent to show the toggle. Point out the commitment hash is real.]**
 
 ---
 
@@ -69,70 +71,76 @@
 **~8 seconds per track. Show the main page, highlight the key feature, move on.**
 
 #### 1. Private Governance — Realms (0:55–1:03)
-**[SCREEN: /governance]**
-> "Private Governance with Realms — commit-reveal voting. Your vote is cryptographically committed before reveal. No one knows how you voted until the round ends."
+**[SCREEN: /governance — show "Why DAOs Died / How We Revive Them" card]**
+> "Private Governance with Realms. We query real SPL Governance proposals from Marinade, Jupiter, and Mango DAOs. Votes use real Pedersen commitment-based ballot encryption."
 
 #### 2. Anonymous Social — Tapestry (1:03–1:11)
-**[SCREEN: /social]**
-> "Anonymous Social with Tapestry — stealth social identities. Post, follow, and interact without linking your wallet to your profile."
+**[SCREEN: /social — show Tapestry integration badge]**
+> "Anonymous Social with Tapestry — real profile lookups via the SocialFi SDK. Stealth social identities that can't be linked to your wallet."
 
 #### 3. Privacy Loyalty — Torque (1:11–1:19)
-**[SCREEN: /loyalty]**
-> "Privacy Loyalty with Torque — anonymous reward claims. Complete campaigns, earn rewards, claim to stealth addresses."
+**[SCREEN: /loyalty — show campaign list]**
+> "Privacy Loyalty with Torque — real campaign data from the Torque SDK. Complete privacy campaigns, claim rewards to stealth addresses."
 
 #### 4. Privacy Art — Exchange Art (1:19–1:27)
-**[SCREEN: /art]**
-> "Privacy Art with Exchange Art — generative art from stealth address entropy. Each privacy transaction creates unique visual art. Mint as compressed NFTs."
+**[SCREEN: /art — show generative art + mint]**
+> "Privacy Art with Exchange Art — generative art from stealth address entropy, using real Metaplex Bubblegum for compressed NFT minting."
 
 #### 5. Green Migration — Sunrise (1:27–1:35)
-**[SCREEN: /migrations]**
-> "Green Migration with Sunrise — leave dead protocols privately. Migrate stranded SOL to green staking via stealth address."
+**[SCREEN: /migrations — show wallet scanner]**
+> "Green Migration with Sunrise — real wallet scanning via Solana RPC. Detects stranded tokens and migrates to green staking via stealth address."
 
 #### 6. Privacy NFTs — DRiP (1:35–1:43)
-**[SCREEN: /channel]**
-> "Privacy NFTs with DRiP — encrypted NFT drops with viewing key-gated access. Free, subscriber, and premium tiers."
+**[SCREEN: /channel — show DRiP channel card and drop list]**
+> "Privacy NFTs with DRiP — our SIP Privacy channel distributes free compressed NFTs about on-chain privacy. Encrypted content with viewing key-gated access across three tiers."
 
-#### 7. Privacy Arena — MagicBlock (1:43–1:51)
-**[SCREEN: /gaming]**
-> "Privacy Arena with MagicBlock — commit-reveal gameplay. Hidden moves, sealed bids, fog of war — all cryptographically enforced."
+**[ACTION: Show the DRiP channel card, click "View on DRiP" button]**
 
-#### 8. Privacy Ticketing — KYD Labs (1:51–1:59)
-**[SCREEN: /ticketing]**
-> "Privacy Ticketing with KYD Labs — stealth tickets prevent scalping and attendance tracking. Prove you have a ticket without revealing which one."
+#### 7. Privacy Arena — MagicBlock (1:43–1:55)
+**[SCREEN: /gaming — click into Rock-Paper-Scissors game]**
+> "Privacy Arena with MagicBlock — and this is playable. Watch."
 
-#### 9. Privacy Metaverse — Portals (1:59–2:05)
-**[SCREEN: /metaverse]**
-> "Privacy Metaverse with Portals — stealth avatars. Explore worlds anonymously, teleport between destinations with private identity proofs."
+**[ACTION: Select Rock, click Commit Rock, watch the commit-reveal pipeline animate, see the result with crypto details]**
 
-#### 10. Privacy DeSci — BIO (2:05–2:12)
-**[SCREEN: /desci]**
-> "Privacy DeSci with BIO Protocol — anonymous research funding and peer review. Fund controversial science without retaliation risk."
+> "Real Pedersen commitment for the move. Deterministic opponent from the commitment hash. Fully cryptographic game resolution."
 
-#### 11. Privacy Music — Audius (2:12–2:20)
-**[SCREEN: /music]**
-> "Privacy Music with Audius — stealth listener identity. Stream privately, create encrypted playlists, pay royalties via stealth transfer."
+#### 8. Privacy Ticketing — KYD Labs (1:55–2:03)
+**[SCREEN: /ticketing — show cNFT ticket minting]**
+> "Privacy Ticketing with KYD Labs — real compressed NFT tickets via Helius DAS. Ticket IDs are Pedersen commitments. Prove you have a ticket without revealing which one."
 
----
+#### 9. Privacy Metaverse — Portals (2:03–2:09)
+**[SCREEN: /metaverse — show world list and stealth avatar]**
+> "Privacy Metaverse with Portals — stealth avatars with real cryptographic identity proofs. Explore worlds anonymously."
 
-### TECH STACK & TRACTION (2:20–2:45)
+#### 10. Privacy DeSci — BIO (2:09–2:15)
+**[SCREEN: /desci — show real BioDAO data]**
+> "Privacy DeSci with BIO Protocol — real BioDAO projects fetched from BIO's API. Anonymous research funding via stealth addresses."
 
-**[SCREEN: /showcase/graveyard-2026 — scroll to stats and links section]**
-
-> "All 11 tracks are built on the same production stack."
->
-> "The core SDK — @sip-protocol/sdk version 0.7.3 — has over 7,500 tests. The app has 820+ tests across 90 test suites. The Anchor program is deployed on Solana mainnet."
->
-> "This isn't a hackathon prototype. SIP won the Zypherpunk Hackathon in December 2025 — $6,500 across three tracks, ranked number 9 out of 93 teams. We have a $10K Superteam grant approved. The SDK is published on npm. The program is on mainnet."
-
-**[ACTION: Show the GitHub repo link, npm link, mainnet program link on showcase page]**
+#### 11. Privacy Music — Audius (2:15–2:23)
+**[SCREEN: /music — show real Audius tracks]**
+> "Privacy Music with Audius — real tracks from Audius' million-song catalog. Stealth listener identity and encrypted playlists."
 
 ---
 
-### CLOSING (2:45–3:00)
+### TECH STACK & TRACTION (2:23–2:48)
+
+**[SCREEN: /showcase/graveyard-2026 — scroll to ResurrectionSection and stats]**
+
+> "All 11 tracks are built on the same production stack — with real sponsor API integrations."
+>
+> "The core SDK has over 7,500 tests. The app has 865+ tests across 93 test suites. Every track has a 'Why It Died / How We Revive It' narrative powered by real data from sponsor APIs — SPL Governance, Tapestry SocialFi, Torque campaigns, Audius tracks, Helius DAS, and more."
+>
+> "This isn't a hackathon prototype. SIP won the Zypherpunk Hackathon in December 2025 — $6,500 across three tracks. We have a $10K Superteam grant approved. The Anchor program is deployed on Solana mainnet."
+
+**[ACTION: Scroll through the ResurrectionSection showing Problem → Solution → Result flow, then show integration badges per track]**
+
+---
+
+### CLOSING (2:48–3:00)
 
 **[SCREEN: Hub page, zoomed out to show all cards]**
 
-> "11 sponsor tracks. One privacy layer. Real cryptography — not mocks."
+> "11 sponsor tracks. One privacy layer. Real cryptography, real APIs, a playable game."
 >
 > "Every dead category on Solana died because users were exposed. SIP resurrects them all."
 >
@@ -160,44 +168,44 @@ Try it: https://app.sip-protocol.org[ROUTE]
 Showcase: https://app.sip-protocol.org/showcase/graveyard-2026
 Source: https://github.com/sip-protocol/sip-app
 
-SDK: 7,500+ tests | App: 820+ tests | Mainnet program live
+SDK: 7,500+ tests | App: 865+ tests | Mainnet program live
 Previous winner: Zypherpunk Hackathon 2025 ($6,500, #9/93, 3 tracks)
 ```
 
 ### Track-Specific Descriptions
 
 **1. Realms — Private Governance**
-> SIP Protocol brings privacy to DAO governance using Realms. Votes are cryptographically committed before reveal using Pedersen commitments — no one can see how you voted until the round ends, preventing vote manipulation and social pressure.
+> SIP Protocol brings privacy to DAO governance using Realms. We query real SPL Governance proposals from Marinade, Jupiter, and Mango DAOs on-chain. Votes use real Pedersen commitment-based ballot encryption — no one can see how you voted until the round ends.
 
 **2. Tapestry — Anonymous Social**
-> SIP Protocol brings privacy to social interaction using Tapestry's protocol. Users create stealth social identities — post, follow, and interact without linking activity to their wallet. Social graphs remain private.
+> SIP Protocol brings privacy to social interaction using Tapestry's SocialFi SDK. Real profile lookups and social graph queries. Users create stealth social identities — post, follow, and interact without linking activity to their wallet.
 
 **3. Torque — Privacy Loyalty**
-> SIP Protocol brings privacy to loyalty programs using Torque's campaign infrastructure. Users complete privacy campaigns and claim rewards to stealth addresses — participation is tracked off-chain with zero on-chain footprint.
+> SIP Protocol brings privacy to loyalty programs using Torque's SDK. Real campaign data integration. Users complete privacy campaigns and claim rewards to stealth addresses — participation is tracked off-chain with zero on-chain footprint.
 
 **4. Exchange Art — Privacy Art**
-> SIP Protocol brings privacy to digital art using Exchange Art. Generative art is deterministically derived from stealth address entropy — each privacy transaction creates unique visual art. Mint as compressed NFTs for ~$0.001 each.
+> SIP Protocol brings privacy to digital art using Exchange Art / Metaplex. Real compressed NFT minting via Bubblegum on devnet. Generative art is deterministically derived from stealth address entropy.
 
 **5. Sunrise — Green Migration**
-> SIP Protocol brings privacy to dead protocol migration using Sunrise. Users migrate stranded SOL from deprecated protocols (Saber, Solend v1, Port Finance) to green staking via stealth address — the destination deposit is unlinkable to the source wallet.
+> SIP Protocol brings privacy to dead protocol migration using Sunrise. Real wallet scanning via Solana RPC detects stranded tokens across deprecated protocols (Saber, Solend v1, Port Finance). Migrate to green staking via stealth address.
 
 **6. DRiP — Privacy NFTs**
-> SIP Protocol brings privacy to NFT distribution using DRiP. Privacy education content is encrypted with viewing key-gated access — free, subscriber, and premium tiers. Drops are distributed as compressed NFTs with stealth delivery.
+> SIP Protocol brings privacy to NFT distribution using DRiP. We created the SIP Privacy channel on DRiP with free compressed NFT drops about on-chain privacy. Content is encrypted with viewing key-gated access — free, subscriber, and premium tiers. Real DRiP NFT data fetched via Helius DAS API.
 
 **7. MagicBlock — Privacy Arena**
-> SIP Protocol brings privacy to on-chain gaming using MagicBlock's engine. Games use cryptographic commitments for hidden moves, viewing keys for fog-of-war, and stealth addresses for private reward claims. Commit-reveal, sealed bids, and tournaments.
+> SIP Protocol brings privacy to on-chain gaming using MagicBlock's framework. Features a playable Rock-Paper-Scissors game with real Pedersen commit-reveal — both players commit hashed moves, then reveal simultaneously. Deterministic resolution from commitment hash. Viewing keys for fog-of-war and stealth addresses for private reward claims.
 
 **8. KYD Labs — Privacy Ticketing**
-> SIP Protocol brings privacy to event ticketing using KYD Labs' platform. Ticket IDs are Pedersen commitments — prove you have a valid ticket without revealing which one. Stealth addresses prevent scalper bots and attendance tracking.
+> SIP Protocol brings privacy to event ticketing using KYD Labs. Real compressed NFT ticket minting via Helius DAS API. Ticket IDs are Pedersen commitments — prove you have a valid ticket without revealing which one.
 
 **9. Portals — Privacy Metaverse**
-> SIP Protocol brings privacy to virtual worlds using Portals' platform. Stealth avatars let users explore worlds anonymously. Teleportation uses private identity proofs — your origin and destination remain unlinkable.
+> SIP Protocol brings privacy to virtual worlds using Portals. Curated world data with enhanced spatial metadata. Stealth avatars with real cryptographic identity proofs let users explore worlds anonymously.
 
 **10. BIO — Privacy DeSci**
-> SIP Protocol brings privacy to decentralized science using BIO Protocol. Anonymous research funding via stealth addresses lets scientists fund controversial research without retaliation risk. Peer review uses anonymous identity proofs.
+> SIP Protocol brings privacy to decentralized science using BIO Protocol. Real BioDAO project data fetched from BIO's API — VitaDAO, HairDAO, PsyDAO, and more. Anonymous research funding via stealth addresses.
 
 **11. Audius — Privacy Music**
-> SIP Protocol brings privacy to music streaming using Audius' decentralized platform. Stealth listener identities prevent listening habit surveillance. Encrypted playlists and stealth royalty transfers keep your music taste private.
+> SIP Protocol brings privacy to music streaming using Audius' public REST API. Real track search and metadata from Audius' million-song catalog. Stealth listener identities and encrypted playlists keep your music taste private.
 
 ---
 

@@ -51,6 +51,40 @@ export function ChannelPageClient() {
         </p>
       </div>
 
+      {/* DRiP Channel Card */}
+      <div className="mb-10 p-5 rounded-2xl bg-gradient-to-r from-violet-600/20 to-purple-600/20 border border-violet-500/30">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <div className="flex-shrink-0 w-14 h-14 rounded-xl bg-violet-500/20 flex items-center justify-center text-3xl">
+            {"\u{1F4E1}"}
+          </div>
+          <div className="flex-1 min-w-0">
+            <h3 className="text-lg font-semibold text-violet-100">
+              SIP Privacy Channel on DRiP
+            </h3>
+            <p className="text-sm text-violet-300/80 mt-1">
+              Free compressed NFT drops about on-chain privacy. Stealth
+              addresses, Pedersen commitments, viewing keys — education content
+              delivered directly to your wallet.
+            </p>
+            <div className="flex flex-wrap gap-3 mt-2 text-xs text-violet-400">
+              <span>5 drops published</span>
+              <span>{"\u{2022}"}</span>
+              <span>3 tiers: Free / Subscriber / Premium</span>
+              <span>{"\u{2022}"}</span>
+              <span>Encrypted content with viewing key access</span>
+            </div>
+          </div>
+          <a
+            href="https://drip.haus/sip-protocol"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex-shrink-0 px-5 py-2.5 text-sm font-medium rounded-xl bg-violet-500 text-white hover:bg-violet-400 transition-colors"
+          >
+            View on DRiP
+          </a>
+        </div>
+      </div>
+
       {/* Stats */}
       <div className="mb-10">
         <ChannelStats />
