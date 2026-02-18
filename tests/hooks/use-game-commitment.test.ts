@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest"
 import { renderHook, act } from "@testing-library/react"
-import { useWallet, useConnection } from "@solana/wallet-adapter-react"
+import { useWallet } from "@solana/wallet-adapter-react"
 import { useGameCommitment } from "@/hooks/use-game-commitment"
 import { createCommitmentStore, createRevealTransaction } from "@/lib/solana/commitment-store"
 import { useSolanaTransaction } from "@/hooks/use-solana-transaction"

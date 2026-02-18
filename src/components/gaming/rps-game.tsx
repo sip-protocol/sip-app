@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback, useEffect, useRef } from "react"
+import { useState, useCallback, useRef } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
 import { useDemoModeStore } from "@/stores/demo-mode"
 import { DemoBanner } from "@/components/ui/demo-banner"
@@ -68,15 +68,12 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
   const canPlay = (connected || isDemoMode) && phase === "select"
 
   // Generate opponent commitment when player selects a move
-  useEffect(() => {
-    if (playerMove && phase === "select") {
-      // Opponent "commits" immediately (simulated)
-      const fakeCommitment = "0x" + Array.from({ length: 16 }, () =>
-        Math.floor(Math.random() * 16).toString(16)
-      ).join("")
-      setOpponentCommitment(fakeCommitment)
-    }
-  }, [playerMove, phase])
+  const generateOpponentCommitment = useCallback((move: RpsMove) => {
+    const fakeCommitment = "0x" + Array.from({ length: 16 }, () =>
+      Math.floor(Math.random() * 16).toString(16)
+    ).join("")
+    setOpponentCommitment(fakeCommitment)
+  }, [])
 
   const handlePlay = useCallback(async () => {
     if (!playerMove || !canPlay) return
@@ -251,7 +248,12 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
               key={move.id}
               type="button"
               disabled={isProcessing}
-              onClick={() => !isProcessing && setPlayerMove(move.id)}
+              onClick={() => {
+                if (!isProcessing) {
+                  setPlayerMove(move.id)
+                  if (phase === "select") generateOpponentCommitment(move.id)
+                }
+              }}
               className={cn(
                 "flex flex-col items-center justify-center py-5 px-3 rounded-xl border-2 transition-all",
                 playerMove === move.id
