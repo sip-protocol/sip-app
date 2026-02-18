@@ -4,6 +4,7 @@ import { useState, useCallback } from "react"
 import { GamingStats } from "@/components/gaming/gaming-stats"
 import { GameList } from "@/components/gaming/game-list"
 import { PlayForm } from "@/components/gaming/play-form"
+import { RpsGame } from "@/components/gaming/rps-game"
 import type { Game } from "@/lib/gaming/types"
 import { DeathRevivalCard } from "@/components/shared/death-revival-card"
 
@@ -34,7 +35,11 @@ export function GamingPageClient() {
         >
           &larr; Back to arena
         </button>
-        <PlayForm game={selectedGame} onResolved={handleBack} />
+        {selectedGame.gameType === "commit_reveal" ? (
+          <RpsGame game={selectedGame} onBack={handleBack} />
+        ) : (
+          <PlayForm game={selectedGame} onResolved={handleBack} />
+        )}
       </div>
     )
   }

@@ -142,8 +142,18 @@ export class GamingService {
         await new Promise((r) => setTimeout(r, SIMULATION_DELAYS.revealing))
       }
 
-      // Step 4: Resolved — deterministic outcome based on move
-      record.won = Math.random() > 0.4 // 60% win rate for demo
+      // Step 4: Resolved — deterministic RPS or random for other game types
+      const normalizedMove = params.move.toLowerCase().trim()
+      const rpsMap: Record<string, string> = { rock: "scissors", paper: "rock", scissors: "paper" }
+      if (rpsMap[normalizedMove] && record.commitmentHash) {
+        // Deterministic opponent from commitment hash
+        const hash = record.commitmentHash.split("").reduce((a, c) => a + c.charCodeAt(0), 0)
+        const oppMoves = ["rock", "paper", "scissors"]
+        const opponentMove = oppMoves[hash % 3]
+        record.won = normalizedMove === opponentMove ? false : rpsMap[normalizedMove] === opponentMove
+      } else {
+        record.won = Math.random() > 0.4 // 60% win rate for non-RPS games
+      }
       record.status = "resolved"
       record.completedAt = Date.now()
       record.stepTimestamps.resolved = Date.now()
