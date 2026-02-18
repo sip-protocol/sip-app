@@ -7,6 +7,7 @@ import type {
 } from "./types"
 import { SIMULATION_DELAYS, getDrop } from "./constants"
 import { generateChannelStealthAddress } from "./stealth-channel"
+import { encryptForViewingKey, encryptContent } from "@/lib/crypto-helpers"
 
 function generateId(prefix: string): string {
   return `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`
@@ -108,6 +109,16 @@ export class ChannelService {
         await new Promise((r) => setTimeout(r, SIMULATION_DELAYS.subscribing))
       }
 
+      // Phase 1B: Viewing key for compliant mode
+      if (params.privacyLevel === "compliant") {
+        const vk = await encryptForViewingKey({
+          dropId: params.dropId,
+          timestamp: Date.now(),
+        })
+        record.viewingKeyHash = vk.viewingKeyHash
+        record.encryptedForAuditor = vk.ciphertext
+      }
+
       // Step 3: Subscribed
       record.status = "subscribed"
       record.completedAt = Date.now()
@@ -167,6 +178,27 @@ export class ChannelService {
       const stealth = await generateChannelStealthAddress()
       record.stealthAddress = stealth.stealthAddress
       record.stealthMetaAddress = stealth.metaAddress
+
+      // Phase 1C: Real content encryption
+      const encryptedDrop = await encryptContent(
+        JSON.stringify({ dropId: record.dropId, title: params.title, contentType: params.contentType })
+      )
+      record.encryptedContent = encryptedDrop.ciphertext
+      record.encryptionNonce = encryptedDrop.nonce
+
+      // Phase 1B: Viewing key for compliant mode
+      if (params.privacyLevel === "compliant") {
+        const vk = await encryptForViewingKey({
+          dropId: record.dropId,
+          title: params.title,
+          contentType: params.contentType,
+          accessTier: params.accessTier,
+          stealthAddress: stealth.stealthAddress,
+          timestamp: Date.now(),
+        })
+        record.viewingKeyHash = vk.viewingKeyHash
+        record.encryptedForAuditor = vk.ciphertext
+      }
 
       if (this.mode === "simulation") {
         await new Promise((r) =>

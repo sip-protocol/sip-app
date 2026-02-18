@@ -53,6 +53,11 @@ export interface ChannelActionRecord {
   title?: string
   stealthAddress?: string
   stealthMetaAddress?: string
+  // Privacy encryption
+  viewingKeyHash?: string
+  encryptedForAuditor?: string
+  encryptedContent?: string
+  encryptionNonce?: string
   // Timestamps
   startedAt: number
   completedAt?: number

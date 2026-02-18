@@ -62,6 +62,11 @@ export interface GamingActionRecord {
   rewardTier?: RewardTier
   stealthAddress?: string
   stealthMetaAddress?: string
+  // Privacy encryption
+  viewingKeyHash?: string
+  encryptedForAuditor?: string
+  encryptedContent?: string
+  encryptionNonce?: string
   // Timestamps
   startedAt: number
   completedAt?: number

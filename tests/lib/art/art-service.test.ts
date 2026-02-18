@@ -17,6 +17,19 @@ vi.mock("@sip-protocol/sdk", () => ({
     sharedSecret: "0x" + "ff".repeat(32),
   }),
   encodeStealthMetaAddress: () => "st:sol:0x" + "ab".repeat(32),
+  createCommitment: () => ({
+    value: "0x" + "ab".repeat(32),
+    blindingFactor: "0x" + "cd".repeat(32),
+  }),
+  generateViewingKey: () => ({
+    hash: "0xmock_viewing_key_hash",
+    publicKey: "0x" + "ee".repeat(32),
+    privateKey: "0x" + "ff".repeat(32),
+  }),
+  encryptForViewing: () => ({
+    ciphertext: "mock_ciphertext",
+    nonce: "mock_nonce",
+  }),
 }))
 
 vi.mock("@/lib/sip-client", () => ({

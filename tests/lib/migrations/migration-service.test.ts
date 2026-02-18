@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest"
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest"
 import { MigrationService } from "@/lib/migrations/migration-service"
 import type { MigrationParams, MigrationStep, MigrationSource } from "@/lib/migrations/types"
 import { PrivacyLevel } from "@sip-protocol/types"
@@ -13,6 +13,38 @@ vi.mock("@/lib/migrations/stealth-migration", () => ({
     sharedSecret: "mock-shared-secret",
   }),
 }))
+
+// Mock crypto helpers (dynamic SDK import doesn't resolve under fake timers)
+vi.mock("@/lib/crypto-helpers", () => ({
+  encryptForViewingKey: vi.fn().mockResolvedValue({
+    ciphertext: "mock-ciphertext",
+    nonce: "mock-nonce",
+    viewingKeyHash: "mock-viewing-key-hash",
+  }),
+}))
+
+// Mock @solana/web3.js to prevent real RPC calls under fake timers
+vi.mock("@solana/web3.js", () => {
+  class MockPublicKey {
+    private _key: string
+    constructor(key: string) { this._key = key }
+    toBase58() { return this._key }
+    toString() { return this._key }
+  }
+
+  class MockConnection {
+    getTokenSupply = vi.fn().mockResolvedValue({
+      value: { amount: "85432000000000", decimals: 9, uiAmount: 85432.0, uiAmountString: "85432" },
+    })
+    getBalance = vi.fn().mockResolvedValue(2_500_000_000)
+  }
+
+  return {
+    Connection: MockConnection,
+    PublicKey: MockPublicKey,
+    LAMPORTS_PER_SOL: 1_000_000_000,
+  }
+})
 
 function createManualSource(balance = "10"): MigrationSource {
   return {
@@ -42,6 +74,10 @@ function createProtocolSource(): MigrationSource {
 describe("MigrationService", () => {
   beforeEach(() => {
     vi.useFakeTimers()
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
   })
 
   describe("validate", () => {
@@ -207,17 +243,27 @@ describe("MigrationService", () => {
       expect(result.stepTimestamps.complete).toBeTruthy()
     })
 
-    it("devnet mode throws not implemented", async () => {
-      const service = new MigrationService({ mode: "devnet" })
+    it("devnet mode falls back to simulation behavior", async () => {
+      const steps: MigrationStep[] = []
+      const service = new MigrationService({
+        mode: "devnet",
+        onStepChange: (step) => {
+          steps.push(step)
+        },
+      })
       const params: MigrationParams = {
         source: createManualSource(),
         amount: "1",
         privacyLevel: PrivacyLevel.SHIELDED,
       }
 
-      await expect(
-        service.executeMigration(params)
-      ).rejects.toThrow("Devnet mode is not yet implemented")
+      const promise = service.executeMigration(params)
+      await vi.advanceTimersByTimeAsync(20000)
+      const result = await promise
+
+      expect(result.status).toBe("complete")
+      expect(result.stealthAddress).toBeTruthy()
+      expect(steps).toContain("complete")
     })
 
     it("preserves privacy level from params", async () => {

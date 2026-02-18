@@ -7,6 +7,7 @@ import type {
 } from "./types"
 import { SIMULATION_DELAYS, getTrack } from "./constants"
 import { generateMusicStealthAddress } from "./stealth-music"
+import { createRealCommitment, encryptForViewingKey, encryptContent } from "@/lib/crypto-helpers"
 
 function generateId(prefix: string): string {
   return `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`
@@ -109,14 +110,21 @@ export class MusicService {
       record.stealthAddress = stealth.stealthAddress
       record.stealthMetaAddress = stealth.metaAddress
 
-      // Generate a simulated commitment hash for stream ID
-      const commitBytes = new Uint8Array(32)
-      crypto.getRandomValues(commitBytes)
-      record.commitmentHash = `0x${Array.from(commitBytes.slice(0, 4))
-        .map((b) => b.toString(16).padStart(2, "0"))
-        .join("")}...${Array.from(commitBytes.slice(28))
-        .map((b) => b.toString(16).padStart(2, "0"))
-        .join("")}`
+      // Real Pedersen commitment via SDK
+      const commitment = await createRealCommitment()
+      record.commitmentHash = commitment.commitmentDisplay
+
+      // Phase 1B: Viewing key for compliant mode
+      if (params.privacyLevel === "compliant") {
+        const vk = await encryptForViewingKey({
+          trackId: params.trackId,
+          tier: params.tier,
+          commitment: commitment.commitmentDisplay,
+          timestamp: Date.now(),
+        })
+        record.viewingKeyHash = vk.viewingKeyHash
+        record.encryptedForAuditor = vk.ciphertext
+      }
 
       if (this.mode === "simulation") {
         await new Promise((r) =>
@@ -185,6 +193,13 @@ export class MusicService {
       record.stealthAddress = stealth.stealthAddress
       record.stealthMetaAddress = stealth.metaAddress
 
+      // Phase 1C: Encrypt playlist content
+      const encryptedPlaylist = await encryptContent(
+        JSON.stringify({ trackId: params.trackId, tier: params.tier })
+      )
+      record.encryptedContent = encryptedPlaylist.ciphertext
+      record.encryptionNonce = encryptedPlaylist.nonce
+
       if (this.mode === "simulation") {
         await new Promise((r) =>
           setTimeout(r, SIMULATION_DELAYS.generating_proof)
@@ -195,6 +210,18 @@ export class MusicService {
       record.status = "encrypting_playlist"
       record.stepTimestamps.encrypting_playlist = Date.now()
       this.onStepChange?.("encrypting_playlist", { ...record })
+
+      // Phase 1B: Viewing key for compliant mode
+      if (params.privacyLevel === "compliant") {
+        const vk = await encryptForViewingKey({
+          trackId: params.trackId,
+          tier: params.tier,
+          stealthAddress: stealth.stealthAddress,
+          timestamp: Date.now(),
+        })
+        record.viewingKeyHash = vk.viewingKeyHash
+        record.encryptedForAuditor = vk.ciphertext
+      }
 
       if (this.mode === "simulation") {
         await new Promise((r) =>

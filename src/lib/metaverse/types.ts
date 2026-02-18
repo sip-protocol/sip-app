@@ -57,6 +57,11 @@ export interface MetaverseActionRecord {
   stealthAddress?: string
   stealthMetaAddress?: string
   teleportVerified?: boolean
+  // Privacy encryption
+  viewingKeyHash?: string
+  encryptedForAuditor?: string
+  encryptedContent?: string
+  encryptionNonce?: string
   // Timestamps
   startedAt: number
   completedAt?: number

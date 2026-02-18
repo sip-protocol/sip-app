@@ -7,6 +7,7 @@ import type {
 } from "./types"
 import { SIMULATION_DELAYS, getGame } from "./constants"
 import { generateGamingStealthAddress } from "./stealth-gaming"
+import { createRealCommitment, encryptForViewingKey, encryptContent } from "@/lib/crypto-helpers"
 
 function generateId(prefix: string): string {
   return `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`
@@ -105,14 +106,26 @@ export class GamingService {
       record.stepTimestamps.generating_commitment = Date.now()
       this.onStepChange?.("generating_commitment", { ...record })
 
-      // Generate a simulated commitment hash
-      const commitBytes = new Uint8Array(32)
-      crypto.getRandomValues(commitBytes)
-      record.commitmentHash = `0x${Array.from(commitBytes.slice(0, 4))
-        .map((b) => b.toString(16).padStart(2, "0"))
-        .join("")}...${Array.from(commitBytes.slice(28))
-        .map((b) => b.toString(16).padStart(2, "0"))
-        .join("")}`
+      // Real Pedersen commitment via SDK
+      const commitment = await createRealCommitment()
+      record.commitmentHash = commitment.commitmentDisplay
+
+      // Phase 1C: Encrypt game move
+      const encryptedMove = await encryptContent(params.move)
+      record.encryptedContent = encryptedMove.ciphertext
+      record.encryptionNonce = encryptedMove.nonce
+
+      // Phase 1B: Viewing key for compliant mode
+      if (params.privacyLevel === "compliant") {
+        const vk = await encryptForViewingKey({
+          gameId: params.gameId,
+          move: params.move,
+          commitment: commitment.commitmentDisplay,
+          timestamp: Date.now(),
+        })
+        record.viewingKeyHash = vk.viewingKeyHash
+        record.encryptedForAuditor = vk.ciphertext
+      }
 
       if (this.mode === "simulation") {
         await new Promise((r) =>
@@ -179,6 +192,18 @@ export class GamingService {
       const stealth = await generateGamingStealthAddress()
       record.stealthAddress = stealth.stealthAddress
       record.stealthMetaAddress = stealth.metaAddress
+
+      // Phase 1B: Viewing key for compliant mode
+      if (params.privacyLevel === "compliant") {
+        const vk = await encryptForViewingKey({
+          gameId: params.gameId,
+          rewardTier: params.rewardTier,
+          stealthAddress: stealth.stealthAddress,
+          timestamp: Date.now(),
+        })
+        record.viewingKeyHash = vk.viewingKeyHash
+        record.encryptedForAuditor = vk.ciphertext
+      }
 
       if (this.mode === "simulation") {
         await new Promise((r) =>

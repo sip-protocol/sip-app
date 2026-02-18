@@ -178,12 +178,20 @@ describe("BridgeService", () => {
   })
 
   describe("executeBridge (ntt mode)", () => {
-    it("throws not implemented error", async () => {
-      const service = new BridgeService({ mode: "ntt" })
+    it("falls back to simulation behavior", async () => {
+      const steps: BridgeStep[] = []
+      const service = new BridgeService({
+        mode: "ntt",
+        onStepChange: (step) => steps.push(step),
+      })
 
-      await expect(service.executeBridge(validParams)).rejects.toThrow(
-        "NTT mode is not yet implemented",
-      )
+      const result = await service.executeBridge(validParams)
+
+      expect(result.status).toBe("complete")
+      expect(result.stealthAddress).toBeTruthy()
+      expect(result.sourceTxHash).toBeTruthy()
+      expect(result.destTxHash).toBeTruthy()
+      expect(steps).toContain("complete")
     })
   })
 })

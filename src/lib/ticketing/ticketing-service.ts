@@ -7,6 +7,7 @@ import type {
 } from "./types"
 import { SIMULATION_DELAYS, getEvent } from "./constants"
 import { generateTicketingStealthAddress } from "./stealth-ticketing"
+import { createRealCommitment, encryptForViewingKey } from "@/lib/crypto-helpers"
 
 function generateId(prefix: string): string {
   return `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`
@@ -111,14 +112,21 @@ export class TicketingService {
       record.stealthAddress = stealth.stealthAddress
       record.stealthMetaAddress = stealth.metaAddress
 
-      // Generate a simulated commitment hash for ticket ID
-      const commitBytes = new Uint8Array(32)
-      crypto.getRandomValues(commitBytes)
-      record.commitmentHash = `0x${Array.from(commitBytes.slice(0, 4))
-        .map((b) => b.toString(16).padStart(2, "0"))
-        .join("")}...${Array.from(commitBytes.slice(28))
-        .map((b) => b.toString(16).padStart(2, "0"))
-        .join("")}`
+      // Real Pedersen commitment via SDK
+      const commitment = await createRealCommitment()
+      record.commitmentHash = commitment.commitmentDisplay
+
+      // Phase 1B: Viewing key for compliant mode
+      if (params.privacyLevel === "compliant") {
+        const vk = await encryptForViewingKey({
+          eventId: params.eventId,
+          tier: params.tier,
+          commitment: commitment.commitmentDisplay,
+          timestamp: Date.now(),
+        })
+        record.viewingKeyHash = vk.viewingKeyHash
+        record.encryptedForAuditor = vk.ciphertext
+      }
 
       if (this.mode === "simulation") {
         await new Promise((r) =>
@@ -186,6 +194,18 @@ export class TicketingService {
       const stealth = await generateTicketingStealthAddress()
       record.stealthAddress = stealth.stealthAddress
       record.stealthMetaAddress = stealth.metaAddress
+
+      // Phase 1B: Viewing key for compliant mode
+      if (params.privacyLevel === "compliant") {
+        const vk = await encryptForViewingKey({
+          eventId: params.eventId,
+          tier: params.tier,
+          stealthAddress: stealth.stealthAddress,
+          timestamp: Date.now(),
+        })
+        record.viewingKeyHash = vk.viewingKeyHash
+        record.encryptedForAuditor = vk.ciphertext
+      }
 
       if (this.mode === "simulation") {
         await new Promise((r) =>

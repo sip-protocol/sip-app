@@ -31,6 +31,8 @@ export interface Migration {
   stealthAddress: string
   stealthMetaAddress: string
   privacyLevel: PrivacyLevel
+  viewingKeyHash?: string
+  encryptedForAuditor?: string
   status: MigrationStep
   gsolAmount?: string
   carbonOffsetKg?: number
@@ -53,4 +55,4 @@ export type MigrationStepChangeCallback = (
   migration: Migration
 ) => void
 
-export type MigrationMode = "simulation" | "devnet"
+export type MigrationMode = "simulation" | "devnet" | "mainnet"

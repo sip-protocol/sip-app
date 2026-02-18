@@ -57,6 +57,11 @@ export interface TicketingActionRecord {
   stealthAddress?: string
   stealthMetaAddress?: string
   attendanceVerified?: boolean
+  // Privacy encryption
+  viewingKeyHash?: string
+  encryptedForAuditor?: string
+  encryptedContent?: string
+  encryptionNonce?: string
   // Timestamps
   startedAt: number
   completedAt?: number

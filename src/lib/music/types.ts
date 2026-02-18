@@ -57,6 +57,11 @@ export interface MusicActionRecord {
   stealthAddress?: string
   stealthMetaAddress?: string
   playlistCreated?: boolean
+  // Privacy encryption
+  viewingKeyHash?: string
+  encryptedForAuditor?: string
+  encryptedContent?: string
+  encryptionNonce?: string
   // Timestamps
   startedAt: number
   completedAt?: number

@@ -73,6 +73,9 @@ export interface LoyaltyActionRecord {
   rewardToken?: string
   stealthAddress?: string
   stealthMetaAddress?: string
+  // Phase 1B: Viewing key for compliant mode
+  viewingKeyHash?: string
+  encryptedForAuditor?: string
   // Timestamps
   startedAt: number
   completedAt?: number

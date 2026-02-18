@@ -7,6 +7,7 @@ import type {
 } from "./types"
 import { SIMULATION_DELAYS, getProject } from "./constants"
 import { generateDeSciStealthAddress } from "./stealth-desci"
+import { createRealCommitment, encryptForViewingKey, encryptContent } from "@/lib/crypto-helpers"
 
 function generateId(prefix: string): string {
   return `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`
@@ -109,14 +110,21 @@ export class DeSciService {
       record.stealthAddress = stealth.stealthAddress
       record.stealthMetaAddress = stealth.metaAddress
 
-      // Generate a simulated commitment hash for funding ID
-      const commitBytes = new Uint8Array(32)
-      crypto.getRandomValues(commitBytes)
-      record.commitmentHash = `0x${Array.from(commitBytes.slice(0, 4))
-        .map((b) => b.toString(16).padStart(2, "0"))
-        .join("")}...${Array.from(commitBytes.slice(28))
-        .map((b) => b.toString(16).padStart(2, "0"))
-        .join("")}`
+      // Real Pedersen commitment via SDK
+      const commitment = await createRealCommitment()
+      record.commitmentHash = commitment.commitmentDisplay
+
+      // Phase 1B: Viewing key for compliant mode
+      if (params.privacyLevel === "compliant") {
+        const vk = await encryptForViewingKey({
+          projectId: params.projectId,
+          tier: params.tier,
+          commitment: commitment.commitmentDisplay,
+          timestamp: Date.now(),
+        })
+        record.viewingKeyHash = vk.viewingKeyHash
+        record.encryptedForAuditor = vk.ciphertext
+      }
 
       if (this.mode === "simulation") {
         await new Promise((r) =>
@@ -182,6 +190,25 @@ export class DeSciService {
       const stealth = await generateDeSciStealthAddress()
       record.stealthAddress = stealth.stealthAddress
       record.stealthMetaAddress = stealth.metaAddress
+
+      // Phase 1C: Encrypt review content
+      const encryptedReview = await encryptContent(
+        JSON.stringify({ projectId: params.projectId, tier: params.tier, type: "peer_review" })
+      )
+      record.encryptedContent = encryptedReview.ciphertext
+      record.encryptionNonce = encryptedReview.nonce
+
+      // Phase 1B: Viewing key for compliant mode
+      if (params.privacyLevel === "compliant") {
+        const vk = await encryptForViewingKey({
+          projectId: params.projectId,
+          tier: params.tier,
+          stealthAddress: stealth.stealthAddress,
+          timestamp: Date.now(),
+        })
+        record.viewingKeyHash = vk.viewingKeyHash
+        record.encryptedForAuditor = vk.ciphertext
+      }
 
       if (this.mode === "simulation") {
         await new Promise((r) =>

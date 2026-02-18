@@ -8,6 +8,7 @@ import type {
 import { SIMULATION_DELAYS } from "./constants"
 import { generateMigrationStealthAddress } from "./stealth-migration"
 import { SunriseClient } from "./sunrise-client"
+import { encryptForViewingKey } from "@/lib/crypto-helpers"
 
 function generateId(): string {
   return `migration_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`
@@ -128,6 +129,19 @@ export class MigrationService {
         const stealth = await generateMigrationStealthAddress()
         migration.stealthAddress = stealth.stealthAddress
         migration.stealthMetaAddress = stealth.stealthMetaAddress
+
+        // Phase 1B: Viewing key for compliant mode
+        if (migration.privacyLevel === "compliant") {
+          const vk = await encryptForViewingKey({
+            amount: migration.amount,
+            sourceProtocol: migration.source?.protocol,
+            stealthAddress: migration.stealthAddress,
+            timestamp: Date.now(),
+          })
+          migration.viewingKeyHash = vk.viewingKeyHash
+          migration.encryptedForAuditor = vk.ciphertext
+        }
+
         if (delay > 0) {
           await new Promise((r) => setTimeout(r, delay))
         }
@@ -158,9 +172,10 @@ export class MigrationService {
   }
 
   private async executeDevnetStep(
-    _step: MigrationStep,
-    _migration: Migration
+    step: MigrationStep,
+    migration: Migration
   ): Promise<void> {
-    throw new Error("Devnet mode is not yet implemented. Use simulation mode.")
+    console.warn("[SIP] Devnet mode not available for migrations, using simulation fallback")
+    return this.executeSimulationStep(step, migration)
   }
 }

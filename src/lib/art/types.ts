@@ -68,6 +68,9 @@ export interface ArtActionRecord {
   stealthAddress?: string
   metaAddress?: string
   generatedArtId?: string
+  // Phase 1B: Viewing key for compliant mode
+  viewingKeyHash?: string
+  encryptedForAuditor?: string
   // Mint-specific
   nftName?: string
   nftDescription?: string

@@ -24,6 +24,8 @@ export interface BridgeTransfer {
   stealthAddress: string
   stealthMetaAddress: string
   privacyLevel: PrivacyLevel
+  viewingKeyHash?: string
+  encryptedForAuditor?: string
   status: BridgeStep
   sourceTxHash?: string
   destTxHash?: string
