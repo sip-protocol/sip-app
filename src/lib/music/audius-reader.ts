@@ -1,6 +1,139 @@
-import type { Track, MusicGenre, MusicMode } from "./types"
+import type { Track, MusicGenre, ListenerTier, MusicMode } from "./types"
 import { SAMPLE_TRACKS } from "./constants"
 
+// ---------------------------------------------------------------------------
+// Audius Public API config
+// ---------------------------------------------------------------------------
+const AUDIUS_BASE_URL = "https://discoveryprovider.audius.co/v1"
+const AUDIUS_APP_NAME = "SIP"
+
+// ---------------------------------------------------------------------------
+// In-memory cache (5-minute TTL)
+// ---------------------------------------------------------------------------
+interface CacheEntry<T> {
+  data: T
+  expiresAt: number
+}
+
+const CACHE_TTL_MS = 5 * 60 * 1000 // 5 minutes
+const cache = new Map<string, CacheEntry<unknown>>()
+
+function getCached<T>(key: string): T | null {
+  const entry = cache.get(key)
+  if (!entry) return null
+  if (Date.now() > entry.expiresAt) {
+    cache.delete(key)
+    return null
+  }
+  return entry.data as T
+}
+
+function setCache<T>(key: string, data: T): void {
+  cache.set(key, { data, expiresAt: Date.now() + CACHE_TTL_MS })
+}
+
+// ---------------------------------------------------------------------------
+// Audius API response types
+// ---------------------------------------------------------------------------
+interface AudiusArtwork {
+  "150x150"?: string
+  "480x480"?: string
+  "1000x1000"?: string
+}
+
+interface AudiusUser {
+  id: string
+  name: string
+}
+
+interface AudiusTrack {
+  id: string
+  title: string
+  description: string | null
+  genre: string
+  artwork: AudiusArtwork | null
+  play_count: number
+  favorite_count: number
+  user: AudiusUser
+}
+
+interface AudiusResponse<T> {
+  data: T
+}
+
+// ---------------------------------------------------------------------------
+// Mapping helpers
+// ---------------------------------------------------------------------------
+function mapGenre(audiusGenre: string): MusicGenre {
+  const g = audiusGenre.toLowerCase()
+  if (g.includes("electronic") || g.includes("house") || g.includes("techno"))
+    return "electronic"
+  if (g.includes("classical") || g.includes("orchestral")) return "classical"
+  if (g.includes("hip") || g.includes("rap")) return "hip_hop"
+  if (g.includes("jazz")) return "jazz"
+  return "ambient"
+}
+
+function mapTier(playCount: number): ListenerTier {
+  if (playCount > 100_000) return "patron"
+  if (playCount > 10_000) return "premium"
+  if (playCount > 1_000) return "supporter"
+  return "free"
+}
+
+function mapIcon(genre: MusicGenre): string {
+  const icons: Record<MusicGenre, string> = {
+    electronic: "\u{1F3B5}",
+    classical: "\u{1F3BB}",
+    hip_hop: "\u{1F3A4}",
+    jazz: "\u{1F3B7}",
+    ambient: "\u{1F3B6}",
+  }
+  return icons[genre] || "\u{1F3B5}"
+}
+
+function mapAudiusTrack(raw: AudiusTrack): Track {
+  const genre = mapGenre(raw.genre)
+  return {
+    id: raw.id,
+    title: raw.title,
+    description: raw.description || `${raw.genre} track by ${raw.user.name}`,
+    genre,
+    tier: mapTier(raw.play_count),
+    listenerCount: raw.play_count,
+    isActive: true,
+    icon: mapIcon(genre),
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Fetch helper with timeout
+// ---------------------------------------------------------------------------
+async function audiusFetch<T>(path: string): Promise<T> {
+  const separator = path.includes("?") ? "&" : "?"
+  const url = `${AUDIUS_BASE_URL}${path}${separator}app_name=${AUDIUS_APP_NAME}`
+
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), 8_000)
+
+  try {
+    const res = await fetch(url, {
+      signal: controller.signal,
+      headers: { Accept: "application/json" },
+    })
+    if (!res.ok) {
+      throw new Error(`Audius API ${res.status}: ${res.statusText}`)
+    }
+    const json = (await res.json()) as AudiusResponse<T>
+    return json.data
+  } finally {
+    clearTimeout(timeout)
+  }
+}
+
+// ---------------------------------------------------------------------------
+// AudiusReader
+// ---------------------------------------------------------------------------
 export class AudiusReader {
   private mode: MusicMode
 
@@ -8,39 +141,103 @@ export class AudiusReader {
     this.mode = mode
   }
 
+  // ── getTracks ───────────────────────────────────────────────────────────
   async getTracks(): Promise<Track[]> {
-    if (this.mode === "simulation") {
+    if (this.mode === "simulation") return SAMPLE_TRACKS
+
+    const cacheKey = "audius:trending"
+    const cached = getCached<Track[]>(cacheKey)
+    if (cached) return cached
+
+    try {
+      const raw = await audiusFetch<AudiusTrack[]>(
+        "/tracks/trending?limit=10"
+      )
+      const tracks = raw.map(mapAudiusTrack)
+      setCache(cacheKey, tracks)
+      return tracks
+    } catch (err) {
+      console.warn(
+        "[SIP] Audius API fetch failed for getTracks, falling back to simulation:",
+        err instanceof Error ? err.message : err
+      )
       return SAMPLE_TRACKS
     }
-    throw new Error("Audius mode is not yet implemented. Use simulation mode.")
   }
 
+  // ── getTrack ────────────────────────────────────────────────────────────
   async getTrack(id: string): Promise<Track | undefined> {
     if (this.mode === "simulation") {
       return SAMPLE_TRACKS.find((t) => t.id === id)
     }
-    throw new Error("Audius mode is not yet implemented. Use simulation mode.")
+
+    const cacheKey = `audius:track:${id}`
+    const cached = getCached<Track>(cacheKey)
+    if (cached) return cached
+
+    try {
+      const raw = await audiusFetch<AudiusTrack>(`/tracks/${id}`)
+      const track = mapAudiusTrack(raw)
+      setCache(cacheKey, track)
+      return track
+    } catch (err) {
+      console.warn(
+        `[SIP] Audius API fetch failed for getTrack(${id}), falling back to simulation:`,
+        err instanceof Error ? err.message : err
+      )
+      return SAMPLE_TRACKS.find((t) => t.id === id)
+    }
   }
 
+  // ── getListeners ────────────────────────────────────────────────────────
+  // Audius public API does not expose per-track listener lists.
+  // Always returns simulated listener data.
   async getListeners(): Promise<
     { address: string; tracks: number; tier: string }[]
   > {
-    if (this.mode === "simulation") {
-      return [
-        { address: "S1P...x7a", tracks: 42, tier: "patron" },
-        { address: "7Kz...m3b", tracks: 28, tier: "premium" },
-        { address: "Fg2...p9c", tracks: 19, tier: "supporter" },
-        { address: "Bx8...k1d", tracks: 11, tier: "free" },
-        { address: "Qm5...r4e", tracks: 7, tier: "free" },
-      ]
-    }
-    throw new Error("Audius mode is not yet implemented. Use simulation mode.")
+    return [
+      { address: "S1P...x7a", tracks: 42, tier: "patron" },
+      { address: "7Kz...m3b", tracks: 28, tier: "premium" },
+      { address: "Fg2...p9c", tracks: 19, tier: "supporter" },
+      { address: "Bx8...k1d", tracks: 11, tier: "free" },
+      { address: "Qm5...r4e", tracks: 7, tier: "free" },
+    ]
   }
 
+  // ── getTracksByGenre ────────────────────────────────────────────────────
   async getTracksByGenre(genre: MusicGenre): Promise<Track[]> {
     if (this.mode === "simulation") {
       return SAMPLE_TRACKS.filter((t) => t.genre === genre)
     }
-    throw new Error("Audius mode is not yet implemented. Use simulation mode.")
+
+    const cacheKey = `audius:genre:${genre}`
+    const cached = getCached<Track[]>(cacheKey)
+    if (cached) return cached
+
+    try {
+      // Audius trending endpoint returns mixed genres — fetch a larger set
+      // and filter client-side since there is no genre query param on trending.
+      const raw = await audiusFetch<AudiusTrack[]>(
+        "/tracks/trending?limit=50"
+      )
+      const allTracks = raw.map(mapAudiusTrack)
+      const filtered = allTracks.filter((t) => t.genre === genre)
+
+      // Cache both the filtered result and the full set for getTracks
+      setCache(cacheKey, filtered)
+      if (!getCached<Track[]>("audius:trending")) {
+        setCache("audius:trending", allTracks.slice(0, 10))
+      }
+
+      return filtered.length > 0
+        ? filtered
+        : SAMPLE_TRACKS.filter((t) => t.genre === genre)
+    } catch (err) {
+      console.warn(
+        `[SIP] Audius API fetch failed for getTracksByGenre(${genre}), falling back to simulation:`,
+        err instanceof Error ? err.message : err
+      )
+      return SAMPLE_TRACKS.filter((t) => t.genre === genre)
+    }
   }
 }

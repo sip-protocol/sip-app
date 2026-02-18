@@ -88,24 +88,29 @@ describe("TapestryReader", () => {
   describe("tapestry mode", () => {
     const reader = new TapestryReader("tapestry")
 
-    it("throws not implemented for getProfiles", async () => {
-      await expect(reader.getProfiles()).rejects.toThrow("Tapestry mode is not yet implemented")
+    it("falls back to simulation data for getProfiles", async () => {
+      const profiles = await reader.getProfiles()
+      expect(profiles.length).toBeGreaterThanOrEqual(1)
     })
 
-    it("throws not implemented for getProfile", async () => {
-      await expect(reader.getProfile("any")).rejects.toThrow("Tapestry mode is not yet implemented")
+    it("falls back to simulation data for getProfile", async () => {
+      const profile = await reader.getProfile("profile-dolphin")
+      expect(profile).toBeDefined()
     })
 
-    it("throws not implemented for getPosts", async () => {
-      await expect(reader.getPosts()).rejects.toThrow("Tapestry mode is not yet implemented")
+    it("falls back to simulation data for getPosts", async () => {
+      const posts = await reader.getPosts()
+      expect(posts.length).toBeGreaterThanOrEqual(1)
     })
 
-    it("throws not implemented for getConnections", async () => {
-      await expect(reader.getConnections("any")).rejects.toThrow("Tapestry mode is not yet implemented")
+    it("falls back to simulation data for getConnections", async () => {
+      const connections = await reader.getConnections("profile-dolphin")
+      expect(connections.length).toBeGreaterThanOrEqual(1)
     })
 
-    it("throws not implemented for getFeed", async () => {
-      await expect(reader.getFeed()).rejects.toThrow("Tapestry mode is not yet implemented")
+    it("falls back to simulation data for getFeed", async () => {
+      const feed = await reader.getFeed()
+      expect(feed.length).toBeGreaterThanOrEqual(1)
     })
   })
 })
