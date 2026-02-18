@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils"
 import { ListenerTierBadge } from "./listener-tier-badge"
+import { AudioPlayer } from "./audio-player"
 import { MUSIC_GENRE_LABELS } from "@/lib/music/constants"
 import type { Track } from "@/lib/music/types"
 
@@ -27,7 +28,7 @@ export function TrackCard({ track, onStream, className }: TrackCardProps) {
           <div>
             <h3 className="font-semibold text-sm">{track.title}</h3>
             <p className="text-xs text-[var(--text-tertiary)]">
-              {track.listenerCount} listeners
+              {track.listenerCount.toLocaleString()} listeners
             </p>
           </div>
         </div>
@@ -35,9 +36,14 @@ export function TrackCard({ track, onStream, className }: TrackCardProps) {
       </div>
 
       {/* Description */}
-      <p className="text-sm text-[var(--text-secondary)] mb-4 line-clamp-2">
+      <p className="text-sm text-[var(--text-secondary)] mb-3 line-clamp-2">
         {track.description}
       </p>
+
+      {/* Audio Preview */}
+      <div className="mb-3">
+        <AudioPlayer trackId={track.id} title={track.title} />
+      </div>
 
       {/* Meta */}
       <div className="flex items-center justify-between">

@@ -51,6 +51,39 @@ export function MusicPageClient() {
         </p>
       </div>
 
+      {/* Audius Platform Card */}
+      <div className="mb-10 p-5 rounded-2xl bg-gradient-to-r from-pink-600/20 to-purple-600/20 border border-pink-500/30">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <div className="flex-shrink-0 w-14 h-14 rounded-xl bg-pink-500/20 flex items-center justify-center text-3xl">
+            {"\u{1F3B5}"}
+          </div>
+          <div className="flex-1 min-w-0">
+            <h3 className="text-lg font-semibold text-pink-100">
+              Powered by Audius
+            </h3>
+            <p className="text-sm text-pink-300/80 mt-1">
+              Real tracks from Audius&apos; decentralized catalog. Stream with
+              stealth listener identity — your music taste stays private.
+            </p>
+            <div className="flex flex-wrap gap-3 mt-2 text-xs text-pink-400">
+              <span>1M+ tracks</span>
+              <span>{"\u{2022}"}</span>
+              <span>Live audio preview</span>
+              <span>{"\u{2022}"}</span>
+              <span>Stealth royalty payments</span>
+            </div>
+          </div>
+          <a
+            href="https://audius.co"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex-shrink-0 px-5 py-2.5 text-sm font-medium rounded-xl bg-pink-500 text-white hover:bg-pink-400 transition-colors"
+          >
+            Audius
+          </a>
+        </div>
+      </div>
+
       {/* Stats */}
       <div className="mb-10">
         <MusicStats />

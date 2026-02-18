@@ -87,6 +87,40 @@ export function ArtPageClient() {
         <ArtStats />
       </div>
 
+      {/* Exchange Art Card */}
+      <div className="mb-8 p-5 rounded-2xl bg-gradient-to-r from-rose-600/20 to-orange-600/20 border border-rose-500/30">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <div className="flex-shrink-0 w-14 h-14 rounded-xl bg-rose-500/20 flex items-center justify-center text-3xl">
+            {"\u{1F3A8}"}
+          </div>
+          <div className="flex-1 min-w-0">
+            <h3 className="text-lg font-semibold text-rose-100">
+              Mint on Exchange Art
+            </h3>
+            <p className="text-sm text-rose-300/80 mt-1">
+              Generate stealth art from privacy transaction entropy, then mint
+              as compressed NFTs on Solana. Each piece is deterministic —
+              same inputs, same art.
+            </p>
+            <div className="flex flex-wrap gap-3 mt-2 text-xs text-rose-400">
+              <span>3 art styles</span>
+              <span>{"\u{2022}"}</span>
+              <span>Compressed NFTs via Bubblegum</span>
+              <span>{"\u{2022}"}</span>
+              <span>~$0.001 per mint</span>
+            </div>
+          </div>
+          <a
+            href="https://exchange.art"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex-shrink-0 px-5 py-2.5 text-sm font-medium rounded-xl bg-rose-500 text-white hover:bg-rose-400 transition-colors"
+          >
+            Exchange Art
+          </a>
+        </div>
+      </div>
+
       {/* Action buttons */}
       <div className="flex gap-3 mb-8">
         <button

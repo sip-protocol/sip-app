@@ -1,3 +1,4 @@
+export { AudioPlayer } from "./audio-player"
 export { ListenerTierBadge } from "./listener-tier-badge"
 export { MusicStats } from "./music-stats"
 export { MusicPrivacyToggle } from "./music-privacy-toggle"

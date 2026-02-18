@@ -53,6 +53,40 @@ export function MetaversePageClient() {
         </p>
       </div>
 
+      {/* Portals Platform Card */}
+      <div className="mb-10 p-5 rounded-2xl bg-gradient-to-r from-indigo-600/20 to-purple-600/20 border border-indigo-500/30">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <div className="flex-shrink-0 w-14 h-14 rounded-xl bg-indigo-500/20 flex items-center justify-center text-3xl">
+            {"\u{1F30D}"}
+          </div>
+          <div className="flex-1 min-w-0">
+            <h3 className="text-lg font-semibold text-indigo-100">
+              Explore on Portals
+            </h3>
+            <p className="text-sm text-indigo-300/80 mt-1">
+              Browser-based 3D worlds on Solana. Visit NFT galleries, social
+              lounges, and trading floors — with stealth avatar identity powered
+              by SIP.
+            </p>
+            <div className="flex flex-wrap gap-3 mt-2 text-xs text-indigo-400">
+              <span>7 curated worlds</span>
+              <span>{"\u{2022}"}</span>
+              <span>Spatial audio</span>
+              <span>{"\u{2022}"}</span>
+              <span>NFT-gated rooms</span>
+            </div>
+          </div>
+          <a
+            href="https://theportal.to"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex-shrink-0 px-5 py-2.5 text-sm font-medium rounded-xl bg-indigo-500 text-white hover:bg-indigo-400 transition-colors"
+          >
+            Enter Portals
+          </a>
+        </div>
+      </div>
+
       {/* Stats */}
       <div className="mb-10">
         <MetaverseStats />
