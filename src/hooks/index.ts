@@ -66,3 +66,9 @@ export { useStealthTip, type TipResult } from "./use-stealth-tip"
 
 // Stealth research funding hook
 export { useStealthFund, type FundResult } from "./use-stealth-fund"
+
+// Game commitment hook for on-chain commit-reveal
+export {
+  useGameCommitment,
+  type GameCommitmentResult,
+} from "./use-game-commitment"

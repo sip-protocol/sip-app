@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils"
 import { usePlayGame } from "@/hooks/use-play-game"
 import { GamingPrivacyToggle } from "./gaming-privacy-toggle"
 import { GamingStatus } from "./gaming-status"
+import { TransactionStatus } from "@/components/solana/transaction-status"
 import type { Game } from "@/lib/gaming/types"
 
 type RpsMove = "rock" | "paper" | "scissors"
@@ -179,6 +180,18 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
             </div>
           )}
         </div>
+
+        {/* On-chain transaction */}
+        {activeRecord?.txSignature && (
+          <div className="mt-3">
+            <TransactionStatus
+              status="confirmed"
+              txSignature={activeRecord.txSignature}
+              explorerUrl={`https://solscan.io/tx/${activeRecord.txSignature}?cluster=devnet`}
+              error={null}
+            />
+          </div>
+        )}
 
         {/* Actions */}
         <div className="mt-6 flex gap-3">

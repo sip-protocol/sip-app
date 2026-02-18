@@ -16,15 +16,18 @@ function generateId(prefix: string): string {
 export interface GamingServiceOptions {
   mode?: GamingMode
   onStepChange?: GamingStepChangeCallback
+  onCommitTransaction?: (gameId: string, move: string) => Promise<string | null>
 }
 
 export class GamingService {
   private mode: GamingMode
   private onStepChange?: GamingStepChangeCallback
+  private onCommitTransaction?: (gameId: string, move: string) => Promise<string | null>
 
   constructor(options: GamingServiceOptions = {}) {
     this.mode = options.mode ?? "simulation"
     this.onStepChange = options.onStepChange
+    this.onCommitTransaction = options.onCommitTransaction
   }
 
   validate(
@@ -95,7 +98,12 @@ export class GamingService {
       record.stepTimestamps.committing_move = Date.now()
       this.onStepChange?.("committing_move", { ...record })
 
-      if (this.mode === "simulation") {
+      if (this.onCommitTransaction) {
+        const signature = await this.onCommitTransaction(params.gameId, params.move)
+        if (signature) {
+          record.txSignature = signature
+        }
+      } else if (this.mode === "simulation") {
         await new Promise((r) =>
           setTimeout(r, SIMULATION_DELAYS.committing_move)
         )
