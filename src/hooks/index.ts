@@ -60,3 +60,6 @@ export {
   useGovernanceCommit,
   type GovernanceCommitResult,
 } from "./use-governance-commit"
+
+// Stealth tipping hook
+export { useStealthTip, type TipResult } from "./use-stealth-tip"

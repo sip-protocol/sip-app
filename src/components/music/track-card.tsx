@@ -3,6 +3,7 @@
 import { cn } from "@/lib/utils"
 import { ListenerTierBadge } from "./listener-tier-badge"
 import { AudioPlayer } from "./audio-player"
+import { TipButton } from "./tip-button"
 import { MUSIC_GENRE_LABELS } from "@/lib/music/constants"
 import type { Track } from "@/lib/music/types"
 
@@ -47,9 +48,12 @@ export function TrackCard({ track, onStream, className }: TrackCardProps) {
 
       {/* Meta */}
       <div className="flex items-center justify-between">
-        <span className="text-xs text-[var(--text-tertiary)]">
-          {MUSIC_GENRE_LABELS[track.genre]}
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-[var(--text-tertiary)]">
+            {MUSIC_GENRE_LABELS[track.genre]}
+          </span>
+          <TipButton artistName={track.title} />
+        </div>
 
         <button
           type="button"

@@ -62,6 +62,8 @@ export interface MusicActionRecord {
   encryptedForAuditor?: string
   encryptedContent?: string
   encryptionNonce?: string
+  // Transaction
+  txSignature?: string
   // Timestamps
   startedAt: number
   completedAt?: number
