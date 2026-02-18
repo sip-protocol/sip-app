@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest"
 import { renderHook, act } from "@testing-library/react"
-import { useWallet, useConnection } from "@solana/wallet-adapter-react"
+import { useWallet } from "@solana/wallet-adapter-react"
 import { useGovernanceCommit } from "@/hooks/use-governance-commit"
 
 // Mock wallet adapter

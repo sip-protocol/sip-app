@@ -24,12 +24,12 @@ export function AudioPlayer({ trackId, title, className }: AudioPlayerProps) {
   const isRealTrack = !trackId.startsWith("track-")
   const streamUrl = `${AUDIUS_BASE}/tracks/${trackId}/stream?app_name=${APP_NAME}`
 
-  const updateProgress = useCallback(() => {
+  const updateProgress = useCallback(function tick() {
     if (audioRef.current) {
       setProgress(audioRef.current.currentTime)
       setDuration(audioRef.current.duration || 0)
       if (!audioRef.current.paused) {
-        animRef.current = requestAnimationFrame(updateProgress)
+        animRef.current = requestAnimationFrame(tick)
       }
     }
   }, [])
