@@ -63,6 +63,7 @@ export interface PrivateVoteRecord {
   startedAt: number
   committedAt?: number
   revealedAt?: number
+  txSignature?: string
   error?: string
   stepTimestamps: Partial<Record<VoteStep, number>>
 }

@@ -54,3 +54,9 @@ export {
 
 // Container size hook for responsive D3 visualizations
 export { useContainerSize } from "./use-container-size"
+
+// Governance on-chain vote commitment hook
+export {
+  useGovernanceCommit,
+  type GovernanceCommitResult,
+} from "./use-governance-commit"
