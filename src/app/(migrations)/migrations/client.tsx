@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { MigrationWizard } from "@/components/migrations/migration-wizard"
+import { DeathRevivalCard } from "@/components/shared/death-revival-card"
 
 export function MigrationsPageClient() {
   return (
@@ -28,6 +29,18 @@ export function MigrationsPageClient() {
         >
           View Migration History →
         </Link>
+      </div>
+
+      {/* Death/Revival Card */}
+      <div className="mt-8">
+        <DeathRevivalCard
+          category="Protocol Migration"
+          whyItDied="Moving assets between protocols was fully visible. Watchers could front-run migrations or exploit timing."
+          howWeRevive="Private protocol migration with stealth addresses. Consolidate stranded tokens without revealing your portfolio."
+          sponsor="Sunrise Stake"
+          sponsorRole="Climate-positive staking with carbon offset integration"
+          gradient="from-green-500 to-green-700"
+        />
       </div>
 
       {/* Info Banner */}

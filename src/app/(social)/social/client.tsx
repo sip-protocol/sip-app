@@ -5,6 +5,7 @@ import { SocialStats } from "@/components/social/social-stats"
 import { FeedList } from "@/components/social/feed-list"
 import { CreatePostForm } from "@/components/social/create-post-form"
 import { CreateProfileForm } from "@/components/social/create-profile-form"
+import { DeathRevivalCard } from "@/components/shared/death-revival-card"
 
 type View = "dashboard" | "create-profile" | "create-post"
 
@@ -97,6 +98,18 @@ export function SocialPageClient() {
 
       {/* Feed */}
       <FeedList />
+
+      {/* Death/Revival Card */}
+      <div className="mt-10">
+        <DeathRevivalCard
+          category="Social Media"
+          whyItDied="Public on-chain identities enabled doxxing and targeted harassment. Users self-censored or left."
+          howWeRevive="Stealth social identities let you post, connect, and engage without linking back to your wallet."
+          sponsor="Tapestry"
+          sponsorRole="SocialFi protocol for decentralized profiles and social graphs"
+          gradient="from-pink-500 to-pink-700"
+        />
+      </div>
 
       {/* Info Banner */}
       <div className="mt-10 p-4 rounded-xl bg-pink-900/20 border border-pink-800">

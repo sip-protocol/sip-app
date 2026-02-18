@@ -5,6 +5,7 @@ import { TicketingStats } from "@/components/ticketing/ticketing-stats"
 import { EventList } from "@/components/ticketing/event-list"
 import { PurchaseForm } from "@/components/ticketing/purchase-form"
 import type { Event } from "@/lib/ticketing/types"
+import { DeathRevivalCard } from "@/components/shared/death-revival-card"
 
 type View = "events" | "purchase"
 
@@ -59,6 +60,18 @@ export function TicketingPageClient() {
 
       {/* Event List */}
       <EventList onPurchase={handlePurchase} />
+
+      {/* Death/Revival Card */}
+      <div className="mt-10">
+        <DeathRevivalCard
+          category="Event Ticketing"
+          whyItDied="Transparent ticket ownership enabled scalping bots and price manipulation. Real fans couldn't get tickets."
+          howWeRevive="Anti-scalping stealth tickets. Ownership is hidden behind commitments — bots can't target or resell."
+          sponsor="KYD Labs"
+          sponsorRole="On-chain event ticketing and access management"
+          gradient="from-teal-500 to-teal-700"
+        />
+      </div>
 
       {/* Info Banner */}
       <div className="mt-10 p-4 rounded-xl bg-teal-900/20 border border-teal-800">

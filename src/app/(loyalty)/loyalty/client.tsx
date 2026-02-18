@@ -5,6 +5,7 @@ import { LoyaltyStats } from "@/components/loyalty/loyalty-stats"
 import { CampaignList } from "@/components/loyalty/campaign-list"
 import { JoinCampaignForm } from "@/components/loyalty/join-campaign-form"
 import type { Campaign } from "@/lib/loyalty/types"
+import { DeathRevivalCard } from "@/components/shared/death-revival-card"
 
 type View = "dashboard" | "join-campaign"
 
@@ -59,6 +60,18 @@ export function LoyaltyPageClient() {
 
       {/* Campaign List */}
       <CampaignList onJoin={handleJoin} />
+
+      {/* Death/Revival Card */}
+      <div className="mt-10">
+        <DeathRevivalCard
+          category="Loyalty Programs"
+          whyItDied="Transparent reward claims revealed user behavior patterns. Competitors tracked participation. Users stopped engaging."
+          howWeRevive="Anonymous reward claims via stealth addresses. Your loyalty activity is private — only you know your tier."
+          sponsor="Torque"
+          sponsorRole="Campaign infrastructure for on-chain loyalty and rewards"
+          gradient="from-amber-500 to-amber-700"
+        />
+      </div>
 
       {/* Info Banner */}
       <div className="mt-10 p-4 rounded-xl bg-amber-900/20 border border-amber-800">

@@ -8,10 +8,16 @@ import {
   Eye,
   Trophy,
   ExternalLink,
+  // eslint-disable-next-line @typescript-eslint/no-deprecated
   Github,
   FileText,
   ChevronDown,
   ArrowRight,
+  Skull,
+  Sprout,
+  AlertTriangle,
+  Sparkles,
+  CheckCircle,
 } from "lucide-react"
 import { DEPLOYMENTS } from "@/lib/constants"
 
@@ -19,7 +25,21 @@ import { DEPLOYMENTS } from "@/lib/constants"
 // Data
 // ============================================================================
 
-const SPONSOR_TRACKS = [
+type IntegrationLevel = "live-api" | "sdk" | "on-chain" | "enhanced-sim"
+
+interface SponsorTrack {
+  name: string
+  sponsor: string
+  href: string
+  icon: string
+  gradient: string
+  primitive: string
+  whyDied: string
+  revival: string
+  integration: IntegrationLevel
+}
+
+const SPONSOR_TRACKS: SponsorTrack[] = [
   {
     name: "Private Governance",
     sponsor: "Realms",
@@ -27,6 +47,9 @@ const SPONSOR_TRACKS = [
     icon: "\u{1F5F3}\uFE0F",
     gradient: "from-blue-500 to-blue-700",
     primitive: "Commit-reveal voting",
+    whyDied: "Visible votes enabled whale manipulation",
+    revival: "Commit-reveal ballots hide votes",
+    integration: "on-chain",
   },
   {
     name: "Anonymous Social",
@@ -35,6 +58,9 @@ const SPONSOR_TRACKS = [
     icon: "\u{1F3AD}",
     gradient: "from-pink-500 to-pink-700",
     primitive: "Stealth social identities",
+    whyDied: "Public wallets enabled doxxing",
+    revival: "Stealth social identities",
+    integration: "sdk",
   },
   {
     name: "Privacy Loyalty",
@@ -43,6 +69,9 @@ const SPONSOR_TRACKS = [
     icon: "\u{1F3C6}",
     gradient: "from-amber-500 to-amber-700",
     primitive: "Anonymous reward claims",
+    whyDied: "Transparent rewards exposed behavior",
+    revival: "Anonymous stealth claims",
+    integration: "live-api",
   },
   {
     name: "Privacy Art",
@@ -51,6 +80,9 @@ const SPONSOR_TRACKS = [
     icon: "\u{1F3A8}",
     gradient: "from-rose-500 to-rose-700",
     primitive: "Stealth NFT minting",
+    whyDied: "Public minting revealed collectors",
+    revival: "Stealth NFT minting",
+    integration: "on-chain",
   },
   {
     name: "Green Migration",
@@ -59,6 +91,9 @@ const SPONSOR_TRACKS = [
     icon: "\u{1F331}",
     gradient: "from-green-500 to-green-700",
     primitive: "Private protocol migration",
+    whyDied: "Visible migrations were front-run",
+    revival: "Private token consolidation",
+    integration: "on-chain",
   },
   {
     name: "Privacy NFTs",
@@ -67,6 +102,9 @@ const SPONSOR_TRACKS = [
     icon: "\u{1F4E1}",
     gradient: "from-violet-500 to-violet-700",
     primitive: "Encrypted NFT drops",
+    whyDied: "Subscriber lists became spam targets",
+    revival: "Encrypted stealth drops",
+    integration: "live-api",
   },
   {
     name: "Privacy Arena",
@@ -75,6 +113,9 @@ const SPONSOR_TRACKS = [
     icon: "\u{1F3AE}",
     gradient: "from-orange-500 to-orange-700",
     primitive: "Commit-reveal gameplay",
+    whyDied: "Transparent state enabled cheating",
+    revival: "Commit-reveal gameplay",
+    integration: "enhanced-sim",
   },
   {
     name: "Privacy Ticketing",
@@ -83,6 +124,9 @@ const SPONSOR_TRACKS = [
     icon: "\u{1F3AB}",
     gradient: "from-teal-500 to-teal-700",
     primitive: "Anti-scalping stealth tickets",
+    whyDied: "Visible ownership enabled scalping",
+    revival: "Anti-scalping stealth tickets",
+    integration: "live-api",
   },
   {
     name: "Privacy Metaverse",
@@ -91,6 +135,9 @@ const SPONSOR_TRACKS = [
     icon: "\u{1F310}",
     gradient: "from-indigo-500 to-indigo-700",
     primitive: "Stealth avatar identities",
+    whyDied: "Wallet-linked avatars killed anonymity",
+    revival: "Stealth avatar identities",
+    integration: "enhanced-sim",
   },
   {
     name: "Privacy DeSci",
@@ -99,6 +146,9 @@ const SPONSOR_TRACKS = [
     icon: "\u{1F9EC}",
     gradient: "from-lime-500 to-lime-700",
     primitive: "Anonymous research funding",
+    whyDied: "Public funding biased peer review",
+    revival: "Anonymous research funding",
+    integration: "enhanced-sim",
   },
   {
     name: "Privacy Music",
@@ -107,6 +157,9 @@ const SPONSOR_TRACKS = [
     icon: "\u{1F3B5}",
     gradient: "from-pink-500 to-pink-700",
     primitive: "Stealth listener identity",
+    whyDied: "Public listening data was monetized",
+    revival: "Stealth listener identity",
+    integration: "live-api",
   },
 ]
 
@@ -139,10 +192,20 @@ const CRYPTO_PRIMITIVES = [
 
 const STATS = [
   { value: "11", label: "Sponsor Tracks" },
-  { value: "820+", label: "Tests Passing" },
+  { value: "865+", label: "Tests Passing" },
   { value: "Mainnet", label: "Anchor Program" },
   { value: "v0.7.3", label: "SDK Version" },
 ]
+
+const INTEGRATION_BADGES: Record<
+  IntegrationLevel,
+  { label: string; color: string }
+> = {
+  "live-api": { label: "Live API", color: "bg-green-800 text-green-300" },
+  sdk: { label: "SDK", color: "bg-blue-800 text-blue-300" },
+  "on-chain": { label: "On-Chain", color: "bg-purple-800 text-purple-300" },
+  "enhanced-sim": { label: "Enhanced", color: "bg-amber-800 text-amber-300" },
+}
 
 // ============================================================================
 // Page
@@ -153,6 +216,7 @@ export default function GraveyardShowcase2026() {
     <>
       <HeroSection />
       <PrimitivesSection />
+      <ResurrectionSection />
       <TracksSection />
       <TractionSection />
       <LinksSection />
@@ -348,12 +412,114 @@ function PrimitivesSection() {
 }
 
 // ============================================================================
+// Category Resurrection (NEW)
+// ============================================================================
+
+function ResurrectionSection() {
+  const stages = [
+    {
+      icon: AlertTriangle,
+      title: "The Problem",
+      description: "Transparent blockchains expose everything",
+      tint: "from-red-900/30 to-red-900/10",
+      border: "border-red-500/20",
+      iconColor: "text-red-400",
+      titleColor: "text-red-400",
+    },
+    {
+      icon: Sparkles,
+      title: "The Solution",
+      description: "One privacy layer with three primitives",
+      tint: "from-purple-900/30 to-purple-900/10",
+      border: "border-purple-500/20",
+      iconColor: "text-purple-400",
+      titleColor: "text-purple-400",
+    },
+    {
+      icon: CheckCircle,
+      title: "The Result",
+      description: "Dead categories come alive again",
+      tint: "from-green-900/30 to-green-900/10",
+      border: "border-green-500/20",
+      iconColor: "text-green-400",
+      titleColor: "text-green-400",
+    },
+  ]
+
+  return (
+    <section className="py-20 border-t border-gray-800/50 bg-gray-900/30">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-2xl sm:text-3xl font-bold"
+          >
+            From Exposure to Revival
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="mt-3 text-gray-400 max-w-2xl mx-auto"
+          >
+            11 categories died because users were exposed. We&apos;re building
+            the antidote.
+          </motion.p>
+        </div>
+
+        {/* Horizontal flow (desktop) / Vertical flow (mobile) */}
+        <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-0">
+          {stages.map((stage, index) => (
+            <div key={stage.title} className="flex flex-col sm:flex-row items-center w-full sm:w-auto">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.15 }}
+                className={`flex-1 p-6 rounded-2xl bg-gradient-to-b ${stage.tint} border ${stage.border} text-center sm:min-w-[200px]`}
+              >
+                <stage.icon
+                  className={`w-8 h-8 mx-auto mb-3 ${stage.iconColor}`}
+                />
+                <h3 className={`font-semibold text-sm mb-1 ${stage.titleColor}`}>
+                  {stage.title}
+                </h3>
+                <p className="text-xs text-gray-400 leading-relaxed">
+                  {stage.description}
+                </p>
+              </motion.div>
+
+              {/* Arrow between stages */}
+              {index < stages.length - 1 && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.15 + 0.1 }}
+                  className="flex items-center justify-center px-3 py-2"
+                >
+                  <ArrowRight className="w-5 h-5 text-gray-600 hidden sm:block" />
+                  <ChevronDown className="w-5 h-5 text-gray-600 sm:hidden" />
+                </motion.div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// ============================================================================
 // Sponsor Tracks Grid
 // ============================================================================
 
 function TracksSection() {
   return (
-    <section className="py-20 border-t border-gray-800/50 bg-gray-900/30">
+    <section className="py-20 border-t border-gray-800/50">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <motion.span
@@ -387,41 +553,69 @@ function TracksSection() {
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {SPONSOR_TRACKS.map((track, index) => (
-            <motion.div
-              key={track.name}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.05 }}
-            >
-              <Link
-                href={track.href}
-                className="group block p-5 rounded-xl border border-gray-800 bg-gray-900/50 hover:border-purple-500/40 transition-all"
+          {SPONSOR_TRACKS.map((track, index) => {
+            const badge = INTEGRATION_BADGES[track.integration]
+            return (
+              <motion.div
+                key={track.name}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.05 }}
               >
-                <div className="flex items-start gap-4">
-                  <div
-                    className={`w-10 h-10 rounded-lg flex items-center justify-center text-lg flex-shrink-0 bg-gradient-to-br ${track.gradient} text-white`}
-                  >
-                    {track.icon}
-                  </div>
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <h3 className="font-semibold text-sm group-hover:text-purple-400 transition-colors">
-                        {track.name}
-                      </h3>
+                <Link
+                  href={track.href}
+                  className="group block p-5 rounded-xl border border-gray-800 bg-gray-900/50 hover:border-purple-500/40 transition-all"
+                >
+                  <div className="flex items-start gap-4">
+                    <div
+                      className={`w-10 h-10 rounded-lg flex items-center justify-center text-lg flex-shrink-0 bg-gradient-to-br ${track.gradient} text-white`}
+                    >
+                      {track.icon}
                     </div>
-                    <p className="text-xs text-gray-500 mb-2">
-                      {track.primitive}
-                    </p>
-                    <span className="inline-flex text-xs font-medium text-gray-400 bg-gray-800 px-2 py-0.5 rounded">
-                      {track.sponsor}
-                    </span>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <h3 className="font-semibold text-sm group-hover:text-purple-400 transition-colors">
+                          {track.name}
+                        </h3>
+                      </div>
+                      <p className="text-xs text-gray-500 mb-2">
+                        {track.primitive}
+                      </p>
+
+                      {/* Death/Revival narrative */}
+                      <div className="mb-2 space-y-0.5">
+                        <div className="flex items-center gap-1.5">
+                          <Skull className="w-3 h-3 text-red-400/60 flex-shrink-0" />
+                          <span className="text-xs text-red-400/60 leading-tight">
+                            {track.whyDied}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <Sprout className="w-3 h-3 text-green-400/60 flex-shrink-0" />
+                          <span className="text-xs text-green-400/60 leading-tight">
+                            {track.revival}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Badges */}
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="inline-flex text-xs font-medium text-gray-400 bg-gray-800 px-2 py-0.5 rounded">
+                          {track.sponsor}
+                        </span>
+                        <span
+                          className={`inline-flex text-xs font-medium px-2 py-0.5 rounded ${badge.color}`}
+                        >
+                          {badge.label}
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </Link>
-            </motion.div>
-          ))}
+                </Link>
+              </motion.div>
+            )
+          })}
         </div>
       </div>
     </section>
@@ -442,9 +636,9 @@ function TractionSection() {
       text: "from-yellow-400 to-amber-400",
     },
     {
-      value: "820+",
+      value: "865+",
       label: "Tests Passing",
-      detail: "SDK + React + App + API",
+      detail: "SDK + React + App + 11 Tracks",
       color: "from-green-900/30 to-emerald-900/30 border-green-500/20",
       text: "from-green-400 to-emerald-400",
     },

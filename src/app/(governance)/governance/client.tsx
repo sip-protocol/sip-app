@@ -7,6 +7,7 @@ import { VoteForm } from "@/components/governance/vote-form"
 import { RevealForm } from "@/components/governance/reveal-form"
 import { getProposal } from "@/lib/governance/constants"
 import { useGovernanceHistoryStore } from "@/stores/governance-history"
+import { DeathRevivalCard } from "@/components/shared/death-revival-card"
 
 type View = "dashboard" | "vote" | "reveal"
 
@@ -101,6 +102,18 @@ export function GovernancePageClient() {
 
       {/* Proposal List */}
       <ProposalList onVote={handleVote} onReveal={handleReveal} />
+
+      {/* Death/Revival Card */}
+      <div className="mt-10">
+        <DeathRevivalCard
+          category="DAOs"
+          whyItDied="Visible votes created bandwagon effects. Whale dominance discouraged small holders. Governance became theater."
+          howWeRevive="Pedersen commitment-based ballot encryption. Two-phase commit-reveal ensures votes stay hidden until the reveal period."
+          sponsor="Realms"
+          sponsorRole="SPL Governance infrastructure for on-chain proposals and voting"
+          gradient="from-blue-500 to-blue-700"
+        />
+      </div>
 
       {/* Info Banner */}
       <div className="mt-10 p-4 rounded-xl bg-sip-purple-900/20 border border-sip-purple-800">

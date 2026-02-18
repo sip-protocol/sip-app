@@ -6,6 +6,7 @@ import { GalleryList } from "@/components/art/gallery-list"
 import { GenerateArtForm } from "@/components/art/generate-art-form"
 import { MintNFTForm } from "@/components/art/mint-nft-form"
 import { useArtGalleryStore } from "@/stores/art-gallery"
+import { DeathRevivalCard } from "@/components/shared/death-revival-card"
 
 type View = "dashboard" | "generate" | "mint"
 
@@ -99,6 +100,18 @@ export function ArtPageClient() {
 
       {/* Gallery */}
       <GalleryList onSelectArt={handleSelectArt} onMintArt={handleMint} />
+
+      {/* Death/Revival Card */}
+      <div className="mt-10">
+        <DeathRevivalCard
+          category="Digital Art"
+          whyItDied="Public minting exposed collector identities and bidding strategies. Snipers front-ran drops. Creators lost control."
+          howWeRevive="Stealth NFT minting hides collector identity. Pedersen commitments conceal bid amounts until reveal."
+          sponsor="Exchange Art"
+          sponsorRole="Premier Solana art marketplace for curated digital art"
+          gradient="from-rose-500 to-rose-700"
+        />
+      </div>
 
       {/* Info Banner */}
       <div className="mt-10 p-4 rounded-xl bg-rose-900/20 border border-rose-800">

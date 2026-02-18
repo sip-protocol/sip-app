@@ -5,6 +5,7 @@ import { MusicStats } from "@/components/music/music-stats"
 import { TrackList } from "@/components/music/track-list"
 import { StreamForm } from "@/components/music/stream-form"
 import type { Track } from "@/lib/music/types"
+import { DeathRevivalCard } from "@/components/shared/death-revival-card"
 
 type View = "tracks" | "stream"
 
@@ -57,6 +58,18 @@ export function MusicPageClient() {
 
       {/* Track List */}
       <TrackList onStream={handleStream} />
+
+      {/* Death/Revival Card */}
+      <div className="mt-10">
+        <DeathRevivalCard
+          category="Music Streaming"
+          whyItDied="Public listening data exposed user preferences. Platforms monetized behavior. Artists lost direct connection."
+          howWeRevive="Stealth listener identity — stream music privately with unlinkable stealth addresses for each session."
+          sponsor="Audius"
+          sponsorRole="Decentralized music streaming protocol with 8M+ monthly users"
+          gradient="from-pink-500 to-pink-700"
+        />
+      </div>
 
       {/* Info Banner */}
       <div className="mt-10 p-4 rounded-xl bg-pink-900/20 border border-pink-800">

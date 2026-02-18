@@ -5,6 +5,7 @@ import { MetaverseStats } from "@/components/metaverse/metaverse-stats"
 import { WorldList } from "@/components/metaverse/world-list"
 import { ExploreForm } from "@/components/metaverse/explore-form"
 import type { World } from "@/lib/metaverse/types"
+import { DeathRevivalCard } from "@/components/shared/death-revival-card"
 
 type View = "worlds" | "explore"
 
@@ -59,6 +60,18 @@ export function MetaversePageClient() {
 
       {/* World List */}
       <WorldList onExplore={handleExplore} />
+
+      {/* Death/Revival Card */}
+      <div className="mt-10">
+        <DeathRevivalCard
+          category="Metaverse"
+          whyItDied="Public wallet-linked avatars destroyed pseudonymity. Users were tracked across virtual worlds."
+          howWeRevive="Stealth avatar identities — explore virtual worlds without linking your real wallet or identity."
+          sponsor="Portals"
+          sponsorRole="Browser-based 3D metaverse platform on Solana"
+          gradient="from-indigo-500 to-indigo-700"
+        />
+      </div>
 
       {/* Info Banner */}
       <div className="mt-10 p-4 rounded-xl bg-indigo-900/20 border border-indigo-800">

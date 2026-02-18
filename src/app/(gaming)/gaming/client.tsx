@@ -5,6 +5,7 @@ import { GamingStats } from "@/components/gaming/gaming-stats"
 import { GameList } from "@/components/gaming/game-list"
 import { PlayForm } from "@/components/gaming/play-form"
 import type { Game } from "@/lib/gaming/types"
+import { DeathRevivalCard } from "@/components/shared/death-revival-card"
 
 type View = "arena" | "play"
 
@@ -57,6 +58,18 @@ export function GamingPageClient() {
 
       {/* Game List */}
       <GameList onPlay={handlePlay} />
+
+      {/* Death/Revival Card */}
+      <div className="mt-10">
+        <DeathRevivalCard
+          category="On-Chain Gaming"
+          whyItDied="Transparent game state enabled cheating — opponents could read your moves before committing theirs."
+          howWeRevive="Commit-reveal gameplay with Pedersen commitments. Your moves are cryptographically hidden until both players reveal."
+          sponsor="MagicBlock"
+          sponsorRole="BOLT ECS framework for fully on-chain games"
+          gradient="from-orange-500 to-orange-700"
+        />
+      </div>
 
       {/* Info Banner */}
       <div className="mt-10 p-4 rounded-xl bg-orange-900/20 border border-orange-800">

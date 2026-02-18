@@ -5,6 +5,7 @@ import { ChannelStats } from "@/components/channel/channel-stats"
 import { DropList } from "@/components/channel/drop-list"
 import { SubscribeForm } from "@/components/channel/subscribe-form"
 import type { Drop } from "@/lib/channel/types"
+import { DeathRevivalCard } from "@/components/shared/death-revival-card"
 
 type View = "feed" | "subscribe"
 
@@ -57,6 +58,18 @@ export function ChannelPageClient() {
 
       {/* Drop List */}
       <DropList onSubscribe={handleSubscribe} />
+
+      {/* Death/Revival Card */}
+      <div className="mt-10">
+        <DeathRevivalCard
+          category="NFT Drops"
+          whyItDied="Public subscriber lists became spam targets. Drop participation revealed financial activity. Creators lost audiences."
+          howWeRevive="Encrypted NFT drops with stealth delivery. Subscribe and receive content without exposing your identity."
+          sponsor="DRiP"
+          sponsorRole="Mass NFT distribution platform for creators"
+          gradient="from-violet-500 to-violet-700"
+        />
+      </div>
 
       {/* Info Banner */}
       <div className="mt-10 p-4 rounded-xl bg-purple-900/20 border border-purple-800">

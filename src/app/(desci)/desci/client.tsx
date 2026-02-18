@@ -5,6 +5,7 @@ import { DeSciStats } from "@/components/desci/desci-stats"
 import { ProjectList } from "@/components/desci/project-list"
 import { FundForm } from "@/components/desci/fund-form"
 import type { Project } from "@/lib/desci/types"
+import { DeathRevivalCard } from "@/components/shared/death-revival-card"
 
 type View = "projects" | "fund"
 
@@ -57,6 +58,18 @@ export function DeSciPageClient() {
 
       {/* Project List */}
       <ProjectList onFund={handleFund} />
+
+      {/* Death/Revival Card */}
+      <div className="mt-10">
+        <DeathRevivalCard
+          category="Decentralized Science"
+          whyItDied="Public funding revealed researcher identities and created bias in peer review. Donors faced retaliation."
+          howWeRevive="Anonymous research funding with Pedersen commitments. Fund science without revealing your identity or amount."
+          sponsor="BIO Protocol"
+          sponsorRole="BioDAO infrastructure for decentralized scientific research funding"
+          gradient="from-lime-500 to-lime-700"
+        />
+      </div>
 
       {/* Info Banner */}
       <div className="mt-10 p-4 rounded-xl bg-lime-900/20 border border-lime-800">
