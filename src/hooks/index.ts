@@ -72,3 +72,9 @@ export {
   useGameCommitment,
   type GameCommitmentResult,
 } from "./use-game-commitment"
+
+// Ticket commitment hook for on-chain ticket purchases
+export {
+  useTicketCommitment,
+  type TicketCommitmentResult,
+} from "./use-ticket-commitment"

@@ -150,6 +150,55 @@ describe("TicketingService", () => {
     })
   })
 
+  describe("onCommitTransaction callback", () => {
+    it("calls onCommitTransaction callback during purchasing step", async () => {
+      const mockCallback = vi.fn().mockResolvedValue("mock-tx-signature")
+      const service = new TicketingService({
+        mode: "simulation",
+        onCommitTransaction: mockCallback,
+      })
+
+      const result = await service.purchaseTicket(validPurchaseParams)
+
+      expect(mockCallback).toHaveBeenCalledWith("event-solana-breakpoint", "vip")
+      expect(result.txSignature).toBe("mock-tx-signature")
+    })
+
+    it("does not set txSignature when callback returns null", async () => {
+      const mockCallback = vi.fn().mockResolvedValue(null)
+      const service = new TicketingService({
+        mode: "simulation",
+        onCommitTransaction: mockCallback,
+      })
+
+      const result = await service.purchaseTicket(validPurchaseParams)
+
+      expect(mockCallback).toHaveBeenCalled()
+      expect(result.txSignature).toBeUndefined()
+    })
+
+    it("still completes the purchase when callback is provided", async () => {
+      const mockCallback = vi.fn().mockResolvedValue("mock-sig")
+      const steps: TicketingStep[] = []
+      const service = new TicketingService({
+        mode: "simulation",
+        onCommitTransaction: mockCallback,
+        onStepChange: (step) => steps.push(step),
+      })
+
+      const result = await service.purchaseTicket(validPurchaseParams)
+
+      expect(steps).toEqual([
+        "selecting_event",
+        "generating_stealth_ticket",
+        "purchasing",
+        "purchased",
+      ])
+      expect(result.status).toBe("purchased")
+      expect(result.txSignature).toBe("mock-sig")
+    })
+  })
+
   describe("verifyTicket (simulation)", () => {
     it("progresses through 3 steps in order", async () => {
       const steps: TicketingStep[] = []
