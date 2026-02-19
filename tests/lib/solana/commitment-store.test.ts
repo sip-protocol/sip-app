@@ -231,14 +231,14 @@ describe("buildTransaction (commitment)", () => {
 })
 
 describe("getExplorerUrl (commitment)", () => {
-  it("generates devnet Solscan URL by default", async () => {
+  it("generates mainnet Solscan URL by default", async () => {
     const result = await createCommitmentStore({
       data: "data",
       commitmentType: "generic",
     })
 
     const url = result.getExplorerUrl("5abc123def")
-    expect(url).toBe("https://solscan.io/tx/5abc123def?cluster=devnet")
+    expect(url).toBe("https://solscan.io/tx/5abc123def")
   })
 
   it("generates mainnet Solscan URL when cluster is mainnet-beta", async () => {
