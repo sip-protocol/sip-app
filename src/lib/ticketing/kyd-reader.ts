@@ -171,23 +171,31 @@ interface KYDApiEvent {
   tiers?: Array<{ name?: string; price?: number }>
 }
 
-function inferCategory(
-  event: KYDApiEvent
-): EventCategory {
-  const text = `${event.category || ""} ${event.type || ""} ${event.name || ""} ${event.description || ""}`.toLowerCase()
+function inferCategory(event: KYDApiEvent): EventCategory {
+  const text =
+    `${event.category || ""} ${event.type || ""} ${event.name || ""} ${event.description || ""}`.toLowerCase()
 
   if (text.includes("hackathon") || text.includes("hacker house"))
     return "hackathon"
-  if (text.includes("workshop") || text.includes("bootcamp"))
-    return "workshop"
-  if (text.includes("meetup") || text.includes("gathering") || text.includes("community"))
+  if (text.includes("workshop") || text.includes("bootcamp")) return "workshop"
+  if (
+    text.includes("meetup") ||
+    text.includes("gathering") ||
+    text.includes("community")
+  )
     return "meetup"
-  if (text.includes("concert") || text.includes("party") || text.includes("music"))
+  if (
+    text.includes("concert") ||
+    text.includes("party") ||
+    text.includes("music")
+  )
     return "concert"
   return "conference"
 }
 
-function inferTier(event: KYDApiEvent): "general" | "early_bird" | "vip" | "backstage" {
+function inferTier(
+  event: KYDApiEvent
+): "general" | "early_bird" | "vip" | "backstage" {
   if (event.tiers?.length) {
     const tierNames = event.tiers.map((t) => (t.name || "").toLowerCase())
     if (tierNames.some((n) => n.includes("backstage"))) return "backstage"
@@ -218,10 +226,8 @@ function mapKYDEvent(raw: KYDApiEvent): Event {
       "Solana ecosystem event with cNFT tickets minted via Metaplex Bubblegum.",
     category,
     tier: inferTier(raw),
-    attendeeCount:
-      raw.attendee_count || raw.attendees || raw.capacity || 0,
-    isActive:
-      raw.is_active ?? (raw.status ? raw.status === "active" : true),
+    attendeeCount: raw.attendee_count || raw.attendees || raw.capacity || 0,
+    isActive: raw.is_active ?? (raw.status ? raw.status === "active" : true),
     icon: categoryIcon(category),
   }
 }
@@ -239,9 +245,7 @@ async function kydFetch<T>(path: string): Promise<T | null> {
     })
 
     if (!response.ok) {
-      console.warn(
-        `[SIP][KYD] API returned ${response.status} for ${path}`
-      )
+      console.warn(`[SIP][KYD] API returned ${response.status} for ${path}`)
       return null
     }
 
@@ -285,9 +289,7 @@ export class KYDReader {
       if (result?.length) {
         const events = result.map(mapKYDEvent)
         setCache("kyd:events", events)
-        console.info(
-          `[SIP][KYD] Fetched ${events.length} live events`
-        )
+        console.info(`[SIP][KYD] Fetched ${events.length} live events`)
         return events
       }
 
@@ -297,9 +299,7 @@ export class KYDReader {
       if (altResult?.length) {
         const events = altResult.map(mapKYDEvent)
         setCache("kyd:events", events)
-        console.info(
-          `[SIP][KYD] Fetched ${events.length} events from v1 API`
-        )
+        console.info(`[SIP][KYD] Fetched ${events.length} events from v1 API`)
         return events
       }
 

@@ -175,7 +175,9 @@ export class MigrationService {
     step: MigrationStep,
     migration: Migration
   ): Promise<void> {
-    console.warn("[SIP] Devnet mode not available for migrations, using simulation fallback")
+    console.warn(
+      "[SIP] Devnet mode not available for migrations, using simulation fallback"
+    )
     return this.executeSimulationStep(step, migration)
   }
 }

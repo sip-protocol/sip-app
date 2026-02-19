@@ -140,9 +140,19 @@ function mapBioCategory(category?: string): ResearchCategory {
   if (!category) return "biotech"
   const lower = category.toLowerCase()
   if (lower.includes("neuro") || lower.includes("brain")) return "neurotech"
-  if (lower.includes("genom") || lower.includes("gene") || lower.includes("synth")) return "genomics"
+  if (
+    lower.includes("genom") ||
+    lower.includes("gene") ||
+    lower.includes("synth")
+  )
+    return "genomics"
   if (lower.includes("climate") || lower.includes("environ")) return "climate"
-  if (lower.includes("pharma") || lower.includes("drug") || lower.includes("psyche")) return "pharma"
+  if (
+    lower.includes("pharma") ||
+    lower.includes("drug") ||
+    lower.includes("psyche")
+  )
+    return "pharma"
   return "biotech"
 }
 
@@ -175,10 +185,7 @@ function mapBioDaoToProject(dao: BioApiDao, index: number): Project {
 // Try fetching from bio.xyz public API
 async function fetchBioProjects(): Promise<Project[] | null> {
   // Try known API endpoint patterns
-  const endpoints = [
-    `${BIO_API_BASE}/v1/daos`,
-    `${BIO_API_BASE}/daos`,
-  ]
+  const endpoints = [`${BIO_API_BASE}/v1/daos`, `${BIO_API_BASE}/daos`]
 
   for (const url of endpoints) {
     try {

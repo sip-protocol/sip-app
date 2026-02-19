@@ -42,12 +42,15 @@ export function AudioPlayer({ trackId, title, className }: AudioPlayerProps) {
       cancelAnimationFrame(animRef.current)
       setIsPlaying(false)
     } else {
-      audioRef.current.play().then(() => {
-        setIsPlaying(true)
-        animRef.current = requestAnimationFrame(updateProgress)
-      }).catch(() => {
-        setError(true)
-      })
+      audioRef.current
+        .play()
+        .then(() => {
+          setIsPlaying(true)
+          animRef.current = requestAnimationFrame(updateProgress)
+        })
+        .catch(() => {
+          setError(true)
+        })
     }
   }, [isPlaying, updateProgress])
 
@@ -71,7 +74,12 @@ export function AudioPlayer({ trackId, title, className }: AudioPlayerProps) {
 
   if (!isRealTrack) {
     return (
-      <div className={cn("flex items-center gap-2 text-xs text-[var(--text-tertiary)]", className)}>
+      <div
+        className={cn(
+          "flex items-center gap-2 text-xs text-[var(--text-tertiary)]",
+          className
+        )}
+      >
         <span className="w-7 h-7 rounded-full bg-pink-500/10 flex items-center justify-center text-pink-400/50">
           {"\u{25B6}"}
         </span>
@@ -82,7 +90,12 @@ export function AudioPlayer({ trackId, title, className }: AudioPlayerProps) {
 
   if (error) {
     return (
-      <div className={cn("flex items-center gap-2 text-xs text-[var(--text-tertiary)]", className)}>
+      <div
+        className={cn(
+          "flex items-center gap-2 text-xs text-[var(--text-tertiary)]",
+          className
+        )}
+      >
         <span className="w-7 h-7 rounded-full bg-pink-500/10 flex items-center justify-center text-pink-400/50">
           {"\u{25B6}"}
         </span>
@@ -98,7 +111,10 @@ export function AudioPlayer({ trackId, title, className }: AudioPlayerProps) {
         ref={audioRef}
         src={streamUrl}
         preload="none"
-        onEnded={() => { setIsPlaying(false); setProgress(0) }}
+        onEnded={() => {
+          setIsPlaying(false)
+          setProgress(0)
+        }}
         onError={() => setError(true)}
       />
 
@@ -121,7 +137,8 @@ export function AudioPlayer({ trackId, title, className }: AudioPlayerProps) {
       </div>
 
       <span className="text-[10px] text-[var(--text-tertiary)] tabular-nums flex-shrink-0">
-        {formatTime(progress)}{duration > 0 ? ` / ${formatTime(duration)}` : ""}
+        {formatTime(progress)}
+        {duration > 0 ? ` / ${formatTime(duration)}` : ""}
       </span>
     </div>
   )

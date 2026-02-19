@@ -31,7 +31,8 @@ export function useGameCommitment(): UseGameCommitmentReturn {
   const { connection } = useConnection()
   const tx = useSolanaTransaction()
 
-  const [lastCommitment, setLastCommitment] = useState<GameCommitmentResult | null>(null)
+  const [lastCommitment, setLastCommitment] =
+    useState<GameCommitmentResult | null>(null)
 
   const commitMove = useCallback(
     async (gameId: string, move: string): Promise<string | null> => {

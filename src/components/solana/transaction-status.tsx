@@ -58,9 +58,7 @@ export function TransactionStatus({
         </div>
       )}
 
-      {error && (
-        <p className="mt-1 text-xs text-red-400/80">{error}</p>
-      )}
+      {error && <p className="mt-1 text-xs text-red-400/80">{error}</p>}
     </div>
   )
 }

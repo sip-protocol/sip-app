@@ -118,7 +118,10 @@ export function VoteCommitmentDisplay({
               Transaction
             </span>
             <a
-              href={explorerUrl ?? `https://solscan.io/tx/${txSignature}?cluster=devnet`}
+              href={
+                explorerUrl ??
+                `https://solscan.io/tx/${txSignature}?cluster=devnet`
+              }
               target="_blank"
               rel="noopener noreferrer"
               className="text-xs font-medium text-sip-purple-400 hover:text-sip-purple-300 transition-colors"

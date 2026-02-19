@@ -59,7 +59,8 @@ export function TeleportForm({ onTeleported }: TeleportFormProps) {
   // Use the first world as the teleport destination
   const destination = worlds[0]
 
-  const isFormReady = (connected || isDemoMode) && status === "idle" && destination
+  const isFormReady =
+    (connected || isDemoMode) && status === "idle" && destination
   const isTeleporting =
     status === "generating_proof" || status === "teleporting"
   const isArrived = status === "arrived"

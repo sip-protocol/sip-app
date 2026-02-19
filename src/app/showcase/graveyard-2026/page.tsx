@@ -473,7 +473,10 @@ function ResurrectionSection() {
         {/* Horizontal flow (desktop) / Vertical flow (mobile) */}
         <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-0">
           {stages.map((stage, index) => (
-            <div key={stage.title} className="flex flex-col sm:flex-row items-center w-full sm:w-auto">
+            <div
+              key={stage.title}
+              className="flex flex-col sm:flex-row items-center w-full sm:w-auto"
+            >
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
@@ -484,7 +487,9 @@ function ResurrectionSection() {
                 <stage.icon
                   className={`w-8 h-8 mx-auto mb-3 ${stage.iconColor}`}
                 />
-                <h3 className={`font-semibold text-sm mb-1 ${stage.titleColor}`}>
+                <h3
+                  className={`font-semibold text-sm mb-1 ${stage.titleColor}`}
+                >
                   {stage.title}
                 </h3>
                 <p className="text-xs text-gray-400 leading-relaxed">

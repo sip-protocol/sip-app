@@ -14,13 +14,21 @@ function generateId(): string {
 export interface GovernanceServiceOptions {
   mode?: GovernanceMode
   onStepChange?: VoteStepChangeCallback
-  onCommitTransaction?: (proposalId: string, choice: number, weight: string) => Promise<string | null>
+  onCommitTransaction?: (
+    proposalId: string,
+    choice: number,
+    weight: string
+  ) => Promise<string | null>
 }
 
 export class GovernanceService {
   private mode: GovernanceMode
   private onStepChange?: VoteStepChangeCallback
-  private onCommitTransaction?: (proposalId: string, choice: number, weight: string) => Promise<string | null>
+  private onCommitTransaction?: (
+    proposalId: string,
+    choice: number,
+    weight: string
+  ) => Promise<string | null>
 
   constructor(options: GovernanceServiceOptions = {}) {
     this.mode = options.mode ?? "simulation"

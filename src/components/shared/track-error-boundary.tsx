@@ -38,7 +38,9 @@ export class TrackErrorBoundary extends Component<Props, State> {
             </p>
             <div className="flex justify-center gap-3">
               <button
-                onClick={() => this.setState({ hasError: false, error: undefined })}
+                onClick={() =>
+                  this.setState({ hasError: false, error: undefined })
+                }
                 className={`px-4 py-2 rounded-lg text-sm font-medium bg-${this.props.trackColor}-500/20 text-${this.props.trackColor}-400 border border-${this.props.trackColor}-500/30 hover:bg-${this.props.trackColor}-500/30 transition-colors`}
               >
                 Try Again

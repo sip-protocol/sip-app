@@ -118,7 +118,11 @@ function mapAssetToGeneratedArt(asset: HeliusAsset): GeneratedArt {
 
   // Derive a style from the asset hash
   const styleIndex = parseInt(seed.slice(0, 2), 16) % 3
-  const styles: ArtStyleId[] = ["cipher_bloom", "stealth_grid", "commitment_flow"]
+  const styles: ArtStyleId[] = [
+    "cipher_bloom",
+    "stealth_grid",
+    "commitment_flow",
+  ]
   const styleId = styles[styleIndex]
 
   const palettes: Record<ArtStyleId, string[]> = {
@@ -128,7 +132,10 @@ function mapAssetToGeneratedArt(asset: HeliusAsset): GeneratedArt {
   }
 
   const byte = (index: number) => {
-    const hex = seed.slice((index * 2) % seed.length, (index * 2 + 2) % seed.length)
+    const hex = seed.slice(
+      (index * 2) % seed.length,
+      (index * 2 + 2) % seed.length
+    )
     return parseInt(hex, 16) || (index * 37) % 256
   }
 
@@ -158,7 +165,7 @@ function mapAssetToGeneratedArt(asset: HeliusAsset): GeneratedArt {
         : styleIndex === 1
           ? PrivacyLevel.COMPLIANT
           : PrivacyLevel.TRANSPARENT,
-    createdAt: Date.now() - (byte(0) * 3600_000),
+    createdAt: Date.now() - byte(0) * 3600_000,
   }
 }
 
@@ -304,7 +311,9 @@ export class ArtService {
         setCache(cacheKey, nfts)
         return nfts
       }
-      console.warn("[SIP] Exchange Art fetch returned no results, using sample gallery")
+      console.warn(
+        "[SIP] Exchange Art fetch returned no results, using sample gallery"
+      )
       return SAMPLE_GALLERY
     } catch (err) {
       console.warn(

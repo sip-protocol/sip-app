@@ -99,8 +99,8 @@ export function ArtPageClient() {
             </h3>
             <p className="text-sm text-rose-300/80 mt-1">
               Generate stealth art from privacy transaction entropy, then mint
-              as compressed NFTs on Solana. Each piece is deterministic —
-              same inputs, same art.
+              as compressed NFTs on Solana. Each piece is deterministic — same
+              inputs, same art.
             </p>
             <div className="flex flex-wrap gap-3 mt-2 text-xs text-rose-400">
               <span>3 art styles</span>

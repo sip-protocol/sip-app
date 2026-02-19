@@ -181,7 +181,11 @@ export class ChannelService {
 
       // Phase 1C: Real content encryption
       const encryptedDrop = await encryptContent(
-        JSON.stringify({ dropId: record.dropId, title: params.title, contentType: params.contentType })
+        JSON.stringify({
+          dropId: record.dropId,
+          title: params.title,
+          contentType: params.contentType,
+        })
       )
       record.encryptedContent = encryptedDrop.ciphertext
       record.encryptionNonce = encryptedDrop.nonce

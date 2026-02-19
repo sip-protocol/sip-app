@@ -7,7 +7,11 @@ import type {
 } from "./types"
 import { SIMULATION_DELAYS, getTrack } from "./constants"
 import { generateMusicStealthAddress } from "./stealth-music"
-import { createRealCommitment, encryptForViewingKey, encryptContent } from "@/lib/crypto-helpers"
+import {
+  createRealCommitment,
+  encryptForViewingKey,
+  encryptContent,
+} from "@/lib/crypto-helpers"
 
 function generateId(prefix: string): string {
   return `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`

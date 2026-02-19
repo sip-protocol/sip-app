@@ -43,7 +43,8 @@ export function MintNFTForm({ art, onReset }: MintNFTFormProps) {
     transparent: PrivacyLevel.TRANSPARENT,
   }
 
-  const isFormReady = (connected || isDemoMode) && name.trim().length >= 1 && status === "idle"
+  const isFormReady =
+    (connected || isDemoMode) && name.trim().length >= 1 && status === "idle"
   const isMinting = status === "preparing_nft" || status === "minting"
   const isMinted = status === "minted"
 

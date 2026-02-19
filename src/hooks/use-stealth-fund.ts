@@ -32,39 +32,42 @@ export function useStealthFund() {
   const tx = useSolanaTransaction()
   const [lastFund, setLastFund] = useState<FundResult | null>(null)
 
-  const sendFund = useCallback(async (
-    projectId: string,
-    tier: string,
-    projectTitle?: string
-  ): Promise<FundResult | null> => {
-    if (!publicKey) return null
+  const sendFund = useCallback(
+    async (
+      projectId: string,
+      tier: string,
+      projectTitle?: string
+    ): Promise<FundResult | null> => {
+      if (!publicKey) return null
 
-    const amountSol = TIER_AMOUNTS[tier] ?? 0.01
-    const amountLamports = Math.floor(amountSol * 1_000_000_000)
+      const amountSol = TIER_AMOUNTS[tier] ?? 0.01
+      const amountLamports = Math.floor(amountSol * 1_000_000_000)
 
-    const transfer = await createStealthTransfer({
-      amountLamports,
-      memo: `SIP-FUND:${projectId}${projectTitle ? `:${projectTitle}` : ""}`,
-    })
+      const transfer = await createStealthTransfer({
+        amountLamports,
+        memo: `SIP-FUND:${projectId}${projectTitle ? `:${projectTitle}` : ""}`,
+      })
 
-    const transaction = await transfer.buildTransaction(
-      publicKey,
-      connection.rpcEndpoint
-    )
+      const transaction = await transfer.buildTransaction(
+        publicKey,
+        connection.rpcEndpoint
+      )
 
-    const signature = await tx.sendTransaction(transaction)
-    if (!signature) return null
+      const signature = await tx.sendTransaction(transaction)
+      if (!signature) return null
 
-    const result: FundResult = {
-      stealthAddress: transfer.stealthAddress,
-      commitment: transfer.commitment.commitmentHash,
-      txSignature: signature,
-      explorerUrl: transfer.getExplorerUrl(signature, "devnet"),
-    }
+      const result: FundResult = {
+        stealthAddress: transfer.stealthAddress,
+        commitment: transfer.commitment.commitmentHash,
+        txSignature: signature,
+        explorerUrl: transfer.getExplorerUrl(signature, "devnet"),
+      }
 
-    setLastFund(result)
-    return result
-  }, [publicKey, connection, tx])
+      setLastFund(result)
+      return result
+    },
+    [publicKey, connection, tx]
+  )
 
   return { sendFund, lastFund, tx }
 }

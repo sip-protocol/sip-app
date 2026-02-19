@@ -184,7 +184,9 @@ export class BridgeService {
   ): Promise<void> {
     // Future: Wormhole NTT SDK integration
     // For now, fall back to simulation with a warning
-    console.warn("[SIP] NTT mode not available for bridge, using simulation fallback")
+    console.warn(
+      "[SIP] NTT mode not available for bridge, using simulation fallback"
+    )
     return this.executeSimulationStep(step, transfer)
   }
 }

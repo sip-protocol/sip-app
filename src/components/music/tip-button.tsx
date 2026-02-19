@@ -20,7 +20,8 @@ export function TipButton({ artistName, disabled }: TipButtonProps) {
     await sendTip(selectedAmount, artistName)
   }
 
-  const isBusy = tx.status !== "idle" && tx.status !== "error" && tx.status !== "confirmed"
+  const isBusy =
+    tx.status !== "idle" && tx.status !== "error" && tx.status !== "confirmed"
 
   if (!showForm) {
     return (
@@ -65,11 +66,16 @@ export function TipButton({ artistName, disabled }: TipButtonProps) {
           disabled={isBusy}
           className="text-xs px-3 py-1.5 rounded bg-purple-500 text-white hover:bg-purple-600 disabled:opacity-50 transition-colors"
         >
-          {tx.isWalletConnected ? `Send ${selectedAmount} SOL` : "Connect Wallet"}
+          {tx.isWalletConnected
+            ? `Send ${selectedAmount} SOL`
+            : "Connect Wallet"}
         </button>
         <button
           type="button"
-          onClick={() => { setShowForm(false); tx.reset() }}
+          onClick={() => {
+            setShowForm(false)
+            tx.reset()
+          }}
           className="text-xs px-2 py-1 text-zinc-500 hover:text-zinc-300"
         >
           Cancel
@@ -85,8 +91,13 @@ export function TipButton({ artistName, disabled }: TipButtonProps) {
 
       {lastTip && tx.status === "confirmed" && (
         <div className="mt-2 text-xs text-zinc-500">
-          <p>Stealth address: <code>{lastTip.stealthAddress.slice(0, 12)}...</code></p>
-          <p>Commitment: <code>{lastTip.commitment.slice(0, 12)}...</code></p>
+          <p>
+            Stealth address:{" "}
+            <code>{lastTip.stealthAddress.slice(0, 12)}...</code>
+          </p>
+          <p>
+            Commitment: <code>{lastTip.commitment.slice(0, 12)}...</code>
+          </p>
         </div>
       )}
     </div>

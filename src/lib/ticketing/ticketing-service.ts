@@ -7,7 +7,10 @@ import type {
 } from "./types"
 import { SIMULATION_DELAYS, getEvent } from "./constants"
 import { generateTicketingStealthAddress } from "./stealth-ticketing"
-import { createRealCommitment, encryptForViewingKey } from "@/lib/crypto-helpers"
+import {
+  createRealCommitment,
+  encryptForViewingKey,
+} from "@/lib/crypto-helpers"
 
 function generateId(prefix: string): string {
   return `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`
@@ -16,13 +19,19 @@ function generateId(prefix: string): string {
 export interface TicketingServiceOptions {
   mode?: TicketingMode
   onStepChange?: TicketingStepChangeCallback
-  onCommitTransaction?: (eventId: string, tier: string) => Promise<string | null>
+  onCommitTransaction?: (
+    eventId: string,
+    tier: string
+  ) => Promise<string | null>
 }
 
 export class TicketingService {
   private mode: TicketingMode
   private onStepChange?: TicketingStepChangeCallback
-  private onCommitTransaction?: (eventId: string, tier: string) => Promise<string | null>
+  private onCommitTransaction?: (
+    eventId: string,
+    tier: string
+  ) => Promise<string | null>
 
   constructor(options: TicketingServiceOptions = {}) {
     this.mode = options.mode ?? "simulation"
@@ -143,7 +152,10 @@ export class TicketingService {
       this.onStepChange?.("purchasing", { ...record })
 
       if (this.onCommitTransaction) {
-        const signature = await this.onCommitTransaction(params.eventId, params.tier)
+        const signature = await this.onCommitTransaction(
+          params.eventId,
+          params.tier
+        )
         if (signature) {
           record.txSignature = signature
         }

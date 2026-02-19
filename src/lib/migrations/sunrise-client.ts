@@ -113,7 +113,7 @@ export class SunriseClient {
 
       console.info(
         `[SIP] Sunrise deposit: ${amount} SOL → ${gsolAmount} gSOL ` +
-        `(TVL: ${details.tvl.toLocaleString()} SOL, source: ${details.source})`
+          `(TVL: ${details.tvl.toLocaleString()} SOL, source: ${details.source})`
       )
 
       return { gsolAmount, carbonOffsetKg, txHash }
@@ -190,12 +190,11 @@ export class SunriseClient {
     const statePubkey = new PublicKey(SUNRISE_STATE_ADDRESS)
 
     // Fetch gSOL supply and holding balance in parallel
-    const [gsolSupplyResult, holdingBalance, stateBalance] =
-      await Promise.all([
-        connection.getTokenSupply(gsolMintPubkey),
-        connection.getBalance(holdingPubkey),
-        connection.getBalance(statePubkey),
-      ])
+    const [gsolSupplyResult, holdingBalance, stateBalance] = await Promise.all([
+      connection.getTokenSupply(gsolMintPubkey),
+      connection.getBalance(holdingPubkey),
+      connection.getBalance(statePubkey),
+    ])
 
     // gSOL supply is the canonical TVL metric:
     // Sunrise mints 1 gSOL per SOL staked, so supply == total staked SOL
@@ -205,14 +204,13 @@ export class SunriseClient {
 
     // TVL: gSOL supply is the most accurate measure.
     // Holding + state balances capture rent-exempt reserves and pending operations.
-    const tvl = gsolSupply > 0
-      ? gsolSupply
-      : holdingBalanceSol + stateBalanceSol
+    const tvl =
+      gsolSupply > 0 ? gsolSupply : holdingBalanceSol + stateBalanceSol
 
     console.info(
       `[SIP] Sunrise on-chain data: gSOL supply=${gsolSupply.toFixed(2)}, ` +
-      `holding=${holdingBalanceSol.toFixed(4)} SOL, ` +
-      `state=${stateBalanceSol.toFixed(4)} SOL`
+        `holding=${holdingBalanceSol.toFixed(4)} SOL, ` +
+        `state=${stateBalanceSol.toFixed(4)} SOL`
     )
 
     return {
@@ -244,9 +242,7 @@ export class SunriseClient {
     }
   }
 
-  private async simulateDeposit(
-    amount: string
-  ): Promise<SunriseDepositResult> {
+  private async simulateDeposit(amount: string): Promise<SunriseDepositResult> {
     const solAmount = parseFloat(amount)
 
     // gSOL is 1:1 with SOL (liquid staking token)

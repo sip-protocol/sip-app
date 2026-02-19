@@ -7,7 +7,11 @@ import type {
 } from "./types"
 import { SIMULATION_DELAYS, getProject } from "./constants"
 import { generateDeSciStealthAddress } from "./stealth-desci"
-import { createRealCommitment, encryptForViewingKey, encryptContent } from "@/lib/crypto-helpers"
+import {
+  createRealCommitment,
+  encryptForViewingKey,
+  encryptContent,
+} from "@/lib/crypto-helpers"
 
 function generateId(prefix: string): string {
   return `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`
@@ -213,7 +217,11 @@ export class DeSciService {
 
       // Phase 1C: Encrypt review content
       const encryptedReview = await encryptContent(
-        JSON.stringify({ projectId: params.projectId, tier: params.tier, type: "peer_review" })
+        JSON.stringify({
+          projectId: params.projectId,
+          tier: params.tier,
+          type: "peer_review",
+        })
       )
       record.encryptedContent = encryptedReview.ciphertext
       record.encryptionNonce = encryptedReview.nonce

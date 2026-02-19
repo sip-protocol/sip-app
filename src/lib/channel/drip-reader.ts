@@ -132,7 +132,12 @@ function mapAssetToDrop(asset: HeliusAsset, index: number): Drop {
     publishedAt: Date.now() - (index + 1) * 86400_000,
     subscriberCount,
     isEncrypted: accessTier !== "free",
-    icon: accessTier === "premium" ? "\u{1F48E}" : accessTier === "subscriber" ? "\u{1F510}" : "\u{1F4E6}",
+    icon:
+      accessTier === "premium"
+        ? "\u{1F48E}"
+        : accessTier === "subscriber"
+          ? "\u{1F510}"
+          : "\u{1F4E6}",
   }
 }
 
@@ -243,7 +248,9 @@ export class DripReader {
         setCache(cacheKey, drops)
         return drops
       }
-      console.warn("[SIP] DRiP Helius fetch returned no results, using simulation data")
+      console.warn(
+        "[SIP] DRiP Helius fetch returned no results, using simulation data"
+      )
       return SAMPLE_DROPS
     } catch (err) {
       console.warn(

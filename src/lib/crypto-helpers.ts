@@ -31,9 +31,10 @@ export async function createRealCommitment(
   const commitment = sdk.createCommitment(value)
 
   const fullHash = commitment.value as string
-  const display = fullHash.length > 16
-    ? `${fullHash.slice(0, 10)}...${fullHash.slice(-8)}`
-    : fullHash
+  const display =
+    fullHash.length > 16
+      ? `${fullHash.slice(0, 10)}...${fullHash.slice(-8)}`
+      : fullHash
 
   return {
     commitmentHash: fullHash,

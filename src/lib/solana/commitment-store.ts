@@ -38,7 +38,10 @@ export interface CommitmentStoreResult {
   /** Random 32-byte hex salt (keep secret until reveal) */
   salt: string
   /** Builds a signable Solana transaction (caller signs + sends) */
-  buildTransaction: (senderPubkey: PublicKey, rpcUrl: string) => Promise<Transaction>
+  buildTransaction: (
+    senderPubkey: PublicKey,
+    rpcUrl: string
+  ) => Promise<Transaction>
   /** Generate a Solscan explorer URL for a given tx signature */
   getExplorerUrl: (txSignature: string, cluster?: string) => string
 }
@@ -49,7 +52,10 @@ export interface CommitmentStoreResult {
  * Uses crypto.subtle (browser) with crypto.createHash fallback (Node/tests).
  * Returns 0x-prefixed hex string.
  */
-export async function hashCommitment(data: string, salt: string): Promise<string> {
+export async function hashCommitment(
+  data: string,
+  salt: string
+): Promise<string> {
   const input = `${data}:${salt}`
 
   // Browser path: crypto.subtle
@@ -57,7 +63,9 @@ export async function hashCommitment(data: string, salt: string): Promise<string
     const encoder = new TextEncoder()
     const buffer = await crypto.subtle.digest("SHA-256", encoder.encode(input))
     const hashArray = Array.from(new Uint8Array(buffer))
-    const hashHex = hashArray.map((b) => b.toString(16).padStart(2, "0")).join("")
+    const hashHex = hashArray
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("")
     return `0x${hashHex}`
   }
 

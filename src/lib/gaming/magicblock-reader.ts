@@ -205,9 +205,7 @@ async function fetchMagicBlockPrograms(): Promise<Game[] | null> {
     })
 
     if (!response.ok) {
-      console.warn(
-        `[SIP][MagicBlock] RPC returned ${response.status}`
-      )
+      console.warn(`[SIP][MagicBlock] RPC returned ${response.status}`)
       return null
     }
 

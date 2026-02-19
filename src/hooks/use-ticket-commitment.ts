@@ -2,9 +2,7 @@
 
 import { useState, useCallback } from "react"
 import { useWallet, useConnection } from "@solana/wallet-adapter-react"
-import {
-  createCommitmentStore,
-} from "@/lib/solana/commitment-store"
+import { createCommitmentStore } from "@/lib/solana/commitment-store"
 import { useSolanaTransaction } from "@/hooks/use-solana-transaction"
 import type { UseSolanaTransactionReturn } from "@/hooks/use-solana-transaction"
 
@@ -28,7 +26,8 @@ export function useTicketCommitment(): UseTicketCommitmentReturn {
   const { connection } = useConnection()
   const tx = useSolanaTransaction()
 
-  const [lastCommitment, setLastCommitment] = useState<TicketCommitmentResult | null>(null)
+  const [lastCommitment, setLastCommitment] =
+    useState<TicketCommitmentResult | null>(null)
 
   const commitPurchase = useCallback(
     async (eventId: string, tier: string): Promise<string | null> => {

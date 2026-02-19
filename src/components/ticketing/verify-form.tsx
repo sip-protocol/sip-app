@@ -50,7 +50,8 @@ export function VerifyForm({ onVerified }: VerifyFormProps) {
   // Use the first ticket as the verifiable ticket
   const verifiableTicket = SAMPLE_TICKETS[0]
 
-  const isFormReady = (connected || isDemoMode) && status === "idle" && verifiableTicket
+  const isFormReady =
+    (connected || isDemoMode) && status === "idle" && verifiableTicket
   const isVerifying =
     status === "generating_proof" || status === "verifying_attendance"
   const isVerified = status === "verified"

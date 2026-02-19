@@ -140,14 +140,10 @@ function mapFollowerToConnection(
   targetProfileId: string,
   direction: "inbound" | "outbound"
 ): SocialConnection {
-  const fromId =
-    direction === "inbound" ? follower.id : targetProfileId
-  const toId =
-    direction === "inbound" ? targetProfileId : follower.id
-  const fromUsername =
-    direction === "inbound" ? follower.username : "self"
-  const toUsername =
-    direction === "inbound" ? "self" : follower.username
+  const fromId = direction === "inbound" ? follower.id : targetProfileId
+  const toId = direction === "inbound" ? targetProfileId : follower.id
+  const fromUsername = direction === "inbound" ? follower.username : "self"
+  const toUsername = direction === "inbound" ? "self" : follower.username
 
   return {
     id: `conn-${fromId}-${toId}`,
@@ -195,7 +191,10 @@ export class TapestryReader {
         setCache(cacheKey, profiles)
         return profiles
       } catch (err) {
-        console.warn("[SIP] Tapestry getProfiles failed, using simulation:", err)
+        console.warn(
+          "[SIP] Tapestry getProfiles failed, using simulation:",
+          err
+        )
         return SAMPLE_PROFILES
       }
     }
@@ -358,9 +357,7 @@ export class TapestryReader {
         return posts
       } catch {
         // Content-based feed failed — fall back to simulation
-        console.warn(
-          "[SIP] Tapestry getFeed failed, using simulation"
-        )
+        console.warn("[SIP] Tapestry getFeed failed, using simulation")
         return [...SAMPLE_POSTS].sort((a, b) => b.timestamp - a.timestamp)
       }
     }

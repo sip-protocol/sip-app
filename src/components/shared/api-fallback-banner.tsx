@@ -7,7 +7,10 @@ interface ApiFallbackBannerProps {
   isSimulation: boolean
 }
 
-export function ApiFallbackBanner({ sponsor, isSimulation }: ApiFallbackBannerProps) {
+export function ApiFallbackBanner({
+  sponsor,
+  isSimulation,
+}: ApiFallbackBannerProps) {
   const [dismissed, setDismissed] = useState(false)
 
   if (!isSimulation || dismissed) return null
@@ -17,7 +20,8 @@ export function ApiFallbackBanner({ sponsor, isSimulation }: ApiFallbackBannerPr
       <div className="flex items-center gap-2 min-w-0">
         <span className="text-amber-400 text-sm flex-shrink-0">&#x26A1;</span>
         <p className="text-xs text-amber-300/80 truncate">
-          Running in demo mode &mdash; {sponsor} API unavailable. Data is simulated.
+          Running in demo mode &mdash; {sponsor} API unavailable. Data is
+          simulated.
         </p>
       </div>
       <button

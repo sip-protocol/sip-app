@@ -83,9 +83,9 @@ export function GamingPageClient() {
           <div>
             <p className="font-medium text-orange-100">Powered by MagicBlock</p>
             <p className="text-sm text-orange-300 mt-1">
-              Games use cryptographic commitments for hidden moves, viewing keys for
-              fog-of-war, and stealth addresses for private reward claims. All
-              cryptography is real — powered by @sip-protocol/sdk.
+              Games use cryptographic commitments for hidden moves, viewing keys
+              for fog-of-war, and stealth addresses for private reward claims.
+              All cryptography is real — powered by @sip-protocol/sdk.
             </p>
           </div>
         </div>

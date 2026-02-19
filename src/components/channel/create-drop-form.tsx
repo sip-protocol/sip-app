@@ -56,7 +56,10 @@ export function CreateDropForm({ onPublished }: CreateDropFormProps) {
   }
 
   const isFormReady =
-    (connected || isDemoMode) && status === "idle" && title.trim() && content.trim()
+    (connected || isDemoMode) &&
+    status === "idle" &&
+    title.trim() &&
+    content.trim()
   const isPublishing =
     status === "encrypting_content" ||
     status === "generating_stealth" ||

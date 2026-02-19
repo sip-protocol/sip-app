@@ -50,7 +50,8 @@ export function GenerateArtForm({
     transparent: "\u{1F513} Transparent",
   }
 
-  const isFormReady = (connected || isDemoMode) && styleId !== null && status === "idle"
+  const isFormReady =
+    (connected || isDemoMode) && styleId !== null && status === "idle"
   const isGenerating = status === "selecting_style" || status === "generating"
   const isGenerated = status === "generated"
 

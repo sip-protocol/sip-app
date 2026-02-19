@@ -36,7 +36,10 @@ export interface StealthTransferResult {
   /** Encoded meta-address for the stealth keypair */
   metaAddress: string
   /** Builds a signable Solana transaction (caller signs + sends) */
-  buildTransaction: (senderPubkey: PublicKey, rpcUrl: string) => Promise<Transaction>
+  buildTransaction: (
+    senderPubkey: PublicKey,
+    rpcUrl: string
+  ) => Promise<Transaction>
   /** Generate a Solscan explorer URL for a given tx signature */
   getExplorerUrl: (txSignature: string, cluster?: string) => string
 }
@@ -74,7 +77,9 @@ export async function createStealthTransfer(
 
   // Raw address string (no sip: prefix) — directly usable with Solana PublicKey
   const rawStealthAddress = String(stealthResult.stealthAddress.address)
-  const ephemeralPubKey = String(stealthResult.stealthAddress.ephemeralPublicKey)
+  const ephemeralPubKey = String(
+    stealthResult.stealthAddress.ephemeralPublicKey
+  )
 
   return {
     stealthAddress: rawStealthAddress,

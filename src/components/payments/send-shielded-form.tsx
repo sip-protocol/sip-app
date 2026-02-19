@@ -67,7 +67,10 @@ export function SendShieldedForm() {
   const isValidAmount =
     numericAmount > 0 && (balance === undefined || numericAmount <= balance)
   const canSubmit =
-    (connected || isDemoMode) && isValidRecipient && isValidAmount && status !== "pending"
+    (connected || isDemoMode) &&
+    isValidRecipient &&
+    isValidAmount &&
+    status !== "pending"
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {

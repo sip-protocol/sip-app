@@ -50,7 +50,8 @@ export function PlaylistForm({ onCreated }: PlaylistFormProps) {
   // Use the first stream as the reviewable item
   const reviewableStream = SAMPLE_STREAMS[0]
 
-  const isFormReady = (connected || isDemoMode) && status === "idle" && reviewableStream
+  const isFormReady =
+    (connected || isDemoMode) && status === "idle" && reviewableStream
   const isCreating =
     status === "generating_proof" || status === "encrypting_playlist"
   const isCreated = status === "created"

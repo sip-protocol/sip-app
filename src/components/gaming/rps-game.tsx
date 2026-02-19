@@ -18,10 +18,18 @@ type PrivacyOption = "shielded" | "compliant" | "transparent"
 const MOVES: { id: RpsMove; emoji: string; label: string; beats: RpsMove }[] = [
   { id: "rock", emoji: "\u{270A}", label: "Rock", beats: "scissors" },
   { id: "paper", emoji: "\u{270B}", label: "Paper", beats: "rock" },
-  { id: "scissors", emoji: "\u{270C}\uFE0F", label: "Scissors", beats: "paper" },
+  {
+    id: "scissors",
+    emoji: "\u{270C}\uFE0F",
+    label: "Scissors",
+    beats: "paper",
+  },
 ]
 
-function resolveRps(player: RpsMove, opponent: RpsMove): "win" | "lose" | "draw" {
+function resolveRps(
+  player: RpsMove,
+  opponent: RpsMove
+): "win" | "lose" | "draw" {
   if (player === opponent) return "draw"
   const playerMove = MOVES.find((m) => m.id === player)!
   return playerMove.beats === opponent ? "win" : "lose"
@@ -45,8 +53,12 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
 
   const [playerMove, setPlayerMove] = useState<RpsMove | null>(null)
   const [opponentMove, setOpponentMove] = useState<RpsMove | null>(null)
-  const [opponentCommitment, setOpponentCommitment] = useState<string | null>(null)
-  const [phase, setPhase] = useState<"select" | "committing" | "revealing" | "result">("select")
+  const [opponentCommitment, setOpponentCommitment] = useState<string | null>(
+    null
+  )
+  const [phase, setPhase] = useState<
+    "select" | "committing" | "revealing" | "result"
+  >("select")
   const [outcome, setOutcome] = useState<"win" | "lose" | "draw" | null>(null)
   const [privacyLevel, setPrivacyLevel] = useState<PrivacyOption>("shielded")
   const revealTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -69,9 +81,11 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
 
   // Generate opponent commitment when player selects a move
   const generateOpponentCommitment = useCallback((move: RpsMove) => {
-    const fakeCommitment = "0x" + Array.from({ length: 16 }, () =>
-      Math.floor(Math.random() * 16).toString(16)
-    ).join("")
+    const fakeCommitment =
+      "0x" +
+      Array.from({ length: 16 }, () =>
+        Math.floor(Math.random() * 16).toString(16)
+      ).join("")
     setOpponentCommitment(fakeCommitment)
   }, [])
 
@@ -119,9 +133,27 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
   // Result screen
   if (phase === "result" && outcome) {
     const outcomeConfig = {
-      win: { label: "You Win!", color: "text-emerald-400", bg: "bg-emerald-500/10", border: "border-emerald-500/20", emoji: "\u{1F389}" },
-      lose: { label: "You Lose!", color: "text-red-400", bg: "bg-red-500/10", border: "border-red-500/20", emoji: "\u{1F480}" },
-      draw: { label: "Draw!", color: "text-amber-400", bg: "bg-amber-500/10", border: "border-amber-500/20", emoji: "\u{1F91D}" },
+      win: {
+        label: "You Win!",
+        color: "text-emerald-400",
+        bg: "bg-emerald-500/10",
+        border: "border-emerald-500/20",
+        emoji: "\u{1F389}",
+      },
+      lose: {
+        label: "You Lose!",
+        color: "text-red-400",
+        bg: "bg-red-500/10",
+        border: "border-red-500/20",
+        emoji: "\u{1F480}",
+      },
+      draw: {
+        label: "Draw!",
+        color: "text-amber-400",
+        bg: "bg-amber-500/10",
+        border: "border-amber-500/20",
+        emoji: "\u{1F91D}",
+      },
     }
     const cfg = outcomeConfig[outcome]
     const playerMoveData = MOVES.find((m) => m.id === playerMove)!
@@ -130,7 +162,14 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
     return (
       <div className="bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-2xl p-6 sm:p-8">
         {/* Outcome header */}
-        <div className={cn("text-center p-6 rounded-xl mb-6", cfg.bg, "border", cfg.border)}>
+        <div
+          className={cn(
+            "text-center p-6 rounded-xl mb-6",
+            cfg.bg,
+            "border",
+            cfg.border
+          )}
+        >
           <div className="text-4xl mb-2">{cfg.emoji}</div>
           <h2 className={cn("text-2xl font-bold", cfg.color)}>{cfg.label}</h2>
         </div>
@@ -139,14 +178,24 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
         <div className="flex items-center justify-center gap-6 mb-6">
           <div className="text-center">
             <div className="text-5xl mb-2">{playerMoveData.emoji}</div>
-            <p className="text-sm font-medium text-[var(--text-primary)]">You</p>
-            <p className="text-xs text-[var(--text-secondary)]">{playerMoveData.label}</p>
+            <p className="text-sm font-medium text-[var(--text-primary)]">
+              You
+            </p>
+            <p className="text-xs text-[var(--text-secondary)]">
+              {playerMoveData.label}
+            </p>
           </div>
-          <div className="text-2xl text-[var(--text-tertiary)] font-bold">VS</div>
+          <div className="text-2xl text-[var(--text-tertiary)] font-bold">
+            VS
+          </div>
           <div className="text-center">
             <div className="text-5xl mb-2">{opponentMoveData.emoji}</div>
-            <p className="text-sm font-medium text-[var(--text-primary)]">Opponent</p>
-            <p className="text-xs text-[var(--text-secondary)]">{opponentMoveData.label}</p>
+            <p className="text-sm font-medium text-[var(--text-primary)]">
+              Opponent
+            </p>
+            <p className="text-xs text-[var(--text-secondary)]">
+              {opponentMoveData.label}
+            </p>
           </div>
         </div>
 
@@ -154,7 +203,9 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
         <div className="space-y-2 text-sm border-t border-[var(--border-default)] pt-4">
           {activeRecord?.commitmentHash && (
             <div className="flex justify-between gap-2">
-              <span className="text-[var(--text-secondary)] flex-shrink-0">Your Commitment</span>
+              <span className="text-[var(--text-secondary)] flex-shrink-0">
+                Your Commitment
+              </span>
               <code className="text-xs font-mono text-orange-400/80 truncate">
                 {activeRecord.commitmentHash}
               </code>
@@ -162,7 +213,9 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
           )}
           {opponentCommitment && (
             <div className="flex justify-between gap-2">
-              <span className="text-[var(--text-secondary)] flex-shrink-0">Opponent Commitment</span>
+              <span className="text-[var(--text-secondary)] flex-shrink-0">
+                Opponent Commitment
+              </span>
               <code className="text-xs font-mono text-[var(--text-tertiary)] truncate">
                 {opponentCommitment}
               </code>
@@ -170,7 +223,9 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
           )}
           {activeRecord?.encryptedContent && (
             <div className="flex justify-between gap-2">
-              <span className="text-[var(--text-secondary)] flex-shrink-0">Encrypted Move</span>
+              <span className="text-[var(--text-secondary)] flex-shrink-0">
+                Encrypted Move
+              </span>
               <code className="text-xs font-mono text-[var(--text-tertiary)] truncate">
                 {activeRecord.encryptedContent.slice(0, 24)}...
               </code>
@@ -222,8 +277,8 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
           <h2 className="text-lg font-semibold">{game.title}</h2>
         </div>
         <p className="text-sm text-[var(--text-secondary)]">
-          Choose your move. Both players commit their moves as Pedersen commitments,
-          then reveal simultaneously.
+          Choose your move. Both players commit their moves as Pedersen
+          commitments, then reveal simultaneously.
         </p>
       </div>
 
@@ -232,7 +287,9 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
         <div className="mb-4 px-4 py-2.5 rounded-lg bg-orange-500/10 border border-orange-500/20 text-center">
           <p className="text-xs text-orange-300/80">
             Opponent has committed:{" "}
-            <code className="font-mono">{opponentCommitment.slice(0, 12)}...</code>
+            <code className="font-mono">
+              {opponentCommitment.slice(0, 12)}...
+            </code>
           </p>
         </div>
       )}
@@ -263,10 +320,14 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
               )}
             >
               <span className="text-4xl mb-1">{move.emoji}</span>
-              <span className={cn(
-                "text-sm font-medium",
-                playerMove === move.id ? "text-orange-400" : "text-[var(--text-secondary)]"
-              )}>
+              <span
+                className={cn(
+                  "text-sm font-medium",
+                  playerMove === move.id
+                    ? "text-orange-400"
+                    : "text-[var(--text-secondary)]"
+                )}
+              >
                 {move.label}
               </span>
             </button>
@@ -290,7 +351,10 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
         <div className="mb-6">
           <GamingStatus
             currentStep={
-              status as "committing_move" | "generating_commitment" | "revealing"
+              status as
+                | "committing_move"
+                | "generating_commitment"
+                | "revealing"
             }
             mode="play"
           />

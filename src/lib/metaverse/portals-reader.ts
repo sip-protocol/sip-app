@@ -151,18 +151,31 @@ interface PortalsApiWorld {
   token_gated?: boolean
 }
 
-function inferWorldCategory(
-  world: PortalsApiWorld
-): WorldCategory {
-  const text = `${world.category || ""} ${world.type || ""} ${world.name || ""} ${world.description || ""}`.toLowerCase()
+function inferWorldCategory(world: PortalsApiWorld): WorldCategory {
+  const text =
+    `${world.category || ""} ${world.type || ""} ${world.name || ""} ${world.description || ""}`.toLowerCase()
 
-  if (text.includes("gallery") || text.includes("art") || text.includes("museum"))
+  if (
+    text.includes("gallery") ||
+    text.includes("art") ||
+    text.includes("museum")
+  )
     return "gallery"
   if (text.includes("game") || text.includes("arena") || text.includes("pvp"))
     return "game_room"
-  if (text.includes("market") || text.includes("shop") || text.includes("trade") || text.includes("bazaar"))
+  if (
+    text.includes("market") ||
+    text.includes("shop") ||
+    text.includes("trade") ||
+    text.includes("bazaar")
+  )
     return "marketplace"
-  if (text.includes("concert") || text.includes("music") || text.includes("stage") || text.includes("venue"))
+  if (
+    text.includes("concert") ||
+    text.includes("music") ||
+    text.includes("stage") ||
+    text.includes("venue")
+  )
     return "concert_hall"
   return "social"
 }
@@ -173,7 +186,10 @@ function inferAvatarTier(
   if (world.nft_gated || world.token_gated) return "vip"
 
   const category = inferWorldCategory(world)
-  const tierMap: Record<WorldCategory, "explorer" | "warrior" | "citizen" | "merchant" | "vip"> = {
+  const tierMap: Record<
+    WorldCategory,
+    "explorer" | "warrior" | "citizen" | "merchant" | "vip"
+  > = {
     gallery: "explorer",
     game_room: "warrior",
     social: "citizen",
@@ -204,10 +220,8 @@ function mapPortalsWorld(raw: PortalsApiWorld): World {
       "3D browser-based space in the Portals metaverse with spatial audio and NFT displays.",
     category,
     tier: inferAvatarTier(raw),
-    visitorCount:
-      raw.visitor_count || raw.visitors || raw.online_count || 0,
-    isActive:
-      raw.is_active ?? (raw.status ? raw.status === "active" : true),
+    visitorCount: raw.visitor_count || raw.visitors || raw.online_count || 0,
+    isActive: raw.is_active ?? (raw.status ? raw.status === "active" : true),
     icon: worldCategoryIcon(category),
   }
 }
@@ -225,9 +239,7 @@ async function portalsFetch<T>(path: string): Promise<T | null> {
     })
 
     if (!response.ok) {
-      console.warn(
-        `[SIP][Portals] API returned ${response.status} for ${path}`
-      )
+      console.warn(`[SIP][Portals] API returned ${response.status} for ${path}`)
       return null
     }
 
@@ -272,9 +284,7 @@ export class PortalsReader {
       if (result?.length) {
         const worlds = result.map(mapPortalsWorld)
         setCache("portals:worlds", worlds)
-        console.info(
-          `[SIP][Portals] Fetched ${worlds.length} live worlds`
-        )
+        console.info(`[SIP][Portals] Fetched ${worlds.length} live worlds`)
         return worlds
       }
 

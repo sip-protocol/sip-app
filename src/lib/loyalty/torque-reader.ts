@@ -1,7 +1,4 @@
-import type {
-  ApiCampaign,
-  ApiRewardType,
-} from "@torque-labs/torque-ts-sdk"
+import type { ApiCampaign, ApiRewardType } from "@torque-labs/torque-ts-sdk"
 import type {
   Campaign,
   CampaignProgress,
@@ -75,9 +72,7 @@ async function torqueFetch<T>(
     })
 
     if (!response.ok) {
-      console.warn(
-        `[SIP][Torque] API returned ${response.status} for ${path}`
-      )
+      console.warn(`[SIP][Torque] API returned ${response.status} for ${path}`)
       return null
     }
 
@@ -127,9 +122,7 @@ function mapTorqueCampaign(tc: ApiCampaign): Campaign {
   const actionType = inferActionType(tc)
 
   // Parse reward amount
-  const rewardAmount = tc.userRewardAmount
-    ? parseFloat(tc.userRewardAmount)
-    : 0
+  const rewardAmount = tc.userRewardAmount ? parseFloat(tc.userRewardAmount) : 0
 
   // Determine reward token label
   const rewardToken = resolveTokenLabel(tc.userRewardToken, tc.userRewardType)
@@ -187,15 +180,15 @@ function resolveTokenLabel(
 
   // Well-known Solana token mints
   const knownTokens: Record<string, string> = {
-    "So11111111111111111111111111111111111111112": "SOL",
-    "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263": "BONK",
-    "jtojtomepa8beP8AuQc6eXt5FriJwfFMwQx2v2f9mCL": "JTO",
-    "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN": "JUP",
-    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v": "USDC",
-    "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB": "USDT",
-    "mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So": "mSOL",
-    "DUSTawucrTsGU8hcqRdHDCbuYhCPADMLM2VcCb8VnFnQ": "DUST",
-    "RLBxxFkseAZ4RgJH3Sqn8jXxhmGoz9jWxDNJMh8pL7a": "RLBB",
+    So11111111111111111111111111111111111111112: "SOL",
+    DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263: "BONK",
+    jtojtomepa8beP8AuQc6eXt5FriJwfFMwQx2v2f9mCL: "JTO",
+    JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN: "JUP",
+    EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v: "USDC",
+    Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB: "USDT",
+    mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So: "mSOL",
+    DUSTawucrTsGU8hcqRdHDCbuYhCPADMLM2VcCb8VnFnQ: "DUST",
+    RLBxxFkseAZ4RgJH3Sqn8jXxhmGoz9jWxDNJMh8pL7a: "RLBB",
     "7dHbWXmci3dT8UFYWYZweBLXgycu7Y3iL6trKn1Y7ARj": "stSOL",
   }
 
@@ -256,9 +249,7 @@ export class TorqueReader {
       if (result?.campaigns?.length) {
         const campaigns = result.campaigns.map(mapTorqueCampaign)
         setCache("torque:campaigns", campaigns)
-        console.info(
-          `[SIP][Torque] Fetched ${campaigns.length} live campaigns`
-        )
+        console.info(`[SIP][Torque] Fetched ${campaigns.length} live campaigns`)
         return campaigns
       }
 
@@ -319,9 +310,7 @@ export class TorqueReader {
   // getProgress
   // -------------------------------------------------------------------------
 
-  async getProgress(
-    campaignId: string
-  ): Promise<CampaignProgress | undefined> {
+  async getProgress(campaignId: string): Promise<CampaignProgress | undefined> {
     if (this.mode === "torque") {
       // Progress requires user authentication (journey endpoint needs wallet)
       // Fall back to simulation data for now

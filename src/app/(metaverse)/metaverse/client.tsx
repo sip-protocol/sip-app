@@ -117,7 +117,8 @@ export function MetaversePageClient() {
         </div>
         <div className="px-4 py-3 bg-indigo-900/20 text-center">
           <p className="text-xs text-indigo-300/70">
-            Explore Portals worlds with your SIP stealth avatar — your wallet address never appears
+            Explore Portals worlds with your SIP stealth avatar — your wallet
+            address never appears
           </p>
         </div>
       </div>

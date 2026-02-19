@@ -150,9 +150,7 @@ export class AudiusReader {
     if (cached) return cached
 
     try {
-      const raw = await audiusFetch<AudiusTrack[]>(
-        "/tracks/trending?limit=10"
-      )
+      const raw = await audiusFetch<AudiusTrack[]>("/tracks/trending?limit=10")
       const tracks = raw.map(mapAudiusTrack)
       setCache(cacheKey, tracks)
       return tracks
@@ -217,9 +215,7 @@ export class AudiusReader {
     try {
       // Audius trending endpoint returns mixed genres — fetch a larger set
       // and filter client-side since there is no genre query param on trending.
-      const raw = await audiusFetch<AudiusTrack[]>(
-        "/tracks/trending?limit=50"
-      )
+      const raw = await audiusFetch<AudiusTrack[]>("/tracks/trending?limit=50")
       const allTracks = raw.map(mapAudiusTrack)
       const filtered = allTracks.filter((t) => t.genre === genre)
 

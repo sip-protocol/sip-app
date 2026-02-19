@@ -53,7 +53,8 @@ export function ReviewForm({ onReviewed }: ReviewFormProps) {
   // Use the first contribution as the reviewable project
   const reviewableProject = SAMPLE_CONTRIBUTIONS[0]
 
-  const isFormReady = (connected || isDemoMode) && status === "idle" && reviewableProject
+  const isFormReady =
+    (connected || isDemoMode) && status === "idle" && reviewableProject
   const isReviewing =
     status === "generating_proof" || status === "submitting_review"
   const isReviewed = status === "reviewed"

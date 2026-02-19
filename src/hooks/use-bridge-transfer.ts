@@ -108,7 +108,14 @@ export function useBridgeTransfer(): UseBridgeTransferReturn {
         return undefined
       }
     },
-    [publicKey, isDemoMode, addTransfer, updateTransfer, trackBridge, activeTransfer]
+    [
+      publicKey,
+      isDemoMode,
+      addTransfer,
+      updateTransfer,
+      trackBridge,
+      activeTransfer,
+    ]
   )
 
   return { status, activeTransfer, error, bridge, reset }

@@ -47,7 +47,8 @@ export function PlayForm({ game, onResolved }: PlayFormProps) {
     transparent: "\u{1F513} Transparent",
   }
 
-  const isFormReady = (connected || isDemoMode) && status === "idle" && move.trim()
+  const isFormReady =
+    (connected || isDemoMode) && status === "idle" && move.trim()
   const isPlaying =
     status === "committing_move" ||
     status === "generating_commitment" ||

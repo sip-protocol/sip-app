@@ -31,9 +31,7 @@ export function GameList({ onPlay }: GameListProps) {
   }, [])
 
   const games =
-    filter === "all"
-      ? allGames
-      : allGames.filter((g) => g.gameType === filter)
+    filter === "all" ? allGames : allGames.filter((g) => g.gameType === filter)
 
   return (
     <div>

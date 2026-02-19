@@ -293,9 +293,8 @@ export class RealmsReader {
     try {
       const pubkey = new PublicKey(proposalId)
       const connection = this.getConnection()
-      const { getProposal: getSplProposal } = await import(
-        "@solana/spl-governance"
-      )
+      const { getProposal: getSplProposal } =
+        await import("@solana/spl-governance")
       const proposalAccount = await getSplProposal(connection, pubkey)
       const proposal = proposalAccount.account
 
@@ -323,10 +322,7 @@ export class RealmsReader {
 
   // ─── getVoterWeight ──────────────────────────────────────────────────
 
-  async getVoterWeight(
-    daoId: string,
-    walletAddress?: string
-  ): Promise<string> {
+  async getVoterWeight(daoId: string, walletAddress?: string): Promise<string> {
     if (this.mode !== "realms" || !walletAddress) {
       return this.getSimulatedWeight(daoId)
     }

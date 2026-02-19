@@ -7,7 +7,11 @@ import type {
 } from "./types"
 import { SIMULATION_DELAYS, getGame } from "./constants"
 import { generateGamingStealthAddress } from "./stealth-gaming"
-import { createRealCommitment, encryptForViewingKey, encryptContent } from "@/lib/crypto-helpers"
+import {
+  createRealCommitment,
+  encryptForViewingKey,
+  encryptContent,
+} from "@/lib/crypto-helpers"
 
 function generateId(prefix: string): string {
   return `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`
@@ -22,7 +26,10 @@ export interface GamingServiceOptions {
 export class GamingService {
   private mode: GamingMode
   private onStepChange?: GamingStepChangeCallback
-  private onCommitTransaction?: (gameId: string, move: string) => Promise<string | null>
+  private onCommitTransaction?: (
+    gameId: string,
+    move: string
+  ) => Promise<string | null>
 
   constructor(options: GamingServiceOptions = {}) {
     this.mode = options.mode ?? "simulation"
@@ -99,7 +106,10 @@ export class GamingService {
       this.onStepChange?.("committing_move", { ...record })
 
       if (this.onCommitTransaction) {
-        const signature = await this.onCommitTransaction(params.gameId, params.move)
+        const signature = await this.onCommitTransaction(
+          params.gameId,
+          params.move
+        )
         if (signature) {
           record.txSignature = signature
         }
@@ -152,13 +162,22 @@ export class GamingService {
 
       // Step 4: Resolved — deterministic RPS or random for other game types
       const normalizedMove = params.move.toLowerCase().trim()
-      const rpsMap: Record<string, string> = { rock: "scissors", paper: "rock", scissors: "paper" }
+      const rpsMap: Record<string, string> = {
+        rock: "scissors",
+        paper: "rock",
+        scissors: "paper",
+      }
       if (rpsMap[normalizedMove] && record.commitmentHash) {
         // Deterministic opponent from commitment hash
-        const hash = record.commitmentHash.split("").reduce((a, c) => a + c.charCodeAt(0), 0)
+        const hash = record.commitmentHash
+          .split("")
+          .reduce((a, c) => a + c.charCodeAt(0), 0)
         const oppMoves = ["rock", "paper", "scissors"]
         const opponentMove = oppMoves[hash % 3]
-        record.won = normalizedMove === opponentMove ? false : rpsMap[normalizedMove] === opponentMove
+        record.won =
+          normalizedMove === opponentMove
+            ? false
+            : rpsMap[normalizedMove] === opponentMove
       } else {
         record.won = Math.random() > 0.4 // 60% win rate for non-RPS games
       }

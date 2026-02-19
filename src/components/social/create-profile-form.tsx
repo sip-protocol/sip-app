@@ -46,7 +46,9 @@ export function CreateProfileForm({ onCreated }: CreateProfileFormProps) {
   }
 
   const isFormReady =
-    (connected || isDemoMode) && username.trim().length >= 3 && status === "idle"
+    (connected || isDemoMode) &&
+    username.trim().length >= 3 &&
+    status === "idle"
 
   const isCreating =
     status === "generating_stealth" || status === "creating_profile"
