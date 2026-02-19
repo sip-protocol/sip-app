@@ -1,9 +1,10 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { cn } from "@/lib/utils"
 import { EventCard } from "./event-card"
 import { SAMPLE_EVENTS } from "@/lib/ticketing/constants"
+import { KYDReader } from "@/lib/ticketing/kyd-reader"
 import type { Event, EventCategory } from "@/lib/ticketing/types"
 
 type EventFilter = "all" | EventCategory
@@ -23,11 +24,17 @@ interface EventListProps {
 
 export function EventList({ onPurchase }: EventListProps) {
   const [filter, setFilter] = useState<EventFilter>("all")
+  const [allEvents, setAllEvents] = useState<Event[]>(SAMPLE_EVENTS)
+
+  useEffect(() => {
+    const reader = new KYDReader("kyd")
+    reader.getEvents().then(setAllEvents)
+  }, [])
 
   const events =
     filter === "all"
-      ? SAMPLE_EVENTS
-      : SAMPLE_EVENTS.filter((e) => e.category === filter)
+      ? allEvents
+      : allEvents.filter((e) => e.category === filter)
 
   return (
     <div>

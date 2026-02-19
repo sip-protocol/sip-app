@@ -192,7 +192,7 @@ const CRYPTO_PRIMITIVES = [
 
 const STATS = [
   { value: "11", label: "Sponsor Tracks" },
-  { value: "865+", label: "Tests Passing" },
+  { value: "950+", label: "Tests Passing" },
   { value: "Mainnet", label: "Anchor Program" },
   { value: "v0.7.3", label: "SDK Version" },
 ]
@@ -636,7 +636,7 @@ function TractionSection() {
       text: "from-yellow-400 to-amber-400",
     },
     {
-      value: "865+",
+      value: "950+",
       label: "Tests Passing",
       detail: "SDK + React + App + 11 Tracks",
       color: "from-green-900/30 to-emerald-900/30 border-green-500/20",

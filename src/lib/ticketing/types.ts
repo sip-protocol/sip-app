@@ -62,6 +62,8 @@ export interface TicketingActionRecord {
   encryptedForAuditor?: string
   encryptedContent?: string
   encryptionNonce?: string
+  // On-chain
+  txSignature?: string
   // Timestamps
   startedAt: number
   completedAt?: number

@@ -87,6 +87,41 @@ export function MetaversePageClient() {
         </div>
       </div>
 
+      {/* Portals Live Preview */}
+      <div className="mb-10 rounded-2xl overflow-hidden border border-indigo-500/20">
+        <div className="flex items-center justify-between px-4 py-2.5 bg-indigo-900/30 border-b border-indigo-500/20">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+            <span className="text-xs font-medium text-indigo-300">
+              Portals Live Preview
+            </span>
+          </div>
+          <a
+            href="https://theportal.to"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs text-indigo-400 hover:text-indigo-300 transition-colors"
+          >
+            Open full experience &rarr;
+          </a>
+        </div>
+        <div className="relative bg-black/50 aspect-video max-h-[400px]">
+          <iframe
+            src="https://theportal.to"
+            title="Portals Metaverse"
+            className="w-full h-full border-0"
+            sandbox="allow-scripts allow-same-origin allow-popups"
+            loading="lazy"
+          />
+          <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-[var(--surface-primary)] via-transparent to-transparent opacity-40" />
+        </div>
+        <div className="px-4 py-3 bg-indigo-900/20 text-center">
+          <p className="text-xs text-indigo-300/70">
+            Explore Portals worlds with your SIP stealth avatar — your wallet address never appears
+          </p>
+        </div>
+      </div>
+
       {/* Stats */}
       <div className="mb-10">
         <MetaverseStats />

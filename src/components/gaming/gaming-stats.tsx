@@ -1,14 +1,23 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { useGamingHistoryStore } from "@/stores/gaming-history"
 import { SAMPLE_GAMES } from "@/lib/gaming/constants"
+import { MagicBlockReader } from "@/lib/gaming/magicblock-reader"
+import type { Game } from "@/lib/gaming/types"
 
 export function GamingStats() {
   const { results } = useGamingHistoryStore()
+  const [allGames, setAllGames] = useState<Game[]>(SAMPLE_GAMES)
+
+  useEffect(() => {
+    const reader = new MagicBlockReader("magicblock")
+    reader.getGames().then(setAllGames)
+  }, [])
 
   const gamesPlayed = results.length
   const wins = results.filter((r) => r.won).length
-  const activeGames = SAMPLE_GAMES.filter((g) => g.isActive).length
+  const activeGames = allGames.filter((g) => g.isActive).length
   const bestReward =
     results.length > 0
       ? results.some((r) => r.rewardTier === "diamond")

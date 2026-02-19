@@ -1,16 +1,25 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { useMetaverseHistoryStore } from "@/stores/metaverse-history"
 import { SAMPLE_WORLDS } from "@/lib/metaverse/constants"
+import { PortalsReader } from "@/lib/metaverse/portals-reader"
+import type { World } from "@/lib/metaverse/types"
 
 export function MetaverseStats() {
   const { visits, actions } = useMetaverseHistoryStore()
+  const [allWorlds, setAllWorlds] = useState<World[]>(SAMPLE_WORLDS)
+
+  useEffect(() => {
+    const reader = new PortalsReader("portals")
+    reader.getWorlds().then(setAllWorlds)
+  }, [])
 
   const worldsVisited = visits.length
   const teleports = actions.filter(
     (a) => a.type === "teleport" && a.status === "arrived"
   ).length
-  const activeWorlds = SAMPLE_WORLDS.filter((w) => w.isActive).length
+  const activeWorlds = allWorlds.filter((w) => w.isActive).length
   const bestAvatar =
     visits.length > 0
       ? visits.some((v) => v.tier === "vip")

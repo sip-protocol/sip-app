@@ -16,15 +16,18 @@ function generateId(prefix: string): string {
 export interface TicketingServiceOptions {
   mode?: TicketingMode
   onStepChange?: TicketingStepChangeCallback
+  onCommitTransaction?: (eventId: string, tier: string) => Promise<string | null>
 }
 
 export class TicketingService {
   private mode: TicketingMode
   private onStepChange?: TicketingStepChangeCallback
+  private onCommitTransaction?: (eventId: string, tier: string) => Promise<string | null>
 
   constructor(options: TicketingServiceOptions = {}) {
     this.mode = options.mode ?? "simulation"
     this.onStepChange = options.onStepChange
+    this.onCommitTransaction = options.onCommitTransaction
   }
 
   validate(
@@ -134,12 +137,17 @@ export class TicketingService {
         )
       }
 
-      // Step 3: Purchasing
+      // Step 3: Purchasing (on-chain commitment if callback provided)
       record.status = "purchasing"
       record.stepTimestamps.purchasing = Date.now()
       this.onStepChange?.("purchasing", { ...record })
 
-      if (this.mode === "simulation") {
+      if (this.onCommitTransaction) {
+        const signature = await this.onCommitTransaction(params.eventId, params.tier)
+        if (signature) {
+          record.txSignature = signature
+        }
+      } else if (this.mode === "simulation") {
         await new Promise((r) => setTimeout(r, SIMULATION_DELAYS.purchasing))
       }
 

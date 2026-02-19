@@ -10,6 +10,7 @@ import { usePurchaseTicket } from "@/hooks/use-purchase-ticket"
 import { TicketingPrivacyToggle } from "./ticketing-privacy-toggle"
 import { TicketingStatus } from "./ticketing-status"
 import { StealthTicketDisplay } from "./stealth-ticket-display"
+import { TransactionStatus } from "@/components/solana/transaction-status"
 import { TierBadge } from "./tier-badge"
 import { EVENT_CATEGORY_LABELS } from "@/lib/ticketing/constants"
 import type { Event, TicketTier } from "@/lib/ticketing/types"
@@ -123,6 +124,17 @@ export function PurchaseForm({ event, onPurchased }: PurchaseFormProps) {
             </div>
           )}
         </div>
+
+        {activeRecord.txSignature && (
+          <div className="mt-1">
+            <TransactionStatus
+              status="confirmed"
+              txSignature={activeRecord.txSignature}
+              explorerUrl={`https://solscan.io/tx/${activeRecord.txSignature}?cluster=devnet`}
+              error={null}
+            />
+          </div>
+        )}
 
         <button
           type="button"
