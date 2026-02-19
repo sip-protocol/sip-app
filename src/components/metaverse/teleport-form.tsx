@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useCallback, useEffect } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
 import { useDemoModeStore } from "@/stores/demo-mode"
 import { DemoBanner } from "@/components/ui/demo-banner"
@@ -11,7 +11,8 @@ import { MetaversePrivacyToggle } from "./metaverse-privacy-toggle"
 import { MetaverseStatus } from "./metaverse-status"
 import { StealthAvatarDisplay } from "./stealth-avatar-display"
 import { SAMPLE_WORLDS, AVATAR_TIER_COLORS } from "@/lib/metaverse/constants"
-import type { AvatarTier } from "@/lib/metaverse/types"
+import { PortalsReader } from "@/lib/metaverse/portals-reader"
+import type { AvatarTier, World } from "@/lib/metaverse/types"
 
 type PrivacyOption = "shielded" | "compliant" | "transparent"
 
@@ -48,8 +49,15 @@ export function TeleportForm({ onTeleported }: TeleportFormProps) {
     transparent: PrivacyLevel.TRANSPARENT,
   }
 
+  const [worlds, setWorlds] = useState<World[]>(SAMPLE_WORLDS)
+
+  useEffect(() => {
+    const reader = new PortalsReader("portals")
+    reader.getWorlds().then(setWorlds)
+  }, [])
+
   // Use the first world as the teleport destination
-  const destination = SAMPLE_WORLDS[0]
+  const destination = worlds[0]
 
   const isFormReady = (connected || isDemoMode) && status === "idle" && destination
   const isTeleporting =

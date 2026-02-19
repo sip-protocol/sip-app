@@ -1,16 +1,25 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { useTicketingHistoryStore } from "@/stores/ticketing-history"
 import { SAMPLE_EVENTS } from "@/lib/ticketing/constants"
+import { KYDReader } from "@/lib/ticketing/kyd-reader"
+import type { Event } from "@/lib/ticketing/types"
 
 export function TicketingStats() {
   const { tickets, actions } = useTicketingHistoryStore()
+  const [allEvents, setAllEvents] = useState<Event[]>(SAMPLE_EVENTS)
+
+  useEffect(() => {
+    const reader = new KYDReader("kyd")
+    reader.getEvents().then(setAllEvents)
+  }, [])
 
   const ticketsHeld = tickets.length
   const eventsAttended = actions.filter(
     (a) => a.type === "verify" && a.status === "verified"
   ).length
-  const activeEvents = SAMPLE_EVENTS.filter((e) => e.isActive).length
+  const activeEvents = allEvents.filter((e) => e.isActive).length
   const bestTier =
     tickets.length > 0
       ? tickets.some((t) => t.tier === "backstage")

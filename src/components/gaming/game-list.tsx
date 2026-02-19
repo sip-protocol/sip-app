@@ -1,9 +1,10 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { cn } from "@/lib/utils"
 import { GameCard } from "./game-card"
 import { SAMPLE_GAMES } from "@/lib/gaming/constants"
+import { MagicBlockReader } from "@/lib/gaming/magicblock-reader"
 import type { Game, GameType } from "@/lib/gaming/types"
 
 type GameFilter = "all" | GameType
@@ -22,11 +23,17 @@ interface GameListProps {
 
 export function GameList({ onPlay }: GameListProps) {
   const [filter, setFilter] = useState<GameFilter>("all")
+  const [allGames, setAllGames] = useState<Game[]>(SAMPLE_GAMES)
+
+  useEffect(() => {
+    const reader = new MagicBlockReader("magicblock")
+    reader.getGames().then(setAllGames)
+  }, [])
 
   const games =
     filter === "all"
-      ? SAMPLE_GAMES
-      : SAMPLE_GAMES.filter((g) => g.gameType === filter)
+      ? allGames
+      : allGames.filter((g) => g.gameType === filter)
 
   return (
     <div>

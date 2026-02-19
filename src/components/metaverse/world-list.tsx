@@ -1,9 +1,10 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { cn } from "@/lib/utils"
 import { WorldCard } from "./world-card"
 import { SAMPLE_WORLDS } from "@/lib/metaverse/constants"
+import { PortalsReader } from "@/lib/metaverse/portals-reader"
 import type { World, WorldCategory } from "@/lib/metaverse/types"
 
 type WorldFilter = "all" | WorldCategory
@@ -23,11 +24,17 @@ interface WorldListProps {
 
 export function WorldList({ onExplore }: WorldListProps) {
   const [filter, setFilter] = useState<WorldFilter>("all")
+  const [allWorlds, setAllWorlds] = useState<World[]>(SAMPLE_WORLDS)
+
+  useEffect(() => {
+    const reader = new PortalsReader("portals")
+    reader.getWorlds().then(setAllWorlds)
+  }, [])
 
   const worlds =
     filter === "all"
-      ? SAMPLE_WORLDS
-      : SAMPLE_WORLDS.filter((w) => w.category === filter)
+      ? allWorlds
+      : allWorlds.filter((w) => w.category === filter)
 
   return (
     <div>
