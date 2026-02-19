@@ -115,7 +115,7 @@ export function MintNFTForm({ art, onReset }: MintNFTFormProps) {
         </div>
 
         <a
-          href={`https://solscan.io/token/${activeRecord.mintAddress}?cluster=devnet`}
+          href={`https://solscan.io/token/${activeRecord.mintAddress}`}
           target="_blank"
           rel="noopener noreferrer"
           className="block w-full py-3 px-6 text-sm font-medium text-center rounded-xl border border-rose-500/30 text-rose-300 hover:bg-rose-900/20 transition-colors"

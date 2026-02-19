@@ -60,7 +60,7 @@ export function useStealthFund() {
         stealthAddress: transfer.stealthAddress,
         commitment: transfer.commitment.commitmentHash,
         txSignature: signature,
-        explorerUrl: transfer.getExplorerUrl(signature, "devnet"),
+        explorerUrl: transfer.getExplorerUrl(signature),
       }
 
       setLastFund(result)

@@ -126,12 +126,12 @@ export async function createStealthTransfer(
 
     /**
      * Generate a Solscan explorer URL for a transaction signature.
-     * Defaults to devnet; pass "mainnet-beta" for production.
+     * Defaults to mainnet; pass "devnet" for development.
      */
     getExplorerUrl: (txSignature: string, cluster?: string): string => {
       const base = `https://solscan.io/tx/${txSignature}`
-      if (cluster === "mainnet-beta") return base
-      return `${base}?cluster=${cluster ?? "devnet"}`
+      if (!cluster || cluster === "mainnet-beta") return base
+      return `${base}?cluster=${cluster}`
     },
   }
 }

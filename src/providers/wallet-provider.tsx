@@ -17,9 +17,9 @@ interface WalletProviderProps {
 }
 
 export function WalletProvider({ children }: WalletProviderProps) {
-  // Use devnet for development, mainnet for production
+  // Use mainnet-beta by default, override with NEXT_PUBLIC_RPC_URL
   const endpoint = useMemo(
-    () => process.env.NEXT_PUBLIC_RPC_URL || clusterApiUrl("devnet"),
+    () => process.env.NEXT_PUBLIC_RPC_URL || clusterApiUrl("mainnet-beta"),
     []
   )
 

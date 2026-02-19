@@ -131,7 +131,7 @@ export function FundForm({ project, onFunded }: FundFormProps) {
           <TransactionStatus
             status="confirmed"
             txSignature={activeRecord.txSignature}
-            explorerUrl={`https://solscan.io/tx/${activeRecord.txSignature}?cluster=devnet`}
+            explorerUrl={`https://solscan.io/tx/${activeRecord.txSignature}`}
             error={null}
           />
         )}

@@ -69,7 +69,7 @@ export function MintedNFTCard({ nft, art, className }: MintedNFTCardProps) {
         <div className="flex items-center justify-between">
           <span className="text-xs text-[var(--text-tertiary)]">{date}</span>
           <a
-            href={`https://solscan.io/token/${nft.mintAddress}?cluster=devnet`}
+            href={`https://solscan.io/token/${nft.mintAddress}`}
             target="_blank"
             rel="noopener noreferrer"
             className="text-xs text-rose-400 hover:text-rose-300 transition-colors"
