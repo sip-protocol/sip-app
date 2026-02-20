@@ -204,16 +204,13 @@ export async function createStealthTransfer(
       })
 
       // Request 300K compute units for shielded_transfer
-      tx.add(
-        ComputeBudgetProgram.setComputeUnitLimit({ units: 300_000 })
-      )
+      tx.add(ComputeBudgetProgram.setComputeUnitLimit({ units: 300_000 }))
       tx.add(
         ComputeBudgetProgram.setComputeUnitPrice({ microLamports: 50_000 })
       )
 
       // Ensure fee_collector is rent-exempt
-      const feeCollectorInfo =
-        await connection.getAccountInfo(FEE_COLLECTOR)
+      const feeCollectorInfo = await connection.getAccountInfo(FEE_COLLECTOR)
       const rentExemptMin =
         await connection.getMinimumBalanceForRentExemption(0)
       const currentBalance = feeCollectorInfo?.lamports ?? 0

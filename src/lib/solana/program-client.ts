@@ -198,11 +198,7 @@ export async function buildShieldedTransferInstruction(params: {
 
   // Derive transfer record PDA
   const [transferRecordPda] = PublicKey.findProgramAddressSync(
-    [
-      TRANSFER_RECORD_SEED,
-      sender.toBuffer(),
-      bigintToLeBytes(totalTransfers),
-    ],
+    [TRANSFER_RECORD_SEED, sender.toBuffer(), bigintToLeBytes(totalTransfers)],
     SIP_PROGRAM_ID
   )
 

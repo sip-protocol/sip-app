@@ -134,9 +134,7 @@ export function useScanPayments(): UseScanPaymentsResult {
 
       for (const { pubkey, account } of accounts) {
         try {
-          const record = parseTransferRecord(
-            new Uint8Array(account.data)
-          )
+          const record = parseTransferRecord(new Uint8Array(account.data))
 
           // Get balance of stealth account (infer SOL amount)
           const balance = await connection.getBalance(

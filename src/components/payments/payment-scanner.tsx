@@ -15,8 +15,7 @@ interface PaymentScannerProps {
 export function PaymentScanner({ className }: PaymentScannerProps) {
   const { connected } = useWallet()
   const { keys } = useStealthKeys()
-  const { payments, isScanning, error, progress, scan } =
-    useScanPayments()
+  const { payments, isScanning, error, progress, scan } = useScanPayments()
   const { claim: claimTransfer } = useClaimTransfer()
 
   const handleClaim = async (paymentId: string) => {

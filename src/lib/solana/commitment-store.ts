@@ -165,17 +165,13 @@ export async function createCommitmentStore(
       })
 
       // Request 200K compute units for verify_commitment
-      tx.add(
-        ComputeBudgetProgram.setComputeUnitLimit({ units: 200_000 })
-      )
+      tx.add(ComputeBudgetProgram.setComputeUnitLimit({ units: 200_000 }))
       tx.add(
         ComputeBudgetProgram.setComputeUnitPrice({ microLamports: 50_000 })
       )
 
       // Parse commitment bytes from the SDK result
-      const commitmentHex = pedersenCommitment.commitmentHash.startsWith(
-        "0x"
-      )
+      const commitmentHex = pedersenCommitment.commitmentHash.startsWith("0x")
         ? pedersenCommitment.commitmentHash.slice(2)
         : pedersenCommitment.commitmentHash
       const blindingHex = pedersenCommitment.blindingFactor.startsWith("0x")
