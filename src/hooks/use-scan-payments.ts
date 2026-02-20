@@ -5,6 +5,7 @@ import { useWallet, useConnection } from "@solana/wallet-adapter-react"
 import { PublicKey } from "@solana/web3.js"
 import { useStealthKeys } from "./use-stealth-keys"
 import { SIP_PROGRAM_ID } from "@/lib/solana/program-client"
+import { NULLIFIER_ACCOUNT_SIZE } from "@/lib/solana/stealth-transfer"
 import { sha256 } from "@noble/hashes/sha2.js"
 import bs58 from "bs58"
 
@@ -117,6 +118,13 @@ export function useScanPayments(): UseScanPaymentsResult {
 
       setProgress(60)
 
+      // Compute nullifier rent to subtract from displayed balance.
+      // The sender pre-funds the stealth account with this amount so claiming is free.
+      const nullifierRent =
+        await connection.getMinimumBalanceForRentExemption(
+          NULLIFIER_ACCOUNT_SIZE
+        )
+
       // Parse each TransferRecord and get stealth account balances
       const detected: DetectedPayment[] = []
 
@@ -130,9 +138,14 @@ export function useScanPayments(): UseScanPaymentsResult {
             "confirmed"
           )
 
+          // Net claimable = balance minus nullifier rent (pre-funded by sender)
+          const netClaimable = record.claimed
+            ? 0
+            : Math.max(0, balance - nullifierRent) / 1_000_000_000
+
           detected.push({
             id: pubkey.toBase58(),
-            amount: balance / 1_000_000_000,
+            amount: netClaimable,
             token: "SOL",
             stealthAddress: record.stealthRecipient.toBase58(),
             encryptedSeed: record.encryptedSeed,

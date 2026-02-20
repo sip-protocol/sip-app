@@ -86,10 +86,15 @@ export function useSendPayment(): UseSendPaymentResult {
           params.recipient
         )
 
-        // 2. Convert amount to lamports
+        // 2. Convert amount to lamports (minimum 0.002 SOL to cover claim costs)
         const amountSol = parseFloat(params.amount)
         if (isNaN(amountSol) || amountSol <= 0) {
           throw new Error("Invalid amount")
+        }
+        if (amountSol < 0.002) {
+          throw new Error(
+            "Minimum shielded transfer is 0.002 SOL (covers on-chain claim costs)"
+          )
         }
         const amountLamports = Math.floor(amountSol * 1_000_000_000)
 

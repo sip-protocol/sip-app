@@ -34,6 +34,14 @@ import { xchacha20poly1305 } from "@noble/ciphers/chacha.js"
 import { bytesToHex, concatBytes } from "@noble/hashes/utils.js"
 import bs58 from "bs58"
 
+/**
+ * NullifierRecord account size (discriminator + fields).
+ * Used to compute rent-exempt minimum for claim subsidy.
+ *
+ * Layout: 8 (disc) + 32 (nullifier) + 32 (transfer_record) + 8 (claimed_at) + 1 (bump) = 81
+ */
+export const NULLIFIER_ACCOUNT_SIZE = 81
+
 export interface StealthTransferParams {
   /** Amount to transfer in lamports */
   amountLamports: number
@@ -222,6 +230,21 @@ export async function createStealthTransfer(
           })
         )
       }
+
+      // Pre-fund stealth account with nullifier rent so claiming is free for recipient.
+      // Without this, the recipient pays ~0.00146 SOL rent for the nullifier PDA,
+      // which can exceed the transfer amount for small payments.
+      const nullifierRent =
+        await connection.getMinimumBalanceForRentExemption(
+          NULLIFIER_ACCOUNT_SIZE
+        )
+      tx.add(
+        SystemProgram.transfer({
+          fromPubkey: senderPubkey,
+          toPubkey: stealthKeypair.publicKey,
+          lamports: nullifierRent,
+        })
+      )
 
       // Parse commitment bytes
       const commitmentBytes = hexToBytes(commitment.commitmentHash)

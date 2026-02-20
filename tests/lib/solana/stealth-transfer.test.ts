@@ -312,7 +312,7 @@ describe("buildTransaction", () => {
     expect(mockGetLatestBlockhash).toHaveBeenCalledWith("confirmed")
   })
 
-  it("adds compute budget + shielded_transfer instructions (3 calls when fee_collector funded)", async () => {
+  it("adds compute budget + nullifier rent + shielded_transfer instructions (4 calls when fee_collector funded)", async () => {
     const { createStealthTransfer } =
       await import("@/lib/solana/stealth-transfer")
     const { PublicKey } = await import("@solana/web3.js")
@@ -327,7 +327,8 @@ describe("buildTransaction", () => {
     )
     await result.buildTransaction(senderPubkey, "https://api.devnet.solana.com")
 
-    expect(mockAdd).toHaveBeenCalledTimes(3)
+    // 4 instructions: computeUnitLimit + computeUnitPrice + nullifierRentTransfer + shieldedTransfer
+    expect(mockAdd).toHaveBeenCalledTimes(4)
     expect(mockSetComputeUnitLimit).toHaveBeenCalledWith({ units: 300_000 })
     expect(mockSetComputeUnitPrice).toHaveBeenCalledWith({
       microLamports: 50_000,
