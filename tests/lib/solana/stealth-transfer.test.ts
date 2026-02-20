@@ -19,6 +19,14 @@ const mockBuildShieldedTransferInstruction = vi.fn().mockResolvedValue({
   type: "shieldedTransfer",
 })
 
+const mockKeypairGenerate = vi.fn().mockReturnValue({
+  publicKey: {
+    toBase58: () => "StealthPubkey11111111111111111111111111111111",
+    toBuffer: () => Buffer.alloc(32),
+  },
+  secretKey: new Uint8Array(64).fill(0xab),
+})
+
 vi.mock("@solana/web3.js", () => {
   class MockPublicKey {
     _key: string
@@ -49,21 +57,30 @@ vi.mock("@solana/web3.js", () => {
   class MockConnection {
     constructor(_url: string, _commitment?: string) {}
     getLatestBlockhash = mockGetLatestBlockhash
+    getAccountInfo = vi.fn().mockResolvedValue({ lamports: 890880 })
+    getMinimumBalanceForRentExemption = vi.fn().mockResolvedValue(890880)
   }
 
   return {
     PublicKey: MockPublicKey,
+    Keypair: {
+      generate: mockKeypairGenerate,
+    },
     Transaction: MockTransaction,
     Connection: MockConnection,
     ComputeBudgetProgram: {
       setComputeUnitLimit: mockSetComputeUnitLimit,
       setComputeUnitPrice: mockSetComputeUnitPrice,
     },
+    SystemProgram: {
+      transfer: vi.fn().mockReturnValue({ type: "systemTransfer" }),
+    },
   }
 })
 
 vi.mock("@/lib/solana/program-client", () => ({
   buildShieldedTransferInstruction: mockBuildShieldedTransferInstruction,
+  FEE_COLLECTOR: { toBase58: () => "FeeCollector111111111111111111111111111111" },
 }))
 
 vi.mock("@/lib/crypto-helpers", () => ({
@@ -74,12 +91,30 @@ vi.mock("@/lib/crypto-helpers", () => ({
   }),
 }))
 
-// Mock SIP SDK (same pattern as music/governance tests)
+// Mock noble crypto (used for encryption)
+vi.mock("@noble/hashes/sha2.js", () => ({
+  sha256: vi.fn().mockReturnValue(new Uint8Array(32).fill(0x42)),
+}))
+
+vi.mock("@noble/ciphers/chacha.js", () => ({
+  xchacha20poly1305: vi.fn().mockReturnValue({
+    encrypt: vi.fn().mockReturnValue(new Uint8Array(48).fill(0xee)),
+    decrypt: vi.fn().mockReturnValue(new Uint8Array(32).fill(0xab)),
+  }),
+}))
+
+vi.mock("@noble/hashes/utils.js", () => ({
+  bytesToHex: vi.fn().mockReturnValue("42".repeat(32)),
+  concatBytes: vi.fn().mockReturnValue(new Uint8Array(64).fill(0x42)),
+}))
+
+// Mock SIP SDK
 vi.mock("@sip-protocol/sdk", () => ({
   generateStealthMetaAddress: () => ({
     metaAddress: {
-      spendingPublicKey: "0x" + "aa".repeat(32),
-      viewingPublicKey: "0x" + "bb".repeat(32),
+      spendingKey: "0x" + "aa".repeat(32),
+      viewingKey: "0x" + "bb".repeat(32),
+      chain: "solana",
     },
     spendingPrivateKey: "0x" + "cc".repeat(32),
     viewingPrivateKey: "0x" + "dd".repeat(32),
@@ -87,7 +122,7 @@ vi.mock("@sip-protocol/sdk", () => ({
   generateStealthAddress: () => ({
     stealthAddress: {
       address: "0x" + "ee".repeat(32),
-      ephemeralPublicKey: "0x" + "11".repeat(33),
+      ephemeralPublicKey: "0x" + "11".repeat(32),
       viewTag: 42,
     },
     sharedSecret: "0x" + "ff".repeat(32),
@@ -106,20 +141,26 @@ vi.mock("@/lib/sip-client", () => ({
   },
 }))
 
+const TEST_VIEWING_KEY = "0x" + "bb".repeat(32)
+const TEST_SPENDING_KEY = "0x" + "aa".repeat(32)
+
 describe("createStealthTransfer", () => {
   beforeEach(() => {
     vi.clearAllMocks()
   })
 
-  it("returns a valid stealth address", async () => {
+  it("returns a valid stealth address (base58)", async () => {
     const { createStealthTransfer } =
       await import("@/lib/solana/stealth-transfer")
 
-    const result = await createStealthTransfer({ amountLamports: 1_000_000 })
+    const result = await createStealthTransfer({
+      amountLamports: 1_000_000,
+      recipientViewingPublicKey: TEST_VIEWING_KEY,
+      recipientSpendingPublicKey: TEST_SPENDING_KEY,
+    })
 
     expect(result.stealthAddress).toBeTruthy()
     expect(typeof result.stealthAddress).toBe("string")
-    // Should be a raw address (no sip: prefix) — ready for Solana PublicKey
     expect(result.stealthAddress).not.toContain("sip:")
   })
 
@@ -127,7 +168,11 @@ describe("createStealthTransfer", () => {
     const { createStealthTransfer } =
       await import("@/lib/solana/stealth-transfer")
 
-    const result = await createStealthTransfer({ amountLamports: 500_000 })
+    const result = await createStealthTransfer({
+      amountLamports: 500_000,
+      recipientViewingPublicKey: TEST_VIEWING_KEY,
+      recipientSpendingPublicKey: TEST_SPENDING_KEY,
+    })
 
     expect(result.ephemeralPublicKey).toBeTruthy()
     expect(typeof result.ephemeralPublicKey).toBe("string")
@@ -137,7 +182,11 @@ describe("createStealthTransfer", () => {
     const { createStealthTransfer } =
       await import("@/lib/solana/stealth-transfer")
 
-    const result = await createStealthTransfer({ amountLamports: 1_000_000 })
+    const result = await createStealthTransfer({
+      amountLamports: 1_000_000,
+      recipientViewingPublicKey: TEST_VIEWING_KEY,
+      recipientSpendingPublicKey: TEST_SPENDING_KEY,
+    })
 
     expect(result.commitment).toBeDefined()
     expect(result.commitment.commitmentHash).toMatch(/^0x/)
@@ -145,21 +194,29 @@ describe("createStealthTransfer", () => {
     expect(result.commitment.commitmentDisplay).toContain("...")
   })
 
-  it("returns encoded meta address", async () => {
+  it("returns viewing key hash for on-chain discovery", async () => {
     const { createStealthTransfer } =
       await import("@/lib/solana/stealth-transfer")
 
-    const result = await createStealthTransfer({ amountLamports: 1_000_000 })
+    const result = await createStealthTransfer({
+      amountLamports: 1_000_000,
+      recipientViewingPublicKey: TEST_VIEWING_KEY,
+      recipientSpendingPublicKey: TEST_SPENDING_KEY,
+    })
 
-    expect(result.metaAddress).toBeTruthy()
-    expect(result.metaAddress).toContain("st:sol:")
+    expect(result.viewingKeyHash).toBeTruthy()
+    expect(result.viewingKeyHash).toMatch(/^0x/)
   })
 
   it("returns buildTransaction function", async () => {
     const { createStealthTransfer } =
       await import("@/lib/solana/stealth-transfer")
 
-    const result = await createStealthTransfer({ amountLamports: 1_000_000 })
+    const result = await createStealthTransfer({
+      amountLamports: 1_000_000,
+      recipientViewingPublicKey: TEST_VIEWING_KEY,
+      recipientSpendingPublicKey: TEST_SPENDING_KEY,
+    })
 
     expect(typeof result.buildTransaction).toBe("function")
   })
@@ -168,7 +225,11 @@ describe("createStealthTransfer", () => {
     const { createStealthTransfer } =
       await import("@/lib/solana/stealth-transfer")
 
-    const result = await createStealthTransfer({ amountLamports: 1_000_000 })
+    const result = await createStealthTransfer({
+      amountLamports: 1_000_000,
+      recipientViewingPublicKey: TEST_VIEWING_KEY,
+      recipientSpendingPublicKey: TEST_SPENDING_KEY,
+    })
 
     expect(typeof result.getExplorerUrl).toBe("function")
   })
@@ -184,7 +245,11 @@ describe("buildTransaction", () => {
       await import("@/lib/solana/stealth-transfer")
     const { PublicKey } = await import("@solana/web3.js")
 
-    const result = await createStealthTransfer({ amountLamports: 1_000_000 })
+    const result = await createStealthTransfer({
+      amountLamports: 1_000_000,
+      recipientViewingPublicKey: TEST_VIEWING_KEY,
+      recipientSpendingPublicKey: TEST_SPENDING_KEY,
+    })
     const senderPubkey = new PublicKey(
       "SenderPubkey111111111111111111111111111111"
     )
@@ -194,16 +259,19 @@ describe("buildTransaction", () => {
     )
 
     expect(tx).toBeDefined()
-    // Should have called add() for CU limit + CU price + shielded transfer
     expect(mockAdd).toHaveBeenCalled()
   })
 
-  it("calls buildShieldedTransferInstruction", async () => {
+  it("calls buildShieldedTransferInstruction with encrypted seed", async () => {
     const { createStealthTransfer } =
       await import("@/lib/solana/stealth-transfer")
     const { PublicKey } = await import("@solana/web3.js")
 
-    const result = await createStealthTransfer({ amountLamports: 2_000_000 })
+    const result = await createStealthTransfer({
+      amountLamports: 2_000_000,
+      recipientViewingPublicKey: TEST_VIEWING_KEY,
+      recipientSpendingPublicKey: TEST_SPENDING_KEY,
+    })
     const senderPubkey = new PublicKey(
       "SenderPubkey111111111111111111111111111111"
     )
@@ -222,7 +290,11 @@ describe("buildTransaction", () => {
       await import("@/lib/solana/stealth-transfer")
     const { PublicKey } = await import("@solana/web3.js")
 
-    const result = await createStealthTransfer({ amountLamports: 1_000_000 })
+    const result = await createStealthTransfer({
+      amountLamports: 1_000_000,
+      recipientViewingPublicKey: TEST_VIEWING_KEY,
+      recipientSpendingPublicKey: TEST_SPENDING_KEY,
+    })
     const senderPubkey = new PublicKey(
       "SenderPubkey111111111111111111111111111111"
     )
@@ -231,18 +303,21 @@ describe("buildTransaction", () => {
     expect(mockGetLatestBlockhash).toHaveBeenCalledWith("confirmed")
   })
 
-  it("adds compute budget + shielded_transfer instructions (3 calls to add)", async () => {
+  it("adds compute budget + shielded_transfer instructions (3 calls when fee_collector funded)", async () => {
     const { createStealthTransfer } =
       await import("@/lib/solana/stealth-transfer")
     const { PublicKey } = await import("@solana/web3.js")
 
-    const result = await createStealthTransfer({ amountLamports: 1_000_000 })
+    const result = await createStealthTransfer({
+      amountLamports: 1_000_000,
+      recipientViewingPublicKey: TEST_VIEWING_KEY,
+      recipientSpendingPublicKey: TEST_SPENDING_KEY,
+    })
     const senderPubkey = new PublicKey(
       "SenderPubkey111111111111111111111111111111"
     )
     await result.buildTransaction(senderPubkey, "https://api.devnet.solana.com")
 
-    // CU limit + CU price + shielded transfer = 3 calls to add()
     expect(mockAdd).toHaveBeenCalledTimes(3)
     expect(mockSetComputeUnitLimit).toHaveBeenCalledWith({ units: 300_000 })
     expect(mockSetComputeUnitPrice).toHaveBeenCalledWith({
@@ -257,7 +332,11 @@ describe("getExplorerUrl", () => {
     const { createStealthTransfer } =
       await import("@/lib/solana/stealth-transfer")
 
-    const result = await createStealthTransfer({ amountLamports: 1_000_000 })
+    const result = await createStealthTransfer({
+      amountLamports: 1_000_000,
+      recipientViewingPublicKey: TEST_VIEWING_KEY,
+      recipientSpendingPublicKey: TEST_SPENDING_KEY,
+    })
     const url = result.getExplorerUrl("5abc123def")
 
     expect(url).toBe("https://solscan.io/tx/5abc123def")
@@ -267,7 +346,11 @@ describe("getExplorerUrl", () => {
     const { createStealthTransfer } =
       await import("@/lib/solana/stealth-transfer")
 
-    const result = await createStealthTransfer({ amountLamports: 1_000_000 })
+    const result = await createStealthTransfer({
+      amountLamports: 1_000_000,
+      recipientViewingPublicKey: TEST_VIEWING_KEY,
+      recipientSpendingPublicKey: TEST_SPENDING_KEY,
+    })
     const url = result.getExplorerUrl("5abc123def", "mainnet-beta")
 
     expect(url).toBe("https://solscan.io/tx/5abc123def")
@@ -277,9 +360,21 @@ describe("getExplorerUrl", () => {
     const { createStealthTransfer } =
       await import("@/lib/solana/stealth-transfer")
 
-    const result = await createStealthTransfer({ amountLamports: 1_000_000 })
+    const result = await createStealthTransfer({
+      amountLamports: 1_000_000,
+      recipientViewingPublicKey: TEST_VIEWING_KEY,
+      recipientSpendingPublicKey: TEST_SPENDING_KEY,
+    })
     const url = result.getExplorerUrl("txhash999", "devnet")
 
     expect(url).toBe("https://solscan.io/tx/txhash999?cluster=devnet")
+  })
+})
+
+describe("encryptStealthSeed / decryptStealthSeed", () => {
+  it("exports encrypt and decrypt functions", async () => {
+    const mod = await import("@/lib/solana/stealth-transfer")
+    expect(typeof mod.encryptStealthSeed).toBe("function")
+    expect(typeof mod.decryptStealthSeed).toBe("function")
   })
 })

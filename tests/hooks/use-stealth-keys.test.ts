@@ -2,11 +2,30 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest"
 import { renderHook, act, waitFor } from "@testing-library/react"
 import { useStealthKeys } from "@/hooks/use-stealth-keys"
 
+// Stable publicKey reference to prevent infinite re-render in useEffect
+const mockPublicKey = { toBase58: () => "MockPublicKey123" }
+
 // Mock wallet adapter
 vi.mock("@solana/wallet-adapter-react", () => ({
   useWallet: () => ({
-    publicKey: { toBase58: () => "MockPublicKey123" },
+    publicKey: mockPublicKey,
     connected: true,
+  }),
+}))
+
+// Mock SIP client — returns inline mock SDK to avoid loading real @sip-protocol/sdk
+vi.mock("@/lib/sip-client", () => ({
+  getSDK: async () => ({
+    generateStealthMetaAddress: () => ({
+      metaAddress: {
+        spendingKey: "0x" + "aa".repeat(32),
+        viewingKey: "0x" + "bb".repeat(32),
+        chain: "solana",
+      },
+      spendingPrivateKey: "0x" + "cc".repeat(32),
+      viewingPrivateKey: "0x" + "dd".repeat(32),
+    }),
+    encodeStealthMetaAddress: () => "sip:solana:" + "ab".repeat(32),
   }),
 }))
 
@@ -26,7 +45,7 @@ describe("useStealthKeys", () => {
     expect(result.current.error).toBeNull()
   })
 
-  it("generates stealth keys", async () => {
+  it("generates stealth keys via SDK", async () => {
     const { result } = renderHook(() => useStealthKeys())
 
     await act(async () => {
@@ -37,6 +56,8 @@ describe("useStealthKeys", () => {
     expect(result.current.keys?.metaAddress).toMatch(/^sip:solana:/)
     expect(result.current.keys?.spendingPublicKey).toBeTruthy()
     expect(result.current.keys?.viewingPublicKey).toBeTruthy()
+    expect(result.current.keys?.spendingPrivateKey).toBeTruthy()
+    expect(result.current.keys?.viewingPrivateKey).toBeTruthy()
   })
 
   it("clears keys when clear is called", async () => {
@@ -72,6 +93,8 @@ describe("useStealthKeys", () => {
       metaAddress: "sip:solana:existing:keys",
       spendingPublicKey: "existing-spending",
       viewingPublicKey: "existing-viewing",
+      spendingPrivateKey: "existing-spending-priv",
+      viewingPrivateKey: "existing-viewing-priv",
       createdAt: Date.now(),
     }
 

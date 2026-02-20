@@ -6,6 +6,9 @@
  *
  * Program: S1PMFspo4W6BYKHWkHNF7kZ3fnqibEXg3LQjxepS9at
  * Deployed: Mainnet-beta + Devnet
+ *
+ * NOTE: Uses Uint8Array + DataView instead of Buffer methods for browser compatibility.
+ * The browser Buffer polyfill does not support writeBigUInt64LE/writeUInt32LE.
  */
 
 import {
@@ -31,16 +34,48 @@ export const FEE_COLLECTOR = new PublicKey(
   "S1P6j1yeTm6zkewQVeihrTZvmfoHABRkHDhabWTuWMd"
 )
 
-const TRANSFER_RECORD_SEED = Buffer.from("transfer_record")
+const TRANSFER_RECORD_SEED = new TextEncoder().encode("transfer_record")
 
 // Discriminators from IDL (sha256("global:<instruction_name>")[0..8])
-const VERIFY_COMMITMENT_DISC = Buffer.from([
+const VERIFY_COMMITMENT_DISC = new Uint8Array([
   0xae, 0x7c, 0x0e, 0x39, 0x3c, 0x50, 0xc4, 0x92,
 ])
 
-const SHIELDED_TRANSFER_DISC = Buffer.from([
+const SHIELDED_TRANSFER_DISC = new Uint8Array([
   0xbf, 0x82, 0x05, 0x7f, 0x7c, 0xbb, 0xee, 0xbc,
 ])
+
+// sha256("global:claim_transfer")[0..8]
+const CLAIM_TRANSFER_DISC = new Uint8Array([
+  0xca, 0xb2, 0x3a, 0xbe, 0xe6, 0xea, 0xe5, 0x11,
+])
+
+const NULLIFIER_SEED = new TextEncoder().encode("nullifier")
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Binary helpers (browser-safe — no Buffer methods)
+// ─────────────────────────────────────────────────────────────────────────────
+
+function writeU64LE(buf: Uint8Array, value: bigint, offset: number): void {
+  const view = new DataView(buf.buffer, buf.byteOffset, buf.byteLength)
+  view.setBigUint64(offset, value, true)
+}
+
+function readU64LE(buf: Uint8Array, offset: number): bigint {
+  const view = new DataView(buf.buffer, buf.byteOffset, buf.byteLength)
+  return view.getBigUint64(offset, true)
+}
+
+function writeU32LE(buf: Uint8Array, value: number, offset: number): void {
+  const view = new DataView(buf.buffer, buf.byteOffset, buf.byteLength)
+  view.setUint32(offset, value, true)
+}
+
+function bigintToLeBytes(value: bigint): Uint8Array {
+  const buf = new Uint8Array(8)
+  writeU64LE(buf, value, 0)
+  return buf
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // verify_commitment
@@ -73,16 +108,16 @@ export function buildVerifyCommitmentInstruction(params: {
   }
 
   // Instruction data: discriminator (8) + commitment (33) + value (8) + blinding (32) = 81 bytes
-  const data = Buffer.alloc(81)
+  const data = new Uint8Array(81)
   let offset = 0
 
-  VERIFY_COMMITMENT_DISC.copy(data, offset)
+  data.set(VERIFY_COMMITMENT_DISC, offset)
   offset += 8
 
   data.set(commitment, offset)
   offset += 33
 
-  data.writeBigUInt64LE(value, offset)
+  writeU64LE(data, value, offset)
   offset += 8
 
   data.set(blinding, offset)
@@ -90,7 +125,7 @@ export function buildVerifyCommitmentInstruction(params: {
   return new TransactionInstruction({
     keys: [{ pubkey: payer, isSigner: true, isWritable: false }],
     programId: SIP_PROGRAM_ID,
-    data,
+    data: Buffer.from(data),
   })
 }
 
@@ -159,7 +194,7 @@ export async function buildShieldedTransferInstruction(params: {
   }
 
   // Parse total_transfers from config (offset: 8 discriminator + 32 authority + 2 fee_bps + 1 paused = 43)
-  const totalTransfers = configAccount.data.readBigUInt64LE(43)
+  const totalTransfers = readU64LE(configAccount.data, 43)
 
   // Derive transfer record PDA
   const [transferRecordPda] = PublicKey.findProgramAddressSync(
@@ -184,10 +219,10 @@ export async function buildShieldedTransferInstruction(params: {
     proof.length + // proof Vec<u8>
     8 // actual_amount u64
 
-  const data = Buffer.alloc(size)
+  const data = new Uint8Array(size)
   let offset = 0
 
-  SHIELDED_TRANSFER_DISC.copy(data, offset)
+  data.set(SHIELDED_TRANSFER_DISC, offset)
   offset += 8
 
   data.set(amountCommitment, offset)
@@ -202,17 +237,17 @@ export async function buildShieldedTransferInstruction(params: {
   data.set(viewingKeyHash, offset)
   offset += 32
 
-  data.writeUInt32LE(encryptedAmount.length, offset)
+  writeU32LE(data, encryptedAmount.length, offset)
   offset += 4
   data.set(encryptedAmount, offset)
   offset += encryptedAmount.length
 
-  data.writeUInt32LE(proof.length, offset)
+  writeU32LE(data, proof.length, offset)
   offset += 4
   data.set(proof, offset)
   offset += proof.length
 
-  data.writeBigUInt64LE(actualAmount, offset)
+  writeU64LE(data, actualAmount, offset)
 
   return new TransactionInstruction({
     keys: [
@@ -228,16 +263,83 @@ export async function buildShieldedTransferInstruction(params: {
       },
     ],
     programId: SIP_PROGRAM_ID,
-    data,
+    data: Buffer.from(data),
   })
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Helpers
+// claim_transfer
 // ─────────────────────────────────────────────────────────────────────────────
 
-function bigintToLeBytes(value: bigint): Buffer {
-  const buf = Buffer.alloc(8)
-  buf.writeBigUInt64LE(value)
-  return buf
+/**
+ * Build a claim_transfer instruction for the SIP program.
+ *
+ * Accounts: [config (PDA), transfer_record (mut), nullifier_record (init),
+ *            stealth_account (signer+mut), recipient (signer+mut+payer), system_program]
+ * Args: nullifier [u8; 32], proof Vec<u8>
+ *
+ * The stealth_account must sign (proves ownership of stealth private key).
+ * The recipient is the main wallet that receives the drained SOL.
+ */
+export function buildClaimTransferInstruction(params: {
+  /** TransferRecord PDA address */
+  transferRecordPda: PublicKey
+  /** Stealth account public key (must be signer) */
+  stealthPubkey: PublicKey
+  /** Recipient's main wallet (receives funds, pays for nullifier PDA) */
+  recipientPubkey: PublicKey
+  /** 32-byte nullifier = SHA-256(transferRecordPda || stealthSeed) */
+  nullifier: Uint8Array
+  /** ZK proof bytes (mock: 128 bytes) */
+  proof: Uint8Array
+}): TransactionInstruction {
+  const {
+    transferRecordPda,
+    stealthPubkey,
+    recipientPubkey,
+    nullifier,
+    proof,
+  } = params
+
+  if (nullifier.length !== 32) {
+    throw new Error(`nullifier must be 32 bytes, got ${nullifier.length}`)
+  }
+
+  // Derive nullifier PDA
+  const [nullifierRecordPda] = PublicKey.findProgramAddressSync(
+    [NULLIFIER_SEED, nullifier],
+    SIP_PROGRAM_ID
+  )
+
+  // Instruction data: discriminator (8) + nullifier (32) + proof Vec (4 + proof.length)
+  const size = 8 + 32 + 4 + proof.length
+  const data = new Uint8Array(size)
+  let offset = 0
+
+  data.set(CLAIM_TRANSFER_DISC, offset)
+  offset += 8
+
+  data.set(nullifier, offset)
+  offset += 32
+
+  writeU32LE(data, proof.length, offset)
+  offset += 4
+  data.set(proof, offset)
+
+  return new TransactionInstruction({
+    keys: [
+      { pubkey: CONFIG_PDA, isSigner: false, isWritable: false },
+      { pubkey: transferRecordPda, isSigner: false, isWritable: true },
+      { pubkey: nullifierRecordPda, isSigner: false, isWritable: true },
+      { pubkey: stealthPubkey, isSigner: true, isWritable: true },
+      { pubkey: recipientPubkey, isSigner: true, isWritable: true },
+      {
+        pubkey: SystemProgram.programId,
+        isSigner: false,
+        isWritable: false,
+      },
+    ],
+    programId: SIP_PROGRAM_ID,
+    data: Buffer.from(data),
+  })
 }

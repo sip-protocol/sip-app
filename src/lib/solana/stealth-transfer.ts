@@ -4,8 +4,11 @@
  * Builds real Solana transactions that send SOL to one-time stealth addresses
  * via the SIP Privacy Anchor program's shielded_transfer instruction.
  *
- * Uses @sip-protocol/sdk for stealth address generation and Pedersen commitments.
- * Creates on-chain TransferRecord PDA with commitment, ephemeral key, and viewing key hash.
+ * Architecture: Hybrid DKSAP + Encrypted Keypair
+ * - DKSAP (Dual-Key Stealth Address Protocol) for discovery via viewing key hash
+ * - Random Keypair for on-chain stealth account (ed25519 DKSAP scalar != Solana Keypair)
+ * - Stealth seed encrypted with DKSAP shared secret (XChaCha20-Poly1305)
+ * - Recipient recovers shared secret via ECDH, decrypts seed, reconstructs Keypair
  *
  * This module does NOT sign or send transactions — it produces a signable
  * Transaction object for the calling hook/component to submit via wallet adapter.
@@ -16,28 +19,40 @@ import { createRealCommitment } from "@/lib/crypto-helpers"
 import type { CommitmentResult } from "@/lib/crypto-helpers"
 import {
   Connection,
+  Keypair,
   PublicKey,
   Transaction,
   ComputeBudgetProgram,
+  SystemProgram,
 } from "@solana/web3.js"
-import { buildShieldedTransferInstruction } from "@/lib/solana/program-client"
+import {
+  buildShieldedTransferInstruction,
+  FEE_COLLECTOR,
+} from "@/lib/solana/program-client"
+import { sha256 } from "@noble/hashes/sha2.js"
+import { xchacha20poly1305 } from "@noble/ciphers/chacha.js"
+import { bytesToHex, concatBytes } from "@noble/hashes/utils.js"
 
 export interface StealthTransferParams {
   /** Amount to transfer in lamports */
   amountLamports: number
-  /** Optional memo to attach (e.g., "sip:stealth-transfer") */
+  /** Recipient's viewing public key (hex, 0x-prefixed, from meta-address) */
+  recipientViewingPublicKey: string
+  /** Recipient's spending public key (hex, 0x-prefixed, from meta-address) */
+  recipientSpendingPublicKey: string
+  /** Optional memo to attach (e.g., "SIP-TIP:artistName") */
   memo?: string
 }
 
 export interface StealthTransferResult {
-  /** Raw stealth address (base58/hex) — ready for Solana PublicKey */
+  /** Stealth account public key (base58) — the one-time address holding SOL */
   stealthAddress: string
-  /** Ephemeral public key for recipient to derive spending key */
+  /** Ephemeral public key for DKSAP shared secret recovery (hex) */
   ephemeralPublicKey: string
   /** Pedersen commitment of the transfer amount */
   commitment: CommitmentResult
-  /** Encoded meta-address for the stealth keypair */
-  metaAddress: string
+  /** Viewing key hash used for on-chain discovery (hex) */
+  viewingKeyHash: string
   /** Builds a signable Solana transaction (caller signs + sends) */
   buildTransaction: (
     senderPubkey: PublicKey,
@@ -60,16 +75,6 @@ function hexToBytes(hex: string): Uint8Array {
 }
 
 /**
- * Convert bigint to 8-byte little-endian Uint8Array
- */
-function bigintToLeBytes(value: bigint): Uint8Array {
-  const buf = new ArrayBuffer(8)
-  const view = new DataView(buf)
-  view.setBigUint64(0, value, true)
-  return new Uint8Array(buf)
-}
-
-/**
  * Create a mock ZK proof (deterministic from inputs)
  */
 function createMockProof(
@@ -78,70 +83,112 @@ function createMockProof(
   _blindingHex: string
 ): Uint8Array {
   const proof = new Uint8Array(128)
-  // Fill with hash-like deterministic data
   const seed = hexToBytes(commitmentHex)
   for (let i = 0; i < 128; i++) {
-    proof[i] = seed[i % seed.length] ^ Number((amount >> BigInt(i % 8)) & BigInt(0xff))
+    proof[i] =
+      seed[i % seed.length] ^ Number((amount >> BigInt(i % 8)) & BigInt(0xff))
   }
   return proof
 }
 
 /**
- * Encrypt amount with viewing key (XOR with key hash)
+ * Encrypt a 32-byte stealth seed using XChaCha20-Poly1305.
+ *
+ * Key derivation: encKey = SHA-256(sharedSecret)
+ * Nonce derivation: nonce = SHA-256(encKey || "sip-nonce")[0..24] (deterministic)
+ *
+ * @returns 48-byte ciphertext (32 plaintext + 16 auth tag)
  */
-function encryptAmount(
-  amount: bigint,
-  viewingKeyHex: string
+export function encryptStealthSeed(
+  seed: Uint8Array,
+  sharedSecret: Uint8Array
 ): Uint8Array {
-  const amountBytes = bigintToLeBytes(amount)
-  const keyBytes = hexToBytes(viewingKeyHex)
-  const encrypted = new Uint8Array(8)
-  for (let i = 0; i < 8; i++) {
-    encrypted[i] = amountBytes[i] ^ keyBytes[i % keyBytes.length]
-  }
-  return encrypted
+  const encKey = sha256(sharedSecret)
+  const nonceInput = concatBytes(encKey, new TextEncoder().encode("sip-nonce"))
+  const nonce = sha256(nonceInput).slice(0, 24)
+  const cipher = xchacha20poly1305(encKey, nonce)
+  return cipher.encrypt(seed)
+}
+
+/**
+ * Decrypt a stealth seed encrypted with encryptStealthSeed.
+ *
+ * @param ciphertext - 48-byte ciphertext (32 encrypted seed + 16 auth tag)
+ * @param sharedSecret - Raw shared secret bytes (same as sender computed)
+ * @returns 32-byte stealth seed
+ */
+export function decryptStealthSeed(
+  ciphertext: Uint8Array,
+  sharedSecret: Uint8Array
+): Uint8Array {
+  const encKey = sha256(sharedSecret)
+  const nonceInput = concatBytes(encKey, new TextEncoder().encode("sip-nonce"))
+  const nonce = sha256(nonceInput).slice(0, 24)
+  const cipher = xchacha20poly1305(encKey, nonce)
+  return cipher.decrypt(ciphertext)
 }
 
 /**
  * Create a stealth transfer via the SIP Privacy program's shielded_transfer instruction.
  *
- * Generates a one-time stealth address, commits the amount with Pedersen commitment,
- * and returns a transaction builder that calls the program on-chain.
+ * Generates a one-time stealth address (random Keypair), encrypts its seed with
+ * the DKSAP shared secret so the recipient can recover it, and returns a
+ * transaction builder that calls the program on-chain.
  *
- * @param params - Transfer parameters (amount in lamports)
+ * @param params - Transfer parameters (amount, recipient viewing/spending keys)
  * @returns Stealth address, commitment, and transaction builder
  */
 export async function createStealthTransfer(
   params: StealthTransferParams
 ): Promise<StealthTransferResult> {
-  const { amountLamports } = params
+  const {
+    amountLamports,
+    recipientViewingPublicKey,
+    recipientSpendingPublicKey,
+  } = params
   const sdk = await getSDK()
 
-  // 1. Generate one-time stealth address
-  const { metaAddress } = sdk.generateStealthMetaAddress("solana")
-  const stealthResult = sdk.generateStealthAddress(metaAddress)
+  // 1. Build meta-address from recipient's public keys
+  const spendingKey = recipientSpendingPublicKey.startsWith("0x")
+    ? recipientSpendingPublicKey
+    : `0x${recipientSpendingPublicKey}`
+  const viewingKey = recipientViewingPublicKey.startsWith("0x")
+    ? recipientViewingPublicKey
+    : `0x${recipientViewingPublicKey}`
+  const recipientMetaAddress = {
+    spendingKey: spendingKey as `0x${string}`,
+    viewingKey: viewingKey as `0x${string}`,
+    chain: "solana" as const,
+  }
 
-  // 2. Create Pedersen commitment of the transfer amount
-  const commitment = await createRealCommitment(BigInt(amountLamports))
-
-  // 3. Encode meta-address for storage/display
-  const metaAddressStr = sdk.encodeStealthMetaAddress(metaAddress)
-
-  const rawStealthAddress = String(stealthResult.stealthAddress.address)
-  const ephemeralPubKey = String(
-    stealthResult.stealthAddress.ephemeralPublicKey
+  // 2. Run DKSAP: get ephemeral pubkey + shared secret for encryption
+  const dksapResult = sdk.generateStealthAddress(recipientMetaAddress)
+  const sharedSecretBytes = hexToBytes(dksapResult.sharedSecret)
+  const ephemeralPubKeyHex = String(
+    dksapResult.stealthAddress.ephemeralPublicKey
   )
 
-  return {
-    stealthAddress: rawStealthAddress,
-    ephemeralPublicKey: ephemeralPubKey,
-    commitment,
-    metaAddress: metaAddressStr,
+  // 3. Generate random Keypair for the on-chain stealth account
+  //    (Can't use DKSAP-derived key because ed25519 scalar != Solana Keypair seed)
+  const stealthKeypair = Keypair.generate()
+  const stealthSeed = stealthKeypair.secretKey.slice(0, 32)
 
-    /**
-     * Build a signable Solana transaction that transfers SOL to the stealth address
-     * via the SIP Privacy program's shielded_transfer instruction.
-     */
+  // 4. Encrypt stealth seed with DKSAP shared secret
+  const encryptedSeed = encryptStealthSeed(stealthSeed, sharedSecretBytes)
+
+  // 5. Compute viewing key hash for on-chain discovery
+  const viewingKeyBytes = hexToBytes(recipientViewingPublicKey)
+  const viewingKeyHash = sha256(viewingKeyBytes)
+
+  // 6. Create Pedersen commitment
+  const commitment = await createRealCommitment(BigInt(amountLamports))
+
+  return {
+    stealthAddress: stealthKeypair.publicKey.toBase58(),
+    ephemeralPublicKey: ephemeralPubKeyHex,
+    commitment,
+    viewingKeyHash: `0x${bytesToHex(viewingKeyHash)}`,
+
     buildTransaction: async (
       senderPubkey: PublicKey,
       rpcUrl: string
@@ -164,51 +211,48 @@ export async function createStealthTransfer(
         ComputeBudgetProgram.setComputeUnitPrice({ microLamports: 50_000 })
       )
 
-      // Parse commitment from SDK result
-      const commitmentBytes = hexToBytes(commitment.commitmentHash)
-
-      // Prepare ephemeral pubkey (33 bytes compressed)
-      const ephemeralBytes = new Uint8Array(33)
-      ephemeralBytes[0] = 0x02 // compressed prefix
-      const rawEphemeral = hexToBytes(ephemeralPubKey)
-      ephemeralBytes.set(rawEphemeral.slice(0, 32), 1)
-
-      // Viewing key hash (use first 32 bytes of meta-address hash)
-      const viewingKey = metaAddress.viewingKey
-      const viewingKeyBytes = hexToBytes(
-        typeof viewingKey === "string" ? viewingKey : String(viewingKey)
-      )
-      // Simple SHA-256-like hash via repeated XOR for viewing key hash
-      const viewingKeyHash = new Uint8Array(32)
-      for (let i = 0; i < viewingKeyBytes.length; i++) {
-        viewingKeyHash[i % 32] ^= viewingKeyBytes[i]
+      // Ensure fee_collector is rent-exempt
+      const feeCollectorInfo =
+        await connection.getAccountInfo(FEE_COLLECTOR)
+      const rentExemptMin =
+        await connection.getMinimumBalanceForRentExemption(0)
+      const currentBalance = feeCollectorInfo?.lamports ?? 0
+      if (currentBalance < rentExemptMin) {
+        const topUp = rentExemptMin - currentBalance
+        tx.add(
+          SystemProgram.transfer({
+            fromPubkey: senderPubkey,
+            toPubkey: FEE_COLLECTOR,
+            lamports: topUp,
+          })
+        )
       }
 
-      // Encrypt amount
-      const encryptedAmount = encryptAmount(
-        BigInt(amountLamports),
-        commitment.blindingFactor
-      )
+      // Parse commitment bytes
+      const commitmentBytes = hexToBytes(commitment.commitmentHash)
 
-      // Mock proof
+      // Ephemeral pubkey: 33 bytes (0x02 prefix + 32-byte ed25519 key)
+      const ephemeralBytes = new Uint8Array(33)
+      ephemeralBytes[0] = 0x02
+      const rawEphemeral = hexToBytes(ephemeralPubKeyHex)
+      ephemeralBytes.set(rawEphemeral.slice(0, 32), 1)
+
+      // Mock ZK proof
       const proof = createMockProof(
         commitment.commitmentHash,
         BigInt(amountLamports),
         commitment.blindingFactor
       )
 
-      // Stealth address as Solana PublicKey
-      const stealthPubkey = new PublicKey(rawStealthAddress)
-
       // Build the shielded_transfer instruction
       const ix = await buildShieldedTransferInstruction({
         connection,
         sender: senderPubkey,
         amountCommitment: commitmentBytes,
-        stealthPubkey,
+        stealthPubkey: stealthKeypair.publicKey,
         ephemeralPubkey: ephemeralBytes,
         viewingKeyHash,
-        encryptedAmount,
+        encryptedAmount: encryptedSeed,
         proof,
         actualAmount: BigInt(amountLamports),
       })
@@ -218,10 +262,6 @@ export async function createStealthTransfer(
       return tx
     },
 
-    /**
-     * Generate a Solscan explorer URL for a transaction signature.
-     * Defaults to mainnet; pass "devnet" for development.
-     */
     getExplorerUrl: (txSignature: string, cluster?: string): string => {
       const base = `https://solscan.io/tx/${txSignature}`
       if (!cluster || cluster === "mainnet-beta") return base

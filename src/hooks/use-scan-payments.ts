@@ -1,18 +1,30 @@
 "use client"
 
 import { useState, useCallback } from "react"
-import { useWallet } from "@solana/wallet-adapter-react"
-import { useDemoModeStore } from "@/stores/demo-mode"
+import { useWallet, useConnection } from "@solana/wallet-adapter-react"
+import { PublicKey } from "@solana/web3.js"
 import { useStealthKeys } from "./use-stealth-keys"
+import { SIP_PROGRAM_ID } from "@/lib/solana/program-client"
+import { sha256 } from "@noble/hashes/sha2.js"
 
 export interface DetectedPayment {
+  /** TransferRecord PDA address (base58) */
   id: string
-  txHash: string
+  /** SOL balance of stealth account (in SOL) */
   amount: number
-  token: "SOL" | "USDC"
+  token: "SOL"
+  /** Stealth recipient pubkey (base58) */
   stealthAddress: string
+  /** Encrypted stealth seed from TransferRecord (for claiming) */
+  encryptedSeed: Uint8Array
+  /** Ephemeral public key from TransferRecord (33 bytes, first byte is 0x02 prefix) */
+  ephemeralPubkey: Uint8Array
+  /** Unix timestamp (seconds) */
   timestamp: number
+  /** Whether this payment has been claimed */
   claimed: boolean
+  /** TransferRecord PDA address (base58) — same as id */
+  transferRecordPda: string
 }
 
 interface UseScanPaymentsResult {
@@ -21,12 +33,61 @@ interface UseScanPaymentsResult {
   error: string | null
   progress: number
   scan: () => Promise<void>
-  claim: (paymentId: string) => Promise<void>
+}
+
+/**
+ * Convert hex string to Uint8Array
+ */
+function hexToBytes(hex: string): Uint8Array {
+  const clean = hex.startsWith("0x") ? hex.slice(2) : hex
+  const bytes = new Uint8Array(clean.length / 2)
+  for (let i = 0; i < clean.length; i += 2) {
+    bytes[i / 2] = parseInt(clean.slice(i, i + 2), 16)
+  }
+  return bytes
+}
+
+/**
+ * TransferRecord byte layout:
+ *   0..8:     discriminator
+ *   8..40:    sender (Pubkey)
+ *   40..72:   stealth_recipient (Pubkey)
+ *   72..105:  amount_commitment ([u8;33])
+ *   105..138: ephemeral_pubkey ([u8;33])
+ *   138..170: viewing_key_hash ([u8;32])
+ *   170..174: encrypted_amount length (u32 LE)
+ *   174..174+N: encrypted_amount data
+ *   After Vec: timestamp (i64), claimed (bool), ...
+ */
+function parseTransferRecord(data: Uint8Array) {
+  const stealthRecipient = new PublicKey(data.slice(40, 72))
+  const ephemeralPubkey = data.slice(105, 138) // 33 bytes
+  const viewingKeyHash = data.slice(138, 170) // 32 bytes
+
+  // encrypted_amount Vec<u8>
+  const view = new DataView(data.buffer, data.byteOffset, data.byteLength)
+  const encLen = view.getUint32(170, true)
+  const encryptedSeed = data.slice(174, 174 + encLen)
+
+  // After Vec: timestamp (i64) + claimed (bool)
+  const afterVec = 174 + encLen
+  const timestampBigInt = view.getBigInt64(afterVec, true)
+  const timestamp = Number(timestampBigInt)
+  const claimed = data[afterVec + 8] !== 0
+
+  return {
+    stealthRecipient,
+    ephemeralPubkey,
+    viewingKeyHash,
+    encryptedSeed,
+    timestamp,
+    claimed,
+  }
 }
 
 export function useScanPayments(): UseScanPaymentsResult {
   const { publicKey } = useWallet()
-  const isDemoMode = useDemoModeStore((s) => s.isDemoMode)
+  const { connection } = useConnection()
   const { keys } = useStealthKeys()
 
   const [payments, setPayments] = useState<DetectedPayment[]>([])
@@ -35,7 +96,7 @@ export function useScanPayments(): UseScanPaymentsResult {
   const [progress, setProgress] = useState(0)
 
   const scan = useCallback(async () => {
-    if ((!publicKey && !isDemoMode) || !keys) {
+    if (!publicKey || !keys) {
       setError("Wallet not connected or stealth keys not generated")
       return
     }
@@ -45,49 +106,67 @@ export function useScanPayments(): UseScanPaymentsResult {
     setProgress(0)
 
     try {
-      // TODO: Integrate with Helius DAS API for real scanning
-      // For now, simulate scanning with mock data
-      //
-      // Production implementation:
-      // import { checkEd25519StealthAddress } from '@sip-protocol/sdk'
-      // const response = await fetch(heliusUrl, {
-      //   method: 'POST',
-      //   body: JSON.stringify({
-      //     jsonrpc: '2.0',
-      //     method: 'getAssetsByOwner',
-      //     params: { ownerAddress: stealthAddress },
-      //   }),
-      // })
+      // Compute viewing key hash for memcmp filter
+      const viewingKeyBytes = hexToBytes(keys.viewingPublicKey)
+      const viewingKeyHash = sha256(viewingKeyBytes)
 
-      // Simulate scanning progress
-      for (let i = 0; i <= 100; i += 10) {
-        setProgress(i)
-        await new Promise((resolve) => setTimeout(resolve, 200))
+      setProgress(20)
+
+      // Query all TransferRecords matching our viewing key hash
+      // memcmp filter at byte offset 138 (viewing_key_hash field)
+      const accounts = await connection.getProgramAccounts(SIP_PROGRAM_ID, {
+        commitment: "confirmed",
+        filters: [
+          {
+            memcmp: {
+              offset: 138,
+              bytes: Buffer.from(viewingKeyHash).toString("base64"),
+              encoding: "base64",
+            },
+          },
+        ],
+      })
+
+      setProgress(60)
+
+      // Parse each TransferRecord and get stealth account balances
+      const detected: DetectedPayment[] = []
+
+      for (const { pubkey, account } of accounts) {
+        try {
+          const record = parseTransferRecord(
+            new Uint8Array(account.data)
+          )
+
+          // Get balance of stealth account (infer SOL amount)
+          const balance = await connection.getBalance(
+            record.stealthRecipient,
+            "confirmed"
+          )
+
+          detected.push({
+            id: pubkey.toBase58(),
+            amount: balance / 1_000_000_000,
+            token: "SOL",
+            stealthAddress: record.stealthRecipient.toBase58(),
+            encryptedSeed: record.encryptedSeed,
+            ephemeralPubkey: record.ephemeralPubkey,
+            timestamp: record.timestamp,
+            claimed: record.claimed,
+            transferRecordPda: pubkey.toBase58(),
+          })
+        } catch (parseErr) {
+          console.warn(
+            `Failed to parse TransferRecord ${pubkey.toBase58()}:`,
+            parseErr
+          )
+        }
       }
 
-      // Generate mock detected payments (demo purposes)
-      const mockPayments: DetectedPayment[] = [
-        {
-          id: "pay_1",
-          txHash: "abc123...def",
-          amount: 0.5,
-          token: "SOL",
-          stealthAddress: `stealth_${Date.now()}_1`,
-          timestamp: Date.now() - 3600000, // 1 hour ago
-          claimed: false,
-        },
-        {
-          id: "pay_2",
-          txHash: "xyz789...ghi",
-          amount: 25.0,
-          token: "USDC",
-          stealthAddress: `stealth_${Date.now()}_2`,
-          timestamp: Date.now() - 86400000, // 1 day ago
-          claimed: false,
-        },
-      ]
+      // Sort by timestamp descending (newest first)
+      detected.sort((a, b) => b.timestamp - a.timestamp)
 
-      setPayments(mockPayments)
+      setPayments(detected)
       setProgress(100)
     } catch (err) {
       console.error("Scan error:", err)
@@ -95,35 +174,7 @@ export function useScanPayments(): UseScanPaymentsResult {
     } finally {
       setIsScanning(false)
     }
-  }, [publicKey, isDemoMode, keys])
-
-  const claim = useCallback(
-    async (paymentId: string) => {
-      if (!publicKey && !isDemoMode) {
-        setError("Wallet not connected")
-        return
-      }
-
-      try {
-        // TODO: Implement actual claiming logic
-        // This would involve:
-        // 1. Deriving the spending key for this stealth address
-        // 2. Creating a transaction to transfer funds to main wallet
-        // 3. Signing and submitting the transaction
-
-        // Simulate claim
-        await new Promise((resolve) => setTimeout(resolve, 1500))
-
-        setPayments((prev) =>
-          prev.map((p) => (p.id === paymentId ? { ...p, claimed: true } : p))
-        )
-      } catch (err) {
-        console.error("Claim error:", err)
-        setError(err instanceof Error ? err.message : "Claim failed")
-      }
-    },
-    [publicKey, isDemoMode]
-  )
+  }, [publicKey, connection, keys])
 
   return {
     payments,
@@ -131,6 +182,5 @@ export function useScanPayments(): UseScanPaymentsResult {
     error,
     progress,
     scan,
-    claim,
   }
 }

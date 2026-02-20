@@ -3,6 +3,7 @@
 import { useWallet } from "@solana/wallet-adapter-react"
 import { useStealthKeys } from "@/hooks/use-stealth-keys"
 import { useScanPayments } from "@/hooks/use-scan-payments"
+import { useClaimTransfer } from "@/hooks/use-claim-transfer"
 import { ScanProgress } from "./scan-progress"
 import { PaymentList } from "./payment-list"
 import { cn } from "@/lib/utils"
@@ -14,8 +15,16 @@ interface PaymentScannerProps {
 export function PaymentScanner({ className }: PaymentScannerProps) {
   const { connected } = useWallet()
   const { keys } = useStealthKeys()
-  const { payments, isScanning, error, progress, scan, claim } =
+  const { payments, isScanning, error, progress, scan } =
     useScanPayments()
+  const { claim: claimTransfer } = useClaimTransfer()
+
+  const handleClaim = async (paymentId: string) => {
+    const payment = payments.find((p) => p.id === paymentId)
+    if (payment) {
+      await claimTransfer(payment)
+    }
+  }
 
   if (!connected) {
     return (
@@ -119,7 +128,7 @@ export function PaymentScanner({ className }: PaymentScannerProps) {
           <h3 className="text-sm font-medium text-[var(--text-secondary)] mb-3">
             Detected Payments ({payments.length})
           </h3>
-          <PaymentList payments={payments} onClaim={claim} />
+          <PaymentList payments={payments} onClaim={handleClaim} />
         </div>
       )}
 

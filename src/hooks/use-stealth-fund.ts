@@ -26,6 +26,16 @@ const TIER_AMOUNTS: Record<string, number> = {
  * Builds a real Solana transaction that sends SOL to a one-time stealth address,
  * tagged with the project ID in the memo for indexing.
  */
+// Default recipient viewing + spending keys for stealth funding
+// In production: per-project meta-address from project profile
+const DEFAULT_RECIPIENT_VIEWING_KEY =
+  process.env.NEXT_PUBLIC_RECIPIENT_VIEWING_PUBKEY ??
+  "0x0000000000000000000000000000000000000000000000000000000000000000"
+
+const DEFAULT_RECIPIENT_SPENDING_KEY =
+  process.env.NEXT_PUBLIC_RECIPIENT_SPENDING_PUBKEY ??
+  "0x0000000000000000000000000000000000000000000000000000000000000000"
+
 export function useStealthFund() {
   const { publicKey } = useWallet()
   const { connection } = useConnection()
@@ -36,7 +46,9 @@ export function useStealthFund() {
     async (
       projectId: string,
       tier: string,
-      projectTitle?: string
+      projectTitle?: string,
+      recipientViewingKey?: string,
+      recipientSpendingKey?: string
     ): Promise<FundResult | null> => {
       if (!publicKey) return null
 
@@ -46,6 +58,10 @@ export function useStealthFund() {
       const transfer = await createStealthTransfer({
         amountLamports,
         memo: `SIP-FUND:${projectId}${projectTitle ? `:${projectTitle}` : ""}`,
+        recipientViewingPublicKey:
+          recipientViewingKey ?? DEFAULT_RECIPIENT_VIEWING_KEY,
+        recipientSpendingPublicKey:
+          recipientSpendingKey ?? DEFAULT_RECIPIENT_SPENDING_KEY,
       })
 
       const transaction = await transfer.buildTransaction(

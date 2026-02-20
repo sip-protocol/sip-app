@@ -12,6 +12,16 @@ export interface TipResult {
   explorerUrl: string
 }
 
+// Default recipient viewing + spending keys for stealth tips
+// In production: per-artist meta-address from profile
+const DEFAULT_RECIPIENT_VIEWING_KEY =
+  process.env.NEXT_PUBLIC_RECIPIENT_VIEWING_PUBKEY ??
+  "0x0000000000000000000000000000000000000000000000000000000000000000"
+
+const DEFAULT_RECIPIENT_SPENDING_KEY =
+  process.env.NEXT_PUBLIC_RECIPIENT_SPENDING_PUBKEY ??
+  "0x0000000000000000000000000000000000000000000000000000000000000000"
+
 export function useStealthTip() {
   const { publicKey } = useWallet()
   const { connection } = useConnection()
@@ -21,7 +31,9 @@ export function useStealthTip() {
   const sendTip = useCallback(
     async (
       amountSol: number,
-      artistName?: string
+      artistName?: string,
+      recipientViewingKey?: string,
+      recipientSpendingKey?: string
     ): Promise<TipResult | null> => {
       if (!publicKey) return null
 
@@ -30,6 +42,10 @@ export function useStealthTip() {
       const transfer = await createStealthTransfer({
         amountLamports,
         memo: artistName ? `SIP-TIP:${artistName}` : "SIP-TIP",
+        recipientViewingPublicKey:
+          recipientViewingKey ?? DEFAULT_RECIPIENT_VIEWING_KEY,
+        recipientSpendingPublicKey:
+          recipientSpendingKey ?? DEFAULT_RECIPIENT_SPENDING_KEY,
       })
 
       const transaction = await transfer.buildTransaction(

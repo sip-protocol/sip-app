@@ -42,6 +42,9 @@ export { useStealthKeys, type StealthKeys } from "./use-stealth-keys"
 // Scan payments hook
 export { useScanPayments, type DetectedPayment } from "./use-scan-payments"
 
+// Claim transfer hook
+export { useClaimTransfer } from "./use-claim-transfer"
+
 // Send payment hook
 export { useSendPayment } from "./use-send-payment"
 

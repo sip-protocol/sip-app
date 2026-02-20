@@ -2,11 +2,14 @@
 
 import { useState, useCallback, useEffect } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
+import { getSDK } from "@/lib/sip-client"
 
 export interface StealthKeys {
   metaAddress: string
   spendingPublicKey: string
   viewingPublicKey: string
+  spendingPrivateKey: string
+  viewingPrivateKey: string
   createdAt: number
 }
 
@@ -70,45 +73,33 @@ export function useStealthKeys(): UseStealthKeysResult {
     setError(null)
 
     try {
-      // TODO: Replace with actual SDK integration when available
-      // For now, generate deterministic keys based on wallet signature
-      //
-      // Production implementation:
-      // import { generateEd25519StealthMetaAddress, encodeStealthMetaAddress } from '@sip-protocol/sdk'
-      // const { metaAddress, spendingPrivateKey, viewingPrivateKey } =
-      //   generateEd25519StealthMetaAddress('solana', 'My Wallet')
+      const sdk = await getSDK()
 
-      // Mock implementation for demo
-      // Generate pseudo-random hex strings (64 chars = 32 bytes)
-      const generateHex = (seed: string) => {
-        let hash = 0
-        for (let i = 0; i < seed.length; i++) {
-          const char = seed.charCodeAt(i)
-          hash = (hash << 5) - hash + char
-          hash = hash & hash
-        }
+      // Generate real ed25519 stealth meta-address via SDK
+      const { metaAddress, spendingPrivateKey, viewingPrivateKey } =
+        sdk.generateStealthMetaAddress("solana")
 
-        const bytes = []
-        for (let i = 0; i < 33; i++) {
-          hash = (hash * 1103515245 + 12345) & 0x7fffffff
-          bytes.push((hash % 256).toString(16).padStart(2, "0"))
-        }
-        return bytes.join("")
-      }
-
-      const walletAddress = publicKey.toBase58()
-      const spendingPublicKey = generateHex(`${walletAddress}_spending`)
-      const viewingPublicKey = generateHex(`${walletAddress}_viewing`)
+      const metaAddressStr = sdk.encodeStealthMetaAddress(metaAddress)
+      const spendingPublicKey =
+        typeof metaAddress.spendingKey === "string"
+          ? metaAddress.spendingKey
+          : String(metaAddress.spendingKey)
+      const viewingPublicKey =
+        typeof metaAddress.viewingKey === "string"
+          ? metaAddress.viewingKey
+          : String(metaAddress.viewingKey)
 
       const newKeys: StealthKeys = {
-        metaAddress: `sip:solana:${spendingPublicKey}:${viewingPublicKey}`,
+        metaAddress: metaAddressStr,
         spendingPublicKey,
         viewingPublicKey,
+        spendingPrivateKey,
+        viewingPrivateKey,
         createdAt: Date.now(),
       }
 
-      // Store in localStorage (encrypted storage in production)
-      const storageKey = getStorageKey(walletAddress)
+      // Store in localStorage (MVP — production uses encrypted storage)
+      const storageKey = getStorageKey(publicKey.toBase58())
       localStorage.setItem(storageKey, JSON.stringify(newKeys))
 
       setKeys(newKeys)

@@ -114,7 +114,7 @@ export function PaymentList({
           token: p.token,
           timestamp: p.timestamp,
           status: p.claimed ? "claimed" : "pending",
-          txHash: p.txHash,
+          txHash: p.transferRecordPda ?? p.id,
           claimed: p.claimed,
         }))
       )

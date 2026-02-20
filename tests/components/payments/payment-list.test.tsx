@@ -9,21 +9,25 @@ describe("PaymentList", () => {
   const mockPayments: DetectedPayment[] = [
     {
       id: "pay_1",
-      txHash: "abc123...def",
       amount: 0.5,
       token: "SOL",
       stealthAddress: "stealth_1",
+      encryptedSeed: new Uint8Array(48).fill(0xee),
+      ephemeralPubkey: new Uint8Array(33).fill(0x11),
       timestamp: Date.now() - 3600000, // 1 hour ago
       claimed: false,
+      transferRecordPda: "abc123...def",
     },
     {
       id: "pay_2",
-      txHash: "xyz789...ghi",
       amount: 25.0,
-      token: "USDC",
+      token: "SOL",
       stealthAddress: "stealth_2",
+      encryptedSeed: new Uint8Array(48).fill(0xee),
+      ephemeralPubkey: new Uint8Array(33).fill(0x11),
       timestamp: Date.now() - 86400000, // 1 day ago
       claimed: true,
+      transferRecordPda: "xyz789...ghi",
     },
   ]
 
@@ -35,7 +39,7 @@ describe("PaymentList", () => {
   it("renders payment list with amounts", () => {
     render(<PaymentList payments={mockPayments} onClaim={mockOnClaim} />)
     expect(screen.getByText(/0.5 SOL/i)).toBeInTheDocument()
-    expect(screen.getByText(/25 USDC/i)).toBeInTheDocument()
+    expect(screen.getByText(/25 SOL/i)).toBeInTheDocument()
   })
 
   it("displays relative timestamps", () => {

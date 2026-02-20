@@ -11,6 +11,15 @@ importers:
       '@metaplex-foundation/mpl-bubblegum':
         specifier: ^5.0.2
         version: 5.0.2(@metaplex-foundation/umi@0.9.2)
+      '@noble/ciphers':
+        specifier: ^2.1.1
+        version: 2.1.1
+      '@noble/curves':
+        specifier: ^2.0.1
+        version: 2.0.1
+      '@noble/hashes':
+        specifier: ^2.0.1
+        version: 2.0.1
       '@sip-protocol/react':
         specifier: ^0.1.0
         version: 0.1.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
