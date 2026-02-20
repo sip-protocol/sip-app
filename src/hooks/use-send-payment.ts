@@ -1,11 +1,13 @@
 "use client"
 
 import { useState, useCallback } from "react"
-import { useWallet } from "@solana/wallet-adapter-react"
+import { useWallet, useConnection } from "@solana/wallet-adapter-react"
 import type { ViewingKey } from "@sip-protocol/types"
 import type { PrivacyLevel } from "@/components/payments/privacy-toggle"
 import type { Token } from "@/components/payments/amount-input"
 import type { TxStatus } from "@/components/payments/transaction-status"
+import { createStealthTransfer } from "@/lib/solana/stealth-transfer"
+import { useSolanaTransaction } from "@/hooks/use-solana-transaction"
 
 interface SendPaymentParams {
   recipient: string
@@ -28,8 +30,30 @@ interface UseSendPaymentResult {
   reset: () => void
 }
 
+/**
+ * Parse a SIP meta-address string into spending and viewing public keys.
+ * Format: sip:solana:<spendingPubKey>:<viewingPubKey>
+ */
+function parseMetaAddress(metaAddress: string): {
+  spendingPublicKey: string
+  viewingPublicKey: string
+} {
+  const parts = metaAddress.split(":")
+  if (parts.length !== 4 || parts[0] !== "sip" || parts[1] !== "solana") {
+    throw new Error(
+      "Invalid SIP meta-address format. Expected: sip:solana:<spending>:<viewing>"
+    )
+  }
+  return {
+    spendingPublicKey: parts[2],
+    viewingPublicKey: parts[3],
+  }
+}
+
 export function useSendPayment(): UseSendPaymentResult {
-  const { publicKey, signTransaction } = useWallet()
+  const { publicKey } = useWallet()
+  const { connection } = useConnection()
+  const tx = useSolanaTransaction()
 
   const [status, setStatus] = useState<TxStatus>("idle")
   const [txHash, setTxHash] = useState<string | null>(null)
@@ -39,13 +63,14 @@ export function useSendPayment(): UseSendPaymentResult {
     setStatus("idle")
     setTxHash(null)
     setError(null)
-  }, [])
+    tx.reset()
+  }, [tx])
 
   const send = useCallback(
     async (
       params: SendPaymentParams
     ): Promise<SendPaymentResult | undefined> => {
-      if (!publicKey || !signTransaction) {
+      if (!publicKey) {
         setError("Wallet not connected")
         setStatus("error")
         return undefined
@@ -56,39 +81,49 @@ export function useSendPayment(): UseSendPaymentResult {
         setError(null)
         setTxHash(null)
 
-        // TODO: Integrate with @sip-protocol/sdk
-        // For now, simulate a transaction for demo purposes
-        // In production, this will use:
-        //
-        // import { useSIP } from '@sip-protocol/react'
-        // const { shieldedTransfer } = useSIP()
-        // const tx = await shieldedTransfer({
-        //   recipient: params.recipient,
-        //   amount: parseUnits(params.amount, params.token === 'SOL' ? 9 : 6),
-        //   privacyLevel: params.privacyLevel,
-        //   viewingKey: params.viewingKey, // For compliant mode
-        // })
+        // 1. Parse recipient meta-address → spending + viewing keys (base58)
+        const { spendingPublicKey, viewingPublicKey } = parseMetaAddress(
+          params.recipient
+        )
 
-        // Simulate network delay
-        await new Promise((resolve) => setTimeout(resolve, 2000))
+        // 2. Convert amount to lamports
+        const amountSol = parseFloat(params.amount)
+        if (isNaN(amountSol) || amountSol <= 0) {
+          throw new Error("Invalid amount")
+        }
+        const amountLamports = Math.floor(amountSol * 1_000_000_000)
 
-        // For demo: generate a mock tx hash
-        const mockTxHash = Array.from({ length: 64 }, () =>
-          Math.floor(Math.random() * 16).toString(16)
-        ).join("")
-
-        setTxHash(mockTxHash)
-        setStatus("confirmed")
-
-        // Log for debugging
-        console.log("Shielded payment sent:", {
-          ...params,
-          from: publicKey.toBase58(),
-          txHash: mockTxHash,
-          viewingKeyHash: params.viewingKey?.hash ?? null,
+        // 3. Create stealth transfer (DKSAP + encrypted keypair + commitment)
+        const transfer = await createStealthTransfer({
+          amountLamports,
+          recipientViewingPublicKey: viewingPublicKey,
+          recipientSpendingPublicKey: spendingPublicKey,
         })
 
-        return { txHash: mockTxHash }
+        // 4. Build signable Solana transaction
+        const transaction = await transfer.buildTransaction(
+          publicKey,
+          connection.rpcEndpoint
+        )
+
+        // 5. Sign + send + confirm via wallet adapter
+        const signature = await tx.sendTransaction(transaction)
+        if (!signature) {
+          throw new Error("Transaction was rejected or failed")
+        }
+
+        setTxHash(signature)
+        setStatus("confirmed")
+
+        console.log("Shielded payment sent:", {
+          recipient: params.recipient,
+          amount: params.amount,
+          stealthAddress: transfer.stealthAddress,
+          txSignature: signature,
+          explorerUrl: transfer.getExplorerUrl(signature),
+        })
+
+        return { txHash: signature }
       } catch (err) {
         console.error("Send payment error:", err)
         setError(err instanceof Error ? err.message : "Transaction failed")
@@ -96,7 +131,7 @@ export function useSendPayment(): UseSendPaymentResult {
         return undefined
       }
     },
-    [publicKey, signTransaction]
+    [publicKey, connection, tx]
   )
 
   return { status, txHash, error, send, reset }
