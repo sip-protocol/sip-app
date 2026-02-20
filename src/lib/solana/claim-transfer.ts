@@ -23,6 +23,7 @@ import { sha256 } from "@noble/hashes/sha2.js"
 import { sha512 } from "@noble/hashes/sha2.js"
 import { bytesToHex, concatBytes } from "@noble/hashes/utils.js"
 import { ed25519 } from "@noble/curves/ed25519.js"
+import bs58 from "bs58"
 
 export interface ClaimParams {
   /** TransferRecord PDA address (base58) */
@@ -33,7 +34,7 @@ export interface ClaimParams {
   ephemeralPubkey: Uint8Array
   /** Expected stealth_recipient pubkey from TransferRecord */
   stealthRecipient: PublicKey
-  /** Recipient's spending private key (hex, 0x-prefixed, 32-byte seed) */
+  /** Recipient's spending private key (base58, 32-byte seed) */
   spendingPrivateKey: string
   /** Recipient's main wallet pubkey (receives the claimed SOL) */
   recipientPubkey: PublicKey
@@ -46,18 +47,6 @@ export interface ClaimResult {
   transaction: Transaction
   /** Stealth Keypair — must partialSign the transaction before sending */
   stealthSigner: Keypair
-}
-
-/**
- * Convert hex string to Uint8Array
- */
-function hexToBytes(hex: string): Uint8Array {
-  const clean = hex.startsWith("0x") ? hex.slice(2) : hex
-  const bytes = new Uint8Array(clean.length / 2)
-  for (let i = 0; i < clean.length; i += 2) {
-    bytes[i / 2] = parseInt(clean.slice(i, i + 2), 16)
-  }
-  return bytes
 }
 
 // ed25519 curve order (L)
@@ -104,7 +93,7 @@ export function recoverSharedSecret(
   spendingPrivateKey: string,
   ephemeralPubkey: Uint8Array
 ): Uint8Array {
-  const spendingPrivBytes = hexToBytes(spendingPrivateKey)
+  const spendingPrivBytes = bs58.decode(spendingPrivateKey)
   const rawScalar = getEd25519Scalar(spendingPrivBytes)
   const spendingScalar = rawScalar % ED25519_ORDER
 

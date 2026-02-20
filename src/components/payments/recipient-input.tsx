@@ -3,8 +3,10 @@
 import { useState, useCallback } from "react"
 import { cn } from "@/lib/utils"
 
-// SIP stealth address format: sip:<chain>:<spendingKey>:<viewingKey>
-const SIP_ADDRESS_REGEX = /^sip:solana:[a-fA-F0-9]{64,66}:[a-fA-F0-9]{64,66}$/
+// SIP stealth address format: sip:solana:<spendingKey(base58)>:<viewingKey(base58)>
+// Base58 alphabet: [1-9A-HJ-NP-Za-km-z], 32-byte key = 32-44 base58 chars
+const SIP_ADDRESS_REGEX =
+  /^sip:solana:[1-9A-HJ-NP-Za-km-z]{32,44}:[1-9A-HJ-NP-Za-km-z]{32,44}$/
 
 // Saved contacts storage key
 const CONTACTS_KEY = "sip-address-book"
@@ -145,7 +147,7 @@ export function RecipientInput({
           onChange={handleChange}
           onBlur={handleBlur}
           disabled={disabled}
-          placeholder="sip:solana:02abc...123:03def...456"
+          placeholder="sip:solana:7x3Fh9w...ABC:2Bp4kL1...XYZ"
           className={cn(
             "w-full px-4 py-3 pr-28 bg-[var(--surface-secondary)] border rounded-xl font-mono text-sm transition-all",
             "focus:outline-none focus:ring-2 focus:ring-sip-purple-500/20",

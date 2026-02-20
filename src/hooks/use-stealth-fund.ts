@@ -26,15 +26,15 @@ const TIER_AMOUNTS: Record<string, number> = {
  * Builds a real Solana transaction that sends SOL to a one-time stealth address,
  * tagged with the project ID in the memo for indexing.
  */
-// Default recipient viewing + spending keys for stealth funding
+// Default recipient viewing + spending keys for stealth funding (base58)
 // In production: per-project meta-address from project profile
 const DEFAULT_RECIPIENT_VIEWING_KEY =
   process.env.NEXT_PUBLIC_RECIPIENT_VIEWING_PUBKEY ??
-  "0x0000000000000000000000000000000000000000000000000000000000000000"
+  "11111111111111111111111111111111"
 
 const DEFAULT_RECIPIENT_SPENDING_KEY =
   process.env.NEXT_PUBLIC_RECIPIENT_SPENDING_PUBKEY ??
-  "0x0000000000000000000000000000000000000000000000000000000000000000"
+  "11111111111111111111111111111111"
 
 export function useStealthFund() {
   const { publicKey } = useWallet()

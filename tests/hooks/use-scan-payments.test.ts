@@ -2,6 +2,14 @@ import { describe, it, expect, vi } from "vitest"
 import { renderHook, act } from "@testing-library/react"
 import { useScanPayments } from "@/hooks/use-scan-payments"
 
+// Mock bs58 for base58 decoding
+vi.mock("bs58", () => ({
+  default: {
+    decode: () => new Uint8Array(32).fill(0xbb),
+    encode: (bytes: Uint8Array) => "MockBase58" + bytes[0].toString(16),
+  },
+}))
+
 // Mock wallet adapter
 vi.mock("@solana/wallet-adapter-react", () => ({
   useWallet: () => ({
@@ -17,15 +25,15 @@ vi.mock("@solana/wallet-adapter-react", () => ({
   }),
 }))
 
-// Mock stealth keys hook
+// Mock stealth keys hook (keys are now base58)
 vi.mock("@/hooks/use-stealth-keys", () => ({
   useStealthKeys: () => ({
     keys: {
-      metaAddress: "sip:solana:mock:keys",
-      spendingPublicKey: "0x" + "aa".repeat(32),
-      viewingPublicKey: "0x" + "bb".repeat(32),
-      spendingPrivateKey: "0x" + "cc".repeat(32),
-      viewingPrivateKey: "0x" + "dd".repeat(32),
+      metaAddress: "sip:solana:MockSpendingBase58:MockViewingBase58",
+      spendingPublicKey: "CVDFLCAjXhVWiPXH9nTCTpCgVzmDVoiPzNJYuccr1dqB",
+      viewingPublicKey: "7x3Fh9wKLmPQrYvNJeS5tWXB2kZdGcA4np8Hu1VfRz6E",
+      spendingPrivateKey: "HYvJjCgo4yLbAoSvBw8bW6eDTFkFEzRZhMbucFfgJnBb",
+      viewingPrivateKey: "9Qk2mTpE8Ld3xRhWjNc6vYBfKs7gZuA1wp4Dq5UeXn3C",
       createdAt: Date.now(),
     },
   }),

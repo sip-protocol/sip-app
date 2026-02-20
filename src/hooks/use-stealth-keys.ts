@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
 import { getSDK } from "@/lib/sip-client"
+import bs58 from "bs58"
 
 export interface StealthKeys {
   metaAddress: string
@@ -21,6 +22,16 @@ interface UseStealthKeysResult {
   clear: () => void
   hasBackedUp: boolean
   confirmBackup: () => void
+}
+
+/** Convert a hex string (with optional 0x prefix) to base58 */
+function hexToBase58(hex: string): string {
+  const clean = hex.startsWith("0x") ? hex.slice(2) : hex
+  const bytes = new Uint8Array(clean.length / 2)
+  for (let i = 0; i < clean.length; i += 2) {
+    bytes[i / 2] = parseInt(clean.slice(i, i + 2), 16)
+  }
+  return bs58.encode(bytes)
 }
 
 const STORAGE_KEY = "sip_stealth_keys"
@@ -79,22 +90,29 @@ export function useStealthKeys(): UseStealthKeysResult {
       const { metaAddress, spendingPrivateKey, viewingPrivateKey } =
         sdk.generateStealthMetaAddress("solana")
 
-      const metaAddressStr = sdk.encodeStealthMetaAddress(metaAddress)
-      const spendingPublicKey =
+      // Convert hex keys from SDK to Solana-native base58 encoding
+      const spendingPubBase58 = hexToBase58(
         typeof metaAddress.spendingKey === "string"
           ? metaAddress.spendingKey
           : String(metaAddress.spendingKey)
-      const viewingPublicKey =
+      )
+      const viewingPubBase58 = hexToBase58(
         typeof metaAddress.viewingKey === "string"
           ? metaAddress.viewingKey
           : String(metaAddress.viewingKey)
+      )
+      const spendingPrivBase58 = hexToBase58(spendingPrivateKey)
+      const viewingPrivBase58 = hexToBase58(viewingPrivateKey)
+
+      // Build meta-address with base58 keys: sip:solana:<spending>:<viewing>
+      const metaAddressStr = `sip:solana:${spendingPubBase58}:${viewingPubBase58}`
 
       const newKeys: StealthKeys = {
         metaAddress: metaAddressStr,
-        spendingPublicKey,
-        viewingPublicKey,
-        spendingPrivateKey,
-        viewingPrivateKey,
+        spendingPublicKey: spendingPubBase58,
+        viewingPublicKey: viewingPubBase58,
+        spendingPrivateKey: spendingPrivBase58,
+        viewingPrivateKey: viewingPrivBase58,
         createdAt: Date.now(),
       }
 

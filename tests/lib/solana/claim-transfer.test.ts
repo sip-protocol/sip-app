@@ -27,8 +27,14 @@ vi.mock("@solana/web3.js", () => {
     equals(other: MockPublicKey) {
       return this.toBase58() === other.toBase58()
     }
-    static findProgramAddressSync(_seeds: Uint8Array[], _programId: MockPublicKey) {
-      return [new MockPublicKey("NullifierPDA1111111111111111111111111111111"), 255]
+    static findProgramAddressSync(
+      _seeds: Uint8Array[],
+      _programId: MockPublicKey
+    ) {
+      return [
+        new MockPublicKey("NullifierPDA1111111111111111111111111111111"),
+        255,
+      ]
     }
   }
 
@@ -114,15 +120,21 @@ vi.mock("@noble/curves/ed25519.js", () => ({
   },
 }))
 
+vi.mock("bs58", () => ({
+  default: {
+    decode: (str: string) => new Uint8Array(32).fill(0xcc),
+    encode: (bytes: Uint8Array) => "MockBase58" + bytes[0].toString(16),
+  },
+}))
+
 describe("buildClaimTransaction", () => {
   beforeEach(() => {
     vi.clearAllMocks()
   })
 
   it("builds a claim transaction", async () => {
-    const { buildClaimTransaction } = await import(
-      "@/lib/solana/claim-transfer"
-    )
+    const { buildClaimTransaction } =
+      await import("@/lib/solana/claim-transfer")
     const { PublicKey } = await import("@solana/web3.js")
 
     // Mock stealthRecipient to match what Keypair.fromSeed returns
@@ -131,12 +143,16 @@ describe("buildClaimTransaction", () => {
     )
 
     const result = await buildClaimTransaction({
-      transferRecordPda: new PublicKey("TransferRecord11111111111111111111111111111"),
+      transferRecordPda: new PublicKey(
+        "TransferRecord11111111111111111111111111111"
+      ),
       encryptedSeed: new Uint8Array(48).fill(0xee),
       ephemeralPubkey: new Uint8Array(32).fill(0x11),
       stealthRecipient,
-      spendingPrivateKey: "0x" + "cc".repeat(32),
-      recipientPubkey: new PublicKey("RecipientWallet111111111111111111111111111111"),
+      spendingPrivateKey: "HYvJjCgo4yLbAoSvBw8bW6eDTFkFEzRZhMbucFfgJnBb",
+      recipientPubkey: new PublicKey(
+        "RecipientWallet111111111111111111111111111111"
+      ),
       rpcUrl: "https://api.devnet.solana.com",
     })
 
@@ -145,23 +161,25 @@ describe("buildClaimTransaction", () => {
   })
 
   it("calls buildClaimTransferInstruction with correct params", async () => {
-    const { buildClaimTransaction } = await import(
-      "@/lib/solana/claim-transfer"
-    )
-    const { buildClaimTransferInstruction } = await import(
-      "@/lib/solana/program-client"
-    )
+    const { buildClaimTransaction } =
+      await import("@/lib/solana/claim-transfer")
+    const { buildClaimTransferInstruction } =
+      await import("@/lib/solana/program-client")
     const { PublicKey } = await import("@solana/web3.js")
 
     await buildClaimTransaction({
-      transferRecordPda: new PublicKey("TransferRecord11111111111111111111111111111"),
+      transferRecordPda: new PublicKey(
+        "TransferRecord11111111111111111111111111111"
+      ),
       encryptedSeed: new Uint8Array(48).fill(0xee),
       ephemeralPubkey: new Uint8Array(32).fill(0x11),
       stealthRecipient: new PublicKey(
         "StealthReconstructed1111111111111111111111111"
       ),
-      spendingPrivateKey: "0x" + "cc".repeat(32),
-      recipientPubkey: new PublicKey("RecipientWallet111111111111111111111111111111"),
+      spendingPrivateKey: "HYvJjCgo4yLbAoSvBw8bW6eDTFkFEzRZhMbucFfgJnBb",
+      recipientPubkey: new PublicKey(
+        "RecipientWallet111111111111111111111111111111"
+      ),
       rpcUrl: "https://api.devnet.solana.com",
     })
 
@@ -176,12 +194,10 @@ describe("buildClaimTransaction", () => {
 
 describe("recoverSharedSecret", () => {
   it("recovers shared secret from spending key and ephemeral pubkey", async () => {
-    const { recoverSharedSecret } = await import(
-      "@/lib/solana/claim-transfer"
-    )
+    const { recoverSharedSecret } = await import("@/lib/solana/claim-transfer")
 
     const result = recoverSharedSecret(
-      "0x" + "cc".repeat(32),
+      "HYvJjCgo4yLbAoSvBw8bW6eDTFkFEzRZhMbucFfgJnBb",
       new Uint8Array(32).fill(0x11)
     )
 

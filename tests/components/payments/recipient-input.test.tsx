@@ -8,7 +8,7 @@ import {
 describe("validateRecipient", () => {
   it("validates correct sip address format", () => {
     const validAddress =
-      "sip:solana:02abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890:03abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890"
+      "sip:solana:CVDFLCAjXhVWiPXH9nTCTpCgVzmDVoiPzNJYuccr1dqB:7x3Fh9wKLmPQrYvNJeS5tWXB2kZdGcA4np8Hu1VfRz6E"
     expect(validateRecipient(validAddress)).toBe(true)
   })
 

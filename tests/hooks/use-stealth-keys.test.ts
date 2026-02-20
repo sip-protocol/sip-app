@@ -13,7 +13,15 @@ vi.mock("@solana/wallet-adapter-react", () => ({
   }),
 }))
 
-// Mock SIP client — returns inline mock SDK to avoid loading real @sip-protocol/sdk
+// Mock bs58 — the hook converts hex keys to base58 via hexToBase58()
+vi.mock("bs58", () => ({
+  default: {
+    encode: (bytes: Uint8Array) => "MockBase58Key" + bytes[0].toString(16),
+    decode: (str: string) => new Uint8Array(32).fill(0xaa),
+  },
+}))
+
+// Mock SIP client — returns inline mock SDK with hex keys (hook converts to base58)
 vi.mock("@/lib/sip-client", () => ({
   getSDK: async () => ({
     generateStealthMetaAddress: () => ({
@@ -25,7 +33,6 @@ vi.mock("@/lib/sip-client", () => ({
       spendingPrivateKey: "0x" + "cc".repeat(32),
       viewingPrivateKey: "0x" + "dd".repeat(32),
     }),
-    encodeStealthMetaAddress: () => "sip:solana:" + "ab".repeat(32),
   }),
 }))
 
@@ -53,11 +60,24 @@ describe("useStealthKeys", () => {
     })
 
     expect(result.current.keys).not.toBeNull()
+
+    // Meta-address uses base58-encoded keys: sip:solana:<spending>:<viewing>
+    expect(result.current.keys?.metaAddress).toBe(
+      "sip:solana:MockBase58Keyaa:MockBase58Keybb"
+    )
     expect(result.current.keys?.metaAddress).toMatch(/^sip:solana:/)
-    expect(result.current.keys?.spendingPublicKey).toBeTruthy()
-    expect(result.current.keys?.viewingPublicKey).toBeTruthy()
-    expect(result.current.keys?.spendingPrivateKey).toBeTruthy()
-    expect(result.current.keys?.viewingPrivateKey).toBeTruthy()
+
+    // All key fields should be base58 strings, not hex
+    expect(result.current.keys?.spendingPublicKey).toBe("MockBase58Keyaa")
+    expect(result.current.keys?.viewingPublicKey).toBe("MockBase58Keybb")
+    expect(result.current.keys?.spendingPrivateKey).toBe("MockBase58Keycc")
+    expect(result.current.keys?.viewingPrivateKey).toBe("MockBase58Keydd")
+
+    // Keys must NOT be hex-encoded
+    expect(result.current.keys?.spendingPublicKey).not.toMatch(/^0x/)
+    expect(result.current.keys?.viewingPublicKey).not.toMatch(/^0x/)
+    expect(result.current.keys?.spendingPrivateKey).not.toMatch(/^0x/)
+    expect(result.current.keys?.viewingPrivateKey).not.toMatch(/^0x/)
   })
 
   it("clears keys when clear is called", async () => {

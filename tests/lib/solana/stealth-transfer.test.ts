@@ -80,7 +80,9 @@ vi.mock("@solana/web3.js", () => {
 
 vi.mock("@/lib/solana/program-client", () => ({
   buildShieldedTransferInstruction: mockBuildShieldedTransferInstruction,
-  FEE_COLLECTOR: { toBase58: () => "FeeCollector111111111111111111111111111111" },
+  FEE_COLLECTOR: {
+    toBase58: () => "FeeCollector111111111111111111111111111111",
+  },
 }))
 
 vi.mock("@/lib/crypto-helpers", () => ({
@@ -141,8 +143,15 @@ vi.mock("@/lib/sip-client", () => ({
   },
 }))
 
-const TEST_VIEWING_KEY = "0x" + "bb".repeat(32)
-const TEST_SPENDING_KEY = "0x" + "aa".repeat(32)
+vi.mock("bs58", () => ({
+  default: {
+    decode: (str: string) => new Uint8Array(32).fill(0xbb),
+    encode: (bytes: Uint8Array) => "MockBase58" + bytes[0].toString(16),
+  },
+}))
+
+const TEST_VIEWING_KEY = "CVDFLCAjXhVWiPXH9nTCTpCgVzmDVoiPzNJYuccr1dqB"
+const TEST_SPENDING_KEY = "CVDFLCAjXhVWiPXH9nTCTpCgVzmDVoiPzNJYuccr1dqB"
 
 describe("createStealthTransfer", () => {
   beforeEach(() => {

@@ -12,15 +12,15 @@ export interface TipResult {
   explorerUrl: string
 }
 
-// Default recipient viewing + spending keys for stealth tips
+// Default recipient viewing + spending keys for stealth tips (base58)
 // In production: per-artist meta-address from profile
 const DEFAULT_RECIPIENT_VIEWING_KEY =
   process.env.NEXT_PUBLIC_RECIPIENT_VIEWING_PUBKEY ??
-  "0x0000000000000000000000000000000000000000000000000000000000000000"
+  "11111111111111111111111111111111"
 
 const DEFAULT_RECIPIENT_SPENDING_KEY =
   process.env.NEXT_PUBLIC_RECIPIENT_SPENDING_PUBKEY ??
-  "0x0000000000000000000000000000000000000000000000000000000000000000"
+  "11111111111111111111111111111111"
 
 export function useStealthTip() {
   const { publicKey } = useWallet()

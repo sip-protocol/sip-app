@@ -32,13 +32,14 @@ import {
 import { sha256 } from "@noble/hashes/sha2.js"
 import { xchacha20poly1305 } from "@noble/ciphers/chacha.js"
 import { bytesToHex, concatBytes } from "@noble/hashes/utils.js"
+import bs58 from "bs58"
 
 export interface StealthTransferParams {
   /** Amount to transfer in lamports */
   amountLamports: number
-  /** Recipient's viewing public key (hex, 0x-prefixed, from meta-address) */
+  /** Recipient's viewing public key (base58, from meta-address) */
   recipientViewingPublicKey: string
-  /** Recipient's spending public key (hex, 0x-prefixed, from meta-address) */
+  /** Recipient's spending public key (base58, from meta-address) */
   recipientSpendingPublicKey: string
   /** Optional memo to attach (e.g., "SIP-TIP:artistName") */
   memo?: string
@@ -148,16 +149,14 @@ export async function createStealthTransfer(
   } = params
   const sdk = await getSDK()
 
-  // 1. Build meta-address from recipient's public keys
-  const spendingKey = recipientSpendingPublicKey.startsWith("0x")
-    ? recipientSpendingPublicKey
-    : `0x${recipientSpendingPublicKey}`
-  const viewingKey = recipientViewingPublicKey.startsWith("0x")
-    ? recipientViewingPublicKey
-    : `0x${recipientViewingPublicKey}`
+  // 1. Build meta-address from recipient's public keys (base58 → hex for SDK)
+  const spendingBytes = bs58.decode(recipientSpendingPublicKey)
+  const viewingBytes = bs58.decode(recipientViewingPublicKey)
+  const spendingKeyHex = `0x${bytesToHex(spendingBytes)}` as `0x${string}`
+  const viewingKeyHex = `0x${bytesToHex(viewingBytes)}` as `0x${string}`
   const recipientMetaAddress = {
-    spendingKey: spendingKey as `0x${string}`,
-    viewingKey: viewingKey as `0x${string}`,
+    spendingKey: spendingKeyHex,
+    viewingKey: viewingKeyHex,
     chain: "solana" as const,
   }
 
@@ -176,9 +175,8 @@ export async function createStealthTransfer(
   // 4. Encrypt stealth seed with DKSAP shared secret
   const encryptedSeed = encryptStealthSeed(stealthSeed, sharedSecretBytes)
 
-  // 5. Compute viewing key hash for on-chain discovery
-  const viewingKeyBytes = hexToBytes(recipientViewingPublicKey)
-  const viewingKeyHash = sha256(viewingKeyBytes)
+  // 5. Compute viewing key hash for on-chain discovery (viewingBytes already decoded above)
+  const viewingKeyHash = sha256(viewingBytes)
 
   // 6. Create Pedersen commitment
   const commitment = await createRealCommitment(BigInt(amountLamports))

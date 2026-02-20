@@ -6,6 +6,7 @@ import { PublicKey } from "@solana/web3.js"
 import { useStealthKeys } from "./use-stealth-keys"
 import { SIP_PROGRAM_ID } from "@/lib/solana/program-client"
 import { sha256 } from "@noble/hashes/sha2.js"
+import bs58 from "bs58"
 
 export interface DetectedPayment {
   /** TransferRecord PDA address (base58) */
@@ -33,18 +34,6 @@ interface UseScanPaymentsResult {
   error: string | null
   progress: number
   scan: () => Promise<void>
-}
-
-/**
- * Convert hex string to Uint8Array
- */
-function hexToBytes(hex: string): Uint8Array {
-  const clean = hex.startsWith("0x") ? hex.slice(2) : hex
-  const bytes = new Uint8Array(clean.length / 2)
-  for (let i = 0; i < clean.length; i += 2) {
-    bytes[i / 2] = parseInt(clean.slice(i, i + 2), 16)
-  }
-  return bytes
 }
 
 /**
@@ -106,8 +95,8 @@ export function useScanPayments(): UseScanPaymentsResult {
     setProgress(0)
 
     try {
-      // Compute viewing key hash for memcmp filter
-      const viewingKeyBytes = hexToBytes(keys.viewingPublicKey)
+      // Compute viewing key hash for memcmp filter (viewing key is base58)
+      const viewingKeyBytes = bs58.decode(keys.viewingPublicKey)
       const viewingKeyHash = sha256(viewingKeyBytes)
 
       setProgress(20)

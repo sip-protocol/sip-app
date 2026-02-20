@@ -40,6 +40,7 @@
     "@wormhole-foundation/sdk-solana": "^4.10.0",
     "@wormhole-foundation/sdk-solana-core": "^4.10.0",
     "@wormhole-foundation/sdk-solana-ntt": "^4.0.13",
+    "bs58": "^6.0.0",
     "clsx": "^2.1.1",
     "d3": "^7.9.0",
     "framer-motion": "^12.27.0",
