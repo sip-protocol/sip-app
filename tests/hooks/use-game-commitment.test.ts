@@ -2,7 +2,10 @@ import { describe, it, expect, vi, beforeEach } from "vitest"
 import { renderHook, act } from "@testing-library/react"
 import { useWallet } from "@solana/wallet-adapter-react"
 import { useGameCommitment } from "@/hooks/use-game-commitment"
-import { createCommitmentStore, createRevealTransaction } from "@/lib/solana/commitment-store"
+import {
+  createCommitmentStore,
+  createRevealTransaction,
+} from "@/lib/solana/commitment-store"
 import { useSolanaTransaction } from "@/hooks/use-solana-transaction"
 
 // Mock wallet adapter
@@ -30,7 +33,9 @@ vi.mock("@/lib/solana/commitment-store", () => ({
     commitmentHash: "0xmockhash123",
     salt: "mocksalt456",
     buildTransaction: vi.fn().mockResolvedValue({ mock: "transaction" }),
-    getExplorerUrl: vi.fn().mockReturnValue("https://solscan.io/tx/mock?cluster=devnet"),
+    getExplorerUrl: vi
+      .fn()
+      .mockReturnValue("https://solscan.io/tx/mock?cluster=devnet"),
   }),
   createRevealTransaction: vi.fn().mockResolvedValue({ mock: "reveal-tx" }),
 }))

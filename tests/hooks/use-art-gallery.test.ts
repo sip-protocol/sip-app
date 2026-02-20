@@ -89,7 +89,10 @@ describe("useArtGallery", () => {
 
   it("returns minted NFTs", () => {
     useArtGalleryStore.setState({
-      mintedNFTs: [makeMockNFT("nft-1", "art-1"), makeMockNFT("nft-2", "art-2")],
+      mintedNFTs: [
+        makeMockNFT("nft-1", "art-1"),
+        makeMockNFT("nft-2", "art-2"),
+      ],
     })
 
     const { result } = renderHook(() => useArtGallery())

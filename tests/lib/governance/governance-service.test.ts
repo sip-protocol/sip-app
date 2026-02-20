@@ -7,7 +7,12 @@ import type { VoteStep, VoteParams } from "@/lib/governance/types"
 vi.mock("@sip-protocol/sdk", () => {
   let callCount = 0
   class MockPrivateVoting {
-    castVote(params: { proposalId: string; choice: number; weight: bigint; encryptionKey: string }) {
+    castVote(params: {
+      proposalId: string
+      choice: number
+      weight: bigint
+      encryptionKey: string
+    }) {
       callCount++
       return {
         ciphertext: `0x${"ab".repeat(32)}`,
@@ -58,14 +63,20 @@ describe("GovernanceService", () => {
 
     it("rejects unknown proposal ID", () => {
       const service = new GovernanceService()
-      const error = service.validate({ ...validParams, proposalId: "nonexistent" })
+      const error = service.validate({
+        ...validParams,
+        proposalId: "nonexistent",
+      })
       expect(error).toBe("Proposal not found")
     })
 
     it("rejects proposal not in voting phase", () => {
       const service = new GovernanceService()
       // prop-mnde-02 is in reveal phase
-      const error = service.validate({ ...validParams, proposalId: "prop-mnde-02" })
+      const error = service.validate({
+        ...validParams,
+        proposalId: "prop-mnde-02",
+      })
       expect(error).toBe("Proposal is not in voting phase")
     })
 
@@ -152,7 +163,7 @@ describe("GovernanceService", () => {
       const service = new GovernanceService({ mode: "simulation" })
 
       await expect(
-        service.commitVote({ ...validParams, weight: "0" }),
+        service.commitVote({ ...validParams, weight: "0" })
       ).rejects.toThrow("Voting weight must be greater than 0")
     })
   })
@@ -171,7 +182,7 @@ describe("GovernanceService", () => {
       const result = await revealService.revealVote(
         committed.id,
         committed.encryptionKey,
-        committed.encryptedVote,
+        committed.encryptedVote
       )
 
       expect(steps).toEqual(["revealing", "revealed"])
@@ -186,7 +197,7 @@ describe("GovernanceService", () => {
       const result = await revealService.revealVote(
         committed.id,
         committed.encryptionKey,
-        committed.encryptedVote,
+        committed.encryptedVote
       )
 
       expect(result.revealedAt).toBeDefined()
@@ -205,7 +216,7 @@ describe("GovernanceService", () => {
           proposalId: "nonexistent",
           voter: "anon",
           timestamp: Date.now(),
-        }),
+        })
       ).rejects.toThrow("Proposal not found")
     })
   })

@@ -3,7 +3,9 @@ import { useGamingHistoryStore } from "@/stores/gaming-history"
 import { PrivacyLevel } from "@sip-protocol/types"
 import type { GamingActionRecord, GameResult } from "@/lib/gaming/types"
 
-function makeMockAction(overrides?: Partial<GamingActionRecord>): GamingActionRecord {
+function makeMockAction(
+  overrides?: Partial<GamingActionRecord>
+): GamingActionRecord {
   return {
     id: `action_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
     type: "play",
@@ -59,7 +61,10 @@ describe("useGamingHistoryStore", () => {
   })
 
   it("updates an action", () => {
-    const action = makeMockAction({ id: "update-me", status: "committing_move" })
+    const action = makeMockAction({
+      id: "update-me",
+      status: "committing_move",
+    })
     useGamingHistoryStore.getState().addAction(action)
 
     useGamingHistoryStore.getState().updateAction("update-me", {

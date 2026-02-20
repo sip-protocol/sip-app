@@ -153,7 +153,11 @@ describe("useSolanaTransaction", () => {
     expect(result.current.error).toBeNull()
     expect(mockSendTx).toHaveBeenCalledOnce()
     expect(mockConfirmTx).toHaveBeenCalledWith(
-      { signature: mockSignature, blockhash: "mock-blockhash", lastValidBlockHeight: 100 },
+      {
+        signature: mockSignature,
+        blockhash: "mock-blockhash",
+        lastValidBlockHeight: 100,
+      },
       "confirmed"
     )
   })
@@ -225,7 +229,9 @@ describe("useSolanaTransaction", () => {
   })
 
   it("handles wallet rejection error", async () => {
-    const mockSendTx = vi.fn().mockRejectedValue(new Error("User rejected the request"))
+    const mockSendTx = vi
+      .fn()
+      .mockRejectedValue(new Error("User rejected the request"))
 
     mockUseWallet.mockReturnValue({
       publicKey: { toBase58: () => "MockPubkey123" },

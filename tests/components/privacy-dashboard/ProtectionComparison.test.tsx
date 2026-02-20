@@ -37,7 +37,6 @@ const mockImprovements = [
 ]
 
 describe("ProtectionComparison", () => {
-
   describe("Component rendering", () => {
     it("renders SVG element with correct dimensions", () => {
       const { container } = render(

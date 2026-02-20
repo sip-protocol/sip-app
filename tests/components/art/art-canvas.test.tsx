@@ -4,7 +4,8 @@ import { ArtCanvas } from "@/components/art/art-canvas"
 
 describe("ArtCanvas", () => {
   it("renders SVG content when svgData is provided", () => {
-    const svg = '<svg xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="40"/></svg>'
+    const svg =
+      '<svg xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="40"/></svg>'
     const { container } = render(<ArtCanvas svgData={svg} />)
     expect(container.querySelector("svg")).toBeInTheDocument()
     expect(container.querySelector("circle")).toBeInTheDocument()
@@ -30,14 +31,17 @@ describe("ArtCanvas", () => {
   })
 
   it("applies lg size class", () => {
-    const svg = '<svg xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100"/></svg>'
+    const svg =
+      '<svg xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100"/></svg>'
     const { container } = render(<ArtCanvas svgData={svg} size="lg" />)
     const el = container.firstElementChild as HTMLElement
     expect(el.className).toContain("w-full")
   })
 
   it("passes custom className", () => {
-    const { container } = render(<ArtCanvas svgData="" className="test-class" />)
+    const { container } = render(
+      <ArtCanvas svgData="" className="test-class" />
+    )
     const el = container.firstElementChild as HTMLElement
     expect(el.className).toContain("test-class")
   })

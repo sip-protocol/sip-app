@@ -20,9 +20,7 @@ describe("ScanProgress", () => {
 
   it("shows pulse animation when scanning", () => {
     render(<ScanProgress progress={50} isScanning={true} />)
-    expect(
-      screen.getByText(/Checking stealth addresses/i)
-    ).toBeInTheDocument()
+    expect(screen.getByText(/Checking stealth addresses/i)).toBeInTheDocument()
   })
 
   it("applies custom className", () => {

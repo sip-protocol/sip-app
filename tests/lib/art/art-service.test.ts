@@ -59,13 +59,19 @@ describe("ArtService", () => {
   describe("validate", () => {
     it("rejects missing styleId for generate", () => {
       const service = new ArtService()
-      const error = service.validate("generate", { ...validGenerateParams, styleId: "" as never })
+      const error = service.validate("generate", {
+        ...validGenerateParams,
+        styleId: "" as never,
+      })
       expect(error).toBe("Art style is required")
     })
 
     it("rejects invalid styleId for generate", () => {
       const service = new ArtService()
-      const error = service.validate("generate", { ...validGenerateParams, styleId: "unknown" as never })
+      const error = service.validate("generate", {
+        ...validGenerateParams,
+        styleId: "unknown" as never,
+      })
       expect(error).toBe("Invalid art style")
     })
 
@@ -76,7 +82,10 @@ describe("ArtService", () => {
 
     it("rejects missing generatedArtId for mint", () => {
       const service = new ArtService()
-      const error = service.validate("mint", { ...validMintParams, generatedArtId: "" })
+      const error = service.validate("mint", {
+        ...validMintParams,
+        generatedArtId: "",
+      })
       expect(error).toBe("Generated art ID is required")
     })
 
@@ -88,7 +97,10 @@ describe("ArtService", () => {
 
     it("rejects long name for mint", () => {
       const service = new ArtService()
-      const error = service.validate("mint", { ...validMintParams, name: "a".repeat(33) })
+      const error = service.validate("mint", {
+        ...validMintParams,
+        name: "a".repeat(33),
+      })
       expect(error).toBe("NFT name must be 32 characters or less")
     })
 
@@ -133,7 +145,7 @@ describe("ArtService", () => {
       const service = new ArtService({ mode: "simulation" })
 
       await expect(
-        service.generateArt({ ...validGenerateParams, styleId: "" as never }),
+        service.generateArt({ ...validGenerateParams, styleId: "" as never })
       ).rejects.toThrow("Art style is required")
     })
   })
@@ -173,7 +185,7 @@ describe("ArtService", () => {
       const service = new ArtService({ mode: "simulation" })
 
       await expect(
-        service.mintNFT({ ...validMintParams, name: "" }),
+        service.mintNFT({ ...validMintParams, name: "" })
       ).rejects.toThrow("NFT name is required")
     })
   })

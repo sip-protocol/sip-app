@@ -64,7 +64,10 @@ describe("useBridgeHistoryStore", () => {
   })
 
   it("updates a transfer", () => {
-    const transfer = makeMockTransfer({ id: "update-me", status: "generating_stealth" })
+    const transfer = makeMockTransfer({
+      id: "update-me",
+      status: "generating_stealth",
+    })
     useBridgeHistoryStore.getState().addTransfer(transfer)
 
     useBridgeHistoryStore.getState().updateTransfer("update-me", {

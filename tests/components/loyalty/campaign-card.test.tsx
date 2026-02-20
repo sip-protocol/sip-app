@@ -34,7 +34,9 @@ describe("CampaignCard", () => {
 
   it("renders campaign description", () => {
     render(<CampaignCard campaign={mockCampaign} />)
-    expect(screen.getByText(/Complete 5 shielded transfers/)).toBeInTheDocument()
+    expect(
+      screen.getByText(/Complete 5 shielded transfers/)
+    ).toBeInTheDocument()
   })
 
   it("renders reward amount", () => {

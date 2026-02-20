@@ -30,7 +30,9 @@ vi.mock("@/lib/solana/stealth-transfer", () => ({
     commitment: { commitmentHash: "0xcommit789" },
     metaAddress: "sip:solana:meta:addr",
     buildTransaction: vi.fn().mockResolvedValue({ mock: "transaction" }),
-    getExplorerUrl: vi.fn().mockReturnValue("https://solscan.io/tx/mock?cluster=devnet"),
+    getExplorerUrl: vi
+      .fn()
+      .mockReturnValue("https://solscan.io/tx/mock?cluster=devnet"),
   }),
 }))
 

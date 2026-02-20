@@ -9,9 +9,27 @@ import {
 
 // Mock data for testing
 const mockNodes: GraphNode[] = [
-  { id: "self-wallet", type: "self", label: "Your Wallet", risk: 0, transactionCount: 10 },
-  { id: "exchange-1", type: "exchange", label: "Binance", risk: 80, transactionCount: 5 },
-  { id: "known-1", type: "known", label: "Alice", risk: 20, transactionCount: 3 },
+  {
+    id: "self-wallet",
+    type: "self",
+    label: "Your Wallet",
+    risk: 0,
+    transactionCount: 10,
+  },
+  {
+    id: "exchange-1",
+    type: "exchange",
+    label: "Binance",
+    risk: 80,
+    transactionCount: 5,
+  },
+  {
+    id: "known-1",
+    type: "known",
+    label: "Alice",
+    risk: 20,
+    transactionCount: 3,
+  },
   { id: "unknown-1", type: "unknown", risk: 50, transactionCount: 2 },
 ]
 
@@ -25,7 +43,12 @@ describe("NetworkGraph", () => {
   describe("Component rendering", () => {
     it("renders SVG element with correct dimensions", () => {
       const { container } = render(
-        <NetworkGraph nodes={mockNodes} edges={mockEdges} width={800} height={600} />
+        <NetworkGraph
+          nodes={mockNodes}
+          edges={mockEdges}
+          width={800}
+          height={600}
+        />
       )
 
       const svg = container.querySelector("svg")
@@ -114,7 +137,11 @@ describe("generateNetworkFromCluster", () => {
       ],
     }
 
-    const result = generateNetworkFromCluster(walletAddress, undefined, exchangeData)
+    const result = generateNetworkFromCluster(
+      walletAddress,
+      undefined,
+      exchangeData
+    )
 
     // Self + 2 exchanges
     expect(result.nodes).toHaveLength(3)
@@ -223,10 +250,16 @@ describe("generateNetworkFromCluster", () => {
     }
 
     const exchangeData = {
-      exchanges: [{ address: "0xexchange", name: "Kraken", transactionCount: 2 }],
+      exchanges: [
+        { address: "0xexchange", name: "Kraken", transactionCount: 2 },
+      ],
     }
 
-    const result = generateNetworkFromCluster(walletAddress, clusterData, exchangeData)
+    const result = generateNetworkFromCluster(
+      walletAddress,
+      clusterData,
+      exchangeData
+    )
 
     // Self + 1 cluster + 1 exchange
     expect(result.nodes).toHaveLength(3)

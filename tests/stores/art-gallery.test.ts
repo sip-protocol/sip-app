@@ -51,7 +51,11 @@ function makeMockNFT(overrides?: Partial<ArtNFT>): ArtNFT {
 
 describe("useArtGalleryStore", () => {
   beforeEach(() => {
-    useArtGalleryStore.setState({ actions: [], generatedArts: [], mintedNFTs: [] })
+    useArtGalleryStore.setState({
+      actions: [],
+      generatedArts: [],
+      mintedNFTs: [],
+    })
   })
 
   it("has empty initial state", () => {
@@ -89,8 +93,15 @@ describe("useArtGalleryStore", () => {
   })
 
   it("updates an action", () => {
-    useArtGalleryStore.getState().addAction(makeMockAction({ id: "update-me", status: "selecting_style" }))
-    useArtGalleryStore.getState().updateAction("update-me", { status: "generated", completedAt: Date.now() })
+    useArtGalleryStore
+      .getState()
+      .addAction(makeMockAction({ id: "update-me", status: "selecting_style" }))
+    useArtGalleryStore
+      .getState()
+      .updateAction("update-me", {
+        status: "generated",
+        completedAt: Date.now(),
+      })
 
     const updated = useArtGalleryStore.getState().getAction("update-me")
     expect(updated?.status).toBe("generated")
@@ -98,7 +109,9 @@ describe("useArtGalleryStore", () => {
   })
 
   it("getAction returns undefined for missing id", () => {
-    expect(useArtGalleryStore.getState().getAction("nonexistent")).toBeUndefined()
+    expect(
+      useArtGalleryStore.getState().getAction("nonexistent")
+    ).toBeUndefined()
   })
 
   it("getActionsByType filters correctly", () => {
@@ -121,8 +134,12 @@ describe("useArtGalleryStore", () => {
   })
 
   it("getGeneratedArt finds by id", () => {
-    useArtGalleryStore.getState().addGeneratedArt(makeMockArt({ id: "art-find" }))
-    expect(useArtGalleryStore.getState().getGeneratedArt("art-find")?.id).toBe("art-find")
+    useArtGalleryStore
+      .getState()
+      .addGeneratedArt(makeMockArt({ id: "art-find" }))
+    expect(useArtGalleryStore.getState().getGeneratedArt("art-find")?.id).toBe(
+      "art-find"
+    )
   })
 
   it("adds a minted NFT", () => {

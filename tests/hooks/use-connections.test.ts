@@ -11,7 +11,9 @@ vi.mock("@solana/wallet-adapter-react", () => ({
 
 vi.mock("@/lib/social/social-service", () => {
   class MockSocialService {
-    validate() { return null }
+    validate() {
+      return null
+    }
     async followProfile() {
       return {
         id: "follow_mock_123",

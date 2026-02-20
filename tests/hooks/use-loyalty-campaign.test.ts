@@ -12,11 +12,20 @@ vi.mock("@solana/wallet-adapter-react", () => ({
 
 vi.mock("@/lib/loyalty/loyalty-service", () => {
   class MockLoyaltyService {
-    private onStepChange?: (step: string, record: Record<string, unknown>) => void
-    constructor(options: { onStepChange?: (step: string, record: Record<string, unknown>) => void } = {}) {
+    private onStepChange?: (
+      step: string,
+      record: Record<string, unknown>
+    ) => void
+    constructor(
+      options: {
+        onStepChange?: (step: string, record: Record<string, unknown>) => void
+      } = {}
+    ) {
       this.onStepChange = options.onStepChange
     }
-    validate() { return null }
+    validate() {
+      return null
+    }
     async joinCampaign(params: { campaignId: string }) {
       const record = {
         id: "join_mock_123",

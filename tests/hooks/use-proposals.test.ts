@@ -7,9 +7,24 @@ vi.mock("@/lib/governance/realms-reader", () => {
   class MockRealmsReader {
     async getProposals() {
       return [
-        { id: "prop-1", daoId: "marinade", status: "voting", title: "Proposal 1" },
-        { id: "prop-2", daoId: "jupiter", status: "reveal", title: "Proposal 2" },
-        { id: "prop-3", daoId: "marinade", status: "completed", title: "Proposal 3" },
+        {
+          id: "prop-1",
+          daoId: "marinade",
+          status: "voting",
+          title: "Proposal 1",
+        },
+        {
+          id: "prop-2",
+          daoId: "jupiter",
+          status: "reveal",
+          title: "Proposal 2",
+        },
+        {
+          id: "prop-3",
+          daoId: "marinade",
+          status: "completed",
+          title: "Proposal 3",
+        },
       ]
     }
     async getDAOs() {

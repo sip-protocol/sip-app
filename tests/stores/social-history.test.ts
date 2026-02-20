@@ -3,7 +3,9 @@ import { useSocialHistoryStore } from "@/stores/social-history"
 import { PrivacyLevel } from "@sip-protocol/types"
 import type { SocialActionRecord, StealthProfile } from "@/lib/social/types"
 
-function makeMockAction(overrides?: Partial<SocialActionRecord>): SocialActionRecord {
+function makeMockAction(
+  overrides?: Partial<SocialActionRecord>
+): SocialActionRecord {
   return {
     id: `action_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
     type: "profile",
@@ -78,7 +80,10 @@ describe("useSocialHistoryStore", () => {
   })
 
   it("updates an action", () => {
-    const action = makeMockAction({ id: "update-me", status: "generating_stealth" })
+    const action = makeMockAction({
+      id: "update-me",
+      status: "generating_stealth",
+    })
     useSocialHistoryStore.getState().addAction(action)
 
     useSocialHistoryStore.getState().updateAction("update-me", {
@@ -103,7 +108,9 @@ describe("useSocialHistoryStore", () => {
     store.addAction(makeMockAction({ id: "a3", type: "profile" }))
     store.addAction(makeMockAction({ id: "a4", type: "follow" }))
 
-    const profiles = useSocialHistoryStore.getState().getActionsByType("profile")
+    const profiles = useSocialHistoryStore
+      .getState()
+      .getActionsByType("profile")
     expect(profiles).toHaveLength(2)
     expect(profiles.every((a) => a.type === "profile")).toBe(true)
   })

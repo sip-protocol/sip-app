@@ -3,7 +3,9 @@ import { useLoyaltyHistoryStore } from "@/stores/loyalty-history"
 import { PrivacyLevel } from "@sip-protocol/types"
 import type { LoyaltyActionRecord, CampaignProgress } from "@/lib/loyalty/types"
 
-function makeMockAction(overrides?: Partial<LoyaltyActionRecord>): LoyaltyActionRecord {
+function makeMockAction(
+  overrides?: Partial<LoyaltyActionRecord>
+): LoyaltyActionRecord {
   return {
     id: `action_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
     type: "join",
@@ -17,7 +19,9 @@ function makeMockAction(overrides?: Partial<LoyaltyActionRecord>): LoyaltyAction
   }
 }
 
-function makeMockProgress(overrides?: Partial<CampaignProgress>): CampaignProgress {
+function makeMockProgress(
+  overrides?: Partial<CampaignProgress>
+): CampaignProgress {
   return {
     campaignId: `camp_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
     completedActions: 0,
@@ -72,7 +76,10 @@ describe("useLoyaltyHistoryStore", () => {
   })
 
   it("updates an action", () => {
-    const action = makeMockAction({ id: "update-me", status: "selecting_campaign" })
+    const action = makeMockAction({
+      id: "update-me",
+      status: "selecting_campaign",
+    })
     useLoyaltyHistoryStore.getState().addAction(action)
 
     useLoyaltyHistoryStore.getState().updateAction("update-me", {
@@ -106,18 +113,27 @@ describe("useLoyaltyHistoryStore", () => {
     const progress = makeMockProgress({ campaignId: "camp-1" })
     useLoyaltyHistoryStore.getState().addCampaign(progress)
 
-    const result = useLoyaltyHistoryStore.getState().getCampaignProgress("camp-1")
+    const result = useLoyaltyHistoryStore
+      .getState()
+      .getCampaignProgress("camp-1")
     expect(result).toBeDefined()
     expect(result?.campaignId).toBe("camp-1")
   })
 
   it("updates campaign progress", () => {
     const store = useLoyaltyHistoryStore.getState()
-    store.addCampaign(makeMockProgress({ campaignId: "camp-update", completedActions: 1 }))
+    store.addCampaign(
+      makeMockProgress({ campaignId: "camp-update", completedActions: 1 })
+    )
 
-    store.updateCampaignProgress("camp-update", { completedActions: 3, isComplete: true })
+    store.updateCampaignProgress("camp-update", {
+      completedActions: 3,
+      isComplete: true,
+    })
 
-    const updated = useLoyaltyHistoryStore.getState().getCampaignProgress("camp-update")
+    const updated = useLoyaltyHistoryStore
+      .getState()
+      .getCampaignProgress("camp-update")
     expect(updated?.completedActions).toBe(3)
     expect(updated?.isComplete).toBe(true)
   })
@@ -128,7 +144,9 @@ describe("useLoyaltyHistoryStore", () => {
     store.addCampaign(makeMockProgress({ campaignId: "c2", isComplete: false }))
     store.addCampaign(makeMockProgress({ campaignId: "c3", isComplete: true }))
 
-    expect(useLoyaltyHistoryStore.getState().getCompletedCampaignCount()).toBe(2)
+    expect(useLoyaltyHistoryStore.getState().getCompletedCampaignCount()).toBe(
+      2
+    )
   })
 
   it("clears all history", () => {

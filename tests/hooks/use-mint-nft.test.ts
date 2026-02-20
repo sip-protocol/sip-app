@@ -12,11 +12,20 @@ vi.mock("@solana/wallet-adapter-react", () => ({
 
 vi.mock("@/lib/art/art-service", () => {
   class MockArtService {
-    private onStepChange?: (step: string, record: Record<string, unknown>) => void
-    constructor(options: { onStepChange?: (step: string, record: Record<string, unknown>) => void } = {}) {
+    private onStepChange?: (
+      step: string,
+      record: Record<string, unknown>
+    ) => void
+    constructor(
+      options: {
+        onStepChange?: (step: string, record: Record<string, unknown>) => void
+      } = {}
+    ) {
       this.onStepChange = options.onStepChange
     }
-    validate() { return null }
+    validate() {
+      return null
+    }
     async mintNFT(params: { name: string; generatedArtId: string }) {
       const record = {
         id: "mint_mock_123",

@@ -11,7 +11,8 @@ const mockPost: SocialPost = {
   id: "post-test-01",
   authorProfileId: "profile-dolphin",
   authorUsername: "anon_dolphin",
-  content: "Privacy is a right, not a privilege. Stealth addresses change everything.",
+  content:
+    "Privacy is a right, not a privilege. Stealth addresses change everything.",
   timestamp: now - 2 * HOUR,
   likeCount: 42,
   commentCount: 7,
@@ -41,7 +42,9 @@ describe("PostCard", () => {
   it("renders post content for public posts", () => {
     render(<PostCard post={mockPost} />)
     expect(
-      screen.getByText("Privacy is a right, not a privilege. Stealth addresses change everything."),
+      screen.getByText(
+        "Privacy is a right, not a privilege. Stealth addresses change everything."
+      )
     ).toBeInTheDocument()
   })
 
@@ -53,14 +56,14 @@ describe("PostCard", () => {
   it("shows encrypted indicator for encrypted posts", () => {
     render(<PostCard post={encryptedPost} />)
     expect(
-      screen.getByText("Encrypted — viewing key required"),
+      screen.getByText("Encrypted — viewing key required")
     ).toBeInTheDocument()
   })
 
   it("does not show content for encrypted posts", () => {
     render(<PostCard post={encryptedPost} />)
     expect(
-      screen.queryByText("0xencrypted_content_hash"),
+      screen.queryByText("0xencrypted_content_hash")
     ).not.toBeInTheDocument()
   })
 

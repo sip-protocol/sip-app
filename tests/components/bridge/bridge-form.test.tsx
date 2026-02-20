@@ -64,9 +64,7 @@ describe("BridgeForm", () => {
 
   it("shows Connect Wallet button when disconnected", () => {
     render(<BridgeForm />)
-    expect(
-      screen.getByText("Connect Wallet to Bridge"),
-    ).toBeInTheDocument()
+    expect(screen.getByText("Connect Wallet to Bridge")).toBeInTheDocument()
   })
 
   it("renders amount input", () => {

@@ -13,7 +13,9 @@ describe("SocialStatus", () => {
 
     it("shows active header for in-progress steps", () => {
       render(<SocialStatus currentStep="creating_profile" mode="profile" />)
-      expect(screen.getByText("Creating Stealth Identity...")).toBeInTheDocument()
+      expect(
+        screen.getByText("Creating Stealth Identity...")
+      ).toBeInTheDocument()
     })
 
     it("shows complete header when done", () => {
@@ -27,7 +29,7 @@ describe("SocialStatus", () => {
           currentStep="failed"
           mode="profile"
           error="Key generation failed"
-        />,
+        />
       )
       expect(screen.getByText("Identity Creation Failed")).toBeInTheDocument()
       expect(screen.getByText("Key generation failed")).toBeInTheDocument()

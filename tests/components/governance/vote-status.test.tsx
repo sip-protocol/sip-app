@@ -27,7 +27,7 @@ describe("VoteStatus", () => {
           currentStep="failed"
           mode="commit"
           error="Encryption failed"
-        />,
+        />
       )
       expect(screen.getByText("Vote Commit Failed")).toBeInTheDocument()
       expect(screen.getByText("Encryption failed")).toBeInTheDocument()
@@ -37,8 +37,8 @@ describe("VoteStatus", () => {
       render(<VoteStatus currentStep="encrypting" mode="commit" />)
       expect(
         screen.getByText(
-          "Creating Pedersen commitment and encrypting with XChaCha20-Poly1305",
-        ),
+          "Creating Pedersen commitment and encrypting with XChaCha20-Poly1305"
+        )
       ).toBeInTheDocument()
     })
   })
@@ -62,11 +62,7 @@ describe("VoteStatus", () => {
 
     it("shows failed header for reveal failure", () => {
       render(
-        <VoteStatus
-          currentStep="failed"
-          mode="reveal"
-          error="Wrong key"
-        />,
+        <VoteStatus currentStep="failed" mode="reveal" error="Wrong key" />
       )
       expect(screen.getByText("Vote Reveal Failed")).toBeInTheDocument()
       expect(screen.getByText("Wrong key")).toBeInTheDocument()

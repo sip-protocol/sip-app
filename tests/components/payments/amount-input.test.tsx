@@ -18,14 +18,18 @@ describe("AmountInput", () => {
   it("calls onValueChange when typing valid number", () => {
     const onValueChange = vi.fn()
     render(<AmountInput {...defaultProps} onValueChange={onValueChange} />)
-    fireEvent.change(screen.getByPlaceholderText("0.00"), { target: { value: "1.5" } })
+    fireEvent.change(screen.getByPlaceholderText("0.00"), {
+      target: { value: "1.5" },
+    })
     expect(onValueChange).toHaveBeenCalledWith("1.5")
   })
 
   it("rejects non-numeric input", () => {
     const onValueChange = vi.fn()
     render(<AmountInput {...defaultProps} onValueChange={onValueChange} />)
-    fireEvent.change(screen.getByPlaceholderText("0.00"), { target: { value: "abc" } })
+    fireEvent.change(screen.getByPlaceholderText("0.00"), {
+      target: { value: "abc" },
+    })
     expect(onValueChange).not.toHaveBeenCalled()
   })
 
@@ -36,7 +40,13 @@ describe("AmountInput", () => {
 
   it("calls onValueChange with balance when max is clicked", () => {
     const onValueChange = vi.fn()
-    render(<AmountInput {...defaultProps} onValueChange={onValueChange} balance={10.5} />)
+    render(
+      <AmountInput
+        {...defaultProps}
+        onValueChange={onValueChange}
+        balance={10.5}
+      />
+    )
     fireEvent.click(screen.getByText(/Max:/))
     expect(onValueChange).toHaveBeenCalledWith("10.5")
   })

@@ -2,7 +2,11 @@ import { describe, it, expect, beforeEach } from "vitest"
 import { PrivacyCashAdapter } from "@/lib/privacy/backends/privacycash"
 import { TOKENS } from "@/lib/privacy/types"
 import { PrivacyLevel } from "@sip-protocol/types"
-import type { TransferEvent, QuoteParams, TransferParams } from "@/lib/privacy/types"
+import type {
+  TransferEvent,
+  QuoteParams,
+  TransferParams,
+} from "@/lib/privacy/types"
 
 describe("PrivacyCashAdapter", () => {
   let adapter: PrivacyCashAdapter

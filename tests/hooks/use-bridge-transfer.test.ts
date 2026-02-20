@@ -14,8 +14,15 @@ vi.mock("@solana/wallet-adapter-react", () => ({
 // Mock BridgeService as a class
 vi.mock("@/lib/bridge/bridge-service", () => {
   class MockBridgeService {
-    private onStepChange?: (step: string, transfer: Record<string, unknown>) => void
-    constructor(options: { onStepChange?: (step: string, transfer: Record<string, unknown>) => void } = {}) {
+    private onStepChange?: (
+      step: string,
+      transfer: Record<string, unknown>
+    ) => void
+    constructor(
+      options: {
+        onStepChange?: (step: string, transfer: Record<string, unknown>) => void
+      } = {}
+    ) {
       this.onStepChange = options.onStepChange
     }
     validate(params: { sourceChain: string; destChain: string }) {
@@ -24,7 +31,13 @@ vi.mock("@/lib/bridge/bridge-service", () => {
       }
       return null
     }
-    async executeBridge(params: { sourceChain: string; destChain: string; token: string; amount: string; privacyLevel: string }) {
+    async executeBridge(params: {
+      sourceChain: string
+      destChain: string
+      token: string
+      amount: string
+      privacyLevel: string
+    }) {
       const transfer = {
         id: "bridge_mock_123",
         sourceChain: params.sourceChain,
@@ -93,7 +106,7 @@ describe("useBridgeTransfer", () => {
     expect(result.current.status).toBe("complete")
     expect(result.current.activeTransfer).toBeTruthy()
     expect(result.current.activeTransfer?.stealthAddress).toBe(
-      "sip:ethereum:0xstealth",
+      "sip:ethereum:0xstealth"
     )
   })
 
@@ -109,7 +122,7 @@ describe("useBridgeTransfer", () => {
 
     expect(result.current.status).toBe("error")
     expect(result.current.error).toBe(
-      "Source and destination chains must be different",
+      "Source and destination chains must be different"
     )
   })
 

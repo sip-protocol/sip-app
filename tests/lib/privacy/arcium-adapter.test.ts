@@ -2,7 +2,11 @@ import { describe, it, expect, beforeEach } from "vitest"
 import { ArciumAdapter } from "@/lib/privacy/backends/arcium"
 import { TOKENS } from "@/lib/privacy/types"
 import { PrivacyLevel } from "@sip-protocol/types"
-import type { TransferEvent, QuoteParams, TransferParams } from "@/lib/privacy/types"
+import type {
+  TransferEvent,
+  QuoteParams,
+  TransferParams,
+} from "@/lib/privacy/types"
 
 describe("ArciumAdapter", () => {
   let adapter: ArciumAdapter
@@ -163,7 +167,9 @@ describe("ArciumAdapter", () => {
       expect(statuses).toContain("success")
 
       // Should show MPC rounds in processing events
-      const processingEvents = statusChanges.filter((e) => e.status === "processing")
+      const processingEvents = statusChanges.filter(
+        (e) => e.status === "processing"
+      )
       expect(processingEvents.length).toBeGreaterThanOrEqual(4) // Initial + 3 rounds
 
       // Should have proof_generated event (MPC computation)

@@ -29,7 +29,9 @@ vi.mock("@/lib/solana/stealth-transfer", () => ({
     commitment: { commitmentHash: "0xcommit789" },
     metaAddress: "sip:solana:meta:addr",
     buildTransaction: vi.fn().mockResolvedValue({ mock: "transaction" }),
-    getExplorerUrl: vi.fn().mockReturnValue("https://solscan.io/tx/mock?cluster=devnet"),
+    getExplorerUrl: vi
+      .fn()
+      .mockReturnValue("https://solscan.io/tx/mock?cluster=devnet"),
   }),
 }))
 
@@ -55,7 +57,9 @@ describe("TipButton", () => {
   it("expands tip form on click", () => {
     render(<TipButton artistName="Test Artist" />)
     fireEvent.click(screen.getByText("Tip Artist"))
-    expect(screen.getByText(/anonymous tip for test artist/i)).toBeInTheDocument()
+    expect(
+      screen.getByText(/anonymous tip for test artist/i)
+    ).toBeInTheDocument()
   })
 
   it("shows amount buttons in expanded form", () => {

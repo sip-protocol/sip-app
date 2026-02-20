@@ -118,7 +118,9 @@ describe("getBestBackend", () => {
   })
 
   it("should throw if no backend is available", async () => {
-    await expect(getBestBackend()).rejects.toThrow("No privacy backend available")
+    await expect(getBestBackend()).rejects.toThrow(
+      "No privacy backend available"
+    )
   })
 
   it("should filter by viewing key support when required", async () => {

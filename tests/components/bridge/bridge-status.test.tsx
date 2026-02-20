@@ -14,25 +14,17 @@ describe("BridgeStatus", () => {
 
   it("shows in progress header for active steps", () => {
     render(<BridgeStatus currentStep="awaiting_attestation" />)
-    expect(
-      screen.getByText("Bridge Transfer in Progress"),
-    ).toBeInTheDocument()
+    expect(screen.getByText("Bridge Transfer in Progress")).toBeInTheDocument()
   })
 
   it("shows complete header when done", () => {
     render(<BridgeStatus currentStep="complete" />)
-    expect(
-      screen.getByText("Bridge Transfer Complete!"),
-    ).toBeInTheDocument()
+    expect(screen.getByText("Bridge Transfer Complete!")).toBeInTheDocument()
   })
 
   it("shows failed header and error message", () => {
-    render(
-      <BridgeStatus currentStep="failed" error="Simulation error" />,
-    )
-    expect(
-      screen.getByText("Bridge Transfer Failed"),
-    ).toBeInTheDocument()
+    render(<BridgeStatus currentStep="failed" error="Simulation error" />)
+    expect(screen.getByText("Bridge Transfer Failed")).toBeInTheDocument()
     expect(screen.getByText("Simulation error")).toBeInTheDocument()
   })
 
@@ -40,8 +32,8 @@ describe("BridgeStatus", () => {
     render(<BridgeStatus currentStep="relaying" />)
     expect(
       screen.getByText(
-        "Delivering tokens to stealth address on destination chain",
-      ),
+        "Delivering tokens to stealth address on destination chain"
+      )
     ).toBeInTheDocument()
   })
 })

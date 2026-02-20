@@ -5,28 +5,48 @@ import { TransactionStatus } from "@/components/solana/transaction-status"
 describe("TransactionStatus", () => {
   it("renders nothing when idle", () => {
     const { container } = render(
-      <TransactionStatus status="idle" txSignature={null} explorerUrl={null} error={null} />
+      <TransactionStatus
+        status="idle"
+        txSignature={null}
+        explorerUrl={null}
+        error={null}
+      />
     )
     expect(container.firstChild).toBeNull()
   })
 
   it("shows signing message", () => {
     render(
-      <TransactionStatus status="signing" txSignature={null} explorerUrl={null} error={null} />
+      <TransactionStatus
+        status="signing"
+        txSignature={null}
+        explorerUrl={null}
+        error={null}
+      />
     )
     expect(screen.getByText(/signing/i)).toBeInTheDocument()
   })
 
   it("shows sending message", () => {
     render(
-      <TransactionStatus status="sending" txSignature={null} explorerUrl={null} error={null} />
+      <TransactionStatus
+        status="sending"
+        txSignature={null}
+        explorerUrl={null}
+        error={null}
+      />
     )
     expect(screen.getByText(/sending/i)).toBeInTheDocument()
   })
 
   it("shows confirming message", () => {
     render(
-      <TransactionStatus status="confirming" txSignature={null} explorerUrl={null} error={null} />
+      <TransactionStatus
+        status="confirming"
+        txSignature={null}
+        explorerUrl={null}
+        error={null}
+      />
     )
     expect(screen.getByText(/confirming/i)).toBeInTheDocument()
   })
@@ -73,7 +93,12 @@ describe("TransactionStatus", () => {
 
   it("shows building message", () => {
     render(
-      <TransactionStatus status="building" txSignature={null} explorerUrl={null} error={null} />
+      <TransactionStatus
+        status="building"
+        txSignature={null}
+        explorerUrl={null}
+        error={null}
+      />
     )
     expect(screen.getByText(/building/i)).toBeInTheDocument()
   })

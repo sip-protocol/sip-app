@@ -13,7 +13,9 @@ vi.mock("@solana/wallet-adapter-react", () => ({
 
 vi.mock("@/lib/loyalty/loyalty-service", () => {
   class MockLoyaltyService {
-    validate() { return null }
+    validate() {
+      return null
+    }
     async joinCampaign() {
       return {
         id: "join_mock_123",

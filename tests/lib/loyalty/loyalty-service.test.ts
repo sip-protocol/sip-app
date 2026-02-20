@@ -1,7 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from "vitest"
 import { LoyaltyService } from "@/lib/loyalty/loyalty-service"
 import { PrivacyLevel } from "@sip-protocol/types"
-import type { LoyaltyStep, JoinCampaignParams, CompleteActionParams, ClaimRewardParams } from "@/lib/loyalty/types"
+import type {
+  LoyaltyStep,
+  JoinCampaignParams,
+  CompleteActionParams,
+  ClaimRewardParams,
+} from "@/lib/loyalty/types"
 
 // Mock the SDK to avoid WASM/crypto deps in tests
 vi.mock("@sip-protocol/sdk", () => ({
@@ -67,13 +72,19 @@ describe("LoyaltyService", () => {
   describe("validate", () => {
     it("rejects empty campaignId for join", () => {
       const service = new LoyaltyService()
-      const error = service.validate("join", { ...validJoinParams, campaignId: "" })
+      const error = service.validate("join", {
+        ...validJoinParams,
+        campaignId: "",
+      })
       expect(error).toBe("Campaign ID is required")
     })
 
     it("rejects unknown campaign for join", () => {
       const service = new LoyaltyService()
-      const error = service.validate("join", { ...validJoinParams, campaignId: "nonexistent" })
+      const error = service.validate("join", {
+        ...validJoinParams,
+        campaignId: "nonexistent",
+      })
       expect(error).toBe("Campaign not found")
     })
 
@@ -85,13 +96,19 @@ describe("LoyaltyService", () => {
 
     it("rejects empty campaignId for action", () => {
       const service = new LoyaltyService()
-      const error = service.validate("action", { ...validActionParams, campaignId: "" })
+      const error = service.validate("action", {
+        ...validActionParams,
+        campaignId: "",
+      })
       expect(error).toBe("Campaign ID is required")
     })
 
     it("rejects empty actionType for action", () => {
       const service = new LoyaltyService()
-      const error = service.validate("action", { ...validActionParams, actionType: "" as never })
+      const error = service.validate("action", {
+        ...validActionParams,
+        actionType: "" as never,
+      })
       expect(error).toBe("Action type is required")
     })
 
@@ -103,19 +120,28 @@ describe("LoyaltyService", () => {
 
     it("rejects empty rewardId for claim", () => {
       const service = new LoyaltyService()
-      const error = service.validate("claim", { ...validClaimParams, rewardId: "" })
+      const error = service.validate("claim", {
+        ...validClaimParams,
+        rewardId: "",
+      })
       expect(error).toBe("Reward ID is required")
     })
 
     it("rejects zero amount for claim", () => {
       const service = new LoyaltyService()
-      const error = service.validate("claim", { ...validClaimParams, amount: 0 })
+      const error = service.validate("claim", {
+        ...validClaimParams,
+        amount: 0,
+      })
       expect(error).toBe("Reward amount must be positive")
     })
 
     it("rejects empty token for claim", () => {
       const service = new LoyaltyService()
-      const error = service.validate("claim", { ...validClaimParams, token: "" })
+      const error = service.validate("claim", {
+        ...validClaimParams,
+        token: "",
+      })
       expect(error).toBe("Token is required")
     })
   })

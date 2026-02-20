@@ -1,7 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from "vitest"
 import { ChannelService } from "@/lib/channel/channel-service"
 import { PrivacyLevel } from "@sip-protocol/types"
-import type { ChannelStep, SubscribeParams, PublishDropParams } from "@/lib/channel/types"
+import type {
+  ChannelStep,
+  SubscribeParams,
+  PublishDropParams,
+} from "@/lib/channel/types"
 
 // Mock the SDK to avoid WASM/crypto deps in tests
 vi.mock("@sip-protocol/sdk", () => ({
@@ -61,13 +65,19 @@ describe("ChannelService", () => {
   describe("validate", () => {
     it("rejects empty dropId for subscribe", () => {
       const service = new ChannelService()
-      const error = service.validate("subscribe", { ...validSubscribeParams, dropId: "" })
+      const error = service.validate("subscribe", {
+        ...validSubscribeParams,
+        dropId: "",
+      })
       expect(error).toBe("Drop ID is required")
     })
 
     it("rejects unknown drop for subscribe", () => {
       const service = new ChannelService()
-      const error = service.validate("subscribe", { ...validSubscribeParams, dropId: "nonexistent" })
+      const error = service.validate("subscribe", {
+        ...validSubscribeParams,
+        dropId: "nonexistent",
+      })
       expect(error).toBe("Drop not found")
     })
 
@@ -79,13 +89,19 @@ describe("ChannelService", () => {
 
     it("rejects empty title for publish", () => {
       const service = new ChannelService()
-      const error = service.validate("publish", { ...validPublishParams, title: "" })
+      const error = service.validate("publish", {
+        ...validPublishParams,
+        title: "",
+      })
       expect(error).toBe("Title is required")
     })
 
     it("rejects empty content for publish", () => {
       const service = new ChannelService()
-      const error = service.validate("publish", { ...validPublishParams, content: "" })
+      const error = service.validate("publish", {
+        ...validPublishParams,
+        content: "",
+      })
       expect(error).toBe("Content is required")
     })
   })

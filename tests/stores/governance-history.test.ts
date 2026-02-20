@@ -3,7 +3,9 @@ import { useGovernanceHistoryStore } from "@/stores/governance-history"
 import { PrivacyLevel } from "@sip-protocol/types"
 import type { PrivateVoteRecord } from "@/lib/governance/types"
 
-function makeMockVote(overrides?: Partial<PrivateVoteRecord>): PrivateVoteRecord {
+function makeMockVote(
+  overrides?: Partial<PrivateVoteRecord>
+): PrivateVoteRecord {
   return {
     id: `vote_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
     proposalId: "prop-mnde-01",
@@ -100,7 +102,9 @@ describe("useGovernanceHistoryStore", () => {
     store.addVote(makeMockVote({ id: "v2", proposalId: "prop-b" }))
     store.addVote(makeMockVote({ id: "v3", proposalId: "prop-a" }))
 
-    const filtered = useGovernanceHistoryStore.getState().getVotesForProposal("prop-a")
+    const filtered = useGovernanceHistoryStore
+      .getState()
+      .getVotesForProposal("prop-a")
     expect(filtered).toHaveLength(2)
     expect(filtered.every((v) => v.proposalId === "prop-a")).toBe(true)
   })

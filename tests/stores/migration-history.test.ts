@@ -67,7 +67,10 @@ describe("useMigrationHistoryStore", () => {
 
   describe("updateMigration", () => {
     it("updates an existing migration", () => {
-      const migration = createMockMigration({ id: "m1", status: "scanning_wallet" })
+      const migration = createMockMigration({
+        id: "m1",
+        status: "scanning_wallet",
+      })
       useMigrationHistoryStore.getState().addMigration(migration)
 
       useMigrationHistoryStore.getState().updateMigration("m1", {

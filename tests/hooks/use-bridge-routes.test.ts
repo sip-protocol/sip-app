@@ -36,9 +36,7 @@ describe("useBridgeRoutes", () => {
   })
 
   it("returns ETH token for EVM-to-EVM routes", () => {
-    const { result } = renderHook(() =>
-      useBridgeRoutes("ethereum", "base"),
-    )
+    const { result } = renderHook(() => useBridgeRoutes("ethereum", "base"))
 
     expect(result.current.availableTokens).toContain("ETH")
     expect(result.current.availableTokens).toContain("USDC")

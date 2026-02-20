@@ -12,7 +12,9 @@ vi.mock("@solana/wallet-adapter-react", () => ({
 
 vi.mock("@/lib/social/social-service", () => {
   class MockSocialService {
-    validate() { return null }
+    validate() {
+      return null
+    }
     async createProfile() {
       return {
         id: "profile_mock_123",
@@ -63,7 +65,7 @@ describe("CreateProfileForm", () => {
   it("renders bio textarea", () => {
     render(<CreateProfileForm />)
     expect(
-      screen.getByPlaceholderText("Privacy advocate, builder, anon..."),
+      screen.getByPlaceholderText("Privacy advocate, builder, anon...")
     ).toBeInTheDocument()
   })
 

@@ -2,7 +2,11 @@ import { describe, it, expect, beforeEach } from "vitest"
 import { MockBackend } from "@/lib/privacy/backends/mock"
 import { TOKENS } from "@/lib/privacy/types"
 import { PrivacyLevel } from "@sip-protocol/types"
-import type { TransferEvent, QuoteParams, TransferParams } from "@/lib/privacy/types"
+import type {
+  TransferEvent,
+  QuoteParams,
+  TransferParams,
+} from "@/lib/privacy/types"
 
 describe("MockBackend", () => {
   let backend: MockBackend
@@ -186,7 +190,9 @@ describe("MockBackend", () => {
       backend.configure({ failureRate: 1 })
 
       const events: TransferEvent[] = []
-      const result = await backend.transfer(transferParams, (e) => events.push(e))
+      const result = await backend.transfer(transferParams, (e) =>
+        events.push(e)
+      )
 
       expect(result.status).toBe("failed")
       expect(result.error).toContain("simulated failure")

@@ -37,7 +37,11 @@ describe("useWalletStore", () => {
     it("sets connected state correctly", () => {
       const { connect } = useWalletStore.getState()
 
-      connect("phantom", "solana", "HN7cABqLq46Es1jh92dQQisAq662SmxELLLsHHe4YWrH")
+      connect(
+        "phantom",
+        "solana",
+        "HN7cABqLq46Es1jh92dQQisAq662SmxELLLsHHe4YWrH"
+      )
 
       const state = useWalletStore.getState()
       expect(state.isConnected).toBe(true)
@@ -51,7 +55,11 @@ describe("useWalletStore", () => {
     it("supports ethereum wallets", () => {
       const { connect } = useWalletStore.getState()
 
-      connect("metamask", "ethereum", "0x1234567890abcdef1234567890abcdef12345678")
+      connect(
+        "metamask",
+        "ethereum",
+        "0x1234567890abcdef1234567890abcdef12345678"
+      )
 
       const state = useWalletStore.getState()
       expect(state.isConnected).toBe(true)

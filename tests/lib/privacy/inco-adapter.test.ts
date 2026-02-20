@@ -2,7 +2,11 @@ import { describe, it, expect, beforeEach } from "vitest"
 import { IncoAdapter } from "@/lib/privacy/backends/inco"
 import { TOKENS } from "@/lib/privacy/types"
 import { PrivacyLevel } from "@sip-protocol/types"
-import type { TransferEvent, QuoteParams, TransferParams } from "@/lib/privacy/types"
+import type {
+  TransferEvent,
+  QuoteParams,
+  TransferParams,
+} from "@/lib/privacy/types"
 
 describe("IncoAdapter", () => {
   let adapter: IncoAdapter

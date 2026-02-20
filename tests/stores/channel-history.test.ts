@@ -1,9 +1,14 @@
 import { describe, it, expect, beforeEach } from "vitest"
 import { useChannelHistoryStore } from "@/stores/channel-history"
 import { PrivacyLevel } from "@sip-protocol/types"
-import type { ChannelActionRecord, ChannelSubscription } from "@/lib/channel/types"
+import type {
+  ChannelActionRecord,
+  ChannelSubscription,
+} from "@/lib/channel/types"
 
-function makeMockAction(overrides?: Partial<ChannelActionRecord>): ChannelActionRecord {
+function makeMockAction(
+  overrides?: Partial<ChannelActionRecord>
+): ChannelActionRecord {
   return {
     id: `action_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
     type: "subscribe",
@@ -17,7 +22,9 @@ function makeMockAction(overrides?: Partial<ChannelActionRecord>): ChannelAction
   }
 }
 
-function makeMockSubscription(overrides?: Partial<ChannelSubscription>): ChannelSubscription {
+function makeMockSubscription(
+  overrides?: Partial<ChannelSubscription>
+): ChannelSubscription {
   return {
     dropId: `drop_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
     subscribedAt: Date.now(),
@@ -58,7 +65,10 @@ describe("useChannelHistoryStore", () => {
   })
 
   it("updates an action", () => {
-    const action = makeMockAction({ id: "update-me", status: "selecting_channel" })
+    const action = makeMockAction({
+      id: "update-me",
+      status: "selecting_channel",
+    })
     useChannelHistoryStore.getState().addAction(action)
 
     useChannelHistoryStore.getState().updateAction("update-me", {
@@ -93,11 +103,19 @@ describe("useChannelHistoryStore", () => {
 
   it("counts active subscriptions", () => {
     const store = useChannelHistoryStore.getState()
-    store.addSubscription(makeMockSubscription({ dropId: "d1", isActive: true }))
-    store.addSubscription(makeMockSubscription({ dropId: "d2", isActive: false }))
-    store.addSubscription(makeMockSubscription({ dropId: "d3", isActive: true }))
+    store.addSubscription(
+      makeMockSubscription({ dropId: "d1", isActive: true })
+    )
+    store.addSubscription(
+      makeMockSubscription({ dropId: "d2", isActive: false })
+    )
+    store.addSubscription(
+      makeMockSubscription({ dropId: "d3", isActive: true })
+    )
 
-    expect(useChannelHistoryStore.getState().getActiveSubscriptionCount()).toBe(2)
+    expect(useChannelHistoryStore.getState().getActiveSubscriptionCount()).toBe(
+      2
+    )
   })
 
   it("clears all history", () => {

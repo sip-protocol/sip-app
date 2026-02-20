@@ -16,8 +16,12 @@ vi.mock("@solana/web3.js", () => {
     constructor(key: string) {
       this._key = key
     }
-    toBase58() { return this._key }
-    toString() { return this._key }
+    toBase58() {
+      return this._key
+    }
+    toString() {
+      return this._key
+    }
   }
 
   class MockConnection {

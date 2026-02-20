@@ -10,7 +10,8 @@ Object.defineProperty(navigator, "clipboard", {
 })
 
 describe("AddressDisplay", () => {
-  const mockAddress = "sip:solana:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef:fedcba9876543210fedcba9876543210fedcba9876543210fedcba9876543210"
+  const mockAddress =
+    "sip:solana:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef:fedcba9876543210fedcba9876543210fedcba9876543210fedcba9876543210"
 
   beforeEach(() => {
     mockWriteText.mockClear()

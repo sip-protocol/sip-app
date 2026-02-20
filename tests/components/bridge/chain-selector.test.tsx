@@ -26,11 +26,7 @@ describe("ChainSelector", () => {
 
   it("shows Select chain when no chain selected", () => {
     render(
-      <ChainSelector
-        {...defaultProps}
-        sourceChain={null}
-        destChain={null}
-      />,
+      <ChainSelector {...defaultProps} sourceChain={null} destChain={null} />
     )
     const placeholders = screen.getAllByText("Select chain")
     expect(placeholders).toHaveLength(2)

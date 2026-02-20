@@ -27,10 +27,12 @@ describe("ArtStatus", () => {
           currentStep="failed"
           mode="generate"
           error="Stealth address generation failed"
-        />,
+        />
       )
       expect(screen.getByText("Art Generation Failed")).toBeInTheDocument()
-      expect(screen.getByText("Stealth address generation failed")).toBeInTheDocument()
+      expect(
+        screen.getByText("Stealth address generation failed")
+      ).toBeInTheDocument()
     })
   })
 
@@ -58,7 +60,7 @@ describe("ArtStatus", () => {
           currentStep="failed"
           mode="mint"
           error="Insufficient SOL for mint"
-        />,
+        />
       )
       expect(screen.getByText("Minting Failed")).toBeInTheDocument()
       expect(screen.getByText("Insufficient SOL for mint")).toBeInTheDocument()
@@ -67,7 +69,11 @@ describe("ArtStatus", () => {
 
   it("applies custom className", () => {
     const { container } = render(
-      <ArtStatus currentStep="selecting_style" mode="generate" className="custom-test" />,
+      <ArtStatus
+        currentStep="selecting_style"
+        mode="generate"
+        className="custom-test"
+      />
     )
     const el = container.firstElementChild as HTMLElement
     expect(el.className).toContain("custom-test")

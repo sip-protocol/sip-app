@@ -1,7 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from "vitest"
 import { GamingService } from "@/lib/gaming/gaming-service"
 import { PrivacyLevel } from "@sip-protocol/types"
-import type { GamingStep, PlayGameParams, ClaimRewardParams } from "@/lib/gaming/types"
+import type {
+  GamingStep,
+  PlayGameParams,
+  ClaimRewardParams,
+} from "@/lib/gaming/types"
 
 // Mock the SDK to avoid WASM/crypto deps in tests
 vi.mock("@sip-protocol/sdk", () => ({
@@ -66,7 +70,10 @@ describe("GamingService", () => {
 
     it("rejects unknown game for play", () => {
       const service = new GamingService()
-      const error = service.validate("play", { ...validPlayParams, gameId: "nonexistent" })
+      const error = service.validate("play", {
+        ...validPlayParams,
+        gameId: "nonexistent",
+      })
       expect(error).toBe("Game not found")
     })
 
@@ -84,7 +91,10 @@ describe("GamingService", () => {
 
     it("rejects empty gameId for claim", () => {
       const service = new GamingService()
-      const error = service.validate("claim", { ...validClaimParams, gameId: "" })
+      const error = service.validate("claim", {
+        ...validClaimParams,
+        gameId: "",
+      })
       expect(error).toBe("Game ID is required")
     })
 

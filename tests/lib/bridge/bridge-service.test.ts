@@ -172,7 +172,7 @@ describe("BridgeService", () => {
       const service = new BridgeService({ mode: "simulation" })
 
       await expect(
-        service.executeBridge({ ...validParams, amount: "0" }),
+        service.executeBridge({ ...validParams, amount: "0" })
       ).rejects.toThrow("Amount must be greater than 0")
     })
   })

@@ -295,9 +295,9 @@ describe("TorqueReader", () => {
     })
 
     it("falls back to simulation when API returns non-200", async () => {
-      fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValue(
-        new Response("Unauthorized", { status: 401 })
-      )
+      fetchSpy = vi
+        .spyOn(globalThis, "fetch")
+        .mockResolvedValue(new Response("Unauthorized", { status: 401 }))
 
       const campaigns = await reader.getCampaigns()
       // Should get simulation data
@@ -331,12 +331,14 @@ describe("TorqueReader", () => {
         requirements: [],
       }
 
-      fetchSpy = vi.spyOn(globalThis, "fetch").mockResolvedValueOnce(
-        new Response(
-          JSON.stringify({ status: "SUCCESS", data: mockApiCampaign }),
-          { status: 200, headers: { "Content-Type": "application/json" } }
+      fetchSpy = vi
+        .spyOn(globalThis, "fetch")
+        .mockResolvedValueOnce(
+          new Response(
+            JSON.stringify({ status: "SUCCESS", data: mockApiCampaign }),
+            { status: 200, headers: { "Content-Type": "application/json" } }
+          )
         )
-      )
 
       const campaign = await reader.getCampaign("single-123")
       expect(campaign).toBeDefined()

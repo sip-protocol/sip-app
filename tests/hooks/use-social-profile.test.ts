@@ -12,11 +12,20 @@ vi.mock("@solana/wallet-adapter-react", () => ({
 
 vi.mock("@/lib/social/social-service", () => {
   class MockSocialService {
-    private onStepChange?: (step: string, record: Record<string, unknown>) => void
-    constructor(options: { onStepChange?: (step: string, record: Record<string, unknown>) => void } = {}) {
+    private onStepChange?: (
+      step: string,
+      record: Record<string, unknown>
+    ) => void
+    constructor(
+      options: {
+        onStepChange?: (step: string, record: Record<string, unknown>) => void
+      } = {}
+    ) {
       this.onStepChange = options.onStepChange
     }
-    validate() { return null }
+    validate() {
+      return null
+    }
     async createProfile(params: { username: string }) {
       const record = {
         id: "profile_mock_123",

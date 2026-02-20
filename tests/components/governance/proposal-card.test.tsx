@@ -58,7 +58,7 @@ describe("ProposalCard", () => {
         proposal={revealProposal}
         onReveal={onReveal}
         hasCommittedVote={true}
-      />,
+      />
     )
     // "Reveal" appears twice: status badge + button
     const reveals = screen.getAllByText("Reveal")
@@ -70,12 +70,7 @@ describe("ProposalCard", () => {
 
   it("does not show Reveal button without committed vote", () => {
     const revealProposal = { ...mockProposal, status: "reveal" as const }
-    render(
-      <ProposalCard
-        proposal={revealProposal}
-        hasCommittedVote={false}
-      />,
-    )
+    render(<ProposalCard proposal={revealProposal} hasCommittedVote={false} />)
     // Only the status badge "Reveal" should appear, not a button
     const reveals = screen.getAllByText("Reveal")
     expect(reveals).toHaveLength(1) // Just the status badge
@@ -84,7 +79,7 @@ describe("ProposalCard", () => {
   it("renders description", () => {
     render(<ProposalCard proposal={mockProposal} />)
     expect(
-      screen.getByText("A test proposal description for testing purposes."),
+      screen.getByText("A test proposal description for testing purposes.")
     ).toBeInTheDocument()
   })
 })

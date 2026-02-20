@@ -13,8 +13,12 @@ vi.mock("@/stores/wallet", () => ({
 // Mock toast store
 const mockAddToast = vi.fn()
 vi.mock("@/stores/toast", () => ({
-  useToastStore: (selector?: (s: { addToast: typeof mockAddToast }) => unknown) =>
-    selector ? selector({ addToast: mockAddToast }) : { addToast: mockAddToast },
+  useToastStore: (
+    selector?: (s: { addToast: typeof mockAddToast }) => unknown
+  ) =>
+    selector
+      ? selector({ addToast: mockAddToast })
+      : { addToast: mockAddToast },
 }))
 
 describe("usePrivacyAction", () => {

@@ -1,7 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from "vitest"
 import { SocialService } from "@/lib/social/social-service"
 import { PrivacyLevel } from "@sip-protocol/types"
-import type { SocialStep, CreateProfileParams, CreatePostParams, FollowParams } from "@/lib/social/types"
+import type {
+  SocialStep,
+  CreateProfileParams,
+  CreatePostParams,
+  FollowParams,
+} from "@/lib/social/types"
 
 // Mock the SDK to avoid WASM/crypto deps in tests
 vi.mock("@sip-protocol/sdk", () => ({
@@ -63,13 +68,19 @@ describe("SocialService", () => {
   describe("validate", () => {
     it("rejects empty username for profile", () => {
       const service = new SocialService()
-      const error = service.validate("profile", { ...validProfileParams, username: "" })
+      const error = service.validate("profile", {
+        ...validProfileParams,
+        username: "",
+      })
       expect(error).toBe("Username is required")
     })
 
     it("rejects long username for profile", () => {
       const service = new SocialService()
-      const error = service.validate("profile", { ...validProfileParams, username: "a".repeat(33) })
+      const error = service.validate("profile", {
+        ...validProfileParams,
+        username: "a".repeat(33),
+      })
       expect(error).toBe("Username must be 32 characters or less")
     })
 
@@ -81,19 +92,28 @@ describe("SocialService", () => {
 
     it("rejects empty content for post", () => {
       const service = new SocialService()
-      const error = service.validate("post", { ...validPostParams, content: "" })
+      const error = service.validate("post", {
+        ...validPostParams,
+        content: "",
+      })
       expect(error).toBe("Content is required")
     })
 
     it("rejects long content for post", () => {
       const service = new SocialService()
-      const error = service.validate("post", { ...validPostParams, content: "a".repeat(281) })
+      const error = service.validate("post", {
+        ...validPostParams,
+        content: "a".repeat(281),
+      })
       expect(error).toBe("Content must be 280 characters or less")
     })
 
     it("rejects empty profileId for post", () => {
       const service = new SocialService()
-      const error = service.validate("post", { ...validPostParams, profileId: "" })
+      const error = service.validate("post", {
+        ...validPostParams,
+        profileId: "",
+      })
       expect(error).toBe("Profile ID is required")
     })
 
@@ -105,19 +125,28 @@ describe("SocialService", () => {
 
     it("rejects empty fromProfileId for follow", () => {
       const service = new SocialService()
-      const error = service.validate("follow", { ...validFollowParams, fromProfileId: "" })
+      const error = service.validate("follow", {
+        ...validFollowParams,
+        fromProfileId: "",
+      })
       expect(error).toBe("From profile ID is required")
     })
 
     it("rejects empty toProfileId for follow", () => {
       const service = new SocialService()
-      const error = service.validate("follow", { ...validFollowParams, toProfileId: "" })
+      const error = service.validate("follow", {
+        ...validFollowParams,
+        toProfileId: "",
+      })
       expect(error).toBe("To profile ID is required")
     })
 
     it("rejects self-follow", () => {
       const service = new SocialService()
-      const error = service.validate("follow", { ...validFollowParams, toProfileId: "profile-dolphin" })
+      const error = service.validate("follow", {
+        ...validFollowParams,
+        toProfileId: "profile-dolphin",
+      })
       expect(error).toBe("Cannot follow yourself")
     })
 
@@ -138,7 +167,11 @@ describe("SocialService", () => {
 
       const result = await service.createProfile(validProfileParams)
 
-      expect(steps).toEqual(["generating_stealth", "creating_profile", "profile_created"])
+      expect(steps).toEqual([
+        "generating_stealth",
+        "creating_profile",
+        "profile_created",
+      ])
       expect(result.status).toBe("profile_created")
     })
 
@@ -164,7 +197,7 @@ describe("SocialService", () => {
       const service = new SocialService({ mode: "simulation" })
 
       await expect(
-        service.createProfile({ ...validProfileParams, username: "" }),
+        service.createProfile({ ...validProfileParams, username: "" })
       ).rejects.toThrow("Username is required")
     })
   })
@@ -195,7 +228,7 @@ describe("SocialService", () => {
       const service = new SocialService({ mode: "simulation" })
 
       await expect(
-        service.createPost({ ...validPostParams, content: "" }),
+        service.createPost({ ...validPostParams, content: "" })
       ).rejects.toThrow("Content is required")
     })
   })
@@ -228,7 +261,7 @@ describe("SocialService", () => {
         service.followProfile({
           ...validFollowParams,
           toProfileId: "profile-dolphin",
-        }),
+        })
       ).rejects.toThrow("Cannot follow yourself")
     })
   })

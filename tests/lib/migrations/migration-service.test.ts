@@ -1,6 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest"
 import { MigrationService } from "@/lib/migrations/migration-service"
-import type { MigrationParams, MigrationStep, MigrationSource } from "@/lib/migrations/types"
+import type {
+  MigrationParams,
+  MigrationStep,
+  MigrationSource,
+} from "@/lib/migrations/types"
 import { PrivacyLevel } from "@sip-protocol/types"
 
 // Mock stealth generation
@@ -27,14 +31,25 @@ vi.mock("@/lib/crypto-helpers", () => ({
 vi.mock("@solana/web3.js", () => {
   class MockPublicKey {
     private _key: string
-    constructor(key: string) { this._key = key }
-    toBase58() { return this._key }
-    toString() { return this._key }
+    constructor(key: string) {
+      this._key = key
+    }
+    toBase58() {
+      return this._key
+    }
+    toString() {
+      return this._key
+    }
   }
 
   class MockConnection {
     getTokenSupply = vi.fn().mockResolvedValue({
-      value: { amount: "85432000000000", decimals: 9, uiAmount: 85432.0, uiAmountString: "85432" },
+      value: {
+        amount: "85432000000000",
+        decimals: 9,
+        uiAmount: 85432.0,
+        uiAmountString: "85432",
+      },
     })
     getBalance = vi.fn().mockResolvedValue(2_500_000_000)
   }
@@ -114,7 +129,12 @@ describe("MigrationService", () => {
     it("rejects protocol source without protocol", () => {
       const service = new MigrationService()
       const error = service.validate({
-        source: { protocol: null, type: "protocol", balance: "5", token: "SOL" },
+        source: {
+          protocol: null,
+          type: "protocol",
+          balance: "5",
+          token: "SOL",
+        },
         amount: "1",
         privacyLevel: PrivacyLevel.SHIELDED,
       })
@@ -196,7 +216,9 @@ describe("MigrationService", () => {
 
       expect(result.status).toBe("complete")
       expect(result.stealthAddress).toBe("sip:solana:mock-stealth-address")
-      expect(result.stealthMetaAddress).toBe("sip:solana:meta:mock-meta-address")
+      expect(result.stealthMetaAddress).toBe(
+        "sip:solana:meta:mock-meta-address"
+      )
       expect(result.withdrawTxHash).toBeTruthy()
       expect(result.depositTxHash).toBeTruthy()
       expect(result.gsolAmount).toBeTruthy()

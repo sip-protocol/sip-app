@@ -160,7 +160,10 @@ describe("TicketingService", () => {
 
       const result = await service.purchaseTicket(validPurchaseParams)
 
-      expect(mockCallback).toHaveBeenCalledWith("event-solana-breakpoint", "vip")
+      expect(mockCallback).toHaveBeenCalledWith(
+        "event-solana-breakpoint",
+        "vip"
+      )
       expect(result.txSignature).toBe("mock-tx-signature")
     })
 

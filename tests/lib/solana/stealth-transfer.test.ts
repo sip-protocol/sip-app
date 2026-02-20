@@ -19,9 +19,15 @@ vi.mock("@solana/web3.js", () => {
     constructor(key: string) {
       this._key = key
     }
-    toBase58() { return this._key }
-    toString() { return this._key }
-    toBuffer() { return Buffer.alloc(32) }
+    toBase58() {
+      return this._key
+    }
+    toString() {
+      return this._key
+    }
+    toBuffer() {
+      return Buffer.alloc(32)
+    }
   }
 
   class MockTransaction {
@@ -91,7 +97,8 @@ describe("createStealthTransfer", () => {
   })
 
   it("returns a valid stealth address", async () => {
-    const { createStealthTransfer } = await import("@/lib/solana/stealth-transfer")
+    const { createStealthTransfer } =
+      await import("@/lib/solana/stealth-transfer")
 
     const result = await createStealthTransfer({ amountLamports: 1_000_000 })
 
@@ -102,7 +109,8 @@ describe("createStealthTransfer", () => {
   })
 
   it("returns ephemeral public key", async () => {
-    const { createStealthTransfer } = await import("@/lib/solana/stealth-transfer")
+    const { createStealthTransfer } =
+      await import("@/lib/solana/stealth-transfer")
 
     const result = await createStealthTransfer({ amountLamports: 500_000 })
 
@@ -111,7 +119,8 @@ describe("createStealthTransfer", () => {
   })
 
   it("returns a valid Pedersen commitment", async () => {
-    const { createStealthTransfer } = await import("@/lib/solana/stealth-transfer")
+    const { createStealthTransfer } =
+      await import("@/lib/solana/stealth-transfer")
 
     const result = await createStealthTransfer({ amountLamports: 1_000_000 })
 
@@ -122,7 +131,8 @@ describe("createStealthTransfer", () => {
   })
 
   it("returns encoded meta address", async () => {
-    const { createStealthTransfer } = await import("@/lib/solana/stealth-transfer")
+    const { createStealthTransfer } =
+      await import("@/lib/solana/stealth-transfer")
 
     const result = await createStealthTransfer({ amountLamports: 1_000_000 })
 
@@ -131,7 +141,8 @@ describe("createStealthTransfer", () => {
   })
 
   it("returns buildTransaction function", async () => {
-    const { createStealthTransfer } = await import("@/lib/solana/stealth-transfer")
+    const { createStealthTransfer } =
+      await import("@/lib/solana/stealth-transfer")
 
     const result = await createStealthTransfer({ amountLamports: 1_000_000 })
 
@@ -139,7 +150,8 @@ describe("createStealthTransfer", () => {
   })
 
   it("returns getExplorerUrl function", async () => {
-    const { createStealthTransfer } = await import("@/lib/solana/stealth-transfer")
+    const { createStealthTransfer } =
+      await import("@/lib/solana/stealth-transfer")
 
     const result = await createStealthTransfer({ amountLamports: 1_000_000 })
 
@@ -153,12 +165,18 @@ describe("buildTransaction", () => {
   })
 
   it("returns a Transaction object", async () => {
-    const { createStealthTransfer } = await import("@/lib/solana/stealth-transfer")
+    const { createStealthTransfer } =
+      await import("@/lib/solana/stealth-transfer")
     const { PublicKey } = await import("@solana/web3.js")
 
     const result = await createStealthTransfer({ amountLamports: 1_000_000 })
-    const senderPubkey = new PublicKey("SenderPubkey111111111111111111111111111111")
-    const tx = await result.buildTransaction(senderPubkey, "https://api.devnet.solana.com")
+    const senderPubkey = new PublicKey(
+      "SenderPubkey111111111111111111111111111111"
+    )
+    const tx = await result.buildTransaction(
+      senderPubkey,
+      "https://api.devnet.solana.com"
+    )
 
     expect(tx).toBeDefined()
     // Should have called add() for the transfer instruction
@@ -166,11 +184,14 @@ describe("buildTransaction", () => {
   })
 
   it("creates a SystemProgram.transfer instruction with correct lamports", async () => {
-    const { createStealthTransfer } = await import("@/lib/solana/stealth-transfer")
+    const { createStealthTransfer } =
+      await import("@/lib/solana/stealth-transfer")
     const { PublicKey } = await import("@solana/web3.js")
 
     const result = await createStealthTransfer({ amountLamports: 2_000_000 })
-    const senderPubkey = new PublicKey("SenderPubkey111111111111111111111111111111")
+    const senderPubkey = new PublicKey(
+      "SenderPubkey111111111111111111111111111111"
+    )
     await result.buildTransaction(senderPubkey, "https://api.devnet.solana.com")
 
     expect(mockTransferIx).toHaveBeenCalledWith(
@@ -181,38 +202,49 @@ describe("buildTransaction", () => {
   })
 
   it("fetches a recent blockhash from the provided RPC", async () => {
-    const { createStealthTransfer } = await import("@/lib/solana/stealth-transfer")
+    const { createStealthTransfer } =
+      await import("@/lib/solana/stealth-transfer")
     const { PublicKey } = await import("@solana/web3.js")
 
     const result = await createStealthTransfer({ amountLamports: 1_000_000 })
-    const senderPubkey = new PublicKey("SenderPubkey111111111111111111111111111111")
+    const senderPubkey = new PublicKey(
+      "SenderPubkey111111111111111111111111111111"
+    )
     await result.buildTransaction(senderPubkey, "https://api.devnet.solana.com")
 
     expect(mockGetLatestBlockhash).toHaveBeenCalledWith("confirmed")
   })
 
   it("adds memo instruction when memo is provided", async () => {
-    const { createStealthTransfer } = await import("@/lib/solana/stealth-transfer")
+    const { createStealthTransfer } =
+      await import("@/lib/solana/stealth-transfer")
     const { PublicKey } = await import("@solana/web3.js")
 
     const result = await createStealthTransfer({
       amountLamports: 1_000_000,
       memo: "sip:stealth-transfer",
     })
-    const senderPubkey = new PublicKey("SenderPubkey111111111111111111111111111111")
+    const senderPubkey = new PublicKey(
+      "SenderPubkey111111111111111111111111111111"
+    )
     await result.buildTransaction(senderPubkey, "https://api.devnet.solana.com")
 
-    expect(mockCreateMemoInstruction).toHaveBeenCalledWith("sip:stealth-transfer")
+    expect(mockCreateMemoInstruction).toHaveBeenCalledWith(
+      "sip:stealth-transfer"
+    )
     // add() should be called twice: transfer + memo
     expect(mockAdd).toHaveBeenCalledTimes(2)
   })
 
   it("skips memo instruction when no memo provided", async () => {
-    const { createStealthTransfer } = await import("@/lib/solana/stealth-transfer")
+    const { createStealthTransfer } =
+      await import("@/lib/solana/stealth-transfer")
     const { PublicKey } = await import("@solana/web3.js")
 
     const result = await createStealthTransfer({ amountLamports: 1_000_000 })
-    const senderPubkey = new PublicKey("SenderPubkey111111111111111111111111111111")
+    const senderPubkey = new PublicKey(
+      "SenderPubkey111111111111111111111111111111"
+    )
     await result.buildTransaction(senderPubkey, "https://api.devnet.solana.com")
 
     expect(mockCreateMemoInstruction).not.toHaveBeenCalled()
@@ -223,7 +255,8 @@ describe("buildTransaction", () => {
 
 describe("getExplorerUrl", () => {
   it("generates mainnet Solscan URL by default", async () => {
-    const { createStealthTransfer } = await import("@/lib/solana/stealth-transfer")
+    const { createStealthTransfer } =
+      await import("@/lib/solana/stealth-transfer")
 
     const result = await createStealthTransfer({ amountLamports: 1_000_000 })
     const url = result.getExplorerUrl("5abc123def")
@@ -232,7 +265,8 @@ describe("getExplorerUrl", () => {
   })
 
   it("generates mainnet Solscan URL when cluster is mainnet-beta", async () => {
-    const { createStealthTransfer } = await import("@/lib/solana/stealth-transfer")
+    const { createStealthTransfer } =
+      await import("@/lib/solana/stealth-transfer")
 
     const result = await createStealthTransfer({ amountLamports: 1_000_000 })
     const url = result.getExplorerUrl("5abc123def", "mainnet-beta")
@@ -241,7 +275,8 @@ describe("getExplorerUrl", () => {
   })
 
   it("generates devnet Solscan URL when cluster is devnet", async () => {
-    const { createStealthTransfer } = await import("@/lib/solana/stealth-transfer")
+    const { createStealthTransfer } =
+      await import("@/lib/solana/stealth-transfer")
 
     const result = await createStealthTransfer({ amountLamports: 1_000_000 })
     const url = result.getExplorerUrl("txhash999", "devnet")

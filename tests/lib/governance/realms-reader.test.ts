@@ -7,10 +7,18 @@ vi.mock("@solana/spl-governance", async () => {
   return {
     ...actual,
     getRealm: vi.fn().mockRejectedValue(new Error("Mock: no RPC in tests")),
-    getAllProposals: vi.fn().mockRejectedValue(new Error("Mock: no RPC in tests")),
-    getAllGovernances: vi.fn().mockRejectedValue(new Error("Mock: no RPC in tests")),
-    getTokenOwnerRecordsByOwner: vi.fn().mockRejectedValue(new Error("Mock: no RPC in tests")),
-    getGovernance: vi.fn().mockRejectedValue(new Error("Mock: no RPC in tests")),
+    getAllProposals: vi
+      .fn()
+      .mockRejectedValue(new Error("Mock: no RPC in tests")),
+    getAllGovernances: vi
+      .fn()
+      .mockRejectedValue(new Error("Mock: no RPC in tests")),
+    getTokenOwnerRecordsByOwner: vi
+      .fn()
+      .mockRejectedValue(new Error("Mock: no RPC in tests")),
+    getGovernance: vi
+      .fn()
+      .mockRejectedValue(new Error("Mock: no RPC in tests")),
     getProposal: vi.fn().mockRejectedValue(new Error("Mock: no RPC in tests")),
   }
 })
@@ -46,7 +54,9 @@ describe("RealmsReader", () => {
 
     it("filters proposals by DAO and status", async () => {
       const proposals = await reader.getProposals("marinade", "voting")
-      expect(proposals.every((p) => p.daoId === "marinade" && p.status === "voting")).toBe(true)
+      expect(
+        proposals.every((p) => p.daoId === "marinade" && p.status === "voting")
+      ).toBe(true)
     })
 
     it("returns a specific proposal", async () => {

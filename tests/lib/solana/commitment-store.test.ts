@@ -26,9 +26,15 @@ vi.mock("@solana/web3.js", () => {
     constructor(key: string) {
       this._key = key
     }
-    toBase58() { return this._key }
-    toString() { return this._key }
-    toBuffer() { return Buffer.alloc(32) }
+    toBase58() {
+      return this._key
+    }
+    toString() {
+      return this._key
+    }
+    toBuffer() {
+      return Buffer.alloc(32)
+    }
   }
 
   class MockTransaction {
@@ -169,8 +175,13 @@ describe("buildTransaction (commitment)", () => {
       commitmentType: "vote",
     })
 
-    const senderPubkey = new PublicKey("Sender111111111111111111111111111111111111")
-    const tx = await result.buildTransaction(senderPubkey, "https://api.devnet.solana.com")
+    const senderPubkey = new PublicKey(
+      "Sender111111111111111111111111111111111111"
+    )
+    const tx = await result.buildTransaction(
+      senderPubkey,
+      "https://api.devnet.solana.com"
+    )
 
     expect(tx).toBeDefined()
   })
@@ -181,7 +192,9 @@ describe("buildTransaction (commitment)", () => {
       commitmentType: "vote",
     })
 
-    const senderPubkey = new PublicKey("Sender111111111111111111111111111111111111")
+    const senderPubkey = new PublicKey(
+      "Sender111111111111111111111111111111111111"
+    )
     await result.buildTransaction(senderPubkey, "https://api.devnet.solana.com")
 
     expect(mockTransferIx).toHaveBeenCalledWith(
@@ -197,7 +210,9 @@ describe("buildTransaction (commitment)", () => {
       commitmentType: "vote",
     })
 
-    const senderPubkey = new PublicKey("Sender111111111111111111111111111111111111")
+    const senderPubkey = new PublicKey(
+      "Sender111111111111111111111111111111111111"
+    )
     await result.buildTransaction(senderPubkey, "https://api.devnet.solana.com")
 
     expect(mockCreateMemoInstruction).toHaveBeenCalledWith(
@@ -211,7 +226,9 @@ describe("buildTransaction (commitment)", () => {
       commitmentType: "move",
     })
 
-    const senderPubkey = new PublicKey("Sender111111111111111111111111111111111111")
+    const senderPubkey = new PublicKey(
+      "Sender111111111111111111111111111111111111"
+    )
     await result.buildTransaction(senderPubkey, "https://api.devnet.solana.com")
 
     expect(mockGetLatestBlockhash).toHaveBeenCalledWith("confirmed")
@@ -223,7 +240,9 @@ describe("buildTransaction (commitment)", () => {
       commitmentType: "generic",
     })
 
-    const senderPubkey = new PublicKey("Sender111111111111111111111111111111111111")
+    const senderPubkey = new PublicKey(
+      "Sender111111111111111111111111111111111111"
+    )
     await result.buildTransaction(senderPubkey, "https://api.devnet.solana.com")
 
     expect(mockAdd).toHaveBeenCalledTimes(2)
@@ -258,7 +277,9 @@ describe("createRevealTransaction", () => {
   })
 
   it("returns a Transaction object", async () => {
-    const senderPubkey = new PublicKey("Sender111111111111111111111111111111111111")
+    const senderPubkey = new PublicKey(
+      "Sender111111111111111111111111111111111111"
+    )
     const tx = await createRevealTransaction(
       "proposalId:yes:100",
       "ab".repeat(32),
@@ -273,7 +294,9 @@ describe("createRevealTransaction", () => {
   it("adds memo with SIP-REVEAL:<type>:<hash>:<data>:<salt> format", async () => {
     const data = "proposalId:yes:100"
     const salt = "ab".repeat(32)
-    const senderPubkey = new PublicKey("Sender111111111111111111111111111111111111")
+    const senderPubkey = new PublicKey(
+      "Sender111111111111111111111111111111111111"
+    )
 
     await createRevealTransaction(
       data,
@@ -284,12 +307,16 @@ describe("createRevealTransaction", () => {
     )
 
     expect(mockCreateMemoInstruction).toHaveBeenCalledWith(
-      expect.stringMatching(/^SIP-REVEAL:vote:0x[0-9a-f]{64}:proposalId:yes:100:/)
+      expect.stringMatching(
+        /^SIP-REVEAL:vote:0x[0-9a-f]{64}:proposalId:yes:100:/
+      )
     )
   })
 
   it("adds both transfer and memo instructions", async () => {
-    const senderPubkey = new PublicKey("Sender111111111111111111111111111111111111")
+    const senderPubkey = new PublicKey(
+      "Sender111111111111111111111111111111111111"
+    )
 
     await createRevealTransaction(
       "data",

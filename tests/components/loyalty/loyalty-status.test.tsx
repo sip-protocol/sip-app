@@ -66,9 +66,11 @@ describe("LoyaltyStatus", () => {
         currentStep="failed"
         mode="claim"
         error="Stealth address generation failed"
-      />,
+      />
     )
     expect(screen.getByText("Claim Failed")).toBeInTheDocument()
-    expect(screen.getByText("Stealth address generation failed")).toBeInTheDocument()
+    expect(
+      screen.getByText("Stealth address generation failed")
+    ).toBeInTheDocument()
   })
 })

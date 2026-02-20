@@ -213,7 +213,9 @@ describe("transformBreakdownToHeatmap", () => {
 
     expect(result.find((r) => r.category === "addressReuse")?.score).toBe(5)
     expect(result.find((r) => r.category === "clusterExposure")?.score).toBe(10)
-    expect(result.find((r) => r.category === "exchangeExposure")?.score).toBe(15)
+    expect(result.find((r) => r.category === "exchangeExposure")?.score).toBe(
+      15
+    )
     expect(result.find((r) => r.category === "temporalPatterns")?.score).toBe(3)
     expect(result.find((r) => r.category === "socialLinks")?.score).toBe(7)
   })

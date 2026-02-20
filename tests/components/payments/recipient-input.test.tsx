@@ -1,10 +1,14 @@
 import { describe, it, expect, vi } from "vitest"
 import { render, screen, fireEvent } from "@testing-library/react"
-import { RecipientInput, validateRecipient } from "@/components/payments/recipient-input"
+import {
+  RecipientInput,
+  validateRecipient,
+} from "@/components/payments/recipient-input"
 
 describe("validateRecipient", () => {
   it("validates correct sip address format", () => {
-    const validAddress = "sip:solana:02abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890:03abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890"
+    const validAddress =
+      "sip:solana:02abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890:03abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890"
     expect(validateRecipient(validAddress)).toBe(true)
   })
 

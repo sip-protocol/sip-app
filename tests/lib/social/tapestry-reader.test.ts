@@ -32,7 +32,9 @@ describe("TapestryReader", () => {
     it("filters posts by profileId", async () => {
       const posts = await reader.getPosts("profile-dolphin")
       expect(posts.length).toBeGreaterThanOrEqual(3)
-      expect(posts.every((p) => p.authorProfileId === "profile-dolphin")).toBe(true)
+      expect(posts.every((p) => p.authorProfileId === "profile-dolphin")).toBe(
+        true
+      )
     })
 
     it("returns connections for a profile", async () => {
@@ -42,8 +44,8 @@ describe("TapestryReader", () => {
         connections.every(
           (c) =>
             c.fromProfileId === "profile-dolphin" ||
-            c.toProfileId === "profile-dolphin",
-        ),
+            c.toProfileId === "profile-dolphin"
+        )
       ).toBe(true)
     })
 
