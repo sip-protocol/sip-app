@@ -9,6 +9,17 @@ vi.mock("@solana/wallet-adapter-react", () => ({
     publicKey: { toBase58: () => "MockPublicKey123" },
     signTransaction: vi.fn(),
   }),
+  useConnection: () => ({
+    connection: { rpcEndpoint: "https://api.mainnet-beta.solana.com" },
+  }),
+}))
+
+// Mock on-chain commit (no real transactions in tests)
+vi.mock("@/hooks/use-on-chain-commit", () => ({
+  useOnChainCommit: () => ({
+    commit: vi.fn().mockResolvedValue(null),
+    tx: { status: "idle", txSignature: null, explorerUrl: null, error: null },
+  }),
 }))
 
 // Mock stealth generation

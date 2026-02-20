@@ -6,6 +6,7 @@ import { useDemoModeStore } from "@/stores/demo-mode"
 import { ArtService } from "@/lib/art/art-service"
 import { useArtGalleryStore } from "@/stores/art-gallery"
 import { useTrackEvent } from "@/hooks/useTrackEvent"
+import { useOnChainCommit } from "@/hooks/use-on-chain-commit"
 import type {
   ArtStep,
   GenerateArtParams,
@@ -24,6 +25,8 @@ export interface UseGenerateArtReturn {
     params: GenerateArtParams
   ) => Promise<ArtActionRecord | undefined>
   reset: () => void
+  /** Solana transaction state for on-chain commitment */
+  commitTx: ReturnType<typeof useOnChainCommit>["tx"]
 }
 
 export function useGenerateArt(): UseGenerateArtReturn {
@@ -31,6 +34,7 @@ export function useGenerateArt(): UseGenerateArtReturn {
   const isDemoMode = useDemoModeStore((s) => s.isDemoMode)
   const { addAction, addGeneratedArt } = useArtGalleryStore()
   const { trackArt } = useTrackEvent()
+  const { commit, tx: commitTx } = useOnChainCommit("art")
 
   const [status, setStatus] = useState<GenerateArtStatus>("idle")
   const [activeRecord, setActiveRecord] = useState<ArtActionRecord | null>(null)
@@ -61,6 +65,7 @@ export function useGenerateArt(): UseGenerateArtReturn {
             setStatus(step)
             setActiveRecord({ ...record })
           },
+          onCommitTransaction: commit,
         })
 
         const validationError = service.validate("generate", params)
@@ -94,7 +99,7 @@ export function useGenerateArt(): UseGenerateArtReturn {
         return undefined
       }
     },
-    [publicKey, isDemoMode, addAction, addGeneratedArt, trackArt]
+    [publicKey, isDemoMode, addAction, addGeneratedArt, trackArt, commit]
   )
 
   return {
@@ -104,5 +109,6 @@ export function useGenerateArt(): UseGenerateArtReturn {
     error,
     generateArt: generateArtFn,
     reset,
+    commitTx,
   }
 }

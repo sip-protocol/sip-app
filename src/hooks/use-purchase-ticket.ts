@@ -25,7 +25,16 @@ export interface UsePurchaseTicketReturn {
   reset: () => void
 }
 
-export function usePurchaseTicket(): UsePurchaseTicketReturn {
+export interface UsePurchaseTicketOptions {
+  onCommitTransaction?: (
+    eventId: string,
+    tier: string
+  ) => Promise<string | null>
+}
+
+export function usePurchaseTicket(
+  options: UsePurchaseTicketOptions = {}
+): UsePurchaseTicketReturn {
   const { publicKey } = useWallet()
   const isDemoMode = useDemoModeStore((s) => s.isDemoMode)
   const { addAction, addTicket } = useTicketingHistoryStore()
@@ -61,6 +70,7 @@ export function usePurchaseTicket(): UsePurchaseTicketReturn {
             setStatus(step)
             setActiveRecord({ ...record })
           },
+          onCommitTransaction: options.onCommitTransaction,
         })
 
         const validationError = service.validate("purchase", params)
@@ -102,7 +112,14 @@ export function usePurchaseTicket(): UsePurchaseTicketReturn {
         return undefined
       }
     },
-    [publicKey, isDemoMode, addAction, addTicket, trackTicketing]
+    [
+      publicKey,
+      isDemoMode,
+      addAction,
+      addTicket,
+      trackTicketing,
+      options.onCommitTransaction,
+    ]
   )
 
   return { status, activeRecord, error, purchaseTicket, reset }

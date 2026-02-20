@@ -14,6 +14,10 @@ import type {
 
 export type TeleportStatus = MetaverseStep | "idle" | "error"
 
+export interface UseTeleportOptions {
+  onCommitTransaction?: (id: string, data: string) => Promise<string | null>
+}
+
 export interface UseTeleportReturn {
   status: TeleportStatus
   activeRecord: MetaverseActionRecord | null
@@ -24,7 +28,9 @@ export interface UseTeleportReturn {
   reset: () => void
 }
 
-export function useTeleport(): UseTeleportReturn {
+export function useTeleport(
+  options: UseTeleportOptions = {}
+): UseTeleportReturn {
   const { publicKey } = useWallet()
   const isDemoMode = useDemoModeStore((s) => s.isDemoMode)
   const { addAction } = useMetaverseHistoryStore()
@@ -60,6 +66,7 @@ export function useTeleport(): UseTeleportReturn {
             setStatus(step)
             setActiveRecord({ ...record })
           },
+          onCommitTransaction: options.onCommitTransaction,
         })
 
         const validationError = service.validate("teleport", params)
@@ -91,7 +98,13 @@ export function useTeleport(): UseTeleportReturn {
         return undefined
       }
     },
-    [publicKey, isDemoMode, addAction, trackMetaverse]
+    [
+      publicKey,
+      isDemoMode,
+      addAction,
+      trackMetaverse,
+      options.onCommitTransaction,
+    ]
   )
 
   return { status, activeRecord, error, teleport, reset }

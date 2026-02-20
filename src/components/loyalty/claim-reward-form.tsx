@@ -7,6 +7,8 @@ import { DemoBanner } from "@/components/ui/demo-banner"
 import { PrivacyLevel } from "@sip-protocol/types"
 import { cn } from "@/lib/utils"
 import { useClaimReward } from "@/hooks/use-claim-reward"
+import { useOnChainCommit } from "@/hooks/use-on-chain-commit"
+import { TransactionStatus } from "@/components/solana/transaction-status"
 import { LoyaltyPrivacyToggle } from "./loyalty-privacy-toggle"
 import { LoyaltyStatus } from "./loyalty-status"
 import { StealthRewardDisplay } from "./stealth-reward-display"
@@ -25,13 +27,15 @@ export function ClaimRewardForm({ reward, onClaimed }: ClaimRewardFormProps) {
 
   const [privacyLevel, setPrivacyLevel] = useState<PrivacyOption>("shielded")
 
+  const { commit, tx } = useOnChainCommit("reward")
+
   const {
     status,
     activeRecord,
     error,
     claimReward,
     reset: resetClaim,
-  } = useClaimReward()
+  } = useClaimReward({ onCommitTransaction: commit })
 
   const privacyMap: Record<PrivacyOption, PrivacyLevel> = {
     shielded: PrivacyLevel.SHIELDED,
@@ -74,6 +78,13 @@ export function ClaimRewardForm({ reward, onClaimed }: ClaimRewardFormProps) {
           metaAddress={activeRecord.stealthMetaAddress ?? ""}
           amount={reward.amount}
           token={reward.token}
+        />
+
+        <TransactionStatus
+          status={tx.status}
+          txSignature={tx.txSignature}
+          explorerUrl={tx.explorerUrl}
+          error={tx.error}
         />
 
         <button

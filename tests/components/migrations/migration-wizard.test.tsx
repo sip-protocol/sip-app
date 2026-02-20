@@ -8,6 +8,9 @@ vi.mock("@solana/wallet-adapter-react", () => ({
     connected: false,
     publicKey: null,
   }),
+  useConnection: () => ({
+    connection: { rpcEndpoint: "https://api.mainnet-beta.solana.com" },
+  }),
 }))
 
 // Mock stealth generation

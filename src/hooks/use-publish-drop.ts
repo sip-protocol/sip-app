@@ -14,6 +14,10 @@ import type {
 
 export type PublishDropStatus = ChannelStep | "idle" | "error"
 
+export interface UsePublishDropOptions {
+  onCommitTransaction?: (id: string, data: string) => Promise<string | null>
+}
+
 export interface UsePublishDropReturn {
   status: PublishDropStatus
   activeRecord: ChannelActionRecord | null
@@ -24,7 +28,9 @@ export interface UsePublishDropReturn {
   reset: () => void
 }
 
-export function usePublishDrop(): UsePublishDropReturn {
+export function usePublishDrop(
+  options: UsePublishDropOptions = {}
+): UsePublishDropReturn {
   const { publicKey } = useWallet()
   const isDemoMode = useDemoModeStore((s) => s.isDemoMode)
   const { addAction } = useChannelHistoryStore()
@@ -61,6 +67,7 @@ export function usePublishDrop(): UsePublishDropReturn {
             setStatus(step)
             setActiveRecord({ ...record })
           },
+          onCommitTransaction: options.onCommitTransaction,
         })
 
         const validationError = service.validate("publish", params)
@@ -92,7 +99,13 @@ export function usePublishDrop(): UsePublishDropReturn {
         return undefined
       }
     },
-    [publicKey, isDemoMode, addAction, trackChannel]
+    [
+      publicKey,
+      isDemoMode,
+      addAction,
+      trackChannel,
+      options.onCommitTransaction,
+    ]
   )
 
   return { status, activeRecord, error, publishDrop, reset }

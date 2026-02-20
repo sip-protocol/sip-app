@@ -78,6 +78,8 @@ export interface SocialActionRecord {
   targetProfileId?: string
   targetUsername?: string
   sharedSecret?: string
+  // On-chain commitment
+  txSignature?: string
   // Timestamps
   startedAt: number
   completedAt?: number

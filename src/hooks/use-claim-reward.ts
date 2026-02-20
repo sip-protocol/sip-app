@@ -14,6 +14,10 @@ import type {
 
 export type ClaimRewardStatus = LoyaltyStep | "idle" | "error"
 
+export interface UseClaimRewardOptions {
+  onCommitTransaction?: (id: string, data: string) => Promise<string | null>
+}
+
 export interface UseClaimRewardReturn {
   status: ClaimRewardStatus
   activeRecord: LoyaltyActionRecord | null
@@ -24,7 +28,9 @@ export interface UseClaimRewardReturn {
   reset: () => void
 }
 
-export function useClaimReward(): UseClaimRewardReturn {
+export function useClaimReward(
+  options: UseClaimRewardOptions = {}
+): UseClaimRewardReturn {
   const { publicKey } = useWallet()
   const isDemoMode = useDemoModeStore((s) => s.isDemoMode)
   const { addAction } = useLoyaltyHistoryStore()
@@ -61,6 +67,7 @@ export function useClaimReward(): UseClaimRewardReturn {
             setStatus(step)
             setActiveRecord({ ...record })
           },
+          onCommitTransaction: options.onCommitTransaction,
         })
 
         const validationError = service.validate("claim", params)
@@ -94,7 +101,13 @@ export function useClaimReward(): UseClaimRewardReturn {
         return undefined
       }
     },
-    [publicKey, isDemoMode, addAction, trackLoyalty]
+    [
+      publicKey,
+      isDemoMode,
+      addAction,
+      trackLoyalty,
+      options.onCommitTransaction,
+    ]
   )
 
   return { status, activeRecord, error, claimReward, reset }

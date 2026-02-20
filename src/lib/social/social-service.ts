@@ -19,15 +19,21 @@ function generateId(prefix: string): string {
 export interface SocialServiceOptions {
   mode?: SocialMode
   onStepChange?: SocialStepChangeCallback
+  onCommitTransaction?: (id: string, data: string) => Promise<string | null>
 }
 
 export class SocialService {
   private mode: SocialMode
   private onStepChange?: SocialStepChangeCallback
+  private onCommitTransaction?: (
+    id: string,
+    data: string
+  ) => Promise<string | null>
 
   constructor(options: SocialServiceOptions = {}) {
     this.mode = options.mode ?? "simulation"
     this.onStepChange = options.onStepChange
+    this.onCommitTransaction = options.onCommitTransaction
   }
 
   validate(
@@ -184,12 +190,18 @@ export class SocialService {
         )
       }
 
-      // Step 2: Publish to feed (simulated)
+      // Step 2: Publish to feed (simulated or on-chain)
       record.status = "publishing"
       record.stepTimestamps.publishing = Date.now()
       this.onStepChange?.("publishing", { ...record })
 
-      if (this.mode === "simulation") {
+      if (this.onCommitTransaction) {
+        const signature = await this.onCommitTransaction(
+          record.id,
+          `${record.profileId}:${record.type}`
+        )
+        if (signature) record.txSignature = signature
+      } else if (this.mode === "simulation") {
         await new Promise((r) => setTimeout(r, SIMULATION_DELAYS.publishing))
       }
 

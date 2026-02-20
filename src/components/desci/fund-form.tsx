@@ -42,6 +42,7 @@ export function FundForm({ project, onFunded }: FundFormProps) {
     error,
     fundProject,
     reset: resetFund,
+    commitTx,
   } = useFundProject()
 
   const privacyMap: Record<PrivacyOption, PrivacyLevel> = {
@@ -220,7 +221,7 @@ export function FundForm({ project, onFunded }: FundFormProps) {
 
       {/* Status (during fund) */}
       {isFunding && (
-        <div className="mb-6">
+        <div className="mb-6 space-y-3">
           <DeSciStatus
             currentStep={
               status as
@@ -230,6 +231,14 @@ export function FundForm({ project, onFunded }: FundFormProps) {
             }
             mode="fund"
           />
+          {commitTx.status !== "idle" && (
+            <TransactionStatus
+              status={commitTx.status}
+              txSignature={commitTx.txSignature}
+              explorerUrl={commitTx.explorerUrl}
+              error={commitTx.error}
+            />
+          )}
         </div>
       )}
 

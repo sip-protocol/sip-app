@@ -71,6 +71,8 @@ export interface ArtActionRecord {
   // Phase 1B: Viewing key for compliant mode
   viewingKeyHash?: string
   encryptedForAuditor?: string
+  // On-chain commitment
+  txSignature?: string
   // Mint-specific
   nftName?: string
   nftDescription?: string

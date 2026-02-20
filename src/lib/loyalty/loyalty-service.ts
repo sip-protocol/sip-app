@@ -17,15 +17,21 @@ function generateId(prefix: string): string {
 export interface LoyaltyServiceOptions {
   mode?: LoyaltyMode
   onStepChange?: LoyaltyStepChangeCallback
+  onCommitTransaction?: (id: string, data: string) => Promise<string | null>
 }
 
 export class LoyaltyService {
   private mode: LoyaltyMode
   private onStepChange?: LoyaltyStepChangeCallback
+  private onCommitTransaction?: (
+    id: string,
+    data: string
+  ) => Promise<string | null>
 
   constructor(options: LoyaltyServiceOptions = {}) {
     this.mode = options.mode ?? "simulation"
     this.onStepChange = options.onStepChange
+    this.onCommitTransaction = options.onCommitTransaction
   }
 
   validate(
@@ -271,12 +277,18 @@ export class LoyaltyService {
         )
       }
 
-      // Step 2: Claiming reward
+      // Step 2: Claiming reward (on-chain or simulated)
       record.status = "claiming"
       record.stepTimestamps.claiming = Date.now()
       this.onStepChange?.("claiming", { ...record })
 
-      if (this.mode === "simulation") {
+      if (this.onCommitTransaction) {
+        const signature = await this.onCommitTransaction(
+          record.id,
+          `${record.campaignId}:${record.rewardAmount}`
+        )
+        if (signature) record.txSignature = signature
+      } else if (this.mode === "simulation") {
         await new Promise((r) => setTimeout(r, SIMULATION_DELAYS.claiming))
       }
 

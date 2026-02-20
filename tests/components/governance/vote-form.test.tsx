@@ -13,14 +13,23 @@ vi.mock("@solana/wallet-adapter-react", () => ({
     connected: false,
     signTransaction: vi.fn(),
   }),
+  useConnection: () => ({
+    connection: { rpcEndpoint: "https://api.mainnet-beta.solana.com" },
+  }),
 }))
 
 // Mock GovernanceService
 vi.mock("@/lib/governance/governance-service", () => {
   class MockGovernanceService {
-    validate() { return null }
-    async commitVote() { return {} }
-    async revealVote() { return {} }
+    validate() {
+      return null
+    }
+    async commitVote() {
+      return {}
+    }
+    async revealVote() {
+      return {}
+    }
   }
   return { GovernanceService: MockGovernanceService }
 })

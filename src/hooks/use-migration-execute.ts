@@ -6,6 +6,7 @@ import { useDemoModeStore } from "@/stores/demo-mode"
 import { MigrationService } from "@/lib/migrations/migration-service"
 import { useMigrationHistoryStore } from "@/stores/migration-history"
 import { useTrackEvent } from "@/hooks/useTrackEvent"
+import { useOnChainCommit } from "@/hooks/use-on-chain-commit"
 import type {
   MigrationStep,
   Migration,
@@ -27,6 +28,8 @@ export interface UseMigrationExecuteReturn {
   error: string | null
   migrate: (params: MigrationExecuteParams) => Promise<Migration | undefined>
   reset: () => void
+  /** Solana transaction state for on-chain commitment */
+  commitTx: ReturnType<typeof useOnChainCommit>["tx"]
 }
 
 export function useMigrationExecute(): UseMigrationExecuteReturn {
@@ -34,6 +37,7 @@ export function useMigrationExecute(): UseMigrationExecuteReturn {
   const isDemoMode = useDemoModeStore((s) => s.isDemoMode)
   const { addMigration, updateMigration } = useMigrationHistoryStore()
   const { trackMigration } = useTrackEvent()
+  const { commit, tx: commitTx } = useOnChainCommit("migrate")
 
   const [status, setStatus] = useState<MigrationExecuteStatus>("idle")
   const [activeMigration, setActiveMigration] = useState<Migration | null>(null)
@@ -62,6 +66,7 @@ export function useMigrationExecute(): UseMigrationExecuteReturn {
             setStatus(step)
             setActiveMigration({ ...migration })
           },
+          onCommitTransaction: commit,
         })
 
         const validationError = service.validate(params)
@@ -107,8 +112,9 @@ export function useMigrationExecute(): UseMigrationExecuteReturn {
       updateMigration,
       trackMigration,
       activeMigration,
+      commit,
     ]
   )
 
-  return { status, activeMigration, error, migrate, reset }
+  return { status, activeMigration, error, migrate, reset, commitTx }
 }

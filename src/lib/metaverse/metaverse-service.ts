@@ -20,15 +20,21 @@ function generateId(prefix: string): string {
 export interface MetaverseServiceOptions {
   mode?: MetaverseMode
   onStepChange?: MetaverseStepChangeCallback
+  onCommitTransaction?: (id: string, data: string) => Promise<string | null>
 }
 
 export class MetaverseService {
   private mode: MetaverseMode
   private onStepChange?: MetaverseStepChangeCallback
+  private onCommitTransaction?: (
+    id: string,
+    data: string
+  ) => Promise<string | null>
 
   constructor(options: MetaverseServiceOptions = {}) {
     this.mode = options.mode ?? "simulation"
     this.onStepChange = options.onStepChange
+    this.onCommitTransaction = options.onCommitTransaction
   }
 
   validate(
@@ -225,12 +231,18 @@ export class MetaverseService {
         )
       }
 
-      // Step 2: Teleporting
+      // Step 2: Teleporting (on-chain or simulated)
       record.status = "teleporting"
       record.stepTimestamps.teleporting = Date.now()
       this.onStepChange?.("teleporting", { ...record })
 
-      if (this.mode === "simulation") {
+      if (this.onCommitTransaction) {
+        const signature = await this.onCommitTransaction(
+          record.id,
+          `${record.worldId}:${record.worldTitle}`
+        )
+        if (signature) record.txSignature = signature
+      } else if (this.mode === "simulation") {
         await new Promise((r) => setTimeout(r, SIMULATION_DELAYS.teleporting))
       }
 

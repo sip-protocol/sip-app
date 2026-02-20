@@ -7,6 +7,7 @@ import { DemoBanner } from "@/components/ui/demo-banner"
 import { PrivacyLevel } from "@sip-protocol/types"
 import { cn } from "@/lib/utils"
 import { useGenerateArt } from "@/hooks/use-generate-art"
+import { TransactionStatus } from "@/components/solana/transaction-status"
 import { ArtStyleSelector } from "./art-style-selector"
 import { ArtPrivacyToggle } from "./art-privacy-toggle"
 import { ArtStatus } from "./art-status"
@@ -32,10 +33,12 @@ export function GenerateArtForm({
 
   const {
     status,
+    activeRecord,
     generatedArt,
     error,
     generateArt,
     reset: resetGenerate,
+    commitTx,
   } = useGenerateArt()
 
   const privacyMap: Record<PrivacyOption, PrivacyLevel> = {
@@ -104,6 +107,15 @@ export function GenerateArtForm({
           </div>
         </div>
 
+        {activeRecord?.txSignature && (
+          <TransactionStatus
+            status="confirmed"
+            txSignature={activeRecord.txSignature}
+            explorerUrl={`https://solscan.io/tx/${activeRecord.txSignature}`}
+            error={null}
+          />
+        )}
+
         <button
           type="button"
           onClick={handleReset}
@@ -149,11 +161,19 @@ export function GenerateArtForm({
 
       {/* Status (during generation) */}
       {isGenerating && (
-        <div className="mb-6">
+        <div className="mb-6 space-y-3">
           <ArtStatus
             currentStep={status as "selecting_style" | "generating"}
             mode="generate"
           />
+          {commitTx.status !== "idle" && (
+            <TransactionStatus
+              status={commitTx.status}
+              txSignature={commitTx.txSignature}
+              explorerUrl={commitTx.explorerUrl}
+              error={commitTx.error}
+            />
+          )}
         </div>
       )}
 

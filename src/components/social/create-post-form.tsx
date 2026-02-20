@@ -9,6 +9,8 @@ import { cn } from "@/lib/utils"
 import { useSocialHistoryStore } from "@/stores/social-history"
 import { SocialService } from "@/lib/social/social-service"
 import { useTrackEvent } from "@/hooks/useTrackEvent"
+import { useOnChainCommit } from "@/hooks/use-on-chain-commit"
+import { TransactionStatus } from "@/components/solana/transaction-status"
 import { IdentitySelector } from "./identity-selector"
 import { SocialPrivacyToggle } from "./social-privacy-toggle"
 import { SocialStatus } from "./social-status"
@@ -40,6 +42,7 @@ export function CreatePostForm({
 
   const { profiles, addAction } = useSocialHistoryStore()
   const { trackSocial } = useTrackEvent()
+  const { commit, tx } = useOnChainCommit("post")
 
   const privacyMap: Record<PrivacyOption, PrivacyLevel> = {
     shielded: PrivacyLevel.SHIELDED,
@@ -70,6 +73,7 @@ export function CreatePostForm({
         const service = new SocialService({
           mode: "simulation",
           onStepChange: (step) => setStatus(step),
+          onCommitTransaction: commit,
         })
 
         const validationError = service.validate("post", {
@@ -112,6 +116,7 @@ export function CreatePostForm({
       addAction,
       trackSocial,
       privacyMap,
+      commit,
     ]
   )
 
@@ -135,6 +140,13 @@ export function CreatePostForm({
               : content}
           </p>
         </div>
+
+        <TransactionStatus
+          status={tx.status}
+          txSignature={tx.txSignature}
+          explorerUrl={tx.explorerUrl}
+          error={tx.error}
+        />
 
         <button
           type="button"

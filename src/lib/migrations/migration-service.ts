@@ -35,16 +35,22 @@ const STEP_ORDER: MigrationStep[] = [
 export interface MigrationServiceOptions {
   mode?: MigrationMode
   onStepChange?: MigrationStepChangeCallback
+  onCommitTransaction?: (id: string, data: string) => Promise<string | null>
 }
 
 export class MigrationService {
   private mode: MigrationMode
   private onStepChange?: MigrationStepChangeCallback
+  private onCommitTransaction?: (
+    id: string,
+    data: string
+  ) => Promise<string | null>
   private sunriseClient: SunriseClient
 
   constructor(options: MigrationServiceOptions = {}) {
     this.mode = options.mode ?? "simulation"
     this.onStepChange = options.onStepChange
+    this.onCommitTransaction = options.onCommitTransaction
     this.sunriseClient = new SunriseClient(this.mode)
   }
 
@@ -163,6 +169,18 @@ export class MigrationService {
         migration.gsolAmount = deposit.gsolAmount
         migration.carbonOffsetKg = deposit.carbonOffsetKg
         migration.depositTxHash = deposit.txHash
+
+        // On-chain commitment (optional)
+        if (this.onCommitTransaction) {
+          const signature = await this.onCommitTransaction(
+            migration.id,
+            `${migration.id}:${migration.amount}`
+          )
+          if (signature) {
+            migration.txSignature = signature
+          }
+        }
+
         if (delay > 0) {
           await new Promise((r) => setTimeout(r, delay))
         }

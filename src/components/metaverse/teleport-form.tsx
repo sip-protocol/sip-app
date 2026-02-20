@@ -7,6 +7,8 @@ import { DemoBanner } from "@/components/ui/demo-banner"
 import { PrivacyLevel } from "@sip-protocol/types"
 import { cn } from "@/lib/utils"
 import { useTeleport } from "@/hooks/use-teleport"
+import { useOnChainCommit } from "@/hooks/use-on-chain-commit"
+import { TransactionStatus } from "@/components/solana/transaction-status"
 import { MetaversePrivacyToggle } from "./metaverse-privacy-toggle"
 import { MetaverseStatus } from "./metaverse-status"
 import { StealthAvatarDisplay } from "./stealth-avatar-display"
@@ -35,13 +37,15 @@ export function TeleportForm({ onTeleported }: TeleportFormProps) {
   const [tier, setTier] = useState<AvatarTier>("explorer")
   const [privacyLevel, setPrivacyLevel] = useState<PrivacyOption>("shielded")
 
+  const { commit, tx } = useOnChainCommit("teleport")
+
   const {
     status,
     activeRecord,
     error,
     teleport,
     reset: resetTeleport,
-  } = useTeleport()
+  } = useTeleport({ onCommitTransaction: commit })
 
   const privacyMap: Record<PrivacyOption, PrivacyLevel> = {
     shielded: PrivacyLevel.SHIELDED,
@@ -95,6 +99,13 @@ export function TeleportForm({ onTeleported }: TeleportFormProps) {
           metaAddress={activeRecord.stealthMetaAddress ?? ""}
           worldTitle={activeRecord.worldTitle ?? ""}
           tier={activeRecord.tier ?? "explorer"}
+        />
+
+        <TransactionStatus
+          status={tx.status}
+          txSignature={tx.txSignature}
+          explorerUrl={tx.explorerUrl}
+          error={tx.error}
         />
 
         <button

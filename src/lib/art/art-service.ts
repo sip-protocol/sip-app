@@ -246,15 +246,21 @@ async function fetchExchangeArtNFTs(): Promise<GeneratedArt[] | null> {
 export interface ArtServiceOptions {
   mode?: ArtMode
   onStepChange?: ArtStepChangeCallback
+  onCommitTransaction?: (id: string, data: string) => Promise<string | null>
 }
 
 export class ArtService {
   private mode: ArtMode
   private onStepChange?: ArtStepChangeCallback
+  private onCommitTransaction?: (
+    id: string,
+    data: string
+  ) => Promise<string | null>
 
   constructor(options: ArtServiceOptions = {}) {
     this.mode = options.mode ?? "simulation"
     this.onStepChange = options.onStepChange
+    this.onCommitTransaction = options.onCommitTransaction
   }
 
   validate(
@@ -445,6 +451,17 @@ export class ArtService {
 
       if (this.mode === "simulation") {
         await new Promise((r) => setTimeout(r, SIMULATION_DELAYS.generating))
+      }
+
+      // On-chain commitment (optional)
+      if (this.onCommitTransaction) {
+        const signature = await this.onCommitTransaction(
+          record.id,
+          `${record.id}:${params.styleId}`
+        )
+        if (signature) {
+          record.txSignature = signature
+        }
       }
 
       // Step 3: Generated

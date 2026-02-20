@@ -8,15 +8,27 @@ vi.mock("@solana/wallet-adapter-react", () => ({
     publicKey: { toBase58: () => "MockPublicKey123" },
     signTransaction: vi.fn(),
   }),
+  useConnection: () => ({
+    connection: { rpcEndpoint: "https://api.mainnet-beta.solana.com" },
+  }),
 }))
 
 vi.mock("@/lib/art/art-service", () => {
   class MockArtService {
-    private onStepChange?: (step: string, record: Record<string, unknown>) => void
-    constructor(options: { onStepChange?: (step: string, record: Record<string, unknown>) => void } = {}) {
+    private onStepChange?: (
+      step: string,
+      record: Record<string, unknown>
+    ) => void
+    constructor(
+      options: {
+        onStepChange?: (step: string, record: Record<string, unknown>) => void
+      } = {}
+    ) {
       this.onStepChange = options.onStepChange
     }
-    validate() { return null }
+    validate() {
+      return null
+    }
     async generateArt(params: { styleId: string }) {
       const record = {
         id: "art_mock_123",
@@ -34,7 +46,13 @@ vi.mock("@/lib/art/art-service", () => {
       }
       const art = {
         id: "ga_mock_456",
-        parameters: { styleId: params.styleId, palette: ["#f43f5e"], shapes: { count: 10, types: ["circle"] }, transforms: { rotation: 0, scale: 1, opacity: 1 }, seed: "aabb" },
+        parameters: {
+          styleId: params.styleId,
+          palette: ["#f43f5e"],
+          shapes: { count: 10, types: ["circle"] },
+          transforms: { rotation: 0, scale: 1, opacity: 1 },
+          seed: "aabb",
+        },
         svgData: "<svg></svg>",
         seed: "aabb",
         stealthAddress: "sip:solana:0xmock",

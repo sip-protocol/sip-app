@@ -1,12 +1,14 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useCallback, useMemo } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
 import { useDemoModeStore } from "@/stores/demo-mode"
 import { DemoBanner } from "@/components/ui/demo-banner"
 import { PrivacyLevel } from "@sip-protocol/types"
 import { cn } from "@/lib/utils"
 import { usePlayGame } from "@/hooks/use-play-game"
+import { useOnChainCommit } from "@/hooks/use-on-chain-commit"
+import { TransactionStatus } from "@/components/solana/transaction-status"
 import { GamingPrivacyToggle } from "./gaming-privacy-toggle"
 import { GamingStatus } from "./gaming-status"
 import { DifficultyBadge } from "./difficulty-badge"
@@ -27,13 +29,20 @@ export function PlayForm({ game, onResolved }: PlayFormProps) {
   const [move, setMove] = useState("")
   const [privacyLevel, setPrivacyLevel] = useState<PrivacyOption>("shielded")
 
+  const { commit: commitOnChain, tx: commitTx } = useOnChainCommit("move")
+
+  const onCommitTransaction = useMemo(
+    () => (gameId: string, gameMove: string) => commitOnChain(gameId, gameMove),
+    [commitOnChain]
+  )
+
   const {
     status,
     activeRecord,
     error,
     playGame,
     reset: resetPlay,
-  } = usePlayGame()
+  } = usePlayGame({ onCommitTransaction })
 
   const privacyMap: Record<PrivacyOption, PrivacyLevel> = {
     shielded: PrivacyLevel.SHIELDED,
@@ -122,6 +131,17 @@ export function PlayForm({ game, onResolved }: PlayFormProps) {
             </div>
           )}
         </div>
+
+        {activeRecord.txSignature && (
+          <div className="mt-1">
+            <TransactionStatus
+              status="confirmed"
+              txSignature={activeRecord.txSignature}
+              explorerUrl={`https://solscan.io/tx/${activeRecord.txSignature}`}
+              error={null}
+            />
+          </div>
+        )}
 
         <button
           type="button"
@@ -220,6 +240,18 @@ export function PlayForm({ game, onResolved }: PlayFormProps) {
             }
             mode="play"
           />
+          {commitTx.status !== "idle" && (
+            <TransactionStatus
+              status={commitTx.status}
+              txSignature={commitTx.txSignature}
+              explorerUrl={
+                commitTx.txSignature
+                  ? `https://solscan.io/tx/${commitTx.txSignature}`
+                  : null
+              }
+              error={commitTx.error}
+            />
+          )}
         </div>
       )}
 

@@ -76,6 +76,8 @@ export interface LoyaltyActionRecord {
   // Phase 1B: Viewing key for compliant mode
   viewingKeyHash?: string
   encryptedForAuditor?: string
+  // On-chain commitment
+  txSignature?: string
   // Timestamps
   startedAt: number
   completedAt?: number

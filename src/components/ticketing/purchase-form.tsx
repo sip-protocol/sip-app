@@ -1,12 +1,13 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useCallback, useMemo } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
 import { useDemoModeStore } from "@/stores/demo-mode"
 import { DemoBanner } from "@/components/ui/demo-banner"
 import { PrivacyLevel } from "@sip-protocol/types"
 import { cn } from "@/lib/utils"
 import { usePurchaseTicket } from "@/hooks/use-purchase-ticket"
+import { useOnChainCommit } from "@/hooks/use-on-chain-commit"
 import { TicketingPrivacyToggle } from "./ticketing-privacy-toggle"
 import { TicketingStatus } from "./ticketing-status"
 import { StealthTicketDisplay } from "./stealth-ticket-display"
@@ -36,13 +37,21 @@ export function PurchaseForm({ event, onPurchased }: PurchaseFormProps) {
   const [tier, setTier] = useState<TicketTier>(event.tier)
   const [privacyLevel, setPrivacyLevel] = useState<PrivacyOption>("shielded")
 
+  const { commit: commitOnChain, tx: commitTx } = useOnChainCommit("ticket")
+
+  const onCommitTransaction = useMemo(
+    () => (eventId: string, ticketTier: string) =>
+      commitOnChain(eventId, ticketTier),
+    [commitOnChain]
+  )
+
   const {
     status,
     activeRecord,
     error,
     purchaseTicket,
     reset: resetPurchase,
-  } = usePurchaseTicket()
+  } = usePurchaseTicket({ onCommitTransaction })
 
   const privacyMap: Record<PrivacyOption, PrivacyLevel> = {
     shielded: PrivacyLevel.SHIELDED,
@@ -230,6 +239,18 @@ export function PurchaseForm({ event, onPurchased }: PurchaseFormProps) {
             }
             mode="purchase"
           />
+          {commitTx.status !== "idle" && (
+            <TransactionStatus
+              status={commitTx.status}
+              txSignature={commitTx.txSignature}
+              explorerUrl={
+                commitTx.txSignature
+                  ? `https://solscan.io/tx/${commitTx.txSignature}`
+                  : null
+              }
+              error={commitTx.error}
+            />
+          )}
         </div>
       )}
 

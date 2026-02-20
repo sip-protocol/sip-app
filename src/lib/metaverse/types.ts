@@ -62,6 +62,8 @@ export interface MetaverseActionRecord {
   encryptedForAuditor?: string
   encryptedContent?: string
   encryptionNonce?: string
+  // On-chain commitment
+  txSignature?: string
   // Timestamps
   startedAt: number
   completedAt?: number

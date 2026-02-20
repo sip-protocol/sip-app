@@ -12,6 +12,7 @@ import {
   createProtocolSource,
   createManualSource,
 } from "@/lib/migrations/dead-protocol-scanner"
+import { TransactionStatus } from "@/components/solana/transaction-status"
 import { ProtocolSelector } from "./protocol-selector"
 import { MigrationAmountInput } from "./migration-amount-input"
 import { MigrationPrivacyToggle } from "./migration-privacy-toggle"
@@ -42,6 +43,7 @@ export function MigrationWizard() {
     error,
     migrate,
     reset: resetMigration,
+    commitTx,
   } = useMigrationExecute()
   const { scanResult } = useDeadProtocolScan()
 
@@ -131,6 +133,15 @@ export function MigrationWizard() {
           )}
         </div>
 
+        {activeMigration.txSignature && (
+          <TransactionStatus
+            status="confirmed"
+            txSignature={activeMigration.txSignature}
+            explorerUrl={`https://solscan.io/tx/${activeMigration.txSignature}`}
+            error={null}
+          />
+        )}
+
         <button
           type="button"
           onClick={handleReset}
@@ -208,6 +219,14 @@ export function MigrationWizard() {
             <StealthReveal
               stealthAddress={activeMigration.stealthAddress}
               stealthMetaAddress={activeMigration.stealthMetaAddress}
+            />
+          )}
+          {commitTx.status !== "idle" && (
+            <TransactionStatus
+              status={commitTx.status}
+              txSignature={commitTx.txSignature}
+              explorerUrl={commitTx.explorerUrl}
+              error={commitTx.error}
             />
           )}
         </div>

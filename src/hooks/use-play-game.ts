@@ -23,7 +23,13 @@ export interface UsePlayGameReturn {
   reset: () => void
 }
 
-export function usePlayGame(): UsePlayGameReturn {
+export interface UsePlayGameOptions {
+  onCommitTransaction?: (gameId: string, move: string) => Promise<string | null>
+}
+
+export function usePlayGame(
+  options: UsePlayGameOptions = {}
+): UsePlayGameReturn {
   const { publicKey } = useWallet()
   const isDemoMode = useDemoModeStore((s) => s.isDemoMode)
   const { addAction, addResult } = useGamingHistoryStore()
@@ -58,6 +64,7 @@ export function usePlayGame(): UsePlayGameReturn {
             setStatus(step)
             setActiveRecord({ ...record })
           },
+          onCommitTransaction: options.onCommitTransaction,
         })
 
         const validationError = service.validate("play", params)
@@ -106,7 +113,14 @@ export function usePlayGame(): UsePlayGameReturn {
         return undefined
       }
     },
-    [publicKey, isDemoMode, addAction, addResult, trackGaming]
+    [
+      publicKey,
+      isDemoMode,
+      addAction,
+      addResult,
+      trackGaming,
+      options.onCommitTransaction,
+    ]
   )
 
   return { status, activeRecord, error, playGame, reset }

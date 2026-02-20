@@ -15,13 +15,33 @@ vi.mock("@solana/wallet-adapter-react", () => ({
 vi.mock("@/lib/governance/governance-service", () => {
   class MockGovernanceService {
     private onStepChange?: (step: string, vote: Record<string, unknown>) => void
-    constructor(options: { onStepChange?: (step: string, vote: Record<string, unknown>) => void } = {}) {
+    private onCommitTransaction?: (
+      proposalId: string,
+      choice: number,
+      weight: string
+    ) => Promise<string | null>
+    constructor(
+      options: {
+        onStepChange?: (step: string, vote: Record<string, unknown>) => void
+        onCommitTransaction?: (
+          proposalId: string,
+          choice: number,
+          weight: string
+        ) => Promise<string | null>
+      } = {}
+    ) {
       this.onStepChange = options.onStepChange
+      this.onCommitTransaction = options.onCommitTransaction
     }
     validate() {
       return null
     }
-    async commitVote(params: { proposalId: string; choice: number; weight: string; privacyLevel: string }) {
+    async commitVote(params: {
+      proposalId: string
+      choice: number
+      weight: string
+      privacyLevel: string
+    }) {
       const vote = {
         id: "vote_mock_123",
         proposalId: params.proposalId,

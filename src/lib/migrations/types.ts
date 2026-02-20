@@ -38,6 +38,7 @@ export interface Migration {
   carbonOffsetKg?: number
   withdrawTxHash?: string
   depositTxHash?: string
+  txSignature?: string
   startedAt: number
   completedAt?: number
   error?: string

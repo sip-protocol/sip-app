@@ -16,15 +16,21 @@ function generateId(prefix: string): string {
 export interface ChannelServiceOptions {
   mode?: ChannelMode
   onStepChange?: ChannelStepChangeCallback
+  onCommitTransaction?: (id: string, data: string) => Promise<string | null>
 }
 
 export class ChannelService {
   private mode: ChannelMode
   private onStepChange?: ChannelStepChangeCallback
+  private onCommitTransaction?: (
+    id: string,
+    data: string
+  ) => Promise<string | null>
 
   constructor(options: ChannelServiceOptions = {}) {
     this.mode = options.mode ?? "simulation"
     this.onStepChange = options.onStepChange
+    this.onCommitTransaction = options.onCommitTransaction
   }
 
   validate(
@@ -210,12 +216,18 @@ export class ChannelService {
         )
       }
 
-      // Step 3: Publishing
+      // Step 3: Publishing (on-chain or simulated)
       record.status = "publishing"
       record.stepTimestamps.publishing = Date.now()
       this.onStepChange?.("publishing", { ...record })
 
-      if (this.mode === "simulation") {
+      if (this.onCommitTransaction) {
+        const signature = await this.onCommitTransaction(
+          record.id,
+          `${record.dropId}:${record.title}`
+        )
+        if (signature) record.txSignature = signature
+      } else if (this.mode === "simulation") {
         await new Promise((r) => setTimeout(r, SIMULATION_DELAYS.publishing))
       }
 

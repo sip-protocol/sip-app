@@ -6,6 +6,7 @@ import { useDemoModeStore } from "@/stores/demo-mode"
 import { DeSciService } from "@/lib/desci/desci-service"
 import { useDeSciHistoryStore } from "@/stores/desci-history"
 import { useTrackEvent } from "@/hooks/useTrackEvent"
+import { useOnChainCommit } from "@/hooks/use-on-chain-commit"
 import type {
   DeSciStep,
   FundProjectParams,
@@ -23,6 +24,8 @@ export interface UseFundProjectReturn {
     params: FundProjectParams
   ) => Promise<DeSciActionRecord | undefined>
   reset: () => void
+  /** Solana transaction state for on-chain commitment */
+  commitTx: ReturnType<typeof useOnChainCommit>["tx"]
 }
 
 export function useFundProject(): UseFundProjectReturn {
@@ -30,6 +33,7 @@ export function useFundProject(): UseFundProjectReturn {
   const isDemoMode = useDemoModeStore((s) => s.isDemoMode)
   const { addAction, addContribution } = useDeSciHistoryStore()
   const { trackDeSci } = useTrackEvent()
+  const { commit, tx: commitTx } = useOnChainCommit("fund")
 
   const [status, setStatus] = useState<FundProjectStatus>("idle")
   const [activeRecord, setActiveRecord] = useState<DeSciActionRecord | null>(
@@ -61,6 +65,9 @@ export function useFundProject(): UseFundProjectReturn {
           onStepChange: (step, record) => {
             setStatus(step)
             setActiveRecord({ ...record })
+          },
+          onFundTransaction: async (projectId, tier) => {
+            return commit(projectId, tier)
           },
         })
 
@@ -103,8 +110,8 @@ export function useFundProject(): UseFundProjectReturn {
         return undefined
       }
     },
-    [publicKey, isDemoMode, addAction, addContribution, trackDeSci]
+    [publicKey, isDemoMode, addAction, addContribution, trackDeSci, commit]
   )
 
-  return { status, activeRecord, error, fundProject, reset }
+  return { status, activeRecord, error, fundProject, reset, commitTx }
 }

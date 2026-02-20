@@ -1,12 +1,13 @@
 "use client"
 
-import { useState, useCallback, useRef } from "react"
+import { useState, useCallback, useRef, useMemo } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
 import { useDemoModeStore } from "@/stores/demo-mode"
 import { DemoBanner } from "@/components/ui/demo-banner"
 import { PrivacyLevel } from "@sip-protocol/types"
 import { cn } from "@/lib/utils"
 import { usePlayGame } from "@/hooks/use-play-game"
+import { useOnChainCommit } from "@/hooks/use-on-chain-commit"
 import { GamingPrivacyToggle } from "./gaming-privacy-toggle"
 import { GamingStatus } from "./gaming-status"
 import { TransactionStatus } from "@/components/solana/transaction-status"
@@ -63,13 +64,20 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
   const [privacyLevel, setPrivacyLevel] = useState<PrivacyOption>("shielded")
   const revealTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
+  const { commit: commitOnChain } = useOnChainCommit("move")
+
+  const onCommitTransaction = useMemo(
+    () => (gameId: string, gameMove: string) => commitOnChain(gameId, gameMove),
+    [commitOnChain]
+  )
+
   const {
     status,
     activeRecord,
     error,
     playGame,
     reset: resetPlay,
-  } = usePlayGame()
+  } = usePlayGame({ onCommitTransaction })
 
   const privacyMap: Record<PrivacyOption, PrivacyLevel> = {
     shielded: PrivacyLevel.SHIELDED,

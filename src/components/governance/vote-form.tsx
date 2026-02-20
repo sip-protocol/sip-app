@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useCallback, useMemo } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
 import { useDemoModeStore } from "@/stores/demo-mode"
 import { DemoBanner } from "@/components/ui/demo-banner"
@@ -8,6 +8,8 @@ import { PrivacyLevel } from "@sip-protocol/types"
 import { cn } from "@/lib/utils"
 import { useGovernanceVote } from "@/hooks/use-governance-vote"
 import { useVoterWeight } from "@/hooks/use-voter-weight"
+import { useOnChainCommit } from "@/hooks/use-on-chain-commit"
+import { TransactionStatus } from "@/components/solana/transaction-status"
 import { DaoBadge } from "./dao-badge"
 import { ProposalStatusBadge } from "./proposal-status-badge"
 import { VoteChoiceSelector } from "./vote-choice-selector"
@@ -31,13 +33,21 @@ export function VoteForm({ proposal, onBack }: VoteFormProps) {
   const [selectedChoice, setSelectedChoice] = useState<number | null>(null)
   const [privacyLevel, setPrivacyLevel] = useState<PrivacyOption>("shielded")
 
+  const { commit: commitOnChain, tx: commitTx } = useOnChainCommit("vote")
+
+  const onCommitTransaction = useMemo(
+    () => (proposalId: string, choice: number, weight: string) =>
+      commitOnChain(proposalId, `${choice}:${weight}`),
+    [commitOnChain]
+  )
+
   const {
     status,
     activeVote,
     error,
     commitVote,
     reset: resetVote,
-  } = useGovernanceVote()
+  } = useGovernanceVote({ onCommitTransaction })
 
   const { weight } = useVoterWeight(proposal.daoId)
 
@@ -114,6 +124,17 @@ export function VoteForm({ proposal, onBack }: VoteFormProps) {
             <span>{proposal.daoName}</span>
           </div>
         </div>
+
+        {activeVote.txSignature && (
+          <div className="mt-1">
+            <TransactionStatus
+              status="confirmed"
+              txSignature={activeVote.txSignature}
+              explorerUrl={`https://solscan.io/tx/${activeVote.txSignature}`}
+              error={null}
+            />
+          </div>
+        )}
 
         <div className="flex gap-3">
           <button
@@ -195,6 +216,18 @@ export function VoteForm({ proposal, onBack }: VoteFormProps) {
             currentStep={activeVote?.status ?? "encrypting"}
             mode="commit"
           />
+          {commitTx.status !== "idle" && (
+            <TransactionStatus
+              status={commitTx.status}
+              txSignature={commitTx.txSignature}
+              explorerUrl={
+                commitTx.txSignature
+                  ? `https://solscan.io/tx/${commitTx.txSignature}`
+                  : null
+              }
+              error={commitTx.error}
+            />
+          )}
         </div>
       )}
 

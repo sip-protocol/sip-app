@@ -23,7 +23,18 @@ import {
 } from "@solana/web3.js"
 import { createMemoInstruction } from "@solana/spl-memo"
 
-export type CommitmentType = "vote" | "move" | "ticket" | "generic"
+export type CommitmentType =
+  | "vote"
+  | "move"
+  | "ticket"
+  | "post"
+  | "reward"
+  | "drop"
+  | "teleport"
+  | "fund"
+  | "art"
+  | "migrate"
+  | "generic"
 
 export interface CommitmentStoreParams {
   /** Data to commit (e.g., "proposalId:choice:weight") */

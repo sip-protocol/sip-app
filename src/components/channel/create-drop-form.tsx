@@ -7,6 +7,8 @@ import { DemoBanner } from "@/components/ui/demo-banner"
 import { PrivacyLevel } from "@sip-protocol/types"
 import { cn } from "@/lib/utils"
 import { usePublishDrop } from "@/hooks/use-publish-drop"
+import { useOnChainCommit } from "@/hooks/use-on-chain-commit"
+import { TransactionStatus } from "@/components/solana/transaction-status"
 import { ChannelPrivacyToggle } from "./channel-privacy-toggle"
 import { ChannelStatus } from "./channel-status"
 import { StealthDropDisplay } from "./stealth-drop-display"
@@ -41,13 +43,15 @@ export function CreateDropForm({ onPublished }: CreateDropFormProps) {
   const [accessTier, setAccessTier] = useState<AccessTier>("free")
   const [privacyLevel, setPrivacyLevel] = useState<PrivacyOption>("shielded")
 
+  const { commit, tx } = useOnChainCommit("drop")
+
   const {
     status,
     activeRecord,
     error,
     publishDrop,
     reset: resetPublish,
-  } = usePublishDrop()
+  } = usePublishDrop({ onCommitTransaction: commit })
 
   const privacyMap: Record<PrivacyOption, PrivacyLevel> = {
     shielded: PrivacyLevel.SHIELDED,
@@ -110,6 +114,13 @@ export function CreateDropForm({ onPublished }: CreateDropFormProps) {
           metaAddress={activeRecord.stealthMetaAddress ?? ""}
           title={activeRecord.title ?? ""}
           contentType={activeRecord.contentType ?? "article"}
+        />
+
+        <TransactionStatus
+          status={tx.status}
+          txSignature={tx.txSignature}
+          explorerUrl={tx.explorerUrl}
+          error={tx.error}
         />
 
         <button

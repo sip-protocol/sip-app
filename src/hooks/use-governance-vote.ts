@@ -23,7 +23,17 @@ export interface UseGovernanceVoteReturn {
   reset: () => void
 }
 
-export function useGovernanceVote(): UseGovernanceVoteReturn {
+export interface UseGovernanceVoteOptions {
+  onCommitTransaction?: (
+    proposalId: string,
+    choice: number,
+    weight: string
+  ) => Promise<string | null>
+}
+
+export function useGovernanceVote(
+  options: UseGovernanceVoteOptions = {}
+): UseGovernanceVoteReturn {
   const { publicKey } = useWallet()
   const isDemoMode = useDemoModeStore((s) => s.isDemoMode)
   const { addVote, updateVote, getVote } = useGovernanceHistoryStore()
@@ -56,6 +66,7 @@ export function useGovernanceVote(): UseGovernanceVoteReturn {
             setStatus(step)
             setActiveVote({ ...vote })
           },
+          onCommitTransaction: options.onCommitTransaction,
         })
 
         const validationError = service.validate(params)
@@ -87,7 +98,7 @@ export function useGovernanceVote(): UseGovernanceVoteReturn {
         return undefined
       }
     },
-    [publicKey, isDemoMode, addVote, trackVote]
+    [publicKey, isDemoMode, addVote, trackVote, options.onCommitTransaction]
   )
 
   const revealVote = useCallback(
