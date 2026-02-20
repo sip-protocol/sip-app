@@ -1,10 +1,6 @@
 "use client"
 
-import { useState } from "react"
 import Link from "next/link"
-
-type AppCategory = "hackathon" | "core" | "coming" | "bonus"
-type FilterTab = "all" | "hackathon" | "coming"
 
 interface AppCard {
   name: string
@@ -12,19 +8,17 @@ interface AppCard {
   href: string
   icon: string
   gradient: string
-  category: AppCategory
   sponsor?: string
+  comingSoon?: boolean
 }
 
-const apps: AppCard[] = [
-  // Core apps (not hackathon-specific)
+const coreApps: AppCard[] = [
   {
     name: "Private Payments",
     description: "Send and receive shielded payments with stealth addresses",
     href: "/payments",
     icon: "\u{1F4B8}",
     gradient: "from-sip-purple-500 to-sip-purple-700",
-    category: "core",
   },
   {
     name: "Privacy Score",
@@ -32,25 +26,48 @@ const apps: AppCard[] = [
     href: "/privacy-score",
     icon: "\u{1F50D}",
     gradient: "from-red-500 to-orange-500",
-    category: "core",
   },
-  // Hackathon sponsor tracks (11)
   {
     name: "Private Bridge",
     description: "Cross-chain transfers with stealth addresses",
     href: "/bridge",
     icon: "\u{1F309}",
     gradient: "from-cyan-500 to-cyan-700",
-    category: "bonus",
     sponsor: "Wormhole",
   },
+  {
+    name: "Wallet",
+    description: "Manage your viewing keys and stealth addresses",
+    href: "/wallet",
+    icon: "\u{1F45B}",
+    gradient: "from-slate-500 to-slate-700",
+    comingSoon: true,
+  },
+  {
+    name: "Private DEX",
+    description: "Swap tokens with cryptographic privacy",
+    href: "/dex",
+    icon: "\u{1F504}",
+    gradient: "from-emerald-500 to-emerald-700",
+    comingSoon: true,
+  },
+  {
+    name: "Enterprise",
+    description: "Compliance dashboard and audit tools",
+    href: "/enterprise",
+    icon: "\u{1F3E2}",
+    gradient: "from-gray-500 to-gray-700",
+    comingSoon: true,
+  },
+]
+
+const privacyApps: AppCard[] = [
   {
     name: "Private Governance",
     description: "Commit-reveal voting on DAOs with Pedersen commitments",
     href: "/governance",
     icon: "\u{1F5F3}\uFE0F",
     gradient: "from-blue-500 to-blue-700",
-    category: "hackathon",
     sponsor: "Realms",
   },
   {
@@ -59,7 +76,6 @@ const apps: AppCard[] = [
     href: "/social",
     icon: "\u{1F3AD}",
     gradient: "from-pink-500 to-pink-700",
-    category: "hackathon",
     sponsor: "Tapestry",
   },
   {
@@ -68,7 +84,6 @@ const apps: AppCard[] = [
     href: "/loyalty",
     icon: "\u{1F3C6}",
     gradient: "from-amber-500 to-amber-700",
-    category: "hackathon",
     sponsor: "Torque",
   },
   {
@@ -77,7 +92,6 @@ const apps: AppCard[] = [
     href: "/art",
     icon: "\u{1F3A8}",
     gradient: "from-rose-500 to-rose-700",
-    category: "hackathon",
     sponsor: "Exchange Art",
   },
   {
@@ -86,7 +100,6 @@ const apps: AppCard[] = [
     href: "/migrations",
     icon: "\u{1F331}",
     gradient: "from-green-500 to-green-700",
-    category: "hackathon",
     sponsor: "Sunrise Stake",
   },
   {
@@ -95,7 +108,6 @@ const apps: AppCard[] = [
     href: "/channel",
     icon: "\u{1F4E1}",
     gradient: "from-violet-500 to-violet-700",
-    category: "hackathon",
     sponsor: "DRiP",
   },
   {
@@ -104,7 +116,6 @@ const apps: AppCard[] = [
     href: "/gaming",
     icon: "\u{1F3AE}",
     gradient: "from-orange-500 to-orange-700",
-    category: "hackathon",
     sponsor: "MagicBlock",
   },
   {
@@ -113,7 +124,6 @@ const apps: AppCard[] = [
     href: "/ticketing",
     icon: "\u{1F3AB}",
     gradient: "from-teal-500 to-teal-700",
-    category: "hackathon",
     sponsor: "KYD Labs",
   },
   {
@@ -123,7 +133,6 @@ const apps: AppCard[] = [
     href: "/metaverse",
     icon: "\u{1F310}",
     gradient: "from-indigo-500 to-indigo-700",
-    category: "hackathon",
     sponsor: "Portals",
   },
   {
@@ -133,7 +142,6 @@ const apps: AppCard[] = [
     href: "/desci",
     icon: "\u{1F9EC}",
     gradient: "from-lime-500 to-lime-700",
-    category: "hackathon",
     sponsor: "BIO Protocol",
   },
   {
@@ -143,55 +151,15 @@ const apps: AppCard[] = [
     href: "/music",
     icon: "\u{1F3B5}",
     gradient: "from-pink-500 to-pink-700",
-    category: "hackathon",
     sponsor: "Audius",
-  },
-  // Coming soon
-  {
-    name: "Wallet",
-    description: "Manage your viewing keys and stealth addresses",
-    href: "/wallet",
-    icon: "\u{1F45B}",
-    gradient: "from-slate-500 to-slate-700",
-    category: "coming",
-  },
-  {
-    name: "Private DEX",
-    description: "Swap tokens with cryptographic privacy",
-    href: "/dex",
-    icon: "\u{1F504}",
-    gradient: "from-emerald-500 to-emerald-700",
-    category: "coming",
-  },
-  {
-    name: "Enterprise",
-    description: "Compliance dashboard and audit tools",
-    href: "/enterprise",
-    icon: "\u{1F3E2}",
-    gradient: "from-gray-500 to-gray-700",
-    category: "coming",
-  },
-]
-
-const FILTER_TABS: { value: FilterTab; label: string; count: number }[] = [
-  { value: "all", label: "All", count: apps.length },
-  {
-    value: "hackathon",
-    label: "Hackathon Tracks",
-    count: apps.filter((a) => a.category === "hackathon").length,
-  },
-  {
-    value: "coming",
-    label: "Coming Soon",
-    count: apps.filter((a) => a.category === "coming").length,
   },
 ]
 
 const STATS = [
-  { label: "Categories", value: "11+" },
-  { label: "Tests", value: "820+" },
+  { label: "Privacy Apps", value: "14" },
+  { label: "Tests", value: "950+" },
   { label: "Status", value: "Mainnet" },
-  { label: "Cryptography", value: "Real" },
+  { label: "SDK", value: "v0.7.3" },
 ]
 
 const HOW_IT_WORKS = [
@@ -204,10 +172,10 @@ const HOW_IT_WORKS = [
   },
   {
     icon: "\u{1F510}",
-    title: "Cryptographic Commitments",
+    title: "Pedersen Commitments",
     description: "Hidden amounts",
     detail:
-      "Pedersen commitments hide transaction amounts while remaining mathematically verifiable.",
+      "Cryptographic commitments hide transaction amounts while remaining mathematically verifiable.",
   },
   {
     icon: "\u{1F441}\uFE0F",
@@ -218,27 +186,65 @@ const HOW_IT_WORKS = [
   },
 ]
 
+function AppCardComponent({ app }: { app: AppCard }) {
+  return (
+    <Link
+      key={app.href}
+      href={app.href}
+      className={`
+        group relative overflow-hidden rounded-xl p-6
+        border border-[var(--border-default)]
+        bg-[var(--surface-primary)]
+        hover:border-[var(--border-hover)]
+        hover:shadow-lg
+        transition-all duration-200
+        ${app.comingSoon ? "opacity-60 pointer-events-none" : ""}
+      `}
+    >
+      {app.comingSoon && (
+        <span className="absolute top-3 right-3 text-xs font-medium px-2 py-1 rounded-full bg-[var(--surface-tertiary)] text-[var(--text-secondary)]">
+          Coming Soon
+        </span>
+      )}
+      <div
+        className={`
+          w-12 h-12 rounded-lg flex items-center justify-center text-2xl mb-4
+          bg-gradient-to-br ${app.gradient} text-white
+        `}
+      >
+        {app.icon}
+      </div>
+      <h3 className="text-lg font-semibold mb-2 group-hover:text-sip-purple-600 transition-colors">
+        {app.name}
+      </h3>
+      <p className="text-sm text-[var(--text-secondary)] mb-3">
+        {app.description}
+      </p>
+      {app.sponsor && (
+        <span className="inline-flex items-center text-xs font-medium text-[var(--text-tertiary)] bg-[var(--surface-secondary)] px-2 py-1 rounded-md border border-[var(--border-default)]">
+          {app.sponsor}
+        </span>
+      )}
+    </Link>
+  )
+}
+
 export default function HubPage() {
-  const [filter, setFilter] = useState<FilterTab>("all")
-
-  const filteredApps =
-    filter === "all" ? apps : apps.filter((a) => a.category === filter)
-
   return (
     <div className="flex flex-col">
       {/* Hero */}
       <section className="flex flex-col items-center px-4 pt-32 pb-16 sm:pt-40 sm:pb-20">
         <div className="text-center max-w-3xl mx-auto mb-8">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-4">
-            Privacy for Every{" "}
+            The{" "}
             <span className="bg-gradient-to-r from-sip-purple-600 to-sip-green-500 bg-clip-text text-transparent">
-              Dead Category
+              Privacy Layer
             </span>{" "}
-            on Solana
+            for Solana
           </h1>
           <p className="text-lg sm:text-xl text-[var(--text-secondary)] max-w-2xl mx-auto">
-            12 categories died because users were exposed. SIP resurrects them
-            with one privacy layer.
+            Stealth addresses, Pedersen commitments, and viewing keys — one SDK
+            for private transactions on any Solana app.
           </p>
         </div>
 
@@ -286,69 +292,29 @@ export default function HubPage() {
         </div>
       </section>
 
-      {/* Track Grid */}
+      {/* Core Applications */}
       <section className="px-4 pb-16 sm:pb-20">
         <div className="max-w-6xl mx-auto">
-          {/* Filter Tabs */}
-          <div className="flex gap-2 mb-6 overflow-x-auto scrollbar-hide">
-            {FILTER_TABS.map((tab) => (
-              <button
-                key={tab.value}
-                type="button"
-                onClick={() => setFilter(tab.value)}
-                className={`flex-shrink-0 px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-                  filter === tab.value
-                    ? "bg-sip-purple-500/20 text-sip-purple-300 border border-sip-purple-500/30"
-                    : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-secondary)]"
-                }`}
-              >
-                {tab.label}
-                <span className="ml-1.5 text-xs opacity-60">{tab.count}</span>
-              </button>
+          <h2 className="text-sm font-semibold text-[var(--text-tertiary)] uppercase tracking-wider mb-6">
+            Core Applications
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {coreApps.map((app) => (
+              <AppCardComponent key={app.href} app={app} />
             ))}
           </div>
+        </div>
+      </section>
 
-          {/* Cards Grid */}
+      {/* Privacy Applications */}
+      <section className="px-4 pb-16 sm:pb-20">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-sm font-semibold text-[var(--text-tertiary)] uppercase tracking-wider mb-6">
+            Privacy Applications
+          </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {filteredApps.map((app) => (
-              <Link
-                key={app.href}
-                href={app.href}
-                className={`
-                  group relative overflow-hidden rounded-xl p-6
-                  border border-[var(--border-default)]
-                  bg-[var(--surface-primary)]
-                  hover:border-[var(--border-hover)]
-                  hover:shadow-lg
-                  transition-all duration-200
-                  ${app.category === "coming" ? "opacity-60 pointer-events-none" : ""}
-                `}
-              >
-                {app.category === "coming" && (
-                  <span className="absolute top-3 right-3 text-xs font-medium px-2 py-1 rounded-full bg-[var(--surface-tertiary)] text-[var(--text-secondary)]">
-                    Coming Soon
-                  </span>
-                )}
-                <div
-                  className={`
-                    w-12 h-12 rounded-lg flex items-center justify-center text-2xl mb-4
-                    bg-gradient-to-br ${app.gradient} text-white
-                  `}
-                >
-                  {app.icon}
-                </div>
-                <h2 className="text-lg font-semibold mb-2 group-hover:text-sip-purple-600 transition-colors">
-                  {app.name}
-                </h2>
-                <p className="text-sm text-[var(--text-secondary)] mb-3">
-                  {app.description}
-                </p>
-                {app.sponsor && (
-                  <span className="inline-flex items-center text-xs font-medium text-[var(--text-tertiary)] bg-[var(--surface-secondary)] px-2 py-1 rounded-md border border-[var(--border-default)]">
-                    {app.sponsor}
-                  </span>
-                )}
-              </Link>
+            {privacyApps.map((app) => (
+              <AppCardComponent key={app.href} app={app} />
             ))}
           </div>
         </div>
@@ -357,13 +323,21 @@ export default function HubPage() {
       {/* Footer Banner */}
       <section className="px-4 pb-16 sm:pb-20">
         <div className="max-w-6xl mx-auto">
-          <div className="p-4 rounded-xl bg-[var(--surface-primary)] border border-[var(--border-default)] text-center">
+          <div className="p-4 rounded-xl bg-[var(--surface-primary)] border border-[var(--border-default)] text-center space-y-2">
             <p className="text-sm text-[var(--text-tertiary)]">
               Built with{" "}
               <code className="text-sip-purple-400 font-mono text-xs">
                 @sip-protocol/sdk v0.7.3
               </code>{" "}
               &mdash; Anchor program live on mainnet
+            </p>
+            <p className="text-xs text-[var(--text-tertiary)]">
+              <Link
+                href="/showcase/graveyard-2026"
+                className="text-sip-purple-400 hover:text-sip-purple-300 transition-colors"
+              >
+                Solana Graveyard Hackathon 2026 Showcase &rarr;
+              </Link>
             </p>
           </div>
         </div>
