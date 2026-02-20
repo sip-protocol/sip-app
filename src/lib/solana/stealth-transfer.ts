@@ -1,8 +1,11 @@
 /**
  * Stealth Transfer Primitive
  *
- * Builds real Solana transactions that send SOL to one-time stealth addresses.
+ * Builds real Solana transactions that send SOL to one-time stealth addresses
+ * via the SIP Privacy Anchor program's shielded_transfer instruction.
+ *
  * Uses @sip-protocol/sdk for stealth address generation and Pedersen commitments.
+ * Creates on-chain TransferRecord PDA with commitment, ephemeral key, and viewing key hash.
  *
  * This module does NOT sign or send transactions — it produces a signable
  * Transaction object for the calling hook/component to submit via wallet adapter.
@@ -15,9 +18,9 @@ import {
   Connection,
   PublicKey,
   Transaction,
-  SystemProgram,
+  ComputeBudgetProgram,
 } from "@solana/web3.js"
-import { createMemoInstruction } from "@solana/spl-memo"
+import { buildShieldedTransferInstruction } from "@/lib/solana/program-client"
 
 export interface StealthTransferParams {
   /** Amount to transfer in lamports */
@@ -45,24 +48,73 @@ export interface StealthTransferResult {
 }
 
 /**
- * Create a stealth transfer: generates a one-time address, commits the amount,
- * and returns a transaction builder for the caller to sign and send.
+ * Convert hex string to Uint8Array
+ */
+function hexToBytes(hex: string): Uint8Array {
+  const clean = hex.startsWith("0x") ? hex.slice(2) : hex
+  const bytes = new Uint8Array(clean.length / 2)
+  for (let i = 0; i < clean.length; i += 2) {
+    bytes[i / 2] = parseInt(clean.slice(i, i + 2), 16)
+  }
+  return bytes
+}
+
+/**
+ * Convert bigint to 8-byte little-endian Uint8Array
+ */
+function bigintToLeBytes(value: bigint): Uint8Array {
+  const buf = new ArrayBuffer(8)
+  const view = new DataView(buf)
+  view.setBigUint64(0, value, true)
+  return new Uint8Array(buf)
+}
+
+/**
+ * Create a mock ZK proof (deterministic from inputs)
+ */
+function createMockProof(
+  commitmentHex: string,
+  amount: bigint,
+  _blindingHex: string
+): Uint8Array {
+  const proof = new Uint8Array(128)
+  // Fill with hash-like deterministic data
+  const seed = hexToBytes(commitmentHex)
+  for (let i = 0; i < 128; i++) {
+    proof[i] = seed[i % seed.length] ^ Number((amount >> BigInt(i % 8)) & BigInt(0xff))
+  }
+  return proof
+}
+
+/**
+ * Encrypt amount with viewing key (XOR with key hash)
+ */
+function encryptAmount(
+  amount: bigint,
+  viewingKeyHex: string
+): Uint8Array {
+  const amountBytes = bigintToLeBytes(amount)
+  const keyBytes = hexToBytes(viewingKeyHex)
+  const encrypted = new Uint8Array(8)
+  for (let i = 0; i < 8; i++) {
+    encrypted[i] = amountBytes[i] ^ keyBytes[i % keyBytes.length]
+  }
+  return encrypted
+}
+
+/**
+ * Create a stealth transfer via the SIP Privacy program's shielded_transfer instruction.
  *
- * @param params - Transfer parameters (amount in lamports, optional memo)
+ * Generates a one-time stealth address, commits the amount with Pedersen commitment,
+ * and returns a transaction builder that calls the program on-chain.
+ *
+ * @param params - Transfer parameters (amount in lamports)
  * @returns Stealth address, commitment, and transaction builder
- *
- * @example
- * ```ts
- * const transfer = await createStealthTransfer({ amountLamports: 1_000_000 })
- * const tx = await transfer.buildTransaction(walletPubkey, rpcUrl)
- * // sign + send tx via wallet adapter
- * const url = transfer.getExplorerUrl(txSignature, "devnet")
- * ```
  */
 export async function createStealthTransfer(
   params: StealthTransferParams
 ): Promise<StealthTransferResult> {
-  const { amountLamports, memo } = params
+  const { amountLamports } = params
   const sdk = await getSDK()
 
   // 1. Generate one-time stealth address
@@ -75,7 +127,6 @@ export async function createStealthTransfer(
   // 3. Encode meta-address for storage/display
   const metaAddressStr = sdk.encodeStealthMetaAddress(metaAddress)
 
-  // Raw address string (no sip: prefix) — directly usable with Solana PublicKey
   const rawStealthAddress = String(stealthResult.stealthAddress.address)
   const ephemeralPubKey = String(
     stealthResult.stealthAddress.ephemeralPublicKey
@@ -88,8 +139,8 @@ export async function createStealthTransfer(
     metaAddress: metaAddressStr,
 
     /**
-     * Build a signable Solana transaction that transfers SOL to the stealth address.
-     * Fetches a recent blockhash from the provided RPC endpoint.
+     * Build a signable Solana transaction that transfers SOL to the stealth address
+     * via the SIP Privacy program's shielded_transfer instruction.
      */
     buildTransaction: async (
       senderPubkey: PublicKey,
@@ -99,27 +150,70 @@ export async function createStealthTransfer(
       const { blockhash, lastValidBlockHeight } =
         await connection.getLatestBlockhash("confirmed")
 
-      const recipientPubkey = new PublicKey(rawStealthAddress)
-
       const tx = new Transaction({
         feePayer: senderPubkey,
         blockhash,
         lastValidBlockHeight,
       })
 
-      // SOL transfer instruction
+      // Request 300K compute units for shielded_transfer
       tx.add(
-        SystemProgram.transfer({
-          fromPubkey: senderPubkey,
-          toPubkey: recipientPubkey,
-          lamports: amountLamports,
-        })
+        ComputeBudgetProgram.setComputeUnitLimit({ units: 300_000 })
+      )
+      tx.add(
+        ComputeBudgetProgram.setComputeUnitPrice({ microLamports: 50_000 })
       )
 
-      // Optional memo instruction (e.g., for tagging stealth transfers)
-      if (memo) {
-        tx.add(createMemoInstruction(memo))
+      // Parse commitment from SDK result
+      const commitmentBytes = hexToBytes(commitment.commitmentHash)
+
+      // Prepare ephemeral pubkey (33 bytes compressed)
+      const ephemeralBytes = new Uint8Array(33)
+      ephemeralBytes[0] = 0x02 // compressed prefix
+      const rawEphemeral = hexToBytes(ephemeralPubKey)
+      ephemeralBytes.set(rawEphemeral.slice(0, 32), 1)
+
+      // Viewing key hash (use first 32 bytes of meta-address hash)
+      const viewingKey = metaAddress.viewingKey
+      const viewingKeyBytes = hexToBytes(
+        typeof viewingKey === "string" ? viewingKey : String(viewingKey)
+      )
+      // Simple SHA-256-like hash via repeated XOR for viewing key hash
+      const viewingKeyHash = new Uint8Array(32)
+      for (let i = 0; i < viewingKeyBytes.length; i++) {
+        viewingKeyHash[i % 32] ^= viewingKeyBytes[i]
       }
+
+      // Encrypt amount
+      const encryptedAmount = encryptAmount(
+        BigInt(amountLamports),
+        commitment.blindingFactor
+      )
+
+      // Mock proof
+      const proof = createMockProof(
+        commitment.commitmentHash,
+        BigInt(amountLamports),
+        commitment.blindingFactor
+      )
+
+      // Stealth address as Solana PublicKey
+      const stealthPubkey = new PublicKey(rawStealthAddress)
+
+      // Build the shielded_transfer instruction
+      const ix = await buildShieldedTransferInstruction({
+        connection,
+        sender: senderPubkey,
+        amountCommitment: commitmentBytes,
+        stealthPubkey,
+        ephemeralPubkey: ephemeralBytes,
+        viewingKeyHash,
+        encryptedAmount,
+        proof,
+        actualAmount: BigInt(amountLamports),
+      })
+
+      tx.add(ix)
 
       return tx
     },

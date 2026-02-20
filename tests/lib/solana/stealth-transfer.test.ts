@@ -6,11 +6,17 @@ const mockGetLatestBlockhash = vi.fn().mockResolvedValue({
   blockhash: "mock-blockhash-" + "a".repeat(32),
   lastValidBlockHeight: 123456,
 })
-const mockTransferIx = vi.fn().mockReturnValue({
-  programId: "11111111111111111111111111111111",
+const mockSetComputeUnitLimit = vi.fn().mockReturnValue({
+  programId: "ComputeBudget111111111111111111111111111111",
+  type: "setComputeUnitLimit",
 })
-const mockCreateMemoInstruction = vi.fn().mockReturnValue({
-  programId: "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+const mockSetComputeUnitPrice = vi.fn().mockReturnValue({
+  programId: "ComputeBudget111111111111111111111111111111",
+  type: "setComputeUnitPrice",
+})
+const mockBuildShieldedTransferInstruction = vi.fn().mockResolvedValue({
+  programId: "S1PMFspo4W6BYKHWkHNF7kZ3fnqibEXg3LQjxepS9at",
+  type: "shieldedTransfer",
 })
 
 vi.mock("@solana/web3.js", () => {
@@ -49,14 +55,23 @@ vi.mock("@solana/web3.js", () => {
     PublicKey: MockPublicKey,
     Transaction: MockTransaction,
     Connection: MockConnection,
-    SystemProgram: {
-      transfer: mockTransferIx,
+    ComputeBudgetProgram: {
+      setComputeUnitLimit: mockSetComputeUnitLimit,
+      setComputeUnitPrice: mockSetComputeUnitPrice,
     },
   }
 })
 
-vi.mock("@solana/spl-memo", () => ({
-  createMemoInstruction: mockCreateMemoInstruction,
+vi.mock("@/lib/solana/program-client", () => ({
+  buildShieldedTransferInstruction: mockBuildShieldedTransferInstruction,
+}))
+
+vi.mock("@/lib/crypto-helpers", () => ({
+  createRealCommitment: vi.fn().mockResolvedValue({
+    commitmentHash: "0x" + "ab".repeat(33),
+    commitmentDisplay: "ab...ab",
+    blindingFactor: "0x" + "cd".repeat(32),
+  }),
 }))
 
 // Mock SIP SDK (same pattern as music/governance tests)
@@ -179,11 +194,11 @@ describe("buildTransaction", () => {
     )
 
     expect(tx).toBeDefined()
-    // Should have called add() for the transfer instruction
+    // Should have called add() for CU limit + CU price + shielded transfer
     expect(mockAdd).toHaveBeenCalled()
   })
 
-  it("creates a SystemProgram.transfer instruction with correct lamports", async () => {
+  it("calls buildShieldedTransferInstruction", async () => {
     const { createStealthTransfer } =
       await import("@/lib/solana/stealth-transfer")
     const { PublicKey } = await import("@solana/web3.js")
@@ -194,9 +209,10 @@ describe("buildTransaction", () => {
     )
     await result.buildTransaction(senderPubkey, "https://api.devnet.solana.com")
 
-    expect(mockTransferIx).toHaveBeenCalledWith(
+    expect(mockBuildShieldedTransferInstruction).toHaveBeenCalledWith(
       expect.objectContaining({
-        lamports: 2_000_000,
+        sender: senderPubkey,
+        actualAmount: BigInt(2_000_000),
       })
     )
   })
@@ -215,28 +231,7 @@ describe("buildTransaction", () => {
     expect(mockGetLatestBlockhash).toHaveBeenCalledWith("confirmed")
   })
 
-  it("adds memo instruction when memo is provided", async () => {
-    const { createStealthTransfer } =
-      await import("@/lib/solana/stealth-transfer")
-    const { PublicKey } = await import("@solana/web3.js")
-
-    const result = await createStealthTransfer({
-      amountLamports: 1_000_000,
-      memo: "sip:stealth-transfer",
-    })
-    const senderPubkey = new PublicKey(
-      "SenderPubkey111111111111111111111111111111"
-    )
-    await result.buildTransaction(senderPubkey, "https://api.devnet.solana.com")
-
-    expect(mockCreateMemoInstruction).toHaveBeenCalledWith(
-      "sip:stealth-transfer"
-    )
-    // add() should be called twice: transfer + memo
-    expect(mockAdd).toHaveBeenCalledTimes(2)
-  })
-
-  it("skips memo instruction when no memo provided", async () => {
+  it("adds compute budget + shielded_transfer instructions (3 calls to add)", async () => {
     const { createStealthTransfer } =
       await import("@/lib/solana/stealth-transfer")
     const { PublicKey } = await import("@solana/web3.js")
@@ -247,9 +242,13 @@ describe("buildTransaction", () => {
     )
     await result.buildTransaction(senderPubkey, "https://api.devnet.solana.com")
 
-    expect(mockCreateMemoInstruction).not.toHaveBeenCalled()
-    // add() should be called once: just the transfer
-    expect(mockAdd).toHaveBeenCalledTimes(1)
+    // CU limit + CU price + shielded transfer = 3 calls to add()
+    expect(mockAdd).toHaveBeenCalledTimes(3)
+    expect(mockSetComputeUnitLimit).toHaveBeenCalledWith({ units: 300_000 })
+    expect(mockSetComputeUnitPrice).toHaveBeenCalledWith({
+      microLamports: 50_000,
+    })
+    expect(mockBuildShieldedTransferInstruction).toHaveBeenCalled()
   })
 })
 

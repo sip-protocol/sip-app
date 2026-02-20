@@ -6,6 +6,10 @@ const {
   mockGetLatestBlockhash,
   mockTransferIx,
   mockCreateMemoInstruction,
+  mockSetComputeUnitLimit,
+  mockSetComputeUnitPrice,
+  mockBuildVerifyCommitmentInstruction,
+  mockCreateRealCommitment,
 } = vi.hoisted(() => ({
   mockAdd: vi.fn().mockReturnThis(),
   mockGetLatestBlockhash: vi.fn().mockResolvedValue({
@@ -17,6 +21,23 @@ const {
   }),
   mockCreateMemoInstruction: vi.fn().mockReturnValue({
     programId: "MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr",
+  }),
+  mockSetComputeUnitLimit: vi.fn().mockReturnValue({
+    programId: "ComputeBudget111111111111111111111111111111",
+    data: "setComputeUnitLimit",
+  }),
+  mockSetComputeUnitPrice: vi.fn().mockReturnValue({
+    programId: "ComputeBudget111111111111111111111111111111",
+    data: "setComputeUnitPrice",
+  }),
+  mockBuildVerifyCommitmentInstruction: vi.fn().mockReturnValue({
+    programId: "S1PMFspo4W6BYKHWkHNF7kZ3fnqibEXg3LQjxepS9at",
+    data: "verifyCommitment",
+  }),
+  mockCreateRealCommitment: vi.fn().mockResolvedValue({
+    commitmentHash: "0x" + "ab".repeat(33),
+    commitmentDisplay: "ab...ab",
+    blindingFactor: "0x" + "cd".repeat(32),
   }),
 }))
 
@@ -59,11 +80,23 @@ vi.mock("@solana/web3.js", () => {
     SystemProgram: {
       transfer: mockTransferIx,
     },
+    ComputeBudgetProgram: {
+      setComputeUnitLimit: mockSetComputeUnitLimit,
+      setComputeUnitPrice: mockSetComputeUnitPrice,
+    },
   }
 })
 
 vi.mock("@solana/spl-memo", () => ({
   createMemoInstruction: mockCreateMemoInstruction,
+}))
+
+vi.mock("@/lib/solana/program-client", () => ({
+  buildVerifyCommitmentInstruction: mockBuildVerifyCommitmentInstruction,
+}))
+
+vi.mock("@/lib/crypto-helpers", () => ({
+  createRealCommitment: mockCreateRealCommitment,
 }))
 
 import {
@@ -186,40 +219,6 @@ describe("buildTransaction (commitment)", () => {
     expect(tx).toBeDefined()
   })
 
-  it("creates a 1-lamport self-transfer", async () => {
-    const result = await createCommitmentStore({
-      data: "proposalId:yes:100",
-      commitmentType: "vote",
-    })
-
-    const senderPubkey = new PublicKey(
-      "Sender111111111111111111111111111111111111"
-    )
-    await result.buildTransaction(senderPubkey, "https://api.devnet.solana.com")
-
-    expect(mockTransferIx).toHaveBeenCalledWith(
-      expect.objectContaining({
-        lamports: 1,
-      })
-    )
-  })
-
-  it("adds memo with SIP-COMMIT:<type>:<hash> format", async () => {
-    const result = await createCommitmentStore({
-      data: "proposalId:yes:100",
-      commitmentType: "vote",
-    })
-
-    const senderPubkey = new PublicKey(
-      "Sender111111111111111111111111111111111111"
-    )
-    await result.buildTransaction(senderPubkey, "https://api.devnet.solana.com")
-
-    expect(mockCreateMemoInstruction).toHaveBeenCalledWith(
-      expect.stringMatching(/^SIP-COMMIT:vote:0x[0-9a-f]{64}$/)
-    )
-  })
-
   it("fetches a recent blockhash", async () => {
     const result = await createCommitmentStore({
       data: "move:rock",
@@ -234,7 +233,7 @@ describe("buildTransaction (commitment)", () => {
     expect(mockGetLatestBlockhash).toHaveBeenCalledWith("confirmed")
   })
 
-  it("adds both transfer and memo instructions (2 calls to add)", async () => {
+  it("adds compute budget + verify_commitment instructions (3 calls to add)", async () => {
     const result = await createCommitmentStore({
       data: "data",
       commitmentType: "generic",
@@ -245,7 +244,58 @@ describe("buildTransaction (commitment)", () => {
     )
     await result.buildTransaction(senderPubkey, "https://api.devnet.solana.com")
 
-    expect(mockAdd).toHaveBeenCalledTimes(2)
+    expect(mockAdd).toHaveBeenCalledTimes(3)
+  })
+
+  it("sets compute unit limit to 200_000", async () => {
+    const result = await createCommitmentStore({
+      data: "data",
+      commitmentType: "generic",
+    })
+
+    const senderPubkey = new PublicKey(
+      "Sender111111111111111111111111111111111111"
+    )
+    await result.buildTransaction(senderPubkey, "https://api.devnet.solana.com")
+
+    expect(mockSetComputeUnitLimit).toHaveBeenCalledWith({ units: 200_000 })
+  })
+
+  it("sets compute unit price to 50_000 microLamports", async () => {
+    const result = await createCommitmentStore({
+      data: "data",
+      commitmentType: "generic",
+    })
+
+    const senderPubkey = new PublicKey(
+      "Sender111111111111111111111111111111111111"
+    )
+    await result.buildTransaction(senderPubkey, "https://api.devnet.solana.com")
+
+    expect(mockSetComputeUnitPrice).toHaveBeenCalledWith({
+      microLamports: 50_000,
+    })
+  })
+
+  it("calls buildVerifyCommitmentInstruction with correct params", async () => {
+    const result = await createCommitmentStore({
+      data: "proposalId:yes:100",
+      commitmentType: "vote",
+    })
+
+    const senderPubkey = new PublicKey(
+      "Sender111111111111111111111111111111111111"
+    )
+    await result.buildTransaction(senderPubkey, "https://api.devnet.solana.com")
+
+    expect(mockBuildVerifyCommitmentInstruction).toHaveBeenCalledWith(
+      expect.objectContaining({
+        payer: senderPubkey,
+        commitment: expect.any(Uint8Array),
+        value: expect.any(BigInt),
+        blinding: expect.any(Uint8Array),
+      })
+    )
   })
 })
 

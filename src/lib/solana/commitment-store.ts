@@ -20,8 +20,22 @@ import {
   PublicKey,
   Transaction,
   SystemProgram,
+  ComputeBudgetProgram,
 } from "@solana/web3.js"
 import { createMemoInstruction } from "@solana/spl-memo"
+import { buildVerifyCommitmentInstruction } from "@/lib/solana/program-client"
+import { createRealCommitment } from "@/lib/crypto-helpers"
+
+/**
+ * Convert hex string to Uint8Array
+ */
+function hexToBytes(hex: string): Uint8Array {
+  const bytes = new Uint8Array(hex.length / 2)
+  for (let i = 0; i < hex.length; i += 2) {
+    bytes[i / 2] = parseInt(hex.slice(i, i + 2), 16)
+  }
+  return bytes
+}
 
 export type CommitmentType =
   | "vote"
@@ -118,17 +132,23 @@ function generateSalt(): string {
 export async function createCommitmentStore(
   params: CommitmentStoreParams
 ): Promise<CommitmentStoreResult> {
-  const { data, commitmentType } = params
+  const { data } = params
   const salt = generateSalt()
   const commitmentHash = await hashCommitment(data, salt)
+
+  // Create a real Pedersen commitment via the SDK for on-chain verification
+  // Hash data string to u64 value for the commitment
+  const dataHashHex = (await hashCommitment(data, "")).slice(2) // raw hex
+  const value = BigInt("0x" + dataHashHex.slice(0, 16)) // first 8 bytes → u64
+  const pedersenCommitment = await createRealCommitment(value)
 
   return {
     commitmentHash,
     salt,
 
     /**
-     * Build a signable Solana transaction that anchors the commitment on-chain.
-     * Includes a 1-lamport self-transfer + SIP-COMMIT memo.
+     * Build a signable Solana transaction that verifies the Pedersen commitment
+     * on-chain via the SIP Privacy program's verify_commitment instruction.
      */
     buildTransaction: async (
       senderPubkey: PublicKey,
@@ -144,18 +164,36 @@ export async function createCommitmentStore(
         lastValidBlockHeight,
       })
 
-      // 1-lamport self-transfer to anchor the memo
+      // Request 200K compute units for verify_commitment
       tx.add(
-        SystemProgram.transfer({
-          fromPubkey: senderPubkey,
-          toPubkey: senderPubkey,
-          lamports: 1,
-        })
+        ComputeBudgetProgram.setComputeUnitLimit({ units: 200_000 })
+      )
+      tx.add(
+        ComputeBudgetProgram.setComputeUnitPrice({ microLamports: 50_000 })
       )
 
-      // Memo instruction with commitment
-      const memo = `SIP-COMMIT:${commitmentType}:${commitmentHash}`
-      tx.add(createMemoInstruction(memo))
+      // Parse commitment bytes from the SDK result
+      const commitmentHex = pedersenCommitment.commitmentHash.startsWith(
+        "0x"
+      )
+        ? pedersenCommitment.commitmentHash.slice(2)
+        : pedersenCommitment.commitmentHash
+      const blindingHex = pedersenCommitment.blindingFactor.startsWith("0x")
+        ? pedersenCommitment.blindingFactor.slice(2)
+        : pedersenCommitment.blindingFactor
+
+      const commitmentBytes = hexToBytes(commitmentHex)
+      const blindingBytes = hexToBytes(blindingHex)
+
+      // SIP program verify_commitment instruction
+      tx.add(
+        buildVerifyCommitmentInstruction({
+          payer: senderPubkey,
+          commitment: commitmentBytes,
+          value,
+          blinding: blindingBytes,
+        })
+      )
 
       return tx
     },
