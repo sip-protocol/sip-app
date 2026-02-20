@@ -58,10 +58,10 @@ function parseTransferRecord(data: Uint8Array) {
   const encLen = view.getUint32(170, true)
   const encryptedSeed = data.slice(174, 174 + encLen)
 
-  // After Vec: timestamp (i64) + claimed (bool)
+  // After Vec: timestamp (i64, Unix seconds) + claimed (bool)
   const afterVec = 174 + encLen
   const timestampBigInt = view.getBigInt64(afterVec, true)
-  const timestamp = Number(timestampBigInt)
+  const timestamp = Number(timestampBigInt) * 1000 // Convert seconds → milliseconds
   const claimed = data[afterVec + 8] !== 0
 
   return {
@@ -109,8 +109,7 @@ export function useScanPayments(): UseScanPaymentsResult {
           {
             memcmp: {
               offset: 138,
-              bytes: Buffer.from(viewingKeyHash).toString("base64"),
-              encoding: "base64",
+              bytes: bs58.encode(viewingKeyHash),
             },
           },
         ],
