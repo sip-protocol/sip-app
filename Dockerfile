@@ -30,6 +30,9 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 ENV NODE_OPTIONS=--max-old-space-size=4096
 
+ARG NEXT_PUBLIC_RPC_URL
+ENV NEXT_PUBLIC_RPC_URL=$NEXT_PUBLIC_RPC_URL
+
 RUN pnpm build
 
 # =============================================================================

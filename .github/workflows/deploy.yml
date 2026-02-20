@@ -48,6 +48,8 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          build-args: |
+            NEXT_PUBLIC_RPC_URL=${{ secrets.NEXT_PUBLIC_RPC_URL }}
 
   deploy:
     needs: build-and-push
