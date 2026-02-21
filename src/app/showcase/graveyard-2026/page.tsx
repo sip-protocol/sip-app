@@ -60,7 +60,7 @@ const SPONSOR_TRACKS: SponsorTrack[] = [
     primitive: "Stealth social identities",
     whyDied: "Public wallets enabled doxxing",
     revival: "Stealth social identities",
-    integration: "sdk",
+    integration: "on-chain",
   },
   {
     name: "Privacy Loyalty",
@@ -71,7 +71,7 @@ const SPONSOR_TRACKS: SponsorTrack[] = [
     primitive: "Anonymous reward claims",
     whyDied: "Transparent rewards exposed behavior",
     revival: "Anonymous stealth claims",
-    integration: "live-api",
+    integration: "on-chain",
   },
   {
     name: "Privacy Art",
@@ -104,7 +104,7 @@ const SPONSOR_TRACKS: SponsorTrack[] = [
     primitive: "Encrypted NFT drops",
     whyDied: "Subscriber lists became spam targets",
     revival: "Encrypted stealth drops",
-    integration: "live-api",
+    integration: "on-chain",
   },
   {
     name: "Privacy Arena",
@@ -115,7 +115,7 @@ const SPONSOR_TRACKS: SponsorTrack[] = [
     primitive: "Commit-reveal gameplay",
     whyDied: "Transparent state enabled cheating",
     revival: "Commit-reveal gameplay",
-    integration: "enhanced-sim",
+    integration: "on-chain",
   },
   {
     name: "Privacy Ticketing",
@@ -126,7 +126,7 @@ const SPONSOR_TRACKS: SponsorTrack[] = [
     primitive: "Anti-scalping stealth tickets",
     whyDied: "Visible ownership enabled scalping",
     revival: "Anti-scalping stealth tickets",
-    integration: "live-api",
+    integration: "on-chain",
   },
   {
     name: "Privacy Metaverse",
@@ -137,7 +137,7 @@ const SPONSOR_TRACKS: SponsorTrack[] = [
     primitive: "Stealth avatar identities",
     whyDied: "Wallet-linked avatars killed anonymity",
     revival: "Stealth avatar identities",
-    integration: "enhanced-sim",
+    integration: "on-chain",
   },
   {
     name: "Privacy DeSci",
@@ -148,7 +148,7 @@ const SPONSOR_TRACKS: SponsorTrack[] = [
     primitive: "Anonymous research funding",
     whyDied: "Public funding biased peer review",
     revival: "Anonymous research funding",
-    integration: "enhanced-sim",
+    integration: "on-chain",
   },
   {
     name: "Privacy Music",
@@ -159,7 +159,7 @@ const SPONSOR_TRACKS: SponsorTrack[] = [
     primitive: "Stealth listener identity",
     whyDied: "Public listening data was monetized",
     revival: "Stealth listener identity",
-    integration: "live-api",
+    integration: "on-chain",
   },
 ]
 
@@ -192,9 +192,9 @@ const CRYPTO_PRIMITIVES = [
 
 const STATS = [
   { value: "11", label: "Sponsor Tracks" },
-  { value: "950+", label: "Tests Passing" },
+  { value: "1,060+", label: "Tests Passing" },
   { value: "Mainnet", label: "Anchor Program" },
-  { value: "v0.7.3", label: "SDK Version" },
+  { value: "11/11", label: "On-Chain" },
 ]
 
 const INTEGRATION_BADGES: Record<
@@ -641,7 +641,7 @@ function TractionSection() {
       text: "from-yellow-400 to-amber-400",
     },
     {
-      value: "950+",
+      value: "1,060+",
       label: "Tests Passing",
       detail: "SDK + React + App + 11 Tracks",
       color: "from-green-900/30 to-emerald-900/30 border-green-500/20",
