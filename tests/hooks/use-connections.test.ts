@@ -5,7 +5,32 @@ import { useConnections } from "@/hooks/use-connections"
 vi.mock("@solana/wallet-adapter-react", () => ({
   useWallet: () => ({
     publicKey: { toBase58: () => "MockPublicKey123" },
+    connected: false,
     signTransaction: vi.fn(),
+    sendTransaction: vi.fn(),
+  }),
+  useConnection: () => ({
+    connection: {
+      rpcEndpoint: "https://api.mainnet-beta.solana.com",
+      getLatestBlockhash: vi.fn().mockResolvedValue({
+        blockhash: "mock-blockhash",
+        lastValidBlockHeight: 12345,
+      }),
+    },
+  }),
+}))
+
+vi.mock("@/hooks/use-on-chain-commit", () => ({
+  useOnChainCommit: () => ({
+    commit: vi.fn().mockResolvedValue(null),
+    tx: {
+      status: "idle",
+      txSignature: null,
+      explorerUrl: null,
+      error: null,
+      sendTransaction: vi.fn().mockResolvedValue(null),
+      reset: vi.fn(),
+    },
   }),
 }))
 

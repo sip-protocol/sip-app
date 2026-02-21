@@ -6,7 +6,29 @@ import { useMintNFT } from "@/hooks/use-mint-nft"
 vi.mock("@solana/wallet-adapter-react", () => ({
   useWallet: () => ({
     publicKey: { toBase58: () => "MockPublicKey123" },
+    connected: false,
     signTransaction: vi.fn(),
+    sendTransaction: vi.fn(),
+  }),
+  useConnection: () => ({
+    connection: {
+      rpcEndpoint: "https://api.mainnet-beta.solana.com",
+      getLatestBlockhash: vi.fn().mockResolvedValue({
+        blockhash: "mock-blockhash",
+        lastValidBlockHeight: 12345,
+      }),
+    },
+  }),
+}))
+
+vi.mock("@/hooks/use-solana-transaction", () => ({
+  useSolanaTransaction: () => ({
+    status: "idle",
+    txSignature: null,
+    explorerUrl: null,
+    error: null,
+    sendTransaction: vi.fn().mockResolvedValue(null),
+    reset: vi.fn(),
   }),
 }))
 
