@@ -325,4 +325,8 @@ export class DripReader {
     const drops = await this.getDrops()
     return drops.filter((d) => d.accessTier === tier)
   }
+
+  clearCache(): void {
+    cache.clear()
+  }
 }

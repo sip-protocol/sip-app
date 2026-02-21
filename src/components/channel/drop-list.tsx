@@ -1,9 +1,10 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { cn } from "@/lib/utils"
 import { DropCard } from "./drop-card"
-import { SAMPLE_DROPS, SAMPLE_SUBSCRIPTIONS } from "@/lib/channel/constants"
+import { SAMPLE_SUBSCRIPTIONS } from "@/lib/channel/constants"
+import { DripReader } from "@/lib/channel/drip-reader"
 import type { Drop, AccessTier } from "@/lib/channel/types"
 
 type DropFilter = "all" | AccessTier
@@ -21,14 +22,47 @@ interface DropListProps {
 
 export function DropList({ onSubscribe }: DropListProps) {
   const [filter, setFilter] = useState<DropFilter>("all")
+  const [allDrops, setAllDrops] = useState<Drop[]>([])
+  const [loading, setLoading] = useState(true)
+  const [isLive, setIsLive] = useState(false)
+
+  useEffect(() => {
+    let cancelled = false
+    async function loadDrops() {
+      setLoading(true)
+      const reader = new DripReader("drip")
+      const drops = await reader.getDrops()
+      if (!cancelled) {
+        setAllDrops(drops)
+        // If any drop id looks like a Solana address (44 chars), it's live data
+        setIsLive(drops.some((d) => d.id.length >= 32))
+        setLoading(false)
+      }
+    }
+    loadDrops()
+    return () => { cancelled = true }
+  }, [])
 
   const drops =
     filter === "all"
-      ? SAMPLE_DROPS
-      : SAMPLE_DROPS.filter((d) => d.accessTier === filter)
+      ? allDrops
+      : allDrops.filter((d) => d.accessTier === filter)
 
   return (
     <div>
+      {/* Mode indicator */}
+      <div className="flex items-center gap-2 mb-4">
+        <div
+          className={cn(
+            "w-2 h-2 rounded-full",
+            isLive ? "bg-emerald-400 animate-pulse" : "bg-gray-500"
+          )}
+        />
+        <span className="text-xs text-[var(--text-tertiary)]">
+          {isLive ? "Live from Helius DAS" : "Simulation"}
+        </span>
+      </div>
+
       {/* Filter tabs */}
       <div className="flex gap-2 mb-6 overflow-x-auto scrollbar-hide">
         {FILTER_TABS.map((tab) => (
@@ -48,8 +82,21 @@ export function DropList({ onSubscribe }: DropListProps) {
         ))}
       </div>
 
-      {/* Drop grid */}
-      {drops.length === 0 ? (
+      {/* Loading skeleton */}
+      {loading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {Array.from({ length: 4 }, (_, i) => (
+            <div
+              key={i}
+              className="bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-xl p-6 animate-pulse"
+            >
+              <div className="h-4 bg-[var(--surface-secondary)] rounded w-3/4 mb-3" />
+              <div className="h-3 bg-[var(--surface-secondary)] rounded w-full mb-2" />
+              <div className="h-3 bg-[var(--surface-secondary)] rounded w-2/3" />
+            </div>
+          ))}
+        </div>
+      ) : drops.length === 0 ? (
         <div className="bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-xl p-12 text-center">
           <p className="text-4xl mb-4">{"\u{1F4E1}"}</p>
           <h3 className="text-lg font-semibold mb-2">No drops found</h3>
