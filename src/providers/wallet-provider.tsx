@@ -8,9 +8,15 @@ import {
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui"
 import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets"
 import { clusterApiUrl } from "@solana/web3.js"
+import { useWalletAccountChange } from "@/hooks/use-wallet-account-change"
 
 // Import wallet adapter styles
 import "@solana/wallet-adapter-react-ui/styles.css"
+
+function WalletAccountChangeListener() {
+  useWalletAccountChange()
+  return null
+}
 
 interface WalletProviderProps {
   children: React.ReactNode
@@ -28,7 +34,10 @@ export function WalletProvider({ children }: WalletProviderProps) {
   return (
     <ConnectionProvider endpoint={endpoint}>
       <SolanaWalletProvider wallets={wallets} autoConnect>
-        <WalletModalProvider>{children}</WalletModalProvider>
+        <WalletModalProvider>
+          <WalletAccountChangeListener />
+          {children}
+        </WalletModalProvider>
       </SolanaWalletProvider>
     </ConnectionProvider>
   )
