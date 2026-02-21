@@ -6,6 +6,7 @@ import { PublicKey } from "@solana/web3.js"
 import { useStealthKeys } from "./use-stealth-keys"
 import { buildClaimTransaction } from "@/lib/solana/claim-transfer"
 import type { DetectedPayment } from "./use-scan-payments"
+import { usePaymentHistoryStore } from "@/stores/payment-history"
 
 interface UseClaimTransferResult {
   /** Claim a detected stealth payment, returns tx signature or null */
@@ -62,6 +63,17 @@ export function useClaimTransfer(): UseClaimTransferResult {
 
         // Wait for confirmation
         await connection.confirmTransaction(signature, "confirmed")
+
+        // Record in payment history
+        usePaymentHistoryStore.getState().addClaimed({
+          walletAddress: publicKey.toBase58(),
+          transferRecordPda: payment.transferRecordPda,
+          amount: payment.amount,
+          token: payment.token,
+          txSignature: signature,
+          stealthAddress: payment.stealthAddress,
+          timestamp: Date.now(),
+        })
 
         return signature
       } catch (err) {

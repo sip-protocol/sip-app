@@ -8,6 +8,7 @@ import type { Token } from "@/components/payments/amount-input"
 import type { TxStatus } from "@/components/payments/transaction-status"
 import { createStealthTransfer } from "@/lib/solana/stealth-transfer"
 import { useSolanaTransaction } from "@/hooks/use-solana-transaction"
+import { usePaymentHistoryStore } from "@/stores/payment-history"
 
 interface SendPaymentParams {
   recipient: string
@@ -118,6 +119,18 @@ export function useSendPayment(): UseSendPaymentResult {
         }
 
         setTxHash(signature)
+
+        // Record in payment history
+        usePaymentHistoryStore.getState().addSent({
+          walletAddress: publicKey.toBase58(),
+          recipient: params.recipient,
+          amount: amountSol,
+          token: params.token,
+          txSignature: signature,
+          stealthAddress: transfer.stealthAddress,
+          timestamp: Date.now(),
+        })
+
         setStatus("confirmed")
 
         console.log("Shielded payment sent:", {
