@@ -6,7 +6,6 @@ import {
   WalletProvider as SolanaWalletProvider,
 } from "@solana/wallet-adapter-react"
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui"
-import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets"
 import { clusterApiUrl } from "@solana/web3.js"
 import { useWalletAccountChange } from "@/hooks/use-wallet-account-change"
 
@@ -29,7 +28,7 @@ export function WalletProvider({ children }: WalletProviderProps) {
     []
   )
 
-  const wallets = useMemo(() => [new PhantomWalletAdapter()], [])
+  const wallets = useMemo(() => [], [])
 
   return (
     <ConnectionProvider endpoint={endpoint}>
