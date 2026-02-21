@@ -100,6 +100,7 @@ export function PaymentList({
       txHash: string
       claimed?: boolean
       recipient?: string
+      stealthAddress?: string
     }
 
     let combined: Transaction[] = []
@@ -116,6 +117,7 @@ export function PaymentList({
           status: p.claimed ? "claimed" : "pending",
           txHash: p.transferRecordPda ?? p.id,
           claimed: p.claimed,
+          stealthAddress: p.stealthAddress,
         }))
       )
     }
@@ -450,7 +452,11 @@ export function PaymentList({
                   />
                 ) : (
                   <a
-                    href={`https://solscan.io/tx/${tx.txHash}`}
+                    href={
+                      tx.type === "received" && tx.stealthAddress
+                        ? `https://solscan.io/account/${tx.stealthAddress}`
+                        : `https://solscan.io/tx/${tx.txHash}`
+                    }
                     target="_blank"
                     rel="noopener noreferrer"
                     className="px-3 py-1.5 text-xs font-medium text-[var(--text-secondary)] hover:text-sip-purple-400 transition-colors"
