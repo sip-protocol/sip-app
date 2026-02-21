@@ -1,0 +1,21 @@
+{
+  "name": "SIP Protocol",
+  "short_name": "SIP",
+  "description": "Privacy middleware for Web3 — stealth addresses, private payments, viewing keys",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#7c3aed",
+  "icons": [
+    {
+      "src": "/logo-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/logo-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
