@@ -8,15 +8,30 @@ import type {
 import { SIMULATION_DELAYS, getDrop } from "./constants"
 import { generateChannelStealthAddress } from "./stealth-channel"
 import { encryptForViewingKey, encryptContent } from "@/lib/crypto-helpers"
+import type { Transaction } from "@solana/web3.js"
 
 function generateId(prefix: string): string {
   return `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`
 }
 
+/**
+ * Callback to build a Bubblegum cNFT mint transaction for drop content.
+ * Returns a signable Transaction to be sent via wallet adapter.
+ */
+export type BuildCNFTMintFn = (params: {
+  recipient: string
+  name: string
+  metadataUri: string
+}) => Promise<Transaction | null>
+
 export interface ChannelServiceOptions {
   mode?: ChannelMode
   onStepChange?: ChannelStepChangeCallback
   onCommitTransaction?: (id: string, data: string) => Promise<string | null>
+  /** Build a Bubblegum cNFT mint transaction (provided by hook when tree is configured) */
+  buildCNFTMint?: BuildCNFTMintFn
+  /** Send a signed transaction, returns signature or null */
+  onSendTransaction?: (tx: Transaction) => Promise<string | null>
 }
 
 export class ChannelService {
@@ -26,11 +41,15 @@ export class ChannelService {
     id: string,
     data: string
   ) => Promise<string | null>
+  private buildCNFTMint?: BuildCNFTMintFn
+  private onSendTransaction?: (tx: Transaction) => Promise<string | null>
 
   constructor(options: ChannelServiceOptions = {}) {
     this.mode = options.mode ?? "simulation"
     this.onStepChange = options.onStepChange
     this.onCommitTransaction = options.onCommitTransaction
+    this.buildCNFTMint = options.buildCNFTMint
+    this.onSendTransaction = options.onSendTransaction
   }
 
   validate(
@@ -216,12 +235,30 @@ export class ChannelService {
         )
       }
 
-      // Step 3: Publishing (on-chain or simulated)
+      // Step 3: Publishing — build and send Bubblegum cNFT mint if configured
       record.status = "publishing"
       record.stepTimestamps.publishing = Date.now()
       this.onStepChange?.("publishing", { ...record })
 
-      if (this.onCommitTransaction) {
+      const metadataUri = `https://arweave.net/${generateId("drop").replace(/_/g, "")}`
+
+      // Try real Bubblegum cNFT mint when builder + sender + stealth address are available
+      if (
+        this.buildCNFTMint &&
+        this.onSendTransaction &&
+        record.stealthAddress
+      ) {
+        const mintTx = await this.buildCNFTMint({
+          recipient: record.stealthAddress,
+          name: params.title,
+          metadataUri,
+        })
+
+        if (mintTx) {
+          const txSignature = await this.onSendTransaction(mintTx)
+          if (txSignature) record.txSignature = txSignature
+        }
+      } else if (this.onCommitTransaction) {
         const signature = await this.onCommitTransaction(
           record.id,
           `${record.dropId}:${record.title}`

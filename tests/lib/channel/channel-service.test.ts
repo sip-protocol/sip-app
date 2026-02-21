@@ -6,6 +6,7 @@ import type {
   SubscribeParams,
   PublishDropParams,
 } from "@/lib/channel/types"
+import { Transaction } from "@solana/web3.js"
 
 // Mock the SDK to avoid WASM/crypto deps in tests
 vi.mock("@sip-protocol/sdk", () => ({
@@ -166,6 +167,164 @@ describe("ChannelService", () => {
       expect(result.stepTimestamps.generating_stealth).toBeDefined()
       expect(result.stepTimestamps.publishing).toBeDefined()
       expect(result.stepTimestamps.published).toBeDefined()
+    })
+  })
+
+  describe("publishDrop (cNFT via Bubblegum)", () => {
+    it("calls buildCNFTMint with correct stealth recipient", async () => {
+      const mockTx = new Transaction()
+      const buildCNFTMint = vi.fn().mockResolvedValue(mockTx)
+      const onSendTransaction = vi.fn().mockResolvedValue("mock-drop-sig-abc123")
+
+      const service = new ChannelService({
+        mode: "simulation",
+        buildCNFTMint,
+        onSendTransaction,
+      })
+
+      const result = await service.publishDrop(validPublishParams)
+
+      expect(buildCNFTMint).toHaveBeenCalledOnce()
+      expect(buildCNFTMint).toHaveBeenCalledWith(
+        expect.objectContaining({
+          recipient: result.stealthAddress,
+          name: "Test Drop",
+        })
+      )
+      expect(onSendTransaction).toHaveBeenCalledWith(mockTx)
+      expect(result.txSignature).toBe("mock-drop-sig-abc123")
+    })
+
+    it("falls back when buildCNFTMint returns null", async () => {
+      const buildCNFTMint = vi.fn().mockResolvedValue(null)
+      const onSendTransaction = vi.fn()
+
+      const service = new ChannelService({
+        mode: "simulation",
+        buildCNFTMint,
+        onSendTransaction,
+      })
+
+      const result = await service.publishDrop(validPublishParams)
+
+      expect(buildCNFTMint).toHaveBeenCalledOnce()
+      expect(onSendTransaction).not.toHaveBeenCalled()
+      expect(result.status).toBe("published")
+      expect(result.txSignature).toBeUndefined()
+    })
+
+    it("falls back when no stealth address available", async () => {
+      // Override stealth generation to return empty address
+      const buildCNFTMint = vi.fn()
+      const onSendTransaction = vi.fn()
+
+      // When only buildCNFTMint is set (no onSendTransaction), falls back
+      const service = new ChannelService({
+        mode: "simulation",
+        buildCNFTMint,
+      })
+
+      const result = await service.publishDrop(validPublishParams)
+
+      // buildCNFTMint not called because onSendTransaction is missing
+      expect(buildCNFTMint).not.toHaveBeenCalled()
+      expect(onSendTransaction).not.toHaveBeenCalled()
+      expect(result.status).toBe("published")
+    })
+
+    it("sets txSignature on successful cNFT mint", async () => {
+      const mockTx = new Transaction()
+      const buildCNFTMint = vi.fn().mockResolvedValue(mockTx)
+      const onSendTransaction = vi.fn().mockResolvedValue("drop-cnft-sig-xyz")
+
+      const service = new ChannelService({
+        mode: "simulation",
+        buildCNFTMint,
+        onSendTransaction,
+      })
+
+      const result = await service.publishDrop(validPublishParams)
+
+      expect(result.txSignature).toBe("drop-cnft-sig-xyz")
+      expect(result.status).toBe("published")
+      expect(result.stealthAddress).toBeTruthy()
+    })
+
+    it("does not set txSignature when onSendTransaction returns null", async () => {
+      const mockTx = new Transaction()
+      const buildCNFTMint = vi.fn().mockResolvedValue(mockTx)
+      const onSendTransaction = vi.fn().mockResolvedValue(null)
+
+      const service = new ChannelService({
+        mode: "simulation",
+        buildCNFTMint,
+        onSendTransaction,
+      })
+
+      const result = await service.publishDrop(validPublishParams)
+
+      expect(buildCNFTMint).toHaveBeenCalledOnce()
+      expect(onSendTransaction).toHaveBeenCalledWith(mockTx)
+      expect(result.txSignature).toBeUndefined()
+    })
+
+    it("passes drop title as cNFT name", async () => {
+      const buildCNFTMint = vi.fn().mockResolvedValue(new Transaction())
+      const onSendTransaction = vi.fn().mockResolvedValue("sig-title-test")
+
+      const service = new ChannelService({
+        mode: "simulation",
+        buildCNFTMint,
+        onSendTransaction,
+      })
+
+      const customParams: PublishDropParams = {
+        ...validPublishParams,
+        title: "My Alpha Drop",
+      }
+
+      await service.publishDrop(customParams)
+
+      expect(buildCNFTMint).toHaveBeenCalledWith(
+        expect.objectContaining({
+          name: "My Alpha Drop",
+        })
+      )
+    })
+
+    it("includes metadataUri in cNFT mint call", async () => {
+      const buildCNFTMint = vi.fn().mockResolvedValue(new Transaction())
+      const onSendTransaction = vi.fn().mockResolvedValue("sig-uri-test")
+
+      const service = new ChannelService({
+        mode: "simulation",
+        buildCNFTMint,
+        onSendTransaction,
+      })
+
+      await service.publishDrop(validPublishParams)
+
+      expect(buildCNFTMint).toHaveBeenCalledWith(
+        expect.objectContaining({
+          metadataUri: expect.stringContaining("https://arweave.net/"),
+        })
+      )
+    })
+
+    it("records step timestamps with cNFT flow", async () => {
+      const service = new ChannelService({
+        mode: "simulation",
+        buildCNFTMint: vi.fn().mockResolvedValue(new Transaction()),
+        onSendTransaction: vi.fn().mockResolvedValue("sig-timestamps"),
+      })
+
+      const result = await service.publishDrop(validPublishParams)
+
+      expect(result.stepTimestamps.encrypting_content).toBeDefined()
+      expect(result.stepTimestamps.generating_stealth).toBeDefined()
+      expect(result.stepTimestamps.publishing).toBeDefined()
+      expect(result.stepTimestamps.published).toBeDefined()
+      expect(result.status).toBe("published")
     })
   })
 })
