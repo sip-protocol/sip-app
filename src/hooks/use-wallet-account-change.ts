@@ -12,11 +12,11 @@ export function useWalletAccountChange() {
   const prevKeyRef = useRef<string | null>(null)
 
   useEffect(() => {
-    const phantom = (window as any)?.phantom?.solana
+    const phantom = (window as { phantom?: { solana?: { on: (event: string, cb: (pk: { toBase58?: () => string } | null) => void) => void; removeListener: (event: string, cb: (pk: { toBase58?: () => string } | null) => void) => void } } })?.phantom?.solana
 
     if (!phantom || !wallet) return
 
-    const handleAccountChanged = (newPublicKey: any) => {
+    const handleAccountChanged = (newPublicKey: { toBase58?: () => string } | null) => {
       const newKey = newPublicKey?.toBase58?.() ?? null
       const prevKey = prevKeyRef.current
 
