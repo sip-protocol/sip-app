@@ -164,13 +164,17 @@ export class GamingService {
       this.onStepChange?.("revealing", { ...record })
 
       if (this.onRevealTransaction) {
-        const revealSig = await this.onRevealTransaction(
-          params.gameId,
-          params.move,
-          commitment.blindingFactor
-        )
-        if (revealSig) {
-          record.revealTxSignature = revealSig
+        try {
+          const revealSig = await this.onRevealTransaction(
+            params.gameId,
+            params.move,
+            commitment.blindingFactor
+          )
+          if (revealSig) {
+            record.revealTxSignature = revealSig
+          }
+        } catch {
+          // Non-fatal: reveal tx failure shouldn't block game resolution
         }
       } else if (this.mode === "simulation") {
         await new Promise((r) => setTimeout(r, SIMULATION_DELAYS.revealing))
