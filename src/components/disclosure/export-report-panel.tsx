@@ -1,41 +1,50 @@
 "use client"
 
-import { useState, useCallback } from "react"
-import type { EncryptedTransaction } from "@sip-protocol/types"
-import { useViewingKeyDisclosure } from "@/hooks/use-viewing-key-disclosure"
+import { useState, useCallback, useMemo } from "react"
+import { useWallet } from "@solana/wallet-adapter-react"
+import { usePaymentHistoryStore } from "@/stores/payment-history"
 
 type ExportFormat = "json" | "csv"
 
-interface ExportReportPanelProps {
-  encryptedTransactions?: EncryptedTransaction[]
-}
-
 /**
- * ExportReportPanel - Panel for generating compliance reports
+ * ExportReportPanel - Panel for generating compliance reports from payment history
  *
  * Features:
- * - Select viewing key
  * - Date range selection
- * - Export format selection
- * - Generate and download report
+ * - Export format selection (JSON/CSV)
+ * - Generate and download report from real payment history
  */
-export function ExportReportPanel({
-  encryptedTransactions = [],
-}: ExportReportPanelProps) {
-  const { keys, decryptTransaction } = useViewingKeyDisclosure()
+export function ExportReportPanel() {
+  const { publicKey } = useWallet()
+  const walletAddress = publicKey?.toBase58() ?? ""
+  const allEntries = usePaymentHistoryStore((s) => s.getAll(walletAddress))
 
-  const [selectedKeyHash, setSelectedKeyHash] = useState<string>("")
   const [startDate, setStartDate] = useState("")
   const [endDate, setEndDate] = useState("")
   const [format, setFormat] = useState<ExportFormat>("json")
   const [isGenerating, setIsGenerating] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const selectedKey = keys.find((k) => k.viewingKey.hash === selectedKeyHash)
+  const filteredEntries = useMemo(() => {
+    let entries = allEntries
+    if (startDate) {
+      const startTs = new Date(startDate).getTime()
+      entries = entries.filter((e) => e.timestamp >= startTs)
+    }
+    if (endDate) {
+      const endTs = new Date(endDate).getTime() + 24 * 60 * 60 * 1000
+      entries = entries.filter((e) => e.timestamp < endTs)
+    }
+    return entries
+  }, [allEntries, startDate, endDate])
 
-  const handleGenerateReport = useCallback(async () => {
-    if (!selectedKey) {
-      setError("Please select a viewing key")
+  const handleGenerateReport = useCallback(() => {
+    if (!walletAddress) {
+      setError("Wallet not connected")
+      return
+    }
+    if (filteredEntries.length === 0) {
+      setError("No transactions in the selected range")
       return
     }
 
@@ -43,66 +52,49 @@ export function ExportReportPanel({
     setError(null)
 
     try {
-      // Decrypt all transactions with the selected key
-      const decryptedTxs = encryptedTransactions
-        .map((encrypted) => {
-          const result = decryptTransaction(selectedKey.viewingKey, encrypted)
-          if (result.success && result.data) {
-            return result.data
-          }
-          return null
-        })
-        .filter(Boolean)
+      const transactions = filteredEntries.map((e) => ({
+        timestamp: new Date(e.timestamp).toISOString(),
+        type: e.type,
+        amount: e.amount,
+        token: e.token,
+        txSignature: e.txSignature,
+        stealthAddress: e.stealthAddress,
+      }))
 
-      // Filter by date range if specified
-      let filteredTxs = decryptedTxs
-      if (startDate) {
-        const startTs = new Date(startDate).getTime()
-        filteredTxs = filteredTxs.filter((tx) => tx && tx.timestamp >= startTs)
-      }
-      if (endDate) {
-        const endTs = new Date(endDate).getTime() + 24 * 60 * 60 * 1000 // End of day
-        filteredTxs = filteredTxs.filter((tx) => tx && tx.timestamp < endTs)
-      }
-
-      // Generate report
-      const report = {
-        metadata: {
-          generatedAt: new Date().toISOString(),
-          viewingKeyHash: selectedKey.viewingKey.hash,
-          viewingKeyLabel: selectedKey.label,
-          dateRange: {
-            start: startDate || "all",
-            end: endDate || "all",
-          },
-          totalTransactions: filteredTxs.length,
-          format,
-        },
-        transactions: filteredTxs,
-      }
-
-      // Download report
       let content: string
       let filename: string
       let mimeType: string
 
       if (format === "json") {
+        const report = {
+          metadata: {
+            generatedAt: new Date().toISOString(),
+            walletAddress,
+            dateRange: {
+              start: startDate || "all",
+              end: endDate || "all",
+            },
+            totalTransactions: transactions.length,
+            format: "json",
+          },
+          transactions,
+        }
         content = JSON.stringify(report, null, 2)
         filename = `sip-audit-report-${Date.now()}.json`
         mimeType = "application/json"
       } else {
-        // CSV format
-        const headers = ["timestamp", "sender", "recipient", "amount"]
-        const rows = filteredTxs.map((tx) => {
-          if (!tx) return ""
-          return [
-            new Date(tx.timestamp).toISOString(),
-            tx.sender,
-            tx.recipient,
+        const headers = "timestamp,type,amount,token,txSignature,stealthAddress"
+        const rows = transactions.map((tx) =>
+          [
+            tx.timestamp,
+            tx.type,
             tx.amount,
+            tx.token,
+            tx.txSignature,
+            tx.stealthAddress,
           ].join(",")
-        })
-        content = [headers.join(","), ...rows].join("\n")
+        )
+        content = [headers, ...rows].join("\n")
         filename = `sip-audit-report-${Date.now()}.csv`
         mimeType = "text/csv"
       }
@@ -121,14 +113,20 @@ export function ExportReportPanel({
     } finally {
       setIsGenerating(false)
     }
-  }, [
-    selectedKey,
-    encryptedTransactions,
-    startDate,
-    endDate,
-    format,
-    decryptTransaction,
-  ])
+  }, [walletAddress, filteredEntries, startDate, endDate, format])
+
+  if (!publicKey) {
+    return (
+      <div className="text-center py-12">
+        <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[var(--surface-secondary)] flex items-center justify-center">
+          <span className="text-3xl">🔗</span>
+        </div>
+        <p className="text-[var(--text-secondary)]">
+          Connect wallet to export report
+        </p>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">
@@ -139,38 +137,11 @@ export function ExportReportPanel({
           <div>
             <p className="font-medium text-amber-400">Generate Audit Report</p>
             <p className="text-sm text-[var(--text-secondary)] mt-1">
-              Export decrypted transaction data for compliance audits, tax
+              Export your stealth payment history for compliance audits, tax
               reports, or internal accounting.
             </p>
           </div>
         </div>
-      </div>
-
-      {/* Select Viewing Key */}
-      <div className="space-y-3">
-        <label className="block text-sm font-medium">Select Viewing Key</label>
-        {keys.length > 0 ? (
-          <select
-            value={selectedKeyHash}
-            onChange={(e) => setSelectedKeyHash(e.target.value)}
-            className="w-full px-4 py-3 rounded-xl border border-[var(--border-default)] bg-[var(--surface-primary)] text-sm focus:outline-none focus:border-sip-purple-500"
-          >
-            <option value="">Choose a viewing key...</option>
-            {keys.map((key) => (
-              <option key={key.viewingKey.hash} value={key.viewingKey.hash}>
-                {key.label || `Key ${key.viewingKey.hash.slice(0, 8)}`} - Path:{" "}
-                {key.viewingKey.path}
-              </option>
-            ))}
-          </select>
-        ) : (
-          <div className="p-4 rounded-xl border border-[var(--border-default)] text-center">
-            <p className="text-[var(--text-secondary)]">
-              No viewing keys available. Generate one in the &quot;Share
-              Key&quot; tab first.
-            </p>
-          </div>
-        )}
       </div>
 
       {/* Date Range */}
@@ -238,23 +209,23 @@ export function ExportReportPanel({
       </div>
 
       {/* Transaction Preview */}
-      {encryptedTransactions.length > 0 && (
-        <div className="p-4 rounded-xl border border-[var(--border-default)] bg-[var(--surface-secondary)]">
+      <div className="p-4 rounded-xl border border-[var(--border-default)] bg-[var(--surface-secondary)]">
+        {allEntries.length > 0 ? (
           <p className="text-sm">
-            <span className="font-medium">{encryptedTransactions.length}</span>{" "}
-            encrypted transactions available for export
+            <span className="font-medium">{filteredEntries.length}</span>{" "}
+            transaction{filteredEntries.length !== 1 ? "s" : ""} matching
+            {startDate || endDate ? " date range" : ""}{" "}
+            <span className="text-[var(--text-tertiary)]">
+              ({allEntries.length} total)
+            </span>
           </p>
-        </div>
-      )}
-
-      {encryptedTransactions.length === 0 && (
-        <div className="p-4 rounded-xl border border-[var(--border-default)] bg-[var(--surface-secondary)]">
+        ) : (
           <p className="text-sm text-[var(--text-secondary)]">
-            No encrypted transactions to export. Send some private payments
+            No stealth payment history yet. Send or claim private payments
             first!
           </p>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Error */}
       {error && (
@@ -267,9 +238,7 @@ export function ExportReportPanel({
       {/* Generate Button */}
       <button
         onClick={handleGenerateReport}
-        disabled={
-          !selectedKeyHash || encryptedTransactions.length === 0 || isGenerating
-        }
+        disabled={filteredEntries.length === 0 || isGenerating}
         className="w-full py-3 px-4 rounded-xl bg-sip-purple-600 text-white font-medium hover:bg-sip-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {isGenerating ? "Generating..." : "📥 Generate & Download Report"}

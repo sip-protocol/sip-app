@@ -7,6 +7,7 @@ import {
   useViewingKeyDisclosure,
   type ShareableKey,
 } from "@/hooks/use-viewing-key-disclosure"
+import { useStealthKeys } from "@/hooks/use-stealth-keys"
 
 interface ShareKeyPanelProps {
   onKeyGenerated?: (key: ViewingKey) => void
@@ -24,10 +25,23 @@ interface ShareKeyPanelProps {
  */
 export function ShareKeyPanel({ onKeyGenerated }: ShareKeyPanelProps) {
   const { keys, generateKey, removeKey } = useViewingKeyDisclosure()
+  const { keys: stealthKeys } = useStealthKeys()
   const [selectedKey, setSelectedKey] = useState<ShareableKey | null>(null)
   const [isGenerating, setIsGenerating] = useState(false)
   const [newKeyLabel, setNewKeyLabel] = useState("")
   const [copySuccess, setCopySuccess] = useState(false)
+  const [stealthKeyCopied, setStealthKeyCopied] = useState(false)
+
+  const handleCopyStealthKey = useCallback(async () => {
+    if (!stealthKeys) return
+    try {
+      await navigator.clipboard.writeText(stealthKeys.viewingPublicKey)
+      setStealthKeyCopied(true)
+      setTimeout(() => setStealthKeyCopied(false), 2000)
+    } catch (err) {
+      console.error("Failed to copy:", err)
+    }
+  }, [stealthKeys])
 
   const handleGenerateKey = useCallback(() => {
     setIsGenerating(true)
@@ -81,6 +95,52 @@ export function ShareKeyPanel({ onKeyGenerated }: ShareKeyPanelProps) {
 
   return (
     <div className="space-y-6">
+      {/* Stealth Viewing Key — for scanning incoming payments */}
+      <div className="p-4 rounded-xl border border-sip-purple-500/30 bg-sip-purple-500/10 space-y-3">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="font-medium text-sip-purple-400">Stealth Viewing Key</h3>
+            <p className="text-xs text-[var(--text-secondary)] mt-1">
+              Share this key to allow someone to detect your incoming stealth payments
+            </p>
+          </div>
+        </div>
+
+        {stealthKeys ? (
+          <div className="space-y-3">
+            <div className="p-3 rounded-lg bg-[var(--surface-secondary)]">
+              <p className="text-xs text-[var(--text-tertiary)] mb-1">Viewing Public Key (base58)</p>
+              <p className="font-mono text-xs break-all">
+                {stealthKeys.viewingPublicKey}
+              </p>
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={handleCopyStealthKey}
+                className="flex-1 py-2 px-4 rounded-lg border border-[var(--border-default)] text-sm font-medium hover:bg-[var(--surface-secondary)] transition-colors"
+              >
+                {stealthKeyCopied ? "✓ Copied!" : "Copy Key"}
+              </button>
+            </div>
+            <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/30">
+              <p className="text-xs text-amber-400">
+                ⚠️ Sharing this key reveals ALL incoming stealth payments to your wallet. Only share with trusted auditors.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="p-3 rounded-lg bg-[var(--surface-secondary)] text-center">
+            <p className="text-sm text-[var(--text-secondary)]">
+              No stealth keys generated yet. Generate them in the Receive page first.
+            </p>
+          </div>
+        )}
+      </div>
+
+      {/* Divider */}
+      <div className="border-t border-[var(--border-default)]" />
+      <p className="text-xs text-[var(--text-tertiary)]">SDK Viewing Keys (for encrypted transaction disclosure)</p>
+
       {/* Generate New Key */}
       {!isGenerating ? (
         <button
