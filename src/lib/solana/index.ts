@@ -22,3 +22,20 @@ export {
   type CommitmentStoreParams,
   type CommitmentStoreResult,
 } from "./commitment-store"
+
+// Bubblegum cNFT minting — compressed NFTs to stealth addresses
+export {
+  buildMintCNFTTransaction,
+  buildMintToCollectionV1Instruction,
+  findTreeConfigPda,
+  findMetadataPda,
+  findMasterEditionPda,
+  findBubblegumSignerPda,
+  BUBBLEGUM_PROGRAM_ID,
+  SPL_NOOP_PROGRAM_ID,
+  SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
+  TOKEN_METADATA_PROGRAM_ID,
+  type MintCNFTParams,
+  type MintCNFTResult,
+  type CNFTCreator,
+} from "./bubblegum-client"
