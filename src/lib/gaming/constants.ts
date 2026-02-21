@@ -91,9 +91,9 @@ export const SAMPLE_RESULTS: GameResult[] = [
 ]
 
 export const SIMULATION_DELAYS: Record<GamingStep, number> = {
-  committing_move: 1200,
-  generating_commitment: 1500,
-  revealing: 1800,
+  committing_move: 800,
+  generating_commitment: 1000,
+  revealing: 600,
   resolved: 0,
   generating_stealth: 1500,
   claiming_reward: 2000,

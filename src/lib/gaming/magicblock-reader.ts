@@ -1,3 +1,13 @@
+import {
+  FindWorldPda,
+  FindComponentPda,
+  FindEntityPda,
+  FindRegistryPda,
+  WORLD_PROGRAM_ID,
+  DELEGATION_PROGRAM_ID,
+  BN,
+} from "@magicblock-labs/bolt-sdk"
+import { PublicKey } from "@solana/web3.js"
 import type { Game, GameResult, GameType, GamingMode } from "./types"
 import { SAMPLE_GAMES, SAMPLE_RESULTS } from "./constants"
 
@@ -6,10 +16,14 @@ import { SAMPLE_GAMES, SAMPLE_RESULTS } from "./constants"
 // ---------------------------------------------------------------------------
 // MagicBlock provides Solana gaming infrastructure via the BOLT ECS framework
 // (Entity Component System) with ephemeral rollups for low-latency gameplay.
-// No public REST API exists, so we provide curated data referencing real
-// MagicBlock architecture: BOLT components, ephemeral rollups, delegation,
-// and on-chain game state patterns.
+// BOLT SDK is used for world/entity/component PDA derivation.
 // ---------------------------------------------------------------------------
+
+// BOLT program addresses (re-exported for visibility in tests and consumers)
+export const BOLT_PROGRAM_IDS = {
+  world: WORLD_PROGRAM_ID.toBase58(),
+  delegation: DELEGATION_PROGRAM_ID.toBase58(),
+} as const
 
 const CACHE_TTL_MS = 5 * 60 * 1000 // 5 minutes
 
@@ -171,19 +185,52 @@ const MAGICBLOCK_LEADERBOARD = [
 // ---------------------------------------------------------------------------
 
 /**
+ * Derive BOLT World and Entity PDAs for a given world ID using the official SDK.
+ * Used to verify world existence and look up game entities on-chain.
+ */
+export function getBoltWorldInfo(worldId = 0) {
+  const worldPda = FindWorldPda({ worldId: new BN(worldId) })
+  const registryPda = FindRegistryPda({})
+  return { worldPda, registryPda, worldProgramId: WORLD_PROGRAM_ID }
+}
+
+/**
+ * Derive a BOLT Entity PDA within a world.
+ * Each game session is an entity with components for state.
+ */
+export function getBoltEntityPda(worldId: number, entityId: number) {
+  return FindEntityPda({
+    worldId: new BN(worldId),
+    entityId: new BN(entityId),
+    seed: new Uint8Array(0),
+  })
+}
+
+/**
+ * Derive a BOLT Component PDA for a game entity.
+ * Components store game state (moves, commitments, results).
+ */
+export function getBoltComponentPda(
+  componentProgramId: PublicKey,
+  entityPda: PublicKey
+) {
+  return FindComponentPda({ componentId: componentProgramId, entity: entityPda })
+}
+
+/**
  * Try to fetch MagicBlock BOLT program data from Solana RPC.
- * MagicBlock's World program and BOLT ECS store game state on-chain.
+ * Uses BOLT SDK's FindWorldPda for world account discovery.
  * Returns null on failure so callers fall back to curated data.
  */
 async function fetchMagicBlockPrograms(): Promise<Game[] | null> {
   try {
-    // MagicBlock World program on mainnet
-    const WORLD_PROGRAM_ID = "WorLD15A7CrDwLcLy4fRqtaTb9fbd8o8iqiEMUDse2n"
-
     const rpcUrl =
       (typeof process !== "undefined"
         ? process.env.NEXT_PUBLIC_HELIUS_RPC_URL
         : undefined) ?? "https://api.mainnet-beta.solana.com"
+
+    // Use BOLT SDK's WORLD_PROGRAM_ID for account discovery
+    const worldProgramId = WORLD_PROGRAM_ID.toBase58()
 
     const response = await fetch(rpcUrl, {
       method: "POST",
@@ -193,7 +240,7 @@ async function fetchMagicBlockPrograms(): Promise<Game[] | null> {
         id: 1,
         method: "getProgramAccounts",
         params: [
-          WORLD_PROGRAM_ID,
+          worldProgramId,
           {
             encoding: "base64",
             dataSlice: { offset: 0, length: 0 },
@@ -215,7 +262,7 @@ async function fetchMagicBlockPrograms(): Promise<Game[] | null> {
       console.info(
         `[SIP][MagicBlock] Found ${json.result.length} BOLT World accounts on-chain`
       )
-      // On-chain accounts exist but can't be decoded without BOLT IDL
+      // On-chain accounts exist but can't be decoded without deployed IDL
       // Return curated data enriched with live account count
       return null
     }

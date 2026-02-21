@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useRef, useMemo } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
+import { motion, AnimatePresence } from "framer-motion"
 import { useDemoModeStore } from "@/stores/demo-mode"
 import { DemoBanner } from "@/components/ui/demo-banner"
 import { PrivacyLevel } from "@sip-protocol/types"
@@ -11,10 +12,13 @@ import { useOnChainCommit } from "@/hooks/use-on-chain-commit"
 import { GamingPrivacyToggle } from "./gaming-privacy-toggle"
 import { GamingStatus } from "./gaming-status"
 import { TransactionStatus } from "@/components/solana/transaction-status"
+import { HashVisualization } from "./hash-visualization"
+import { ConfettiParticles } from "./confetti-particles"
 import type { Game } from "@/lib/gaming/types"
 
 type RpsMove = "rock" | "paper" | "scissors"
 type PrivacyOption = "shielded" | "compliant" | "transparent"
+type GamePhase = "select" | "locked" | "committing" | "revealing" | "result"
 
 const MOVES: { id: RpsMove; emoji: string; label: string; beats: RpsMove }[] = [
   { id: "rock", emoji: "\u{270A}", label: "Rock", beats: "scissors" },
@@ -36,7 +40,6 @@ function resolveRps(
   return playerMove.beats === opponent ? "win" : "lose"
 }
 
-// Generate a deterministic opponent move from a seed (commitment hash)
 function getOpponentMove(seed: string): RpsMove {
   const hash = seed.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0)
   const moves: RpsMove[] = ["rock", "paper", "scissors"]
@@ -57,11 +60,11 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
   const [opponentCommitment, setOpponentCommitment] = useState<string | null>(
     null
   )
-  const [phase, setPhase] = useState<
-    "select" | "committing" | "revealing" | "result"
-  >("select")
+  const [phase, setPhase] = useState<GamePhase>("select")
   const [outcome, setOutcome] = useState<"win" | "lose" | "draw" | null>(null)
   const [privacyLevel, setPrivacyLevel] = useState<PrivacyOption>("shielded")
+  const [countdown, setCountdown] = useState<number | null>(null)
+  const [score, setScore] = useState({ wins: 0, losses: 0, draws: 0 })
   const revealTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const { commit: commitOnChain } = useOnChainCommit("move")
@@ -87,8 +90,7 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
 
   const canPlay = (connected || isDemoMode) && phase === "select"
 
-  // Generate opponent commitment when player selects a move
-  const generateOpponentCommitment = useCallback((move: RpsMove) => {
+  const generateOpponentCommitment = useCallback((_move: RpsMove) => {
     const fakeCommitment =
       "0x" +
       Array.from({ length: 16 }, () =>
@@ -100,6 +102,10 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
   const handlePlay = useCallback(async () => {
     if (!playerMove || !canPlay) return
 
+    // Brief "locked" phase for confirmation feel
+    setPhase("locked")
+    await new Promise((r) => setTimeout(r, 500))
+
     setPhase("committing")
 
     const result = await playGame({
@@ -109,20 +115,27 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
     })
 
     if (result) {
-      // Determine opponent move from commitment hash (deterministic)
       const oppMove = result.commitmentHash
         ? getOpponentMove(result.commitmentHash)
         : MOVES[Math.floor(Math.random() * 3)].id
       setOpponentMove(oppMove)
 
+      // Countdown reveal: 3 → 2 → 1
       setPhase("revealing")
+      for (const n of [3, 2, 1]) {
+        setCountdown(n)
+        await new Promise((r) => setTimeout(r, 600))
+      }
+      setCountdown(null)
 
-      // Brief pause then show result
-      revealTimerRef.current = setTimeout(() => {
-        const result_ = resolveRps(playerMove, oppMove)
-        setOutcome(result_)
-        setPhase("result")
-      }, 1500)
+      const gameResult = resolveRps(playerMove, oppMove)
+      setOutcome(gameResult)
+      setScore((prev) => ({
+        wins: prev.wins + (gameResult === "win" ? 1 : 0),
+        losses: prev.losses + (gameResult === "lose" ? 1 : 0),
+        draws: prev.draws + (gameResult === "draw" ? 1 : 0),
+      }))
+      setPhase("result")
     }
   }, [playerMove, canPlay, game.id, privacyLevel, privacyMap, playGame])
 
@@ -134,29 +147,31 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
     setOpponentCommitment(null)
     setPhase("select")
     setOutcome(null)
+    setCountdown(null)
   }, [resetPlay])
 
-  const isProcessing = phase === "committing" || phase === "revealing"
+  const isProcessing =
+    phase === "locked" || phase === "committing" || phase === "revealing"
 
-  // Result screen
+  // ─── Result screen ───────────────────────────────────────────────
   if (phase === "result" && outcome) {
     const outcomeConfig = {
       win: {
-        label: "You Win!",
+        label: "VICTORY",
         color: "text-emerald-400",
         bg: "bg-emerald-500/10",
         border: "border-emerald-500/20",
         emoji: "\u{1F389}",
       },
       lose: {
-        label: "You Lose!",
+        label: "DEFEATED",
         color: "text-red-400",
         bg: "bg-red-500/10",
         border: "border-red-500/20",
         emoji: "\u{1F480}",
       },
       draw: {
-        label: "Draw!",
+        label: "TIE",
         color: "text-amber-400",
         bg: "bg-amber-500/10",
         border: "border-amber-500/20",
@@ -168,43 +183,75 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
     const opponentMoveData = MOVES.find((m) => m.id === opponentMove)!
 
     return (
-      <div className="bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-2xl p-6 sm:p-8">
+      <motion.div
+        className="bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-2xl p-6 sm:p-8 relative overflow-hidden"
+        initial={outcome === "lose" ? { x: 0 } : {}}
+        animate={
+          outcome === "lose"
+            ? { x: [0, -8, 8, -6, 6, -3, 3, 0] }
+            : {}
+        }
+        transition={outcome === "lose" ? { duration: 0.5 } : {}}
+      >
+        {outcome === "win" && <ConfettiParticles />}
+
+        {/* Score bar */}
+        <ScoreBar score={score} />
+
         {/* Outcome header */}
-        <div
+        <motion.div
           className={cn(
-            "text-center p-6 rounded-xl mb-6",
+            "text-center p-6 rounded-xl mb-6 relative",
             cfg.bg,
             "border",
             cfg.border
           )}
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: [0, 1.15, 1], opacity: 1 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
         >
           <div className="text-4xl mb-2">{cfg.emoji}</div>
           <h2 className={cn("text-2xl font-bold", cfg.color)}>{cfg.label}</h2>
-        </div>
+        </motion.div>
 
-        {/* Move comparison */}
+        {/* Move comparison — hands slide in from opposite sides */}
         <div className="flex items-center justify-center gap-6 mb-6">
-          <div className="text-center">
-            <div className="text-5xl mb-2">{playerMoveData.emoji}</div>
+          <motion.div
+            className="text-center"
+            initial={{ x: -120, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.4, delay: 0.2 }}
+          >
+            <div className="text-6xl mb-2">{playerMoveData.emoji}</div>
             <p className="text-sm font-medium text-[var(--text-primary)]">
               You
             </p>
             <p className="text-xs text-[var(--text-secondary)]">
               {playerMoveData.label}
             </p>
-          </div>
-          <div className="text-2xl text-[var(--text-tertiary)] font-bold">
+          </motion.div>
+          <motion.div
+            className="text-2xl text-[var(--text-tertiary)] font-bold"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 0.3, type: "spring", stiffness: 300 }}
+          >
             VS
-          </div>
-          <div className="text-center">
-            <div className="text-5xl mb-2">{opponentMoveData.emoji}</div>
+          </motion.div>
+          <motion.div
+            className="text-center"
+            initial={{ x: 120, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.4, delay: 0.2 }}
+          >
+            <div className="text-6xl mb-2">{opponentMoveData.emoji}</div>
             <p className="text-sm font-medium text-[var(--text-primary)]">
               Opponent
             </p>
             <p className="text-xs text-[var(--text-secondary)]">
               {opponentMoveData.label}
             </p>
-          </div>
+          </motion.div>
         </div>
 
         {/* Crypto details */}
@@ -255,13 +302,15 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
 
         {/* Actions */}
         <div className="mt-6 flex gap-3">
-          <button
+          <motion.button
             type="button"
             onClick={handleReset}
             className="flex-1 py-3 px-6 text-sm font-medium rounded-xl bg-gradient-to-r from-orange-500 to-orange-700 text-white hover:from-orange-400 hover:to-orange-600 transition-colors"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
           >
             Play Again
-          </button>
+          </motion.button>
           <button
             type="button"
             onClick={onBack}
@@ -270,6 +319,40 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
             Back to Arena
           </button>
         </div>
+
+        {/* MagicBlock badge */}
+        <p className="text-center text-[10px] text-[var(--text-tertiary)] mt-4">
+          Powered by MagicBlock BOLT
+        </p>
+      </motion.div>
+    )
+  }
+
+  // ─── Countdown overlay during reveal ─────────────────────────────
+  if (phase === "revealing" && countdown !== null) {
+    return (
+      <div className="bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-2xl p-6 sm:p-8">
+        <ScoreBar score={score} />
+        <div className="flex items-center justify-center min-h-[300px]">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={countdown}
+              className="text-8xl font-bold text-orange-400"
+              initial={{ scale: 2, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.5, opacity: 0 }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+            >
+              {countdown}
+            </motion.div>
+          </AnimatePresence>
+        </div>
+        <p className="text-center text-sm text-[var(--text-secondary)] mt-4">
+          Revealing moves...
+        </p>
+        <p className="text-center text-[10px] text-[var(--text-tertiary)] mt-4">
+          Powered by MagicBlock BOLT
+        </p>
       </div>
     )
   }
@@ -277,6 +360,11 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
   return (
     <div className="bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-2xl p-6 sm:p-8">
       {isDemoMode && <DemoBanner />}
+
+      {/* Score bar */}
+      {(score.wins > 0 || score.losses > 0 || score.draws > 0) && (
+        <ScoreBar score={score} />
+      )}
 
       {/* Header */}
       <div className="text-center mb-6">
@@ -289,6 +377,26 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
           commitments, then reveal simultaneously.
         </p>
       </div>
+
+      {/* Locked phase — brief confirmation */}
+      {phase === "locked" && playerMove && (
+        <motion.div
+          className="mb-6 p-6 rounded-xl bg-orange-500/10 border border-orange-500/20 text-center"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+        >
+          <motion.div
+            className="text-4xl mb-2"
+            animate={{ rotate: [0, -10, 10, 0] }}
+            transition={{ duration: 0.4 }}
+          >
+            {"\u{1F512}"}
+          </motion.div>
+          <p className="text-sm font-medium text-orange-300">
+            Move locked! Generating commitment...
+          </p>
+        </motion.div>
+      )}
 
       {/* Opponent commitment status */}
       {opponentCommitment && phase === "select" && (
@@ -303,76 +411,104 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
       )}
 
       {/* Move selection */}
-      <div className="mb-6">
-        <label className="block text-sm font-medium text-[var(--text-secondary)] mb-3 text-center">
-          {isProcessing ? "Moves Locked" : "Choose Your Move"}
-        </label>
-        <div className="grid grid-cols-3 gap-3">
-          {MOVES.map((move) => (
-            <button
-              key={move.id}
-              type="button"
-              disabled={isProcessing}
-              onClick={() => {
-                if (!isProcessing) {
-                  setPlayerMove(move.id)
-                  if (phase === "select") generateOpponentCommitment(move.id)
-                }
-              }}
-              className={cn(
-                "flex flex-col items-center justify-center py-5 px-3 rounded-xl border-2 transition-all",
-                playerMove === move.id
-                  ? "border-orange-500 bg-orange-500/15 scale-105 shadow-lg shadow-orange-500/20"
-                  : "border-[var(--border-default)] bg-[var(--surface-secondary)] hover:border-orange-500/40 hover:bg-orange-500/5",
-                isProcessing && "opacity-60 cursor-not-allowed"
-              )}
-            >
-              <span className="text-4xl mb-1">{move.emoji}</span>
-              <span
+      {(phase === "select" || phase === "locked") && (
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-[var(--text-secondary)] mb-3 text-center">
+            {phase === "locked" ? "Move Locked" : "Choose Your Move"}
+          </label>
+          <div className="grid grid-cols-3 gap-3">
+            {MOVES.map((move) => (
+              <motion.button
+                key={move.id}
+                type="button"
+                disabled={phase === "locked"}
+                onClick={() => {
+                  if (phase === "select") {
+                    setPlayerMove(move.id)
+                    generateOpponentCommitment(move.id)
+                  }
+                }}
                 className={cn(
-                  "text-sm font-medium",
+                  "flex flex-col items-center justify-center py-5 px-3 rounded-xl border-2 transition-all",
                   playerMove === move.id
-                    ? "text-orange-400"
-                    : "text-[var(--text-secondary)]"
+                    ? "border-orange-500 bg-orange-500/15 shadow-lg shadow-orange-500/20"
+                    : "border-[var(--border-default)] bg-[var(--surface-secondary)] hover:border-orange-500/40 hover:bg-orange-500/5",
+                  phase === "locked" && "opacity-60 cursor-not-allowed"
                 )}
+                whileHover={
+                  phase === "select"
+                    ? { scale: 1.08, y: -4 }
+                    : {}
+                }
+                whileTap={phase === "select" ? { scale: 0.95 } : {}}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                animate={
+                  playerMove === move.id
+                    ? {
+                        boxShadow: [
+                          "0 0 0 0 rgba(249,115,22,0)",
+                          "0 0 20px 4px rgba(249,115,22,0.3)",
+                          "0 0 0 0 rgba(249,115,22,0)",
+                        ],
+                      }
+                    : {}
+                }
               >
-                {move.label}
-              </span>
-            </button>
-          ))}
+                <span className="text-6xl mb-1">{move.emoji}</span>
+                <span
+                  className={cn(
+                    "text-sm font-medium",
+                    playerMove === move.id
+                      ? "text-orange-400"
+                      : "text-[var(--text-secondary)]"
+                  )}
+                >
+                  {move.label}
+                </span>
+              </motion.button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
+
+      {/* Committing phase — hash visualization */}
+      {phase === "committing" && activeRecord?.commitmentHash && (
+        <div className="mb-6">
+          <GamingStatus
+            currentStep={
+              status as "committing_move" | "generating_commitment" | "revealing"
+            }
+            mode="play"
+          />
+          <div className="mt-4 p-4 rounded-lg bg-[var(--surface-secondary)] border border-[var(--border-default)]">
+            <p className="text-xs text-[var(--text-secondary)] mb-2">
+              Commitment Hash
+            </p>
+            <HashVisualization hash={activeRecord.commitmentHash} />
+          </div>
+        </div>
+      )}
+
+      {/* Status pipeline during processing (no hash yet) */}
+      {phase === "committing" && !activeRecord?.commitmentHash && (
+        <div className="mb-6">
+          <GamingStatus
+            currentStep={
+              status as "committing_move" | "generating_commitment" | "revealing"
+            }
+            mode="play"
+          />
+        </div>
+      )}
 
       {/* Privacy Toggle */}
-      {!isProcessing && (
+      {phase === "select" && (
         <div className="mb-6">
           <GamingPrivacyToggle
             value={privacyLevel}
             onChange={setPrivacyLevel}
             disabled={isProcessing}
           />
-        </div>
-      )}
-
-      {/* Status pipeline during processing */}
-      {isProcessing && (
-        <div className="mb-6">
-          <GamingStatus
-            currentStep={
-              status as
-                | "committing_move"
-                | "generating_commitment"
-                | "revealing"
-            }
-            mode="play"
-          />
-          {phase === "revealing" && opponentMove && (
-            <div className="mt-4 text-center">
-              <p className="text-sm text-[var(--text-secondary)] animate-pulse">
-                Revealing moves...
-              </p>
-            </div>
-          )}
         </div>
       )}
 
@@ -384,27 +520,29 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
       )}
 
       {/* Play button */}
-      <button
-        type="button"
-        onClick={handlePlay}
-        disabled={!playerMove || !canPlay}
-        className={cn(
-          "w-full py-4 px-6 text-lg font-semibold rounded-xl transition-all",
-          playerMove && canPlay
-            ? "bg-gradient-to-r from-orange-500 to-orange-700 text-white hover:from-orange-400 hover:to-orange-600 hover:shadow-lg hover:shadow-orange-500/20"
-            : "bg-orange-600/30 text-white/50 cursor-not-allowed"
-        )}
-      >
-        {!connected && !isDemoMode
-          ? "Connect Wallet"
-          : isProcessing
-            ? "Committing..."
+      {phase === "select" && (
+        <motion.button
+          type="button"
+          onClick={handlePlay}
+          disabled={!playerMove || !canPlay}
+          className={cn(
+            "w-full py-4 px-6 text-lg font-semibold rounded-xl transition-all",
+            playerMove && canPlay
+              ? "bg-gradient-to-r from-orange-500 to-orange-700 text-white hover:from-orange-400 hover:to-orange-600 hover:shadow-lg hover:shadow-orange-500/20"
+              : "bg-orange-600/30 text-white/50 cursor-not-allowed"
+          )}
+          whileHover={playerMove && canPlay ? { scale: 1.02 } : {}}
+          whileTap={playerMove && canPlay ? { scale: 0.98 } : {}}
+        >
+          {!connected && !isDemoMode
+            ? "Connect Wallet"
             : playerMove
               ? `Commit ${MOVES.find((m) => m.id === playerMove)?.label}`
               : "Select a Move"}
-      </button>
+        </motion.button>
+      )}
 
-      {!connected && !isDemoMode && (
+      {!connected && !isDemoMode && phase === "select" && (
         <button
           type="button"
           onClick={enableDemo}
@@ -415,31 +553,55 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
       )}
 
       {/* How it works */}
-      <div className="mt-6 pt-6 border-t border-[var(--border-default)]">
-        <h3 className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-3">
-          How Commit-Reveal Works
-        </h3>
-        <div className="grid grid-cols-3 gap-2 text-center">
-          <div className="p-2 rounded-lg bg-[var(--surface-secondary)]">
-            <div className="text-lg mb-0.5">{"\u{1F512}"}</div>
-            <p className="text-[10px] text-[var(--text-tertiary)] leading-tight">
-              Both commit hashed moves
-            </p>
-          </div>
-          <div className="p-2 rounded-lg bg-[var(--surface-secondary)]">
-            <div className="text-lg mb-0.5">{"\u{1F50D}"}</div>
-            <p className="text-[10px] text-[var(--text-tertiary)] leading-tight">
-              Reveal simultaneously
-            </p>
-          </div>
-          <div className="p-2 rounded-lg bg-[var(--surface-secondary)]">
-            <div className="text-lg mb-0.5">{"\u{2705}"}</div>
-            <p className="text-[10px] text-[var(--text-tertiary)] leading-tight">
-              Verify commitments match
-            </p>
+      {phase === "select" && (
+        <div className="mt-6 pt-6 border-t border-[var(--border-default)]">
+          <h3 className="text-xs font-semibold text-[var(--text-secondary)] uppercase tracking-wider mb-3">
+            How Commit-Reveal Works
+          </h3>
+          <div className="grid grid-cols-3 gap-2 text-center">
+            <div className="p-2 rounded-lg bg-[var(--surface-secondary)]">
+              <div className="text-lg mb-0.5">{"\u{1F512}"}</div>
+              <p className="text-[10px] text-[var(--text-tertiary)] leading-tight">
+                Both commit hashed moves
+              </p>
+            </div>
+            <div className="p-2 rounded-lg bg-[var(--surface-secondary)]">
+              <div className="text-lg mb-0.5">{"\u{1F50D}"}</div>
+              <p className="text-[10px] text-[var(--text-tertiary)] leading-tight">
+                Reveal simultaneously
+              </p>
+            </div>
+            <div className="p-2 rounded-lg bg-[var(--surface-secondary)]">
+              <div className="text-lg mb-0.5">{"\u{2705}"}</div>
+              <p className="text-[10px] text-[var(--text-tertiary)] leading-tight">
+                Verify commitments match
+              </p>
+            </div>
           </div>
         </div>
-      </div>
+      )}
+
+      {/* MagicBlock badge */}
+      <p className="text-center text-[10px] text-[var(--text-tertiary)] mt-4">
+        Powered by MagicBlock BOLT
+      </p>
+    </div>
+  )
+}
+
+// ─── Score Bar ─────────────────────────────────────────────────────
+function ScoreBar({
+  score,
+}: {
+  score: { wins: number; losses: number; draws: number }
+}) {
+  return (
+    <div className="flex items-center justify-center gap-4 mb-4 text-sm font-medium">
+      <span className="text-emerald-400">W {score.wins}</span>
+      <span className="text-[var(--text-tertiary)]">|</span>
+      <span className="text-red-400">L {score.losses}</span>
+      <span className="text-[var(--text-tertiary)]">|</span>
+      <span className="text-amber-400">D {score.draws}</span>
     </div>
   )
 }
