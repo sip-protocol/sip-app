@@ -21,7 +21,11 @@ export function PaymentScanner({ className }: PaymentScannerProps) {
   const handleClaim = async (paymentId: string) => {
     const payment = payments.find((p) => p.id === paymentId)
     if (payment) {
-      await claimTransfer(payment)
+      const signature = await claimTransfer(payment)
+      if (signature) {
+        // Re-scan to refresh payment statuses from on-chain
+        await scan()
+      }
     }
   }
 
