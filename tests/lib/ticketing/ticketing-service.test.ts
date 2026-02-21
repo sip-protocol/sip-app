@@ -6,6 +6,7 @@ import type {
   PurchaseTicketParams,
   VerifyTicketParams,
 } from "@/lib/ticketing/types"
+import { Transaction } from "@solana/web3.js"
 
 // Mock the SDK to avoid WASM/crypto deps in tests
 vi.mock("@sip-protocol/sdk", () => ({
@@ -236,6 +237,180 @@ describe("TicketingService", () => {
       expect(result.stepTimestamps.generating_proof).toBeDefined()
       expect(result.stepTimestamps.verifying_attendance).toBeDefined()
       expect(result.stepTimestamps.verified).toBeDefined()
+    })
+  })
+
+  describe("purchaseTicket (cNFT via Bubblegum)", () => {
+    it("calls buildCNFTMint with correct stealth recipient", async () => {
+      const mockTx = new Transaction()
+      const buildCNFTMint = vi.fn().mockResolvedValue(mockTx)
+      const onSendTransaction = vi.fn().mockResolvedValue("mock-tix-sig-abc123")
+
+      const service = new TicketingService({
+        mode: "simulation",
+        buildCNFTMint,
+        onSendTransaction,
+      })
+
+      const result = await service.purchaseTicket(validPurchaseParams)
+
+      expect(buildCNFTMint).toHaveBeenCalledOnce()
+      expect(buildCNFTMint).toHaveBeenCalledWith(
+        expect.objectContaining({
+          recipient: result.stealthAddress,
+        })
+      )
+      expect(onSendTransaction).toHaveBeenCalledWith(mockTx)
+      expect(result.txSignature).toBe("mock-tix-sig-abc123")
+    })
+
+    it("includes event name and tier in cNFT name", async () => {
+      const buildCNFTMint = vi.fn().mockResolvedValue(new Transaction())
+      const onSendTransaction = vi.fn().mockResolvedValue("sig-name-test")
+
+      const service = new TicketingService({
+        mode: "simulation",
+        buildCNFTMint,
+        onSendTransaction,
+      })
+
+      await service.purchaseTicket(validPurchaseParams)
+
+      // Event "Solana Breakpoint", tier "vip" -> "Solana Breakpoint — Vip"
+      expect(buildCNFTMint).toHaveBeenCalledWith(
+        expect.objectContaining({
+          name: expect.stringContaining("Solana Breakpoint"),
+        })
+      )
+      expect(buildCNFTMint).toHaveBeenCalledWith(
+        expect.objectContaining({
+          name: expect.stringContaining("Vip"),
+        })
+      )
+    })
+
+    it("falls back when buildCNFTMint returns null", async () => {
+      const buildCNFTMint = vi.fn().mockResolvedValue(null)
+      const onSendTransaction = vi.fn()
+
+      const service = new TicketingService({
+        mode: "simulation",
+        buildCNFTMint,
+        onSendTransaction,
+      })
+
+      const result = await service.purchaseTicket(validPurchaseParams)
+
+      expect(buildCNFTMint).toHaveBeenCalledOnce()
+      expect(onSendTransaction).not.toHaveBeenCalled()
+      expect(result.status).toBe("purchased")
+      expect(result.txSignature).toBeUndefined()
+    })
+
+    it("falls back when no onSendTransaction provided", async () => {
+      const buildCNFTMint = vi.fn()
+      const onSendTransaction = vi.fn()
+
+      // Only buildCNFTMint set (no onSendTransaction), falls back
+      const service = new TicketingService({
+        mode: "simulation",
+        buildCNFTMint,
+      })
+
+      const result = await service.purchaseTicket(validPurchaseParams)
+
+      // buildCNFTMint not called because onSendTransaction is missing
+      expect(buildCNFTMint).not.toHaveBeenCalled()
+      expect(onSendTransaction).not.toHaveBeenCalled()
+      expect(result.status).toBe("purchased")
+    })
+
+    it("sets txSignature on successful cNFT mint", async () => {
+      const mockTx = new Transaction()
+      const buildCNFTMint = vi.fn().mockResolvedValue(mockTx)
+      const onSendTransaction = vi.fn().mockResolvedValue("tix-cnft-sig-xyz")
+
+      const service = new TicketingService({
+        mode: "simulation",
+        buildCNFTMint,
+        onSendTransaction,
+      })
+
+      const result = await service.purchaseTicket(validPurchaseParams)
+
+      expect(result.txSignature).toBe("tix-cnft-sig-xyz")
+      expect(result.status).toBe("purchased")
+      expect(result.stealthAddress).toBeTruthy()
+    })
+
+    it("does not set txSignature when onSendTransaction returns null", async () => {
+      const mockTx = new Transaction()
+      const buildCNFTMint = vi.fn().mockResolvedValue(mockTx)
+      const onSendTransaction = vi.fn().mockResolvedValue(null)
+
+      const service = new TicketingService({
+        mode: "simulation",
+        buildCNFTMint,
+        onSendTransaction,
+      })
+
+      const result = await service.purchaseTicket(validPurchaseParams)
+
+      expect(buildCNFTMint).toHaveBeenCalledOnce()
+      expect(onSendTransaction).toHaveBeenCalledWith(mockTx)
+      expect(result.txSignature).toBeUndefined()
+    })
+
+    it("includes metadataUri in cNFT mint call", async () => {
+      const buildCNFTMint = vi.fn().mockResolvedValue(new Transaction())
+      const onSendTransaction = vi.fn().mockResolvedValue("sig-uri-test")
+
+      const service = new TicketingService({
+        mode: "simulation",
+        buildCNFTMint,
+        onSendTransaction,
+      })
+
+      await service.purchaseTicket(validPurchaseParams)
+
+      expect(buildCNFTMint).toHaveBeenCalledWith(
+        expect.objectContaining({
+          metadataUri: expect.stringContaining("https://arweave.net/"),
+        })
+      )
+    })
+
+    it("records step timestamps with cNFT flow", async () => {
+      const service = new TicketingService({
+        mode: "simulation",
+        buildCNFTMint: vi.fn().mockResolvedValue(new Transaction()),
+        onSendTransaction: vi.fn().mockResolvedValue("sig-timestamps"),
+      })
+
+      const result = await service.purchaseTicket(validPurchaseParams)
+
+      expect(result.stepTimestamps.selecting_event).toBeDefined()
+      expect(result.stepTimestamps.generating_stealth_ticket).toBeDefined()
+      expect(result.stepTimestamps.purchasing).toBeDefined()
+      expect(result.stepTimestamps.purchased).toBeDefined()
+      expect(result.status).toBe("purchased")
+    })
+
+    it("falls back to onCommitTransaction when builder is not available", async () => {
+      const mockCallback = vi.fn().mockResolvedValue("commit-fallback-sig")
+
+      const service = new TicketingService({
+        mode: "simulation",
+        onCommitTransaction: mockCallback,
+      })
+
+      const result = await service.purchaseTicket(validPurchaseParams)
+
+      expect(mockCallback).toHaveBeenCalledWith(
+        "event-solana-breakpoint",
+        "vip"
+      )
+      expect(result.txSignature).toBe("commit-fallback-sig")
     })
   })
 })

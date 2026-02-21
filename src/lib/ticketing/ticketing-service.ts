@@ -11,10 +11,21 @@ import {
   createRealCommitment,
   encryptForViewingKey,
 } from "@/lib/crypto-helpers"
+import type { Transaction } from "@solana/web3.js"
 
 function generateId(prefix: string): string {
   return `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`
 }
+
+/**
+ * Callback to build a Bubblegum cNFT mint transaction for ticket purchase.
+ * Returns a signable Transaction to be sent via wallet adapter.
+ */
+export type BuildCNFTMintFn = (params: {
+  recipient: string
+  name: string
+  metadataUri: string
+}) => Promise<Transaction | null>
 
 export interface TicketingServiceOptions {
   mode?: TicketingMode
@@ -23,6 +34,10 @@ export interface TicketingServiceOptions {
     eventId: string,
     tier: string
   ) => Promise<string | null>
+  /** Build a Bubblegum cNFT mint transaction (provided by hook when tree is configured) */
+  buildCNFTMint?: BuildCNFTMintFn
+  /** Send a signed transaction, returns signature or null */
+  onSendTransaction?: (tx: Transaction) => Promise<string | null>
 }
 
 export class TicketingService {
@@ -32,11 +47,15 @@ export class TicketingService {
     eventId: string,
     tier: string
   ) => Promise<string | null>
+  private buildCNFTMint?: BuildCNFTMintFn
+  private onSendTransaction?: (tx: Transaction) => Promise<string | null>
 
   constructor(options: TicketingServiceOptions = {}) {
     this.mode = options.mode ?? "simulation"
     this.onStepChange = options.onStepChange
     this.onCommitTransaction = options.onCommitTransaction
+    this.buildCNFTMint = options.buildCNFTMint
+    this.onSendTransaction = options.onSendTransaction
   }
 
   validate(
@@ -146,12 +165,32 @@ export class TicketingService {
         )
       }
 
-      // Step 3: Purchasing (on-chain commitment if callback provided)
+      // Step 3: Purchasing — build and send Bubblegum cNFT ticket if configured
       record.status = "purchasing"
       record.stepTimestamps.purchasing = Date.now()
       this.onStepChange?.("purchasing", { ...record })
 
-      if (this.onCommitTransaction) {
+      const tierLabel = params.tier.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
+      const ticketName = `${event?.title ?? params.eventId} — ${tierLabel}`
+      const metadataUri = `https://arweave.net/${generateId("tix").replace(/_/g, "")}`
+
+      // Try real Bubblegum cNFT mint when builder + sender + stealth address are available
+      if (
+        this.buildCNFTMint &&
+        this.onSendTransaction &&
+        record.stealthAddress
+      ) {
+        const mintTx = await this.buildCNFTMint({
+          recipient: record.stealthAddress,
+          name: ticketName,
+          metadataUri,
+        })
+
+        if (mintTx) {
+          const txSignature = await this.onSendTransaction(mintTx)
+          if (txSignature) record.txSignature = txSignature
+        }
+      } else if (this.onCommitTransaction) {
         const signature = await this.onCommitTransaction(
           params.eventId,
           params.tier
