@@ -178,6 +178,50 @@ describe("LoyaltyService", () => {
     })
   })
 
+  describe("joinCampaign (onCommitTransaction)", () => {
+    it("calls onCommitTransaction during joining step", async () => {
+      const onCommit = vi.fn().mockResolvedValue("tx-join-abc123")
+      const service = new LoyaltyService({
+        mode: "simulation",
+        onCommitTransaction: onCommit,
+      })
+
+      const result = await service.joinCampaign(validJoinParams)
+
+      expect(onCommit).toHaveBeenCalledTimes(1)
+      expect(onCommit).toHaveBeenCalledWith(
+        result.id,
+        `${result.campaignId}:join`
+      )
+      expect(result.txSignature).toBe("tx-join-abc123")
+    })
+
+    it("sets txSignature when onCommitTransaction returns a value", async () => {
+      const onCommit = vi.fn().mockResolvedValue("sig-join-xyz")
+      const service = new LoyaltyService({
+        mode: "simulation",
+        onCommitTransaction: onCommit,
+      })
+
+      const result = await service.joinCampaign(validJoinParams)
+
+      expect(result.txSignature).toBe("sig-join-xyz")
+    })
+
+    it("does not set txSignature when onCommitTransaction returns null", async () => {
+      const onCommit = vi.fn().mockResolvedValue(null)
+      const service = new LoyaltyService({
+        mode: "simulation",
+        onCommitTransaction: onCommit,
+      })
+
+      const result = await service.joinCampaign(validJoinParams)
+
+      expect(onCommit).toHaveBeenCalledTimes(1)
+      expect(result.txSignature).toBeUndefined()
+    })
+  })
+
   describe("completeAction (simulation)", () => {
     it("progresses through 3 steps in order", async () => {
       const steps: LoyaltyStep[] = []
@@ -207,6 +251,50 @@ describe("LoyaltyService", () => {
       expect(result.stepTimestamps.verifying_action).toBeDefined()
       expect(result.stepTimestamps.recording).toBeDefined()
       expect(result.stepTimestamps.recorded).toBeDefined()
+    })
+  })
+
+  describe("completeAction (onCommitTransaction)", () => {
+    it("calls onCommitTransaction during recording step", async () => {
+      const onCommit = vi.fn().mockResolvedValue("tx-action-abc123")
+      const service = new LoyaltyService({
+        mode: "simulation",
+        onCommitTransaction: onCommit,
+      })
+
+      const result = await service.completeAction(validActionParams)
+
+      expect(onCommit).toHaveBeenCalledTimes(1)
+      expect(onCommit).toHaveBeenCalledWith(
+        result.id,
+        `${result.campaignId}:action:${result.actionType}`
+      )
+      expect(result.txSignature).toBe("tx-action-abc123")
+    })
+
+    it("sets txSignature when onCommitTransaction returns a value", async () => {
+      const onCommit = vi.fn().mockResolvedValue("sig-action-xyz")
+      const service = new LoyaltyService({
+        mode: "simulation",
+        onCommitTransaction: onCommit,
+      })
+
+      const result = await service.completeAction(validActionParams)
+
+      expect(result.txSignature).toBe("sig-action-xyz")
+    })
+
+    it("does not set txSignature when onCommitTransaction returns null", async () => {
+      const onCommit = vi.fn().mockResolvedValue(null)
+      const service = new LoyaltyService({
+        mode: "simulation",
+        onCommitTransaction: onCommit,
+      })
+
+      const result = await service.completeAction(validActionParams)
+
+      expect(onCommit).toHaveBeenCalledTimes(1)
+      expect(result.txSignature).toBeUndefined()
     })
   })
 
@@ -241,6 +329,50 @@ describe("LoyaltyService", () => {
       expect(result.stepTimestamps.generating_stealth).toBeDefined()
       expect(result.stepTimestamps.claiming).toBeDefined()
       expect(result.stepTimestamps.claimed).toBeDefined()
+    })
+  })
+
+  describe("claimReward (onCommitTransaction)", () => {
+    it("calls onCommitTransaction during claiming step", async () => {
+      const onCommit = vi.fn().mockResolvedValue("tx-claim-abc123")
+      const service = new LoyaltyService({
+        mode: "simulation",
+        onCommitTransaction: onCommit,
+      })
+
+      const result = await service.claimReward(validClaimParams)
+
+      expect(onCommit).toHaveBeenCalledTimes(1)
+      expect(onCommit).toHaveBeenCalledWith(
+        result.id,
+        `${result.campaignId}:${result.rewardAmount}`
+      )
+      expect(result.txSignature).toBe("tx-claim-abc123")
+    })
+
+    it("sets txSignature when onCommitTransaction returns a value", async () => {
+      const onCommit = vi.fn().mockResolvedValue("sig-claim-xyz")
+      const service = new LoyaltyService({
+        mode: "simulation",
+        onCommitTransaction: onCommit,
+      })
+
+      const result = await service.claimReward(validClaimParams)
+
+      expect(result.txSignature).toBe("sig-claim-xyz")
+    })
+
+    it("does not set txSignature when onCommitTransaction returns null", async () => {
+      const onCommit = vi.fn().mockResolvedValue(null)
+      const service = new LoyaltyService({
+        mode: "simulation",
+        onCommitTransaction: onCommit,
+      })
+
+      const result = await service.claimReward(validClaimParams)
+
+      expect(onCommit).toHaveBeenCalledTimes(1)
+      expect(result.txSignature).toBeUndefined()
     })
   })
 })

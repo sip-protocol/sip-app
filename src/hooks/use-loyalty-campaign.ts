@@ -6,6 +6,7 @@ import { useDemoModeStore } from "@/stores/demo-mode"
 import { LoyaltyService } from "@/lib/loyalty/loyalty-service"
 import { useLoyaltyHistoryStore } from "@/stores/loyalty-history"
 import { useTrackEvent } from "@/hooks/useTrackEvent"
+import { useOnChainCommit } from "@/hooks/use-on-chain-commit"
 import type {
   LoyaltyStep,
   JoinCampaignParams,
@@ -23,6 +24,8 @@ export interface UseLoyaltyCampaignReturn {
     params: JoinCampaignParams
   ) => Promise<LoyaltyActionRecord | undefined>
   reset: () => void
+  /** Solana transaction state for on-chain commitment */
+  commitTx: ReturnType<typeof useOnChainCommit>["tx"]
 }
 
 export function useLoyaltyCampaign(): UseLoyaltyCampaignReturn {
@@ -30,6 +33,7 @@ export function useLoyaltyCampaign(): UseLoyaltyCampaignReturn {
   const isDemoMode = useDemoModeStore((s) => s.isDemoMode)
   const { addAction, addCampaign } = useLoyaltyHistoryStore()
   const { trackLoyalty } = useTrackEvent()
+  const { commit, tx: commitTx } = useOnChainCommit("reward")
 
   const [status, setStatus] = useState<LoyaltyCampaignStatus>("idle")
   const [activeRecord, setActiveRecord] = useState<LoyaltyActionRecord | null>(
@@ -62,6 +66,7 @@ export function useLoyaltyCampaign(): UseLoyaltyCampaignReturn {
             setStatus(step)
             setActiveRecord({ ...record })
           },
+          onCommitTransaction: commit,
         })
 
         const validationError = service.validate("join", params)
@@ -102,8 +107,8 @@ export function useLoyaltyCampaign(): UseLoyaltyCampaignReturn {
         return undefined
       }
     },
-    [publicKey, isDemoMode, addAction, addCampaign, trackLoyalty]
+    [publicKey, isDemoMode, addAction, addCampaign, trackLoyalty, commit]
   )
 
-  return { status, activeRecord, error, joinCampaign, reset }
+  return { status, activeRecord, error, joinCampaign, reset, commitTx }
 }

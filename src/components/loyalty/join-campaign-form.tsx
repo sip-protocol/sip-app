@@ -7,6 +7,7 @@ import { DemoBanner } from "@/components/ui/demo-banner"
 import { PrivacyLevel } from "@sip-protocol/types"
 import { cn } from "@/lib/utils"
 import { useLoyaltyCampaign } from "@/hooks/use-loyalty-campaign"
+import { TransactionStatus } from "@/components/solana/transaction-status"
 import { LoyaltyPrivacyToggle } from "./loyalty-privacy-toggle"
 import { LoyaltyStatus } from "./loyalty-status"
 import type { Campaign } from "@/lib/loyalty/types"
@@ -27,7 +28,7 @@ export function JoinCampaignForm({
 
   const [privacyLevel, setPrivacyLevel] = useState<PrivacyOption>("shielded")
 
-  const { status, error, joinCampaign, reset: resetJoin } = useLoyaltyCampaign()
+  const { status, error, joinCampaign, reset: resetJoin, commitTx } = useLoyaltyCampaign()
 
   const privacyMap: Record<PrivacyOption, PrivacyLevel> = {
     shielded: PrivacyLevel.SHIELDED,
@@ -93,6 +94,13 @@ export function JoinCampaignForm({
             </span>
           </div>
         </div>
+
+        <TransactionStatus
+          status={commitTx.status}
+          txSignature={commitTx.txSignature}
+          explorerUrl={commitTx.explorerUrl}
+          error={commitTx.error}
+        />
 
         <button
           type="button"

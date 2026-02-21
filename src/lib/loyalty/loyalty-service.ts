@@ -119,12 +119,18 @@ export class LoyaltyService {
         )
       }
 
-      // Step 2: Joining campaign
+      // Step 2: Joining campaign (on-chain or simulated)
       record.status = "joining"
       record.stepTimestamps.joining = Date.now()
       this.onStepChange?.("joining", { ...record })
 
-      if (this.mode === "simulation") {
+      if (this.onCommitTransaction) {
+        const signature = await this.onCommitTransaction(
+          record.id,
+          `${record.campaignId}:join`
+        )
+        if (signature) record.txSignature = signature
+      } else if (this.mode === "simulation") {
         await new Promise((r) => setTimeout(r, SIMULATION_DELAYS.joining))
       }
 
@@ -189,12 +195,18 @@ export class LoyaltyService {
         )
       }
 
-      // Step 2: Recording to Torque
+      // Step 2: Recording to Torque (on-chain or simulated)
       record.status = "recording"
       record.stepTimestamps.recording = Date.now()
       this.onStepChange?.("recording", { ...record })
 
-      if (this.mode === "simulation") {
+      if (this.onCommitTransaction) {
+        const signature = await this.onCommitTransaction(
+          record.id,
+          `${record.campaignId}:action:${record.actionType}`
+        )
+        if (signature) record.txSignature = signature
+      } else if (this.mode === "simulation") {
         await new Promise((r) => setTimeout(r, SIMULATION_DELAYS.recording))
       }
 
