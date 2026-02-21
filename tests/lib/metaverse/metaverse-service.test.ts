@@ -182,4 +182,65 @@ describe("MetaverseService", () => {
       expect(result.stepTimestamps.arrived).toBeDefined()
     })
   })
+
+  describe("teleport (with shielded transfer)", () => {
+    it("calls onShieldedTransfer during teleporting step", async () => {
+      const mockShielded = vi.fn().mockResolvedValue("5xMockShieldedSig")
+      const service = new MetaverseService({
+        mode: "simulation",
+        onShieldedTransfer: mockShielded,
+      })
+
+      const result = await service.teleport(validTeleportParams)
+
+      expect(mockShielded).toHaveBeenCalledWith(
+        1_000_000,
+        expect.stringContaining("SIP-TELEPORT")
+      )
+      expect(result.shieldedTxSignature).toBe("5xMockShieldedSig")
+    })
+
+    it("stores shieldedTxSignature on record", async () => {
+      const mockShielded = vi.fn().mockResolvedValue("5xShieldedTeleport")
+      const service = new MetaverseService({
+        mode: "simulation",
+        onShieldedTransfer: mockShielded,
+      })
+
+      const result = await service.teleport(validTeleportParams)
+      expect(result.shieldedTxSignature).toBe("5xShieldedTeleport")
+    })
+
+    it("handles null return from shielded transfer", async () => {
+      const mockShielded = vi.fn().mockResolvedValue(null)
+      const service = new MetaverseService({
+        mode: "simulation",
+        onShieldedTransfer: mockShielded,
+      })
+
+      const result = await service.teleport(validTeleportParams)
+      expect(mockShielded).toHaveBeenCalled()
+      expect(result.shieldedTxSignature).toBeUndefined()
+      expect(result.status).toBe("arrived")
+    })
+
+    it("proceeds without shielded transfer when no callback", async () => {
+      const service = new MetaverseService({ mode: "simulation" })
+      const result = await service.teleport(validTeleportParams)
+
+      expect(result.shieldedTxSignature).toBeUndefined()
+      expect(result.status).toBe("arrived")
+    })
+
+    it("does not block teleport if shielded transfer errors", async () => {
+      const mockShielded = vi.fn().mockRejectedValue(new Error("tx failed"))
+      const service = new MetaverseService({
+        mode: "simulation",
+        onShieldedTransfer: mockShielded,
+      })
+
+      const result = await service.teleport(validTeleportParams)
+      expect(result.status).toBe("arrived")
+    })
+  })
 })

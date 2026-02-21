@@ -1,11 +1,13 @@
 "use client"
 
 import { useState, useCallback } from "react"
-import { useWallet } from "@solana/wallet-adapter-react"
+import { useWallet, useConnection } from "@solana/wallet-adapter-react"
 import { useDemoModeStore } from "@/stores/demo-mode"
 import { MetaverseService } from "@/lib/metaverse/metaverse-service"
 import { useMetaverseHistoryStore } from "@/stores/metaverse-history"
 import { useTrackEvent } from "@/hooks/useTrackEvent"
+import { useSolanaTransaction } from "@/hooks/use-solana-transaction"
+import { createStealthTransfer } from "@/lib/solana/stealth-transfer"
 import type {
   MetaverseStep,
   TeleportParams,
@@ -16,6 +18,7 @@ export type TeleportStatus = MetaverseStep | "idle" | "error"
 
 export interface UseTeleportOptions {
   onCommitTransaction?: (id: string, data: string) => Promise<string | null>
+  onShieldedTransfer?: (amountLamports: number, memo: string) => Promise<string | null>
 }
 
 export interface UseTeleportReturn {
@@ -26,15 +29,18 @@ export interface UseTeleportReturn {
     params: TeleportParams
   ) => Promise<MetaverseActionRecord | undefined>
   reset: () => void
+  shieldedTx: ReturnType<typeof useSolanaTransaction>
 }
 
 export function useTeleport(
   options: UseTeleportOptions = {}
 ): UseTeleportReturn {
   const { publicKey } = useWallet()
+  const { connection } = useConnection()
   const isDemoMode = useDemoModeStore((s) => s.isDemoMode)
   const { addAction } = useMetaverseHistoryStore()
   const { trackMetaverse } = useTrackEvent()
+  const shieldedTx = useSolanaTransaction()
 
   const [status, setStatus] = useState<TeleportStatus>("idle")
   const [activeRecord, setActiveRecord] =
@@ -46,6 +52,33 @@ export function useTeleport(
     setActiveRecord(null)
     setError(null)
   }, [])
+
+  const defaultShieldedTransfer = useCallback(
+    async (amountLamports: number, memo: string): Promise<string | null> => {
+      if (!publicKey) return null
+      try {
+        const viewingKey = process.env.NEXT_PUBLIC_RECIPIENT_VIEWING_PUBKEY ?? "11111111111111111111111111111111"
+        const spendingKey = process.env.NEXT_PUBLIC_RECIPIENT_SPENDING_PUBKEY ?? "11111111111111111111111111111111"
+
+        const transfer = await createStealthTransfer({
+          amountLamports,
+          memo,
+          recipientViewingPublicKey: viewingKey,
+          recipientSpendingPublicKey: spendingKey,
+        })
+
+        const transaction = await transfer.buildTransaction(
+          publicKey,
+          connection.rpcEndpoint
+        )
+
+        return shieldedTx.sendTransaction(transaction)
+      } catch {
+        return null
+      }
+    },
+    [publicKey, connection, shieldedTx]
+  )
 
   const teleport = useCallback(
     async (
@@ -67,6 +100,7 @@ export function useTeleport(
             setActiveRecord({ ...record })
           },
           onCommitTransaction: options.onCommitTransaction,
+          onShieldedTransfer: options.onShieldedTransfer ?? defaultShieldedTransfer,
         })
 
         const validationError = service.validate("teleport", params)
@@ -104,8 +138,10 @@ export function useTeleport(
       addAction,
       trackMetaverse,
       options.onCommitTransaction,
+      options.onShieldedTransfer,
+      defaultShieldedTransfer,
     ]
   )
 
-  return { status, activeRecord, error, teleport, reset }
+  return { status, activeRecord, error, teleport, reset, shieldedTx }
 }

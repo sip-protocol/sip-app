@@ -64,6 +64,7 @@ export interface MetaverseActionRecord {
   encryptionNonce?: string
   // On-chain commitment
   txSignature?: string
+  shieldedTxSignature?: string
   // Timestamps
   startedAt: number
   completedAt?: number

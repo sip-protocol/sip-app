@@ -21,6 +21,7 @@ export interface MetaverseServiceOptions {
   mode?: MetaverseMode
   onStepChange?: MetaverseStepChangeCallback
   onCommitTransaction?: (id: string, data: string) => Promise<string | null>
+  onShieldedTransfer?: (amountLamports: number, memo: string) => Promise<string | null>
 }
 
 export class MetaverseService {
@@ -30,11 +31,16 @@ export class MetaverseService {
     id: string,
     data: string
   ) => Promise<string | null>
+  private onShieldedTransfer?: (
+    amountLamports: number,
+    memo: string
+  ) => Promise<string | null>
 
   constructor(options: MetaverseServiceOptions = {}) {
     this.mode = options.mode ?? "simulation"
     this.onStepChange = options.onStepChange
     this.onCommitTransaction = options.onCommitTransaction
+    this.onShieldedTransfer = options.onShieldedTransfer
   }
 
   validate(
@@ -244,6 +250,19 @@ export class MetaverseService {
         if (signature) record.txSignature = signature
       } else if (this.mode === "simulation") {
         await new Promise((r) => setTimeout(r, SIMULATION_DELAYS.teleporting))
+      }
+
+      // Shielded transfer: send tiny SOL to stealth address for avatar metadata
+      if (this.onShieldedTransfer) {
+        try {
+          const shieldedSig = await this.onShieldedTransfer(
+            1_000_000, // 0.001 SOL for avatar metadata commitment
+            `SIP-TELEPORT:${params.worldId}:${params.tier}`
+          )
+          if (shieldedSig) record.shieldedTxSignature = shieldedSig
+        } catch {
+          // Non-fatal: shielded transfer failure shouldn't block teleport
+        }
       }
 
       // Step 3: Arrived
