@@ -107,8 +107,10 @@ export class SunriseClient {
       const gsolAmount = solAmount.toFixed(4)
       const carbonOffsetKg = this.estimateCarbonOffset(solAmount)
 
-      // Deposit still simulated (requires wallet signing via @sunrisestake/client)
-      // but the data context is real
+      // Real deposit requires @sunrisestake/client wallet integration:
+      //   const sunriseClient = new SunriseStakeClient(provider, network)
+      //   const { tx } = await sunriseClient.deposit(new BN(solAmount * LAMPORTS_PER_SOL))
+      // Until then, simulate the tx hash while using real on-chain data context
       const txHash = this.generateSimulatedTxHash()
 
       console.info(
