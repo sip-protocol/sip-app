@@ -3,6 +3,9 @@ export type { GovernanceServiceOptions } from "./governance-service"
 
 export { RealmsReader } from "./realms-reader"
 
+export { buildCastVoteTransaction } from "./realms-vote-builder"
+export type { CastVoteParams } from "./realms-vote-builder"
+
 export {
   SAMPLE_DAOS,
   SAMPLE_PROPOSALS,
@@ -25,4 +28,5 @@ export type {
   VoteParams,
   VoteStepChangeCallback,
   GovernanceMode,
+  RealmVoteData,
 } from "./types"

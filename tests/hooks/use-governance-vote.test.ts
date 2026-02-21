@@ -7,8 +7,38 @@ import { useGovernanceVote } from "@/hooks/use-governance-vote"
 vi.mock("@solana/wallet-adapter-react", () => ({
   useWallet: () => ({
     publicKey: { toBase58: () => "MockPublicKey123" },
+    connected: true,
     signTransaction: vi.fn(),
+    sendTransaction: vi.fn(),
   }),
+  useConnection: () => ({
+    connection: {
+      rpcEndpoint: "https://api.devnet.solana.com",
+      getLatestBlockhash: vi.fn().mockResolvedValue({
+        blockhash: "mock-blockhash",
+        lastValidBlockHeight: 100,
+      }),
+      confirmTransaction: vi.fn().mockResolvedValue({ value: { err: null } }),
+    },
+  }),
+}))
+
+// Mock useSolanaTransaction (used for Realms castVote)
+vi.mock("@/hooks/use-solana-transaction", () => ({
+  useSolanaTransaction: () => ({
+    status: "idle",
+    txSignature: null,
+    explorerUrl: null,
+    error: null,
+    isWalletConnected: true,
+    sendTransaction: vi.fn().mockResolvedValue(null),
+    reset: vi.fn(),
+  }),
+}))
+
+// Mock realms-vote-builder
+vi.mock("@/lib/governance/realms-vote-builder", () => ({
+  buildCastVoteTransaction: vi.fn().mockResolvedValue({ mock: "transaction" }),
 }))
 
 // Mock GovernanceService as a class

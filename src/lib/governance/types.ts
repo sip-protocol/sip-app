@@ -64,6 +64,7 @@ export interface PrivateVoteRecord {
   committedAt?: number
   revealedAt?: number
   txSignature?: string
+  realmsVoteTxSignature?: string
   error?: string
   stepTimestamps: Partial<Record<VoteStep, number>>
 }
@@ -81,3 +82,14 @@ export type VoteStepChangeCallback = (
 ) => void
 
 export type GovernanceMode = "simulation" | "realms"
+
+/**
+ * On-chain realm data needed to build a real SPL Governance castVote transaction.
+ * Passed alongside VoteParams when sendRealmsVote is enabled.
+ */
+export interface RealmVoteData {
+  realmPubkey: string
+  governancePubkey: string
+  tokenOwnerRecordPubkey: string
+  voterWeightRecordPubkey?: string
+}

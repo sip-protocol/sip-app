@@ -1,15 +1,19 @@
 "use client"
 
 import { useState, useCallback } from "react"
-import { useWallet } from "@solana/wallet-adapter-react"
+import { useWallet, useConnection } from "@solana/wallet-adapter-react"
+import { PublicKey } from "@solana/web3.js"
 import { useDemoModeStore } from "@/stores/demo-mode"
 import { GovernanceService } from "@/lib/governance/governance-service"
 import { useGovernanceHistoryStore } from "@/stores/governance-history"
 import { useTrackEvent } from "@/hooks/useTrackEvent"
+import { useSolanaTransaction } from "@/hooks/use-solana-transaction"
+import { buildCastVoteTransaction } from "@/lib/governance/realms-vote-builder"
 import type {
   VoteStep,
   VoteParams,
   PrivateVoteRecord,
+  RealmVoteData,
 } from "@/lib/governance/types"
 
 export type GovernanceVoteStatus = VoteStep | "idle" | "error"
@@ -29,15 +33,21 @@ export interface UseGovernanceVoteOptions {
     choice: number,
     weight: string
   ) => Promise<string | null>
+  /** When true AND realmVoteData is provided, sends a real SPL Governance castVote tx after commitment */
+  sendRealmsVote?: boolean
+  /** On-chain realm data needed for SPL Governance castVote */
+  realmVoteData?: RealmVoteData
 }
 
 export function useGovernanceVote(
   options: UseGovernanceVoteOptions = {}
 ): UseGovernanceVoteReturn {
   const { publicKey } = useWallet()
+  const { connection } = useConnection()
   const isDemoMode = useDemoModeStore((s) => s.isDemoMode)
   const { addVote, updateVote, getVote } = useGovernanceHistoryStore()
   const { trackVote } = useTrackEvent()
+  const realmsTx = useSolanaTransaction()
 
   const [status, setStatus] = useState<GovernanceVoteStatus>("idle")
   const [activeVote, setActiveVote] = useState<PrivateVoteRecord | null>(null)
@@ -47,7 +57,8 @@ export function useGovernanceVote(
     setStatus("idle")
     setActiveVote(null)
     setError(null)
-  }, [])
+    realmsTx.reset()
+  }, [realmsTx])
 
   const commitVote = useCallback(
     async (params: VoteParams): Promise<PrivateVoteRecord | undefined> => {
@@ -80,6 +91,38 @@ export function useGovernanceVote(
 
         const result = await service.commitVote(params)
 
+        // Send real SPL Governance castVote transaction after commitment succeeds
+        if (
+          options.sendRealmsVote &&
+          options.realmVoteData &&
+          publicKey
+        ) {
+          try {
+            const tx = await buildCastVoteTransaction(connection, {
+              realmPubkey: new PublicKey(options.realmVoteData.realmPubkey),
+              governancePubkey: new PublicKey(options.realmVoteData.governancePubkey),
+              proposalPubkey: new PublicKey(params.proposalId),
+              tokenOwnerRecordPubkey: new PublicKey(options.realmVoteData.tokenOwnerRecordPubkey),
+              voterPubkey: publicKey,
+              voterWeightRecordPubkey: options.realmVoteData.voterWeightRecordPubkey
+                ? new PublicKey(options.realmVoteData.voterWeightRecordPubkey)
+                : undefined,
+              choice: params.choice,
+            })
+
+            const realmsSignature = await realmsTx.sendTransaction(tx)
+            if (realmsSignature) {
+              result.realmsVoteTxSignature = realmsSignature
+            }
+          } catch (realmsErr) {
+            // Log but don't fail the overall vote — the SIP commitment succeeded
+            console.warn(
+              "[SIP] Realms castVote failed (commitment still valid):",
+              realmsErr instanceof Error ? realmsErr.message : realmsErr
+            )
+          }
+        }
+
         setActiveVote(result)
         addVote(result)
 
@@ -98,7 +141,17 @@ export function useGovernanceVote(
         return undefined
       }
     },
-    [publicKey, isDemoMode, addVote, trackVote, options.onCommitTransaction]
+    [
+      publicKey,
+      isDemoMode,
+      connection,
+      addVote,
+      trackVote,
+      realmsTx,
+      options.onCommitTransaction,
+      options.sendRealmsVote,
+      options.realmVoteData,
+    ]
   )
 
   const revealVote = useCallback(
