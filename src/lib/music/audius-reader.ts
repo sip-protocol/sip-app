@@ -202,6 +202,50 @@ export class AudiusReader {
     ]
   }
 
+  // ── searchTracks ───────────────────────────────────────────────────────
+  async searchTracks(query: string): Promise<Track[]> {
+    if (this.mode === "simulation") {
+      const q = query.toLowerCase()
+      return SAMPLE_TRACKS.filter(
+        (t) =>
+          t.title.toLowerCase().includes(q) ||
+          t.description.toLowerCase().includes(q) ||
+          t.genre.toLowerCase().includes(q)
+      )
+    }
+
+    const cacheKey = `audius:search:${query}`
+    const cached = getCached<Track[]>(cacheKey)
+    if (cached) return cached
+
+    try {
+      const raw = await audiusFetch<AudiusTrack[]>(
+        `/tracks/search?query=${encodeURIComponent(query)}&limit=10`
+      )
+      const tracks = raw.map(mapAudiusTrack)
+      setCache(cacheKey, tracks)
+      return tracks
+    } catch (err) {
+      console.warn(
+        `[SIP] Audius API fetch failed for searchTracks("${query}"), falling back to simulation:`,
+        err instanceof Error ? err.message : err
+      )
+      const q = query.toLowerCase()
+      return SAMPLE_TRACKS.filter(
+        (t) =>
+          t.title.toLowerCase().includes(q) ||
+          t.description.toLowerCase().includes(q) ||
+          t.genre.toLowerCase().includes(q)
+      )
+    }
+  }
+
+  // ── getStreamUrl ──────────────────────────────────────────────────────
+  getStreamUrl(trackId: string): string | null {
+    if (this.mode === "simulation") return null
+    return `${AUDIUS_BASE_URL}/tracks/${trackId}/stream?app_name=${AUDIUS_APP_NAME}`
+  }
+
   // ── getTracksByGenre ────────────────────────────────────────────────────
   async getTracksByGenre(genre: MusicGenre): Promise<Track[]> {
     if (this.mode === "simulation") {
