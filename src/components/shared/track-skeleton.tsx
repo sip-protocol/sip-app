@@ -1,3 +1,41 @@
+/**
+ * Full-page loading skeleton for track pages.
+ * Shows a header placeholder + grid of animated skeleton cards.
+ */
+export function TrackPageSkeleton({ count = 3 }: { count?: number }) {
+  return (
+    <div className="space-y-6">
+      {/* Header skeleton */}
+      <div className="space-y-3">
+        <div className="h-8 w-48 bg-gray-800 rounded-lg animate-pulse" />
+        <div className="h-4 w-80 bg-gray-800/60 rounded animate-pulse" />
+      </div>
+
+      {/* Card grid skeleton */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {Array.from({ length: count }).map((_, i) => (
+          <div
+            key={i}
+            className="p-5 rounded-xl bg-gray-800/40 border border-gray-700/50 animate-pulse"
+            style={{ animationDelay: `${i * 150}ms` }}
+          >
+            <div className="h-5 w-2/3 bg-gray-800 rounded mb-3" />
+            <div className="space-y-2">
+              <div className="h-3 w-full bg-gray-800/60 rounded" />
+              <div className="h-3 w-5/6 bg-gray-800/60 rounded" />
+              <div className="h-3 w-3/4 bg-gray-800/60 rounded" />
+            </div>
+            <div className="mt-4 flex gap-2">
+              <div className="h-7 w-20 bg-gray-800/40 rounded-lg" />
+              <div className="h-7 w-16 bg-gray-800/40 rounded-lg" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 export function StatsSkeleton() {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
