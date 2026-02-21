@@ -42,6 +42,7 @@ export type CommitmentType =
   | "move"
   | "ticket"
   | "post"
+  | "playlist"
   | "reward"
   | "drop"
   | "teleport"

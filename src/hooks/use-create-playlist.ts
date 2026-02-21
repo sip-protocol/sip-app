@@ -14,6 +14,10 @@ import type {
 
 export type CreatePlaylistStatus = MusicStep | "idle" | "error"
 
+export interface UseCreatePlaylistOptions {
+  onCommitTransaction?: (id: string, data: string) => Promise<string | null>
+}
+
 export interface UseCreatePlaylistReturn {
   status: CreatePlaylistStatus
   activeRecord: MusicActionRecord | null
@@ -24,7 +28,9 @@ export interface UseCreatePlaylistReturn {
   reset: () => void
 }
 
-export function useCreatePlaylist(): UseCreatePlaylistReturn {
+export function useCreatePlaylist(
+  options: UseCreatePlaylistOptions = {}
+): UseCreatePlaylistReturn {
   const { publicKey } = useWallet()
   const isDemoMode = useDemoModeStore((s) => s.isDemoMode)
   const { addAction } = useMusicHistoryStore()
@@ -61,6 +67,7 @@ export function useCreatePlaylist(): UseCreatePlaylistReturn {
             setStatus(step)
             setActiveRecord({ ...record })
           },
+          onCommitTransaction: options.onCommitTransaction,
         })
 
         const validationError = service.validate("playlist", params)
@@ -93,7 +100,7 @@ export function useCreatePlaylist(): UseCreatePlaylistReturn {
         return undefined
       }
     },
-    [publicKey, isDemoMode, addAction, trackMusic]
+    [publicKey, isDemoMode, addAction, trackMusic, options.onCommitTransaction]
   )
 
   return { status, activeRecord, error, createPlaylist, reset }

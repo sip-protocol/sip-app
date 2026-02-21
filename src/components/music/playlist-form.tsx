@@ -7,6 +7,8 @@ import { DemoBanner } from "@/components/ui/demo-banner"
 import { PrivacyLevel } from "@sip-protocol/types"
 import { cn } from "@/lib/utils"
 import { useCreatePlaylist } from "@/hooks/use-create-playlist"
+import { useOnChainCommit } from "@/hooks/use-on-chain-commit"
+import { TransactionStatus } from "@/components/solana/transaction-status"
 import { MusicPrivacyToggle } from "./music-privacy-toggle"
 import { MusicStatus } from "./music-status"
 import { StealthStreamDisplay } from "./stealth-stream-display"
@@ -33,13 +35,15 @@ export function PlaylistForm({ onCreated }: PlaylistFormProps) {
   const [tier, setTier] = useState<ListenerTier>("free")
   const [privacyLevel, setPrivacyLevel] = useState<PrivacyOption>("shielded")
 
+  const { commit, tx } = useOnChainCommit("playlist")
+
   const {
     status,
     activeRecord,
     error,
     createPlaylist,
     reset: resetPlaylist,
-  } = useCreatePlaylist()
+  } = useCreatePlaylist({ onCommitTransaction: commit })
 
   const privacyMap: Record<PrivacyOption, PrivacyLevel> = {
     shielded: PrivacyLevel.SHIELDED,
@@ -93,6 +97,13 @@ export function PlaylistForm({ onCreated }: PlaylistFormProps) {
           metaAddress={activeRecord.stealthMetaAddress ?? ""}
           trackTitle={activeRecord.trackTitle ?? ""}
           tier={activeRecord.tier ?? "free"}
+        />
+
+        <TransactionStatus
+          status={tx.status}
+          txSignature={tx.txSignature}
+          explorerUrl={tx.explorerUrl}
+          error={tx.error}
         />
 
         <button

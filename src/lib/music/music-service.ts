@@ -20,15 +20,21 @@ function generateId(prefix: string): string {
 export interface MusicServiceOptions {
   mode?: MusicMode
   onStepChange?: MusicStepChangeCallback
+  onCommitTransaction?: (id: string, data: string) => Promise<string | null>
 }
 
 export class MusicService {
   private mode: MusicMode
   private onStepChange?: MusicStepChangeCallback
+  private onCommitTransaction?: (
+    id: string,
+    data: string
+  ) => Promise<string | null>
 
   constructor(options: MusicServiceOptions = {}) {
     this.mode = options.mode ?? "simulation"
     this.onStepChange = options.onStepChange
+    this.onCommitTransaction = options.onCommitTransaction
   }
 
   validate(
@@ -227,7 +233,15 @@ export class MusicService {
         record.encryptedForAuditor = vk.ciphertext
       }
 
-      if (this.mode === "simulation") {
+      if (this.onCommitTransaction) {
+        const signature = await this.onCommitTransaction(
+          record.id,
+          `${params.trackId}:playlist`
+        )
+        if (signature) {
+          record.txSignature = signature
+        }
+      } else if (this.mode === "simulation") {
         await new Promise((r) =>
           setTimeout(r, SIMULATION_DELAYS.encrypting_playlist)
         )

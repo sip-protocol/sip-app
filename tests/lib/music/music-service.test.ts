@@ -185,5 +185,52 @@ describe("MusicService", () => {
       expect(result.stepTimestamps.encrypting_playlist).toBeDefined()
       expect(result.stepTimestamps.created).toBeDefined()
     })
+
+    it("calls onCommitTransaction during encrypting_playlist step", async () => {
+      const onCommit = vi.fn().mockResolvedValue("mock_tx_sig_123")
+      const service = new MusicService({
+        mode: "simulation",
+        onCommitTransaction: onCommit,
+      })
+
+      const result = await service.createPlaylist(validPlaylistParams)
+
+      expect(onCommit).toHaveBeenCalledOnce()
+      expect(onCommit).toHaveBeenCalledWith(
+        expect.stringContaining("playlist_"),
+        expect.stringContaining("track-decentralized-beats:playlist")
+      )
+      expect(result.txSignature).toBe("mock_tx_sig_123")
+      expect(result.status).toBe("created")
+    })
+
+    it("sets no txSignature when onCommitTransaction returns null", async () => {
+      const onCommit = vi.fn().mockResolvedValue(null)
+      const service = new MusicService({
+        mode: "simulation",
+        onCommitTransaction: onCommit,
+      })
+
+      const result = await service.createPlaylist(validPlaylistParams)
+
+      expect(onCommit).toHaveBeenCalledOnce()
+      expect(result.txSignature).toBeUndefined()
+    })
+
+    it("uses simulation delay when onCommitTransaction is not provided", async () => {
+      const steps: MusicStep[] = []
+      const service = new MusicService({
+        mode: "simulation",
+        onStepChange: (step) => steps.push(step),
+      })
+
+      const start = Date.now()
+      await service.createPlaylist(validPlaylistParams)
+      const elapsed = Date.now() - start
+
+      // Simulation delays should have been applied (generating_proof + encrypting_playlist)
+      expect(elapsed).toBeGreaterThanOrEqual(100)
+      expect(steps).toContain("encrypting_playlist")
+    })
   })
 })
