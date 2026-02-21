@@ -219,7 +219,7 @@ export const TOKENS: TokenConfig[] = [
     name: "Solana",
     address: null, // Native token
     decimals: 9,
-    icon: "/tokens/sol.svg",
+    icon: "/tokens/sol.png",
     network: "solana",
   },
   {
@@ -227,7 +227,7 @@ export const TOKENS: TokenConfig[] = [
     name: "USD Coin",
     address: "4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU", // Devnet USDC
     decimals: 6,
-    icon: "/tokens/usdc.svg",
+    icon: "/tokens/usdc.png",
     network: "solana",
   },
   // Ethereum Sepolia
@@ -236,7 +236,7 @@ export const TOKENS: TokenConfig[] = [
     name: "Ethereum",
     address: null, // Native token
     decimals: 18,
-    icon: "/tokens/eth.svg",
+    icon: "/tokens/eth.png",
     network: "ethereum",
   },
   {
@@ -244,7 +244,7 @@ export const TOKENS: TokenConfig[] = [
     name: "USD Coin",
     address: "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238", // Sepolia USDC
     decimals: 6,
-    icon: "/tokens/usdc.svg",
+    icon: "/tokens/usdc.png",
     network: "ethereum",
   },
   {
@@ -252,7 +252,7 @@ export const TOKENS: TokenConfig[] = [
     name: "Wrapped Ether",
     address: "0x7b79995e5f793A07Bc00c21412e50Ecae098E7f9", // Sepolia WETH
     decimals: 18,
-    icon: "/tokens/weth.svg",
+    icon: "/tokens/weth.png",
     network: "ethereum",
   },
   // NEAR Testnet
@@ -261,7 +261,7 @@ export const TOKENS: TokenConfig[] = [
     name: "NEAR Protocol",
     address: null, // Native token
     decimals: 24,
-    icon: "/tokens/near.svg",
+    icon: "/tokens/near.png",
     network: "near",
   },
   {
@@ -269,7 +269,7 @@ export const TOKENS: TokenConfig[] = [
     name: "USD Coin",
     address: "usdc.fakes.testnet", // NEAR Testnet USDC
     decimals: 6,
-    icon: "/tokens/usdc.svg",
+    icon: "/tokens/usdc.png",
     network: "near",
   },
   // Zcash Testnet
@@ -278,7 +278,7 @@ export const TOKENS: TokenConfig[] = [
     name: "Zcash",
     address: null, // Native token
     decimals: 8,
-    icon: "/tokens/zec.svg",
+    icon: "/tokens/zec.png",
     network: "zcash",
   },
   // Arbitrum
@@ -287,7 +287,7 @@ export const TOKENS: TokenConfig[] = [
     name: "Arbitrum",
     address: null, // Uses ETH as native, ARB is the token
     decimals: 18,
-    icon: "/tokens/arb.svg",
+    icon: "/tokens/arb.png",
     network: "arbitrum",
   },
   // Base
@@ -296,7 +296,7 @@ export const TOKENS: TokenConfig[] = [
     name: "Base",
     address: null, // Uses ETH as native
     decimals: 18,
-    icon: "/tokens/base.svg",
+    icon: "/tokens/base.png",
     network: "base",
   },
   // Bitcoin
@@ -305,7 +305,7 @@ export const TOKENS: TokenConfig[] = [
     name: "Bitcoin",
     address: null,
     decimals: 8,
-    icon: "/tokens/btc.svg",
+    icon: "/tokens/btc.png",
     network: "bitcoin",
   },
   // Optimism
@@ -314,7 +314,7 @@ export const TOKENS: TokenConfig[] = [
     name: "Optimism",
     address: null, // Uses ETH as native, OP is the token
     decimals: 18,
-    icon: "/tokens/op.svg",
+    icon: "/tokens/op.png",
     network: "optimism",
   },
   // Polygon
@@ -323,7 +323,7 @@ export const TOKENS: TokenConfig[] = [
     name: "Polygon",
     address: null,
     decimals: 18,
-    icon: "/tokens/pol.svg",
+    icon: "/tokens/pol.png",
     network: "polygon",
   },
   // BNB Chain
@@ -332,7 +332,7 @@ export const TOKENS: TokenConfig[] = [
     name: "BNB",
     address: null,
     decimals: 18,
-    icon: "/tokens/bnb.svg",
+    icon: "/tokens/bnb.png",
     network: "bsc",
   },
   // Avalanche
@@ -341,7 +341,7 @@ export const TOKENS: TokenConfig[] = [
     name: "Avalanche",
     address: null,
     decimals: 18,
-    icon: "/tokens/avax.svg",
+    icon: "/tokens/avax.png",
     network: "avalanche",
   },
   // Aptos
@@ -350,7 +350,7 @@ export const TOKENS: TokenConfig[] = [
     name: "Aptos",
     address: null,
     decimals: 8,
-    icon: "/tokens/apt.svg",
+    icon: "/tokens/apt.png",
     network: "aptos",
   },
 ]

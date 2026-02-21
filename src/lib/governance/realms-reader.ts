@@ -522,9 +522,9 @@ export class RealmsReader {
       }
 
       // Unknown realm — return generic info
-      return { id: realmPubkey, name: "Unknown DAO", icon: "/tokens/sol.svg" }
+      return { id: realmPubkey, name: "Unknown DAO", icon: "/tokens/sol.png" }
     } catch {
-      return { id: "unknown", name: "Unknown DAO", icon: "/tokens/sol.svg" }
+      return { id: "unknown", name: "Unknown DAO", icon: "/tokens/sol.png" }
     }
   }
 
