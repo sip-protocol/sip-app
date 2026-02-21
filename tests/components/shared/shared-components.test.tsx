@@ -84,7 +84,7 @@ describe("ActionToast", () => {
 
   it("renders success message with emerald/green styling", () => {
     const onClose = vi.fn()
-    const { container } = render(
+    render(
       <ActionToast message="Transfer complete" type="success" onClose={onClose} />
     )
     expect(screen.getByText("Transfer complete")).toBeInTheDocument()
@@ -95,7 +95,7 @@ describe("ActionToast", () => {
 
   it("renders error message with red styling", () => {
     const onClose = vi.fn()
-    const { container } = render(
+    render(
       <ActionToast message="Something failed" type="error" onClose={onClose} />
     )
     expect(screen.getByText("Something failed")).toBeInTheDocument()

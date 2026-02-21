@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi, afterEach } from "vitest"
+import { describe, it, expect, beforeEach, vi } from "vitest"
 import { SAMPLE_TRACKS } from "@/lib/music/constants"
 
 // Mock fetch for Audius API calls
