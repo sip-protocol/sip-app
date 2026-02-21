@@ -202,6 +202,50 @@ describe("SocialService", () => {
     })
   })
 
+  describe("createProfile (onCommitTransaction)", () => {
+    it("calls onCommitTransaction during creating_profile step", async () => {
+      const onCommit = vi.fn().mockResolvedValue("tx-profile-abc123")
+      const service = new SocialService({
+        mode: "simulation",
+        onCommitTransaction: onCommit,
+      })
+
+      const result = await service.createProfile(validProfileParams)
+
+      expect(onCommit).toHaveBeenCalledTimes(1)
+      expect(onCommit).toHaveBeenCalledWith(
+        result.id,
+        `${result.profileId}:profile`
+      )
+      expect(result.txSignature).toBe("tx-profile-abc123")
+    })
+
+    it("sets txSignature when onCommitTransaction returns a value", async () => {
+      const onCommit = vi.fn().mockResolvedValue("sig-profile-xyz")
+      const service = new SocialService({
+        mode: "simulation",
+        onCommitTransaction: onCommit,
+      })
+
+      const result = await service.createProfile(validProfileParams)
+
+      expect(result.txSignature).toBe("sig-profile-xyz")
+    })
+
+    it("does not set txSignature when onCommitTransaction returns null", async () => {
+      const onCommit = vi.fn().mockResolvedValue(null)
+      const service = new SocialService({
+        mode: "simulation",
+        onCommitTransaction: onCommit,
+      })
+
+      const result = await service.createProfile(validProfileParams)
+
+      expect(onCommit).toHaveBeenCalledTimes(1)
+      expect(result.txSignature).toBeUndefined()
+    })
+  })
+
   describe("createPost (simulation)", () => {
     it("progresses through 3 steps in order", async () => {
       const steps: SocialStep[] = []
@@ -230,6 +274,38 @@ describe("SocialService", () => {
       await expect(
         service.createPost({ ...validPostParams, content: "" })
       ).rejects.toThrow("Content is required")
+    })
+  })
+
+  describe("createPost (onCommitTransaction)", () => {
+    it("calls onCommitTransaction during publishing step", async () => {
+      const onCommit = vi.fn().mockResolvedValue("tx-post-abc123")
+      const service = new SocialService({
+        mode: "simulation",
+        onCommitTransaction: onCommit,
+      })
+
+      const result = await service.createPost(validPostParams)
+
+      expect(onCommit).toHaveBeenCalledTimes(1)
+      expect(onCommit).toHaveBeenCalledWith(
+        result.id,
+        `${result.profileId}:post`
+      )
+      expect(result.txSignature).toBe("tx-post-abc123")
+    })
+
+    it("does not set txSignature when onCommitTransaction returns null", async () => {
+      const onCommit = vi.fn().mockResolvedValue(null)
+      const service = new SocialService({
+        mode: "simulation",
+        onCommitTransaction: onCommit,
+      })
+
+      const result = await service.createPost(validPostParams)
+
+      expect(onCommit).toHaveBeenCalledTimes(1)
+      expect(result.txSignature).toBeUndefined()
     })
   })
 
@@ -263,6 +339,50 @@ describe("SocialService", () => {
           toProfileId: "profile-dolphin",
         })
       ).rejects.toThrow("Cannot follow yourself")
+    })
+  })
+
+  describe("followProfile (onCommitTransaction)", () => {
+    it("calls onCommitTransaction during connecting step", async () => {
+      const onCommit = vi.fn().mockResolvedValue("tx-follow-abc123")
+      const service = new SocialService({
+        mode: "simulation",
+        onCommitTransaction: onCommit,
+      })
+
+      const result = await service.followProfile(validFollowParams)
+
+      expect(onCommit).toHaveBeenCalledTimes(1)
+      expect(onCommit).toHaveBeenCalledWith(
+        result.id,
+        `${result.profileId}:follow:${validFollowParams.toProfileId}`
+      )
+      expect(result.txSignature).toBe("tx-follow-abc123")
+    })
+
+    it("sets txSignature when onCommitTransaction returns a value", async () => {
+      const onCommit = vi.fn().mockResolvedValue("sig-follow-xyz")
+      const service = new SocialService({
+        mode: "simulation",
+        onCommitTransaction: onCommit,
+      })
+
+      const result = await service.followProfile(validFollowParams)
+
+      expect(result.txSignature).toBe("sig-follow-xyz")
+    })
+
+    it("does not set txSignature when onCommitTransaction returns null", async () => {
+      const onCommit = vi.fn().mockResolvedValue(null)
+      const service = new SocialService({
+        mode: "simulation",
+        onCommitTransaction: onCommit,
+      })
+
+      const result = await service.followProfile(validFollowParams)
+
+      expect(onCommit).toHaveBeenCalledTimes(1)
+      expect(result.txSignature).toBeUndefined()
     })
   })
 })

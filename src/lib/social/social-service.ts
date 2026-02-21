@@ -122,12 +122,18 @@ export class SocialService {
         )
       }
 
-      // Step 2: Create Tapestry profile (simulated)
+      // Step 2: Create Tapestry profile (simulated or on-chain)
       record.status = "creating_profile"
       record.stepTimestamps.creating_profile = Date.now()
       this.onStepChange?.("creating_profile", { ...record })
 
-      if (this.mode === "simulation") {
+      if (this.onCommitTransaction) {
+        const signature = await this.onCommitTransaction(
+          record.id,
+          `${record.profileId}:${record.type}`
+        )
+        if (signature) record.txSignature = signature
+      } else if (this.mode === "simulation") {
         await new Promise((r) =>
           setTimeout(r, SIMULATION_DELAYS.creating_profile)
         )
@@ -261,12 +267,18 @@ export class SocialService {
         )
       }
 
-      // Step 2: Create connection (simulated)
+      // Step 2: Create connection (simulated or on-chain)
       record.status = "connecting"
       record.stepTimestamps.connecting = Date.now()
       this.onStepChange?.("connecting", { ...record })
 
-      if (this.mode === "simulation") {
+      if (this.onCommitTransaction) {
+        const signature = await this.onCommitTransaction(
+          record.id,
+          `${record.profileId}:${record.type}:${params.toProfileId}`
+        )
+        if (signature) record.txSignature = signature
+      } else if (this.mode === "simulation") {
         await new Promise((r) => setTimeout(r, SIMULATION_DELAYS.connecting))
       }
 

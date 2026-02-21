@@ -7,6 +7,7 @@ import { DemoBanner } from "@/components/ui/demo-banner"
 import { PrivacyLevel } from "@sip-protocol/types"
 import { cn } from "@/lib/utils"
 import { useSocialProfile } from "@/hooks/use-social-profile"
+import { TransactionStatus } from "@/components/solana/transaction-status"
 import { SocialPrivacyToggle } from "./social-privacy-toggle"
 import { SocialStatus } from "./social-status"
 import { StealthIdentityDisplay } from "./stealth-identity-display"
@@ -31,6 +32,7 @@ export function CreateProfileForm({ onCreated }: CreateProfileFormProps) {
     error,
     createProfile,
     reset: resetProfile,
+    commitTx,
   } = useSocialProfile()
 
   const privacyMap: Record<PrivacyOption, PrivacyLevel> = {
@@ -101,6 +103,13 @@ export function CreateProfileForm({ onCreated }: CreateProfileFormProps) {
             </span>
           </div>
         </div>
+
+        <TransactionStatus
+          status={commitTx.status}
+          txSignature={commitTx.txSignature}
+          explorerUrl={commitTx.explorerUrl}
+          error={commitTx.error}
+        />
 
         <button
           type="button"

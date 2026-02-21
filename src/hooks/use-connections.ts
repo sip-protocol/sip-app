@@ -7,6 +7,7 @@ import { TapestryReader } from "@/lib/social/tapestry-reader"
 import { SocialService } from "@/lib/social/social-service"
 import { useSocialHistoryStore } from "@/stores/social-history"
 import { useTrackEvent } from "@/hooks/useTrackEvent"
+import { useOnChainCommit } from "@/hooks/use-on-chain-commit"
 import type {
   SocialConnection,
   SocialStep,
@@ -25,6 +26,8 @@ export interface UseConnectionsReturn {
   status: ConnectionStatus
   error: string | null
   reset: () => void
+  /** Solana transaction state for on-chain commitment */
+  commitTx: ReturnType<typeof useOnChainCommit>["tx"]
 }
 
 export function useConnections(profileId: string | null): UseConnectionsReturn {
@@ -32,6 +35,7 @@ export function useConnections(profileId: string | null): UseConnectionsReturn {
   const isDemoMode = useDemoModeStore((s) => s.isDemoMode)
   const { addAction } = useSocialHistoryStore()
   const { trackSocial } = useTrackEvent()
+  const { commit, tx: commitTx } = useOnChainCommit("post")
 
   const [connections, setConnections] = useState<SocialConnection[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -80,6 +84,7 @@ export function useConnections(profileId: string | null): UseConnectionsReturn {
           onStepChange: (step) => {
             setStatus(step)
           },
+          onCommitTransaction: commit,
         })
 
         const validationError = service.validate("follow", params)
@@ -109,8 +114,8 @@ export function useConnections(profileId: string | null): UseConnectionsReturn {
         return undefined
       }
     },
-    [publicKey, isDemoMode, addAction, trackSocial]
+    [publicKey, isDemoMode, addAction, trackSocial, commit]
   )
 
-  return { connections, isLoading, followProfile, status, error, reset }
+  return { connections, isLoading, followProfile, status, error, reset, commitTx }
 }

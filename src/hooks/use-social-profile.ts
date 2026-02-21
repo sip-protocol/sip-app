@@ -6,6 +6,7 @@ import { useDemoModeStore } from "@/stores/demo-mode"
 import { SocialService } from "@/lib/social/social-service"
 import { useSocialHistoryStore } from "@/stores/social-history"
 import { useTrackEvent } from "@/hooks/useTrackEvent"
+import { useOnChainCommit } from "@/hooks/use-on-chain-commit"
 import type {
   SocialStep,
   CreateProfileParams,
@@ -23,6 +24,8 @@ export interface UseSocialProfileReturn {
     params: CreateProfileParams
   ) => Promise<SocialActionRecord | undefined>
   reset: () => void
+  /** Solana transaction state for on-chain commitment */
+  commitTx: ReturnType<typeof useOnChainCommit>["tx"]
 }
 
 export function useSocialProfile(): UseSocialProfileReturn {
@@ -30,6 +33,7 @@ export function useSocialProfile(): UseSocialProfileReturn {
   const isDemoMode = useDemoModeStore((s) => s.isDemoMode)
   const { addAction, addProfile } = useSocialHistoryStore()
   const { trackSocial } = useTrackEvent()
+  const { commit, tx: commitTx } = useOnChainCommit("post")
 
   const [status, setStatus] = useState<SocialProfileStatus>("idle")
   const [activeRecord, setActiveRecord] = useState<SocialActionRecord | null>(
@@ -62,6 +66,7 @@ export function useSocialProfile(): UseSocialProfileReturn {
             setStatus(step)
             setActiveRecord({ ...record })
           },
+          onCommitTransaction: commit,
         })
 
         const validationError = service.validate("profile", params)
@@ -109,8 +114,8 @@ export function useSocialProfile(): UseSocialProfileReturn {
         return undefined
       }
     },
-    [publicKey, isDemoMode, addAction, addProfile, trackSocial]
+    [publicKey, isDemoMode, addAction, addProfile, trackSocial, commit]
   )
 
-  return { status, activeRecord, error, createProfile, reset }
+  return { status, activeRecord, error, createProfile, reset, commitTx }
 }
