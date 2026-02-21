@@ -395,7 +395,11 @@ export function buildMintToCollectionV1Instruction(params: {
       { pubkey: collectionEditionPda, isSigner: false, isWritable: false },
       { pubkey: bubblegumSignerPda, isSigner: false, isWritable: false },
       { pubkey: SPL_NOOP_PROGRAM_ID, isSigner: false, isWritable: false },
-      { pubkey: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID, isSigner: false, isWritable: false },
+      {
+        pubkey: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
+        isSigner: false,
+        isWritable: false,
+      },
       { pubkey: TOKEN_METADATA_PROGRAM_ID, isSigner: false, isWritable: false },
       { pubkey: SystemProgram.programId, isSigner: false, isWritable: false },
     ],
@@ -454,9 +458,7 @@ export async function buildMintCNFTTransaction(
   if (metadata.creators) {
     const totalShare = metadata.creators.reduce((sum, c) => sum + c.share, 0)
     if (totalShare !== 100) {
-      throw new Error(
-        `Creator shares must sum to 100, got ${totalShare}`
-      )
+      throw new Error(`Creator shares must sum to 100, got ${totalShare}`)
     }
   }
 

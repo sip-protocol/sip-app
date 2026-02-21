@@ -120,10 +120,9 @@ export function useScanPayments(): UseScanPaymentsResult {
 
       // Compute nullifier rent to subtract from displayed balance.
       // The sender pre-funds the stealth account with this amount so claiming is free.
-      const nullifierRent =
-        await connection.getMinimumBalanceForRentExemption(
-          NULLIFIER_ACCOUNT_SIZE
-        )
+      const nullifierRent = await connection.getMinimumBalanceForRentExemption(
+        NULLIFIER_ACCOUNT_SIZE
+      )
 
       // Parse each TransferRecord and get stealth account balances
       const detected: DetectedPayment[] = []

@@ -48,10 +48,9 @@ export function useSunriseBalance(): UseSunriseBalanceReturn {
       }
 
       // Real wallet scan: query gSOL token accounts owned by the connected wallet
-      const result = await connection.getParsedTokenAccountsByOwner(
-        publicKey,
-        { mint: gsolMintPubkey }
-      )
+      const result = await connection.getParsedTokenAccountsByOwner(publicKey, {
+        mint: gsolMintPubkey,
+      })
 
       const balance =
         result.value[0]?.account.data.parsed.info.tokenAmount.uiAmount ?? 0
@@ -63,7 +62,9 @@ export function useSunriseBalance(): UseSunriseBalanceReturn {
         err instanceof Error ? err.message : err
       )
       setGsolBalance(0)
-      setError(err instanceof Error ? err.message : "Failed to fetch gSOL balance")
+      setError(
+        err instanceof Error ? err.message : "Failed to fetch gSOL balance"
+      )
     } finally {
       setIsLoading(false)
     }

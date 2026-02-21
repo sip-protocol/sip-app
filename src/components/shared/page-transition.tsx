@@ -3,8 +3,10 @@
 import { motion, type HTMLMotionProps } from "framer-motion"
 import type { ReactNode } from "react"
 
-interface PageTransitionProps
-  extends Omit<HTMLMotionProps<"div">, "initial" | "animate" | "transition"> {
+interface PageTransitionProps extends Omit<
+  HTMLMotionProps<"div">,
+  "initial" | "animate" | "transition"
+> {
   children: ReactNode
 }
 

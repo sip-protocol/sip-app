@@ -13,8 +13,9 @@ export function HashVisualization({ hash, className }: HashVisualizationProps) {
   const cleanHash = hash.startsWith("0x") ? hash.slice(2) : hash
   const [revealedCount, setRevealedCount] = useState(0)
   const [scrambled, setScrambled] = useState(() =>
-    Array.from({ length: cleanHash.length }, () =>
-      HEX_CHARS[Math.floor(Math.random() * 16)]
+    Array.from(
+      { length: cleanHash.length },
+      () => HEX_CHARS[Math.floor(Math.random() * 16)]
     ).join("")
   )
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
@@ -30,8 +31,9 @@ export function HashVisualization({ hash, className }: HashVisualizationProps) {
       })
 
       setScrambled(
-        Array.from({ length: cleanHash.length }, () =>
-          HEX_CHARS[Math.floor(Math.random() * 16)]
+        Array.from(
+          { length: cleanHash.length },
+          () => HEX_CHARS[Math.floor(Math.random() * 16)]
         ).join("")
       )
     }, 40)
@@ -52,9 +54,7 @@ export function HashVisualization({ hash, className }: HashVisualizationProps) {
           <span
             key={i}
             className={
-              i < revealedCount
-                ? "text-orange-400"
-                : "text-orange-400/40"
+              i < revealedCount ? "text-orange-400" : "text-orange-400/40"
             }
           >
             {char}

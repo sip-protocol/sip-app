@@ -159,5 +159,13 @@ export function useFundProject(): UseFundProjectReturn {
     ]
   )
 
-  return { status, activeRecord, error, fundProject, reset, commitTx, shieldedTx }
+  return {
+    status,
+    activeRecord,
+    error,
+    fundProject,
+    reset,
+    commitTx,
+    shieldedTx,
+  }
 }

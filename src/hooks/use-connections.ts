@@ -117,5 +117,13 @@ export function useConnections(profileId: string | null): UseConnectionsReturn {
     [publicKey, isDemoMode, addAction, trackSocial, commit]
   )
 
-  return { connections, isLoading, followProfile, status, error, reset, commitTx }
+  return {
+    connections,
+    isLoading,
+    followProfile,
+    status,
+    error,
+    reset,
+    commitTx,
+  }
 }

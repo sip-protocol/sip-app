@@ -21,7 +21,10 @@ export interface MetaverseServiceOptions {
   mode?: MetaverseMode
   onStepChange?: MetaverseStepChangeCallback
   onCommitTransaction?: (id: string, data: string) => Promise<string | null>
-  onShieldedTransfer?: (amountLamports: number, memo: string) => Promise<string | null>
+  onShieldedTransfer?: (
+    amountLamports: number,
+    memo: string
+  ) => Promise<string | null>
 }
 
 export class MetaverseService {

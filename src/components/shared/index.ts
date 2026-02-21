@@ -1,7 +1,11 @@
 export { TrackErrorBoundary } from "./track-error-boundary"
 export { ErrorBoundary } from "./error-boundary"
 export { ApiFallbackBanner } from "./api-fallback-banner"
-export { TrackPageSkeleton, StatsSkeleton, CardListSkeleton } from "./track-skeleton"
+export {
+  TrackPageSkeleton,
+  StatsSkeleton,
+  CardListSkeleton,
+} from "./track-skeleton"
 export { DeathRevivalCard } from "./death-revival-card"
 export { WalletButton } from "./wallet-button"
 export { PageTransition } from "./page-transition"

@@ -125,7 +125,15 @@ export function useMintNFT(): UseMintNFTReturn {
         return undefined
       }
     },
-    [publicKey, isDemoMode, connection, addAction, addMintedNFT, trackArt, mintTx]
+    [
+      publicKey,
+      isDemoMode,
+      connection,
+      addAction,
+      addMintedNFT,
+      trackArt,
+      mintTx,
+    ]
   )
 
   return { status, activeRecord, error, mintNFT: mintNFTFn, reset, mintTx }

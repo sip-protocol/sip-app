@@ -4,8 +4,14 @@ import { useState } from "react"
 import { motion } from "framer-motion"
 
 const COLORS = [
-  "#f97316", "#22c55e", "#3b82f6", "#a855f7",
-  "#eab308", "#ef4444", "#06b6d4", "#ec4899",
+  "#f97316",
+  "#22c55e",
+  "#3b82f6",
+  "#a855f7",
+  "#eab308",
+  "#ef4444",
+  "#06b6d4",
+  "#ec4899",
 ]
 
 // Deterministic pseudo-random generator (mulberry32)

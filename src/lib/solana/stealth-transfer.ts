@@ -234,10 +234,9 @@ export async function createStealthTransfer(
       // Pre-fund stealth account with nullifier rent so claiming is free for recipient.
       // Without this, the recipient pays ~0.00146 SOL rent for the nullifier PDA,
       // which can exceed the transfer amount for small payments.
-      const nullifierRent =
-        await connection.getMinimumBalanceForRentExemption(
-          NULLIFIER_ACCOUNT_SIZE
-        )
+      const nullifierRent = await connection.getMinimumBalanceForRentExemption(
+        NULLIFIER_ACCOUNT_SIZE
+      )
       tx.add(
         SystemProgram.transfer({
           fromPubkey: senderPubkey,

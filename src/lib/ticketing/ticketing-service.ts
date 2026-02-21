@@ -170,7 +170,9 @@ export class TicketingService {
       record.stepTimestamps.purchasing = Date.now()
       this.onStepChange?.("purchasing", { ...record })
 
-      const tierLabel = params.tier.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
+      const tierLabel = params.tier
+        .replace(/_/g, " ")
+        .replace(/\b\w/g, (c) => c.toUpperCase())
       const ticketName = `${event?.title ?? params.eventId} — ${tierLabel}`
       const metadataUri = `https://arweave.net/${generateId("tix").replace(/_/g, "")}`
 

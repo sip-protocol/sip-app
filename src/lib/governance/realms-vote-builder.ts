@@ -72,9 +72,7 @@ export async function buildCastVoteTransaction(
   // Build the Vote object for the chosen option
   const vote = new Vote({
     voteType: VoteKind.Approve,
-    approveChoices: [
-      new VoteChoice({ rank: choice, weightPercentage: 100 }),
-    ],
+    approveChoices: [new VoteChoice({ rank: choice, weightPercentage: 100 })],
     deny: undefined,
     veto: undefined,
   })
@@ -94,13 +92,13 @@ export async function buildCastVoteTransaction(
     realmPubkey,
     governancePubkey,
     proposalPubkey,
-    proposal.tokenOwnerRecord,  // proposalOwnerRecord (the proposer's TOR)
-    tokenOwnerRecordPubkey,     // voter's tokenOwnerRecord
-    voterPubkey,                // governanceAuthority (signer)
+    proposal.tokenOwnerRecord, // proposalOwnerRecord (the proposer's TOR)
+    tokenOwnerRecordPubkey, // voter's tokenOwnerRecord
+    voterPubkey, // governanceAuthority (signer)
     proposal.governingTokenMint,
     vote,
-    voterPubkey,                // payer
-    voterWeightRecordPubkey,
+    voterPubkey, // payer
+    voterWeightRecordPubkey
   )
 
   tx.feePayer = voterPubkey

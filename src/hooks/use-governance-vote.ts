@@ -92,19 +92,20 @@ export function useGovernanceVote(
         const result = await service.commitVote(params)
 
         // Send real SPL Governance castVote transaction after commitment succeeds
-        if (
-          options.sendRealmsVote &&
-          options.realmVoteData &&
-          publicKey
-        ) {
+        if (options.sendRealmsVote && options.realmVoteData && publicKey) {
           try {
             const tx = await buildCastVoteTransaction(connection, {
               realmPubkey: new PublicKey(options.realmVoteData.realmPubkey),
-              governancePubkey: new PublicKey(options.realmVoteData.governancePubkey),
+              governancePubkey: new PublicKey(
+                options.realmVoteData.governancePubkey
+              ),
               proposalPubkey: new PublicKey(params.proposalId),
-              tokenOwnerRecordPubkey: new PublicKey(options.realmVoteData.tokenOwnerRecordPubkey),
+              tokenOwnerRecordPubkey: new PublicKey(
+                options.realmVoteData.tokenOwnerRecordPubkey
+              ),
               voterPubkey: publicKey,
-              voterWeightRecordPubkey: options.realmVoteData.voterWeightRecordPubkey
+              voterWeightRecordPubkey: options.realmVoteData
+                .voterWeightRecordPubkey
                 ? new PublicKey(options.realmVoteData.voterWeightRecordPubkey)
                 : undefined,
               choice: params.choice,

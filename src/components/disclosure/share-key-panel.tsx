@@ -99,9 +99,12 @@ export function ShareKeyPanel({ onKeyGenerated }: ShareKeyPanelProps) {
       <div className="p-4 rounded-xl border border-sip-purple-500/30 bg-sip-purple-500/10 space-y-3">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="font-medium text-sip-purple-400">Stealth Viewing Key</h3>
+            <h3 className="font-medium text-sip-purple-400">
+              Stealth Viewing Key
+            </h3>
             <p className="text-xs text-[var(--text-secondary)] mt-1">
-              Share this key to allow someone to detect your incoming stealth payments
+              Share this key to allow someone to detect your incoming stealth
+              payments
             </p>
           </div>
         </div>
@@ -109,7 +112,9 @@ export function ShareKeyPanel({ onKeyGenerated }: ShareKeyPanelProps) {
         {stealthKeys ? (
           <div className="space-y-3">
             <div className="p-3 rounded-lg bg-[var(--surface-secondary)]">
-              <p className="text-xs text-[var(--text-tertiary)] mb-1">Viewing Public Key (base58)</p>
+              <p className="text-xs text-[var(--text-tertiary)] mb-1">
+                Viewing Public Key (base58)
+              </p>
               <p className="font-mono text-xs break-all">
                 {stealthKeys.viewingPublicKey}
               </p>
@@ -124,14 +129,16 @@ export function ShareKeyPanel({ onKeyGenerated }: ShareKeyPanelProps) {
             </div>
             <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/30">
               <p className="text-xs text-amber-400">
-                ⚠️ Sharing this key reveals ALL incoming stealth payments to your wallet. Only share with trusted auditors.
+                ⚠️ Sharing this key reveals ALL incoming stealth payments to
+                your wallet. Only share with trusted auditors.
               </p>
             </div>
           </div>
         ) : (
           <div className="p-3 rounded-lg bg-[var(--surface-secondary)] text-center">
             <p className="text-sm text-[var(--text-secondary)]">
-              No stealth keys generated yet. Generate them in the Receive page first.
+              No stealth keys generated yet. Generate them in the Receive page
+              first.
             </p>
           </div>
         )}
@@ -139,7 +146,9 @@ export function ShareKeyPanel({ onKeyGenerated }: ShareKeyPanelProps) {
 
       {/* Divider */}
       <div className="border-t border-[var(--border-default)]" />
-      <p className="text-xs text-[var(--text-tertiary)]">SDK Viewing Keys (for encrypted transaction disclosure)</p>
+      <p className="text-xs text-[var(--text-tertiary)]">
+        SDK Viewing Keys (for encrypted transaction disclosure)
+      </p>
 
       {/* Generate New Key */}
       {!isGenerating ? (

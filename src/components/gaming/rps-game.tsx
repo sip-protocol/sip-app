@@ -186,11 +186,7 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
       <motion.div
         className="bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-2xl p-6 sm:p-8 relative overflow-hidden"
         initial={outcome === "lose" ? { x: 0 } : {}}
-        animate={
-          outcome === "lose"
-            ? { x: [0, -8, 8, -6, 6, -3, 3, 0] }
-            : {}
-        }
+        animate={outcome === "lose" ? { x: [0, -8, 8, -6, 6, -3, 3, 0] } : {}}
         transition={outcome === "lose" ? { duration: 0.5 } : {}}
       >
         {outcome === "win" && <ConfettiParticles />}
@@ -435,11 +431,7 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
                     : "border-[var(--border-default)] bg-[var(--surface-secondary)] hover:border-orange-500/40 hover:bg-orange-500/5",
                   phase === "locked" && "opacity-60 cursor-not-allowed"
                 )}
-                whileHover={
-                  phase === "select"
-                    ? { scale: 1.08, y: -4 }
-                    : {}
-                }
+                whileHover={phase === "select" ? { scale: 1.08, y: -4 } : {}}
                 whileTap={phase === "select" ? { scale: 0.95 } : {}}
                 transition={{ type: "spring", stiffness: 400, damping: 17 }}
                 animate={
@@ -476,7 +468,10 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
         <div className="mb-6">
           <GamingStatus
             currentStep={
-              status as "committing_move" | "generating_commitment" | "revealing"
+              status as
+                | "committing_move"
+                | "generating_commitment"
+                | "revealing"
             }
             mode="play"
           />
@@ -494,7 +489,10 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
         <div className="mb-6">
           <GamingStatus
             currentStep={
-              status as "committing_move" | "generating_commitment" | "revealing"
+              status as
+                | "committing_move"
+                | "generating_commitment"
+                | "revealing"
             }
             mode="play"
           />

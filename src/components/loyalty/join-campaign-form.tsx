@@ -28,7 +28,13 @@ export function JoinCampaignForm({
 
   const [privacyLevel, setPrivacyLevel] = useState<PrivacyOption>("shielded")
 
-  const { status, error, joinCampaign, reset: resetJoin, commitTx } = useLoyaltyCampaign()
+  const {
+    status,
+    error,
+    joinCampaign,
+    reset: resetJoin,
+    commitTx,
+  } = useLoyaltyCampaign()
 
   const privacyMap: Record<PrivacyOption, PrivacyLevel> = {
     shielded: PrivacyLevel.SHIELDED,

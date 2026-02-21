@@ -214,7 +214,10 @@ export function getBoltComponentPda(
   componentProgramId: PublicKey,
   entityPda: PublicKey
 ) {
-  return FindComponentPda({ componentId: componentProgramId, entity: entityPda })
+  return FindComponentPda({
+    componentId: componentProgramId,
+    entity: entityPda,
+  })
 }
 
 /**

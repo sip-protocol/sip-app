@@ -25,7 +25,9 @@ export function ChannelStats() {
       }
     }
     loadDrops()
-    return () => { cancelled = true }
+    return () => {
+      cancelled = true
+    }
   }, [])
 
   const subscribed = subscriptions.filter((s) => s.isActive).length

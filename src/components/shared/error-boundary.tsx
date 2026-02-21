@@ -38,13 +38,7 @@ export class ErrorBoundary extends Component<
   }
 }
 
-function ErrorCard({
-  error,
-  onRetry,
-}: {
-  error?: Error
-  onRetry: () => void
-}) {
+function ErrorCard({ error, onRetry }: { error?: Error; onRetry: () => void }) {
   return (
     <motion.div
       className="max-w-lg mx-auto px-4 py-12"

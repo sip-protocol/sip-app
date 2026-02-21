@@ -75,7 +75,8 @@ function filterAndSort(
   return entries
     .filter(
       (e) =>
-        e.walletAddress === walletAddress && (type === undefined || e.type === type)
+        e.walletAddress === walletAddress &&
+        (type === undefined || e.type === type)
     )
     .sort((a, b) => b.timestamp - a.timestamp)
 }

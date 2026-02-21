@@ -21,7 +21,11 @@ export interface GamingServiceOptions {
   mode?: GamingMode
   onStepChange?: GamingStepChangeCallback
   onCommitTransaction?: (gameId: string, move: string) => Promise<string | null>
-  onRevealTransaction?: (gameId: string, move: string, salt: string) => Promise<string | null>
+  onRevealTransaction?: (
+    gameId: string,
+    move: string,
+    salt: string
+  ) => Promise<string | null>
 }
 
 export class GamingService {

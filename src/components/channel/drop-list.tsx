@@ -40,7 +40,9 @@ export function DropList({ onSubscribe }: DropListProps) {
       }
     }
     loadDrops()
-    return () => { cancelled = true }
+    return () => {
+      cancelled = true
+    }
   }, [])
 
   const drops =

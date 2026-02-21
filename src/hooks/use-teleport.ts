@@ -18,7 +18,10 @@ export type TeleportStatus = MetaverseStep | "idle" | "error"
 
 export interface UseTeleportOptions {
   onCommitTransaction?: (id: string, data: string) => Promise<string | null>
-  onShieldedTransfer?: (amountLamports: number, memo: string) => Promise<string | null>
+  onShieldedTransfer?: (
+    amountLamports: number,
+    memo: string
+  ) => Promise<string | null>
 }
 
 export interface UseTeleportReturn {
@@ -57,8 +60,12 @@ export function useTeleport(
     async (amountLamports: number, memo: string): Promise<string | null> => {
       if (!publicKey) return null
       try {
-        const viewingKey = process.env.NEXT_PUBLIC_RECIPIENT_VIEWING_PUBKEY ?? "11111111111111111111111111111111"
-        const spendingKey = process.env.NEXT_PUBLIC_RECIPIENT_SPENDING_PUBKEY ?? "11111111111111111111111111111111"
+        const viewingKey =
+          process.env.NEXT_PUBLIC_RECIPIENT_VIEWING_PUBKEY ??
+          "11111111111111111111111111111111"
+        const spendingKey =
+          process.env.NEXT_PUBLIC_RECIPIENT_SPENDING_PUBKEY ??
+          "11111111111111111111111111111111"
 
         const transfer = await createStealthTransfer({
           amountLamports,
@@ -100,7 +107,8 @@ export function useTeleport(
             setActiveRecord({ ...record })
           },
           onCommitTransaction: options.onCommitTransaction,
-          onShieldedTransfer: options.onShieldedTransfer ?? defaultShieldedTransfer,
+          onShieldedTransfer:
+            options.onShieldedTransfer ?? defaultShieldedTransfer,
         })
 
         const validationError = service.validate("teleport", params)

@@ -584,7 +584,9 @@ export class ArtService {
         if (mintTx) {
           txSignature = await this.onSendTransaction(mintTx)
           // Use tx signature as a deterministic mint address reference
-          mintAddress = txSignature ?? `SIP${generateId("nft").replace(/_/g, "").slice(0, 40)}`
+          mintAddress =
+            txSignature ??
+            `SIP${generateId("nft").replace(/_/g, "").slice(0, 40)}`
         } else {
           // Builder returned null (tree not configured) — fall back to simulation
           mintAddress = `SIP${generateId("nft").replace(/_/g, "").slice(0, 40)}`
