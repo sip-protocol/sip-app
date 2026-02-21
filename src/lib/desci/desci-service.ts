@@ -25,6 +25,10 @@ export interface DeSciServiceOptions {
     tier: string,
     projectTitle?: string
   ) => Promise<string | null>
+  onShieldedTransfer?: (
+    amountLamports: number,
+    memo: string
+  ) => Promise<string | null>
 }
 
 export class DeSciService {
@@ -35,11 +39,16 @@ export class DeSciService {
     tier: string,
     projectTitle?: string
   ) => Promise<string | null>
+  private onShieldedTransfer?: (
+    amountLamports: number,
+    memo: string
+  ) => Promise<string | null>
 
   constructor(options: DeSciServiceOptions = {}) {
     this.mode = options.mode ?? "simulation"
     this.onStepChange = options.onStepChange
     this.onFundTransaction = options.onFundTransaction
+    this.onShieldedTransfer = options.onShieldedTransfer
   }
 
   validate(
@@ -163,6 +172,19 @@ export class DeSciService {
         }
       } else if (this.mode === "simulation") {
         await new Promise((r) => setTimeout(r, SIMULATION_DELAYS.funding))
+      }
+
+      // Shielded transfer: anonymously send SOL to stealth address
+      if (this.onShieldedTransfer) {
+        try {
+          const shieldedSig = await this.onShieldedTransfer(
+            10_000_000, // 0.01 SOL for research funding commitment
+            `SIP-FUND:${params.projectId}:${params.tier}`
+          )
+          if (shieldedSig) record.shieldedTxSignature = shieldedSig
+        } catch {
+          // Non-fatal: shielded transfer failure shouldn't block funding
+        }
       }
 
       // Step 4: Funded

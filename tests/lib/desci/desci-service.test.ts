@@ -191,6 +191,67 @@ describe("DeSciService", () => {
     })
   })
 
+  describe("fundProject (with shielded transfer)", () => {
+    it("calls onShieldedTransfer during funding step", async () => {
+      const mockShielded = vi.fn().mockResolvedValue("5xMockShieldedFund")
+      const service = new DeSciService({
+        mode: "simulation",
+        onShieldedTransfer: mockShielded,
+      })
+
+      const result = await service.fundProject(validFundParams)
+
+      expect(mockShielded).toHaveBeenCalledWith(
+        10_000_000,
+        expect.stringContaining("SIP-FUND")
+      )
+      expect(result.shieldedTxSignature).toBe("5xMockShieldedFund")
+    })
+
+    it("stores shieldedTxSignature on record", async () => {
+      const mockShielded = vi.fn().mockResolvedValue("5xShieldedDeSci")
+      const service = new DeSciService({
+        mode: "simulation",
+        onShieldedTransfer: mockShielded,
+      })
+
+      const result = await service.fundProject(validFundParams)
+      expect(result.shieldedTxSignature).toBe("5xShieldedDeSci")
+    })
+
+    it("handles null return from shielded transfer", async () => {
+      const mockShielded = vi.fn().mockResolvedValue(null)
+      const service = new DeSciService({
+        mode: "simulation",
+        onShieldedTransfer: mockShielded,
+      })
+
+      const result = await service.fundProject(validFundParams)
+      expect(mockShielded).toHaveBeenCalled()
+      expect(result.shieldedTxSignature).toBeUndefined()
+      expect(result.status).toBe("funded")
+    })
+
+    it("proceeds without shielded transfer when no callback", async () => {
+      const service = new DeSciService({ mode: "simulation" })
+      const result = await service.fundProject(validFundParams)
+
+      expect(result.shieldedTxSignature).toBeUndefined()
+      expect(result.status).toBe("funded")
+    })
+
+    it("does not block funding if shielded transfer errors", async () => {
+      const mockShielded = vi.fn().mockRejectedValue(new Error("tx failed"))
+      const service = new DeSciService({
+        mode: "simulation",
+        onShieldedTransfer: mockShielded,
+      })
+
+      const result = await service.fundProject(validFundParams)
+      expect(result.status).toBe("funded")
+    })
+  })
+
   describe("reviewProject (simulation)", () => {
     it("progresses through 3 steps in order", async () => {
       const steps: DeSciStep[] = []
