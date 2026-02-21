@@ -1,6 +1,7 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { useState } from "react"
+import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import {
   Shield,
@@ -37,6 +38,11 @@ interface SponsorTrack {
   whyDied: string
   revival: string
   integration: IntegrationLevel
+  deathStory: string
+  revivalStory: string
+  cryptoPrimitive: string
+  sponsorRole: string
+  beforeAfter: [string, string]
 }
 
 const SPONSOR_TRACKS: SponsorTrack[] = [
@@ -50,6 +56,16 @@ const SPONSOR_TRACKS: SponsorTrack[] = [
     whyDied: "Visible votes enabled whale manipulation",
     revival: "Commit-reveal ballots hide votes",
     integration: "on-chain",
+    deathStory:
+      "On-chain DAOs collapsed because visible votes let whales manipulate outcomes. Proposals became predictable \u2014 minority voters stopped participating knowing whales would just copy-trade the winning side. Voter turnout on Realms dropped to single digits.",
+    revivalStory:
+      "Commit-reveal voting hides ballots until the reveal phase. Voters commit a Pedersen commitment of their choice, then reveal simultaneously. No one can front-run or copy votes. Viewing keys let DAO auditors verify vote legitimacy without exposing individual ballots.",
+    cryptoPrimitive: "Pedersen Commitments",
+    sponsorRole: "DAO governance infrastructure and on-chain voting programs",
+    beforeAfter: [
+      "Whales see votes in real-time and copy-trade the winning side",
+      "All ballots hidden until simultaneous reveal \u2014 no front-running possible",
+    ],
   },
   {
     name: "Anonymous Social",
@@ -61,6 +77,16 @@ const SPONSOR_TRACKS: SponsorTrack[] = [
     whyDied: "Public wallets enabled doxxing",
     revival: "Stealth social identities",
     integration: "on-chain",
+    deathStory:
+      "Wallet-linked social profiles became liability maps. Doxxing was trivial \u2014 connect a wallet to see every transaction, every NFT, every DeFi position. Users abandoned Solana social platforms for pseudonymous alternatives on Web2.",
+    revivalStory:
+      "Stealth social identities decouple your profile from your wallet. Each social interaction uses a one-time stealth address. Followers can verify you\u2019re real via viewing keys without linking your posts to your portfolio.",
+    cryptoPrimitive: "Stealth Addresses",
+    sponsorRole: "Decentralized social graph and identity infrastructure",
+    beforeAfter: [
+      "Your social profile exposes your entire financial history",
+      "Post, follow, and interact with unlinkable stealth identities",
+    ],
   },
   {
     name: "Privacy Loyalty",
@@ -72,6 +98,16 @@ const SPONSOR_TRACKS: SponsorTrack[] = [
     whyDied: "Transparent rewards exposed behavior",
     revival: "Anonymous stealth claims",
     integration: "on-chain",
+    deathStory:
+      "Transparent reward programs exposed customer behavior patterns. Competitors could analyze who earned what, reverse-engineer strategies, and poach high-value users. Brands stopped investing in on-chain loyalty.",
+    revivalStory:
+      "Anonymous reward claims via stealth addresses. Brands verify engagement through Pedersen commitments that prove completion, but can\u2019t see who claimed what. Viewing keys let brands audit program metrics without individual tracking.",
+    cryptoPrimitive: "Pedersen Commitments",
+    sponsorRole: "On-chain loyalty and incentive distribution platform",
+    beforeAfter: [
+      "Competitors analyze reward claims to poach your best customers",
+      "Engagement proven cryptographically \u2014 individual claims invisible",
+    ],
   },
   {
     name: "Privacy Art",
@@ -83,6 +119,16 @@ const SPONSOR_TRACKS: SponsorTrack[] = [
     whyDied: "Public minting revealed collectors",
     revival: "Stealth NFT minting",
     integration: "on-chain",
+    deathStory:
+      "Public minting revealed collector identities and purchase prices. Whales got front-run on drops. Artists lost sales to bots that analyzed wallet patterns to snipe underpriced pieces. The collector class left for private galleries.",
+    revivalStory:
+      "Stealth NFT minting to unlinkable addresses. Collectors buy with hidden identity, artists get paid, and the marketplace stays fair. Compressed NFTs via Bubblegum keep costs low. Viewing keys let galleries verify provenance.",
+    cryptoPrimitive: "Stealth Addresses",
+    sponsorRole: "Curated NFT marketplace and artist platform on Solana",
+    beforeAfter: [
+      "Bots front-run drops by analyzing collector wallet patterns",
+      "Collectors mint to stealth addresses \u2014 identity and price hidden",
+    ],
   },
   {
     name: "Green Migration",
@@ -94,6 +140,16 @@ const SPONSOR_TRACKS: SponsorTrack[] = [
     whyDied: "Visible migrations were front-run",
     revival: "Private token consolidation",
     integration: "on-chain",
+    deathStory:
+      "Green staking on Solana died because visible stake accounts let validators discriminate. Carbon offset purchases were front-run. Environmental DAOs couldn\u2019t operate privately, and participants were targeted for their on-chain activity.",
+    revivalStory:
+      "Private protocol migration with hidden amounts. Stealth addresses for green stake delegation. Pedersen commitments prove carbon offset amounts without revealing the staker. Sunrise validators see commitment proofs, not wallet addresses.",
+    cryptoPrimitive: "Pedersen Commitments",
+    sponsorRole: "Climate-positive staking and carbon offset infrastructure",
+    beforeAfter: [
+      "Validators discriminate based on visible stake accounts",
+      "Stake delegated via stealth addresses \u2014 commitment proofs only",
+    ],
   },
   {
     name: "Privacy NFTs",
@@ -105,6 +161,16 @@ const SPONSOR_TRACKS: SponsorTrack[] = [
     whyDied: "Subscriber lists became spam targets",
     revival: "Encrypted stealth drops",
     integration: "on-chain",
+    deathStory:
+      "Creator channels became spam magnets \u2014 subscriber lists were fully public. Exclusive content was trivially pirated because NFT ownership was visible. Creators couldn\u2019t monetize premium tiers when anyone could see who subscribed.",
+    revivalStory:
+      "Encrypted stealth drops where subscribers are invisible. Content encrypted per-subscriber using viewing keys. DRiP channels become truly exclusive \u2014 ownership verified cryptographically, subscriber list hidden.",
+    cryptoPrimitive: "Viewing Keys",
+    sponsorRole: "Creator-to-fan NFT distribution and channel platform",
+    beforeAfter: [
+      "Subscriber lists public \u2014 exclusive content trivially pirated",
+      "Subscribers invisible, content encrypted per-viewer via viewing keys",
+    ],
   },
   {
     name: "Privacy Arena",
@@ -116,6 +182,16 @@ const SPONSOR_TRACKS: SponsorTrack[] = [
     whyDied: "Transparent state enabled cheating",
     revival: "Commit-reveal gameplay",
     integration: "on-chain",
+    deathStory:
+      "Competitive Solana games died because transparent state enabled cheating. In any commit-reveal game, players could read opponents\u2019 moves from the mempool. Esports on Solana was DOA \u2014 no hidden information means no competitive integrity.",
+    revivalStory:
+      "Commit-reveal gameplay with Pedersen commitments. Players commit encrypted moves, then reveal simultaneously. MagicBlock BOLT ECS provides the game engine, SIP provides the cryptographic fairness layer.",
+    cryptoPrimitive: "Pedersen Commitments",
+    sponsorRole: "On-chain game engine with BOLT ECS and ephemeral rollups",
+    beforeAfter: [
+      "Opponents read your moves from the mempool before you play",
+      "Moves committed as Pedersen hashes \u2014 simultaneous reveal only",
+    ],
   },
   {
     name: "Privacy Ticketing",
@@ -127,6 +203,16 @@ const SPONSOR_TRACKS: SponsorTrack[] = [
     whyDied: "Visible ownership enabled scalping",
     revival: "Anti-scalping stealth tickets",
     integration: "on-chain",
+    deathStory:
+      "NFT tickets were instantly scalped because ownership and transfer history were public. Bots monitored minting transactions and sniped tickets for resale. Event organizers couldn\u2019t prevent secondary market manipulation.",
+    revivalStory:
+      "Anti-scalping stealth tickets as compressed NFTs. Ticket ownership verified via Pedersen commitment, not wallet address. Transfer requires viewing key authorization. KYD\u2019s event infrastructure plus SIP\u2019s privacy equals fair ticketing.",
+    cryptoPrimitive: "Stealth Addresses",
+    sponsorRole: "Event ticketing platform and NFT ticket infrastructure",
+    beforeAfter: [
+      "Bots snipe tickets on-mint and resell at 10x on secondary markets",
+      "Ticket ownership hidden \u2014 transfers require viewing key auth",
+    ],
   },
   {
     name: "Privacy Metaverse",
@@ -138,6 +224,16 @@ const SPONSOR_TRACKS: SponsorTrack[] = [
     whyDied: "Wallet-linked avatars killed anonymity",
     revival: "Stealth avatar identities",
     integration: "on-chain",
+    deathStory:
+      "Wallet-linked metaverse avatars killed anonymity. Your 3D identity was your financial identity. Stalking, harassment, and wealth-based discrimination became rampant. Users retreated to anonymous Web2 metaverses.",
+    revivalStory:
+      "Stealth avatar identities decoupled from wallets. Enter any Portals room with a fresh stealth address. Prove membership via viewing keys without revealing your main wallet. Private teleportation between worlds.",
+    cryptoPrimitive: "Stealth Addresses",
+    sponsorRole: "3D metaverse rooms and social spaces on Solana",
+    beforeAfter: [
+      "Your avatar reveals your wallet \u2014 wealth-based harassment is trivial",
+      "Fresh stealth address per room \u2014 prove membership, hide identity",
+    ],
   },
   {
     name: "Privacy DeSci",
@@ -149,6 +245,16 @@ const SPONSOR_TRACKS: SponsorTrack[] = [
     whyDied: "Public funding biased peer review",
     revival: "Anonymous research funding",
     integration: "on-chain",
+    deathStory:
+      "Public research funding created bias \u2014 reviewers could see who funded what and adjusted their evaluations accordingly. Anonymous peer review was impossible when every grant was a public transaction. Researchers self-censored controversial topics.",
+    revivalStory:
+      "Anonymous research funding via stealth transfers. Fund BioDAOs without revealing your identity. Pedersen commitments prove funding amounts for milestone tracking. Viewing keys enable selective auditing without compromising researcher privacy.",
+    cryptoPrimitive: "Viewing Keys",
+    sponsorRole: "Decentralized science funding and BioDAO infrastructure",
+    beforeAfter: [
+      "Reviewers see funder identity and bias their evaluations",
+      "Funding anonymous \u2014 milestones tracked via commitment proofs",
+    ],
   },
   {
     name: "Privacy Music",
@@ -160,6 +266,16 @@ const SPONSOR_TRACKS: SponsorTrack[] = [
     whyDied: "Public listening data was monetized",
     revival: "Stealth listener identity",
     integration: "on-chain",
+    deathStory:
+      "Public listening data was monetized without consent. Record labels tracked wallet-linked listening habits to manipulate royalty negotiations. Artists couldn\u2019t see who streamed them but labels could see everything. Listeners left for Web2 streaming.",
+    revivalStory:
+      "Stealth listener identities. Stream on Audius with a one-time stealth address per session. Artists get aggregate metrics via Pedersen commitments, listeners keep their habits private. Viewing keys for voluntary fan-artist connections.",
+    cryptoPrimitive: "Stealth Addresses",
+    sponsorRole: "Decentralized music streaming and artist royalty platform",
+    beforeAfter: [
+      "Labels track your listening habits to manipulate royalty deals",
+      "One-time stealth address per session \u2014 aggregate metrics only",
+    ],
   },
 ]
 
@@ -192,7 +308,7 @@ const CRYPTO_PRIMITIVES = [
 
 const STATS = [
   { value: "11", label: "Sponsor Tracks" },
-  { value: "1,060+", label: "Tests Passing" },
+  { value: "1,108+", label: "Tests Passing" },
   { value: "Mainnet", label: "Anchor Program" },
   { value: "11/11", label: "On-Chain" },
 ]
@@ -523,6 +639,8 @@ function ResurrectionSection() {
 // ============================================================================
 
 function TracksSection() {
+  const [expandedTrack, setExpandedTrack] = useState<string | null>(null)
+
   return (
     <section className="py-20 border-t border-gray-800/50">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -553,13 +671,16 @@ function TracksSection() {
           >
             Each sponsor track gets a dedicated privacy application built with
             real cryptography &mdash; not mocks, not simulations of the core
-            primitives.
+            primitives. Click any track to see the full death &amp; revival
+            story.
           </motion.p>
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {SPONSOR_TRACKS.map((track, index) => {
             const badge = INTEGRATION_BADGES[track.integration]
+            const isExpanded = expandedTrack === track.name
+
             return (
               <motion.div
                 key={track.name}
@@ -567,10 +688,26 @@ function TracksSection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.05 }}
+                layout
+                className={isExpanded ? "sm:col-span-2 lg:col-span-3" : ""}
               >
-                <Link
-                  href={track.href}
-                  className="group block p-5 rounded-xl border border-gray-800 bg-gray-900/50 hover:border-purple-500/40 transition-all"
+                <div
+                  role="button"
+                  tabIndex={0}
+                  onClick={() =>
+                    setExpandedTrack(isExpanded ? null : track.name)
+                  }
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault()
+                      setExpandedTrack(isExpanded ? null : track.name)
+                    }
+                  }}
+                  className={`group block p-5 rounded-xl border transition-all cursor-pointer ${
+                    isExpanded
+                      ? "border-purple-500/40 bg-gray-900/80"
+                      : "border-gray-800 bg-gray-900/50 hover:border-purple-500/40"
+                  }`}
                 >
                   <div className="flex items-start gap-4">
                     <div
@@ -578,17 +715,22 @@ function TracksSection() {
                     >
                       {track.icon}
                     </div>
-                    <div className="min-w-0">
+                    <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2 mb-1">
                         <h3 className="font-semibold text-sm group-hover:text-purple-400 transition-colors">
                           {track.name}
                         </h3>
+                        <ChevronDown
+                          className={`w-3.5 h-3.5 text-gray-500 transition-transform ${
+                            isExpanded ? "rotate-180" : ""
+                          }`}
+                        />
                       </div>
                       <p className="text-xs text-gray-500 mb-2">
                         {track.primitive}
                       </p>
 
-                      {/* Death/Revival narrative */}
+                      {/* Compact Death/Revival one-liners (always visible) */}
                       <div className="mb-2 space-y-0.5">
                         <div className="flex items-center gap-1.5">
                           <Skull className="w-3 h-3 text-red-400/60 flex-shrink-0" />
@@ -617,7 +759,94 @@ function TracksSection() {
                       </div>
                     </div>
                   </div>
-                </Link>
+
+                  {/* Expandable narrative card */}
+                  <AnimatePresence>
+                    {isExpanded && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                        className="overflow-hidden"
+                      >
+                        <div className="mt-5 pt-5 border-t border-gray-800 space-y-4">
+                          {/* Death story */}
+                          <div className="rounded-lg bg-red-950/20 border border-red-500/10 p-4">
+                            <div className="flex items-center gap-2 mb-2">
+                              <Skull className="w-4 h-4 text-red-400" />
+                              <span className="text-sm font-semibold text-red-400">
+                                Why It Died
+                              </span>
+                            </div>
+                            <p className="text-sm text-red-300/70 leading-relaxed">
+                              {track.deathStory}
+                            </p>
+                          </div>
+
+                          {/* Revival story */}
+                          <div className="rounded-lg bg-green-950/20 border border-green-500/10 p-4">
+                            <div className="flex items-center gap-2 mb-2">
+                              <Sprout className="w-4 h-4 text-green-400" />
+                              <span className="text-sm font-semibold text-green-400">
+                                How SIP Revives It
+                              </span>
+                            </div>
+                            <p className="text-sm text-green-300/70 leading-relaxed">
+                              {track.revivalStory}
+                            </p>
+                          </div>
+
+                          {/* Before/After comparison */}
+                          <div className="grid sm:grid-cols-2 gap-3">
+                            <div className="rounded-lg bg-gray-800/50 border border-red-500/10 p-3">
+                              <div className="text-xs font-semibold text-red-400/80 uppercase tracking-wider mb-1.5">
+                                Before Privacy
+                              </div>
+                              <p className="text-xs text-gray-400 leading-relaxed">
+                                {track.beforeAfter[0]}
+                              </p>
+                            </div>
+                            <div className="rounded-lg bg-gray-800/50 border border-green-500/10 p-3">
+                              <div className="text-xs font-semibold text-green-400/80 uppercase tracking-wider mb-1.5">
+                                After Privacy
+                              </div>
+                              <p className="text-xs text-gray-400 leading-relaxed">
+                                {track.beforeAfter[1]}
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Badges row: sponsor role + crypto primitive */}
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="inline-flex items-center gap-1.5 text-xs font-medium text-purple-300 bg-purple-500/10 border border-purple-500/20 px-2.5 py-1 rounded-full">
+                              <Shield className="w-3 h-3" />
+                              {track.cryptoPrimitive}
+                            </span>
+                            <span className="inline-flex items-center gap-1.5 text-xs font-medium text-gray-300 bg-gray-800 border border-gray-700 px-2.5 py-1 rounded-full">
+                              Powered by {track.sponsor}
+                            </span>
+                            <span className="text-xs text-gray-600 hidden sm:inline">
+                              {track.sponsorRole}
+                            </span>
+                          </div>
+
+                          {/* Try it link */}
+                          <div className="pt-2">
+                            <Link
+                              href={track.href}
+                              className="inline-flex items-center gap-2 text-sm font-medium text-purple-400 hover:text-purple-300 transition-colors"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <ArrowRight className="w-4 h-4" />
+                              Try {track.name} Live
+                            </Link>
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
               </motion.div>
             )
           })}
@@ -641,7 +870,7 @@ function TractionSection() {
       text: "from-yellow-400 to-amber-400",
     },
     {
-      value: "1,060+",
+      value: "1,108+",
       label: "Tests Passing",
       detail: "SDK + React + App + 11 Tracks",
       color: "from-green-900/30 to-emerald-900/30 border-green-500/20",
