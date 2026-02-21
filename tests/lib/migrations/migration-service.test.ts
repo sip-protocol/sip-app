@@ -301,5 +301,69 @@ describe("MigrationService", () => {
 
       expect(result.privacyLevel).toBe(PrivacyLevel.COMPLIANT)
     })
+
+    it("calls onCommitTransaction during deposit step", async () => {
+      const mockCommit = vi.fn().mockResolvedValue("mock-tx-signature-abc123")
+      const service = new MigrationService({
+        mode: "simulation",
+        onCommitTransaction: mockCommit,
+      })
+
+      const params: MigrationParams = {
+        source: createManualSource(),
+        amount: "2.5",
+        privacyLevel: PrivacyLevel.SHIELDED,
+      }
+
+      const promise = service.executeMigration(params)
+      await vi.advanceTimersByTimeAsync(20000)
+      const result = await promise
+
+      expect(mockCommit).toHaveBeenCalledOnce()
+      expect(mockCommit).toHaveBeenCalledWith(
+        result.id,
+        `${result.id}:2.5`
+      )
+      expect(result.txSignature).toBe("mock-tx-signature-abc123")
+    })
+
+    it("handles onCommitTransaction returning null", async () => {
+      const mockCommit = vi.fn().mockResolvedValue(null)
+      const service = new MigrationService({
+        mode: "simulation",
+        onCommitTransaction: mockCommit,
+      })
+
+      const params: MigrationParams = {
+        source: createManualSource(),
+        amount: "1",
+        privacyLevel: PrivacyLevel.SHIELDED,
+      }
+
+      const promise = service.executeMigration(params)
+      await vi.advanceTimersByTimeAsync(20000)
+      const result = await promise
+
+      expect(mockCommit).toHaveBeenCalledOnce()
+      expect(result.txSignature).toBeUndefined()
+      expect(result.status).toBe("complete")
+    })
+
+    it("completes without txSignature when no onCommitTransaction provided", async () => {
+      const service = new MigrationService({ mode: "simulation" })
+
+      const params: MigrationParams = {
+        source: createManualSource(),
+        amount: "1",
+        privacyLevel: PrivacyLevel.SHIELDED,
+      }
+
+      const promise = service.executeMigration(params)
+      await vi.advanceTimersByTimeAsync(20000)
+      const result = await promise
+
+      expect(result.txSignature).toBeUndefined()
+      expect(result.status).toBe("complete")
+    })
   })
 })
