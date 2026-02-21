@@ -17,6 +17,7 @@ import {
 import { renderArt } from "./art-engine"
 import { encryptForViewingKey } from "@/lib/crypto-helpers"
 import { PrivacyLevel } from "@sip-protocol/types"
+import type { Transaction } from "@solana/web3.js"
 
 function generateId(prefix: string): string {
   return `${prefix}_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`
@@ -243,10 +244,24 @@ async function fetchExchangeArtNFTs(): Promise<GeneratedArt[] | null> {
 // ArtService
 // ---------------------------------------------------------------------------
 
+/**
+ * Callback to build a Bubblegum cNFT mint transaction.
+ * Returns a signable Transaction to be sent via wallet adapter.
+ */
+export type BuildCNFTMintFn = (params: {
+  recipient: string
+  name: string
+  metadataUri: string
+}) => Promise<Transaction | null>
+
 export interface ArtServiceOptions {
   mode?: ArtMode
   onStepChange?: ArtStepChangeCallback
   onCommitTransaction?: (id: string, data: string) => Promise<string | null>
+  /** Build a Bubblegum cNFT mint transaction (provided by hook when tree is configured) */
+  buildCNFTMint?: BuildCNFTMintFn
+  /** Send a signed transaction, returns signature or null */
+  onSendTransaction?: (tx: Transaction) => Promise<string | null>
 }
 
 export class ArtService {
@@ -256,11 +271,15 @@ export class ArtService {
     id: string,
     data: string
   ) => Promise<string | null>
+  private buildCNFTMint?: BuildCNFTMintFn
+  private onSendTransaction?: (tx: Transaction) => Promise<string | null>
 
   constructor(options: ArtServiceOptions = {}) {
     this.mode = options.mode ?? "simulation"
     this.onStepChange = options.onStepChange
     this.onCommitTransaction = options.onCommitTransaction
+    this.buildCNFTMint = options.buildCNFTMint
+    this.onSendTransaction = options.onSendTransaction
   }
 
   validate(
@@ -537,16 +556,48 @@ export class ArtService {
         record.encryptedForAuditor = vk.ciphertext
       }
 
-      // Step 2: Mint (simulated in demo mode)
+      // Step 2: Mint — build and send Bubblegum cNFT transaction if configured
       record.status = "minting"
       record.stepTimestamps.minting = Date.now()
       this.onStepChange?.("minting", { ...record })
 
-      const mintAddress = `SIP${generateId("nft").replace(/_/g, "").slice(0, 40)}`
-      const metadataUri = `https://arweave.net/${generateId("meta").replace(/_/g, "")}`
+      const metadataUri =
+        params.metadataUri ??
+        `https://arweave.net/${generateId("meta").replace(/_/g, "")}`
+      record.metadataUri = metadataUri
+
+      let mintAddress: string
+      let txSignature: string | null = null
+
+      // Try real Bubblegum cNFT mint when builder + sender + stealth address are available
+      if (
+        this.buildCNFTMint &&
+        this.onSendTransaction &&
+        params.stealthAddress
+      ) {
+        const mintTx = await this.buildCNFTMint({
+          recipient: params.stealthAddress,
+          name: params.name,
+          metadataUri,
+        })
+
+        if (mintTx) {
+          txSignature = await this.onSendTransaction(mintTx)
+          // Use tx signature as a deterministic mint address reference
+          mintAddress = txSignature ?? `SIP${generateId("nft").replace(/_/g, "").slice(0, 40)}`
+        } else {
+          // Builder returned null (tree not configured) — fall back to simulation
+          mintAddress = `SIP${generateId("nft").replace(/_/g, "").slice(0, 40)}`
+        }
+      } else {
+        // No builder available — simulation mode fallback
+        mintAddress = `SIP${generateId("nft").replace(/_/g, "").slice(0, 40)}`
+      }
 
       record.mintAddress = mintAddress
-      record.metadataUri = metadataUri
+      if (txSignature) {
+        record.txSignature = txSignature
+      }
 
       if (this.mode === "simulation") {
         await new Promise((r) => setTimeout(r, SIMULATION_DELAYS.minting))

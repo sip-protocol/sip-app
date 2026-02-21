@@ -95,6 +95,10 @@ export interface MintArtParams {
   name: string
   description: string
   privacyLevel: PrivacyLevel
+  /** Stealth address from art generation — used as cNFT recipient */
+  stealthAddress?: string
+  /** Metadata URI (e.g. Arweave) for cNFT on-chain metadata */
+  metadataUri?: string
 }
 
 export type ArtStepChangeCallback = (

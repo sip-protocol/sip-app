@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest"
 import { ArtService } from "@/lib/art/art-service"
 import { PrivacyLevel } from "@sip-protocol/types"
 import type { ArtStep, GenerateArtParams, MintArtParams } from "@/lib/art/types"
+import { Transaction } from "@solana/web3.js"
 
 vi.mock("@sip-protocol/sdk", () => ({
   generateStealthMetaAddress: () => ({
@@ -164,7 +165,7 @@ describe("ArtService", () => {
       expect(record.status).toBe("minted")
     })
 
-    it("produces mock mint address", async () => {
+    it("produces mock mint address when no builder configured", async () => {
       const service = new ArtService({ mode: "simulation" })
       const { nft } = await service.mintNFT(validMintParams)
 
@@ -187,6 +188,168 @@ describe("ArtService", () => {
       await expect(
         service.mintNFT({ ...validMintParams, name: "" })
       ).rejects.toThrow("NFT name is required")
+    })
+  })
+
+  describe("mintNFT (cNFT via Bubblegum)", () => {
+    it("calls buildCNFTMint with correct stealth recipient", async () => {
+      const mockTx = new Transaction()
+      const buildCNFTMint = vi.fn().mockResolvedValue(mockTx)
+      const onSendTransaction = vi.fn().mockResolvedValue("mock-signature-abc123")
+
+      const service = new ArtService({
+        mode: "simulation",
+        buildCNFTMint,
+        onSendTransaction,
+      })
+
+      const mintParams: MintArtParams = {
+        ...validMintParams,
+        stealthAddress: "sip:solana:0x" + "ee".repeat(32),
+        metadataUri: "https://arweave.net/test-metadata",
+      }
+
+      const { record, nft } = await service.mintNFT(mintParams)
+
+      expect(buildCNFTMint).toHaveBeenCalledOnce()
+      expect(buildCNFTMint).toHaveBeenCalledWith({
+        recipient: "sip:solana:0x" + "ee".repeat(32),
+        name: "My Privacy Art",
+        metadataUri: "https://arweave.net/test-metadata",
+      })
+      expect(onSendTransaction).toHaveBeenCalledWith(mockTx)
+      expect(record.txSignature).toBe("mock-signature-abc123")
+      expect(nft.mintAddress).toBe("mock-signature-abc123")
+    })
+
+    it("falls back to simulation when buildCNFTMint returns null", async () => {
+      const buildCNFTMint = vi.fn().mockResolvedValue(null)
+      const onSendTransaction = vi.fn()
+
+      const service = new ArtService({
+        mode: "simulation",
+        buildCNFTMint,
+        onSendTransaction,
+      })
+
+      const mintParams: MintArtParams = {
+        ...validMintParams,
+        stealthAddress: "sip:solana:0x" + "ee".repeat(32),
+      }
+
+      const { nft } = await service.mintNFT(mintParams)
+
+      expect(buildCNFTMint).toHaveBeenCalledOnce()
+      expect(onSendTransaction).not.toHaveBeenCalled()
+      expect(nft.mintAddress.startsWith("SIP")).toBe(true)
+    })
+
+    it("falls back to simulation when no stealthAddress provided", async () => {
+      const buildCNFTMint = vi.fn()
+      const onSendTransaction = vi.fn()
+
+      const service = new ArtService({
+        mode: "simulation",
+        buildCNFTMint,
+        onSendTransaction,
+      })
+
+      const { nft } = await service.mintNFT(validMintParams)
+
+      expect(buildCNFTMint).not.toHaveBeenCalled()
+      expect(onSendTransaction).not.toHaveBeenCalled()
+      expect(nft.mintAddress.startsWith("SIP")).toBe(true)
+    })
+
+    it("falls back to simulation when onSendTransaction returns null", async () => {
+      const mockTx = new Transaction()
+      const buildCNFTMint = vi.fn().mockResolvedValue(mockTx)
+      const onSendTransaction = vi.fn().mockResolvedValue(null)
+
+      const service = new ArtService({
+        mode: "simulation",
+        buildCNFTMint,
+        onSendTransaction,
+      })
+
+      const mintParams: MintArtParams = {
+        ...validMintParams,
+        stealthAddress: "sip:solana:0x" + "ee".repeat(32),
+      }
+
+      const { nft, record } = await service.mintNFT(mintParams)
+
+      expect(buildCNFTMint).toHaveBeenCalledOnce()
+      expect(onSendTransaction).toHaveBeenCalledWith(mockTx)
+      // Falls back to SIP-prefixed address when tx send returns null
+      expect(nft.mintAddress.startsWith("SIP")).toBe(true)
+      expect(record.txSignature).toBeUndefined()
+    })
+
+    it("uses provided metadataUri for cNFT mint", async () => {
+      const buildCNFTMint = vi.fn().mockResolvedValue(new Transaction())
+      const onSendTransaction = vi.fn().mockResolvedValue("sig-123")
+
+      const service = new ArtService({
+        mode: "simulation",
+        buildCNFTMint,
+        onSendTransaction,
+      })
+
+      const mintParams: MintArtParams = {
+        ...validMintParams,
+        stealthAddress: "sip:solana:0xrecipient",
+        metadataUri: "https://arweave.net/custom-uri",
+      }
+
+      const { nft } = await service.mintNFT(mintParams)
+
+      expect(buildCNFTMint).toHaveBeenCalledWith(
+        expect.objectContaining({
+          metadataUri: "https://arweave.net/custom-uri",
+        })
+      )
+      expect(nft.metadataUri).toBe("https://arweave.net/custom-uri")
+    })
+
+    it("generates metadataUri when not provided in params", async () => {
+      const buildCNFTMint = vi.fn().mockResolvedValue(new Transaction())
+      const onSendTransaction = vi.fn().mockResolvedValue("sig-456")
+
+      const service = new ArtService({
+        mode: "simulation",
+        buildCNFTMint,
+        onSendTransaction,
+      })
+
+      const mintParams: MintArtParams = {
+        ...validMintParams,
+        stealthAddress: "sip:solana:0xrecipient",
+      }
+
+      const { nft } = await service.mintNFT(mintParams)
+
+      expect(nft.metadataUri).toContain("https://arweave.net/")
+    })
+
+    it("records step timestamps with cNFT flow", async () => {
+      const service = new ArtService({
+        mode: "simulation",
+        buildCNFTMint: vi.fn().mockResolvedValue(new Transaction()),
+        onSendTransaction: vi.fn().mockResolvedValue("sig-789"),
+      })
+
+      const mintParams: MintArtParams = {
+        ...validMintParams,
+        stealthAddress: "sip:solana:0xrecipient",
+      }
+
+      const { record } = await service.mintNFT(mintParams)
+
+      expect(record.stepTimestamps.preparing_nft).toBeDefined()
+      expect(record.stepTimestamps.minting).toBeDefined()
+      expect(record.stepTimestamps.minted).toBeDefined()
+      expect(record.status).toBe("minted")
     })
   })
 })
