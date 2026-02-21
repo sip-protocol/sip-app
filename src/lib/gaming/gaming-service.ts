@@ -21,6 +21,7 @@ export interface GamingServiceOptions {
   mode?: GamingMode
   onStepChange?: GamingStepChangeCallback
   onCommitTransaction?: (gameId: string, move: string) => Promise<string | null>
+  onRevealTransaction?: (gameId: string, move: string, salt: string) => Promise<string | null>
 }
 
 export class GamingService {
@@ -30,11 +31,17 @@ export class GamingService {
     gameId: string,
     move: string
   ) => Promise<string | null>
+  private onRevealTransaction?: (
+    gameId: string,
+    move: string,
+    salt: string
+  ) => Promise<string | null>
 
   constructor(options: GamingServiceOptions = {}) {
     this.mode = options.mode ?? "simulation"
     this.onStepChange = options.onStepChange
     this.onCommitTransaction = options.onCommitTransaction
+    this.onRevealTransaction = options.onRevealTransaction
   }
 
   validate(
@@ -151,12 +158,21 @@ export class GamingService {
         )
       }
 
-      // Step 3: Revealing
+      // Step 3: Revealing — send on-chain reveal transaction
       record.status = "revealing"
       record.stepTimestamps.revealing = Date.now()
       this.onStepChange?.("revealing", { ...record })
 
-      if (this.mode === "simulation") {
+      if (this.onRevealTransaction) {
+        const revealSig = await this.onRevealTransaction(
+          params.gameId,
+          params.move,
+          commitment.blindingFactor
+        )
+        if (revealSig) {
+          record.revealTxSignature = revealSig
+        }
+      } else if (this.mode === "simulation") {
         await new Promise((r) => setTimeout(r, SIMULATION_DELAYS.revealing))
       }
 

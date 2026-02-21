@@ -179,6 +179,95 @@ describe("GamingService", () => {
     })
   })
 
+  describe("onRevealTransaction callback", () => {
+    it("calls onRevealTransaction during reveal step with correct args", async () => {
+      const mockReveal = vi.fn().mockResolvedValue("mock-reveal-sig")
+      const service = new GamingService({
+        mode: "simulation",
+        onRevealTransaction: mockReveal,
+      })
+
+      const result = await service.playGame(validPlayParams)
+
+      expect(mockReveal).toHaveBeenCalledTimes(1)
+      expect(mockReveal).toHaveBeenCalledWith(
+        "game-stealth-showdown",
+        "rock",
+        expect.any(String) // blinding factor as salt
+      )
+      expect(result.revealTxSignature).toBe("mock-reveal-sig")
+    })
+
+    it("sets revealTxSignature on result when callback succeeds", async () => {
+      const mockReveal = vi.fn().mockResolvedValue("reveal-tx-abc123")
+      const service = new GamingService({
+        mode: "simulation",
+        onRevealTransaction: mockReveal,
+      })
+
+      const result = await service.playGame(validPlayParams)
+
+      expect(result.revealTxSignature).toBe("reveal-tx-abc123")
+    })
+
+    it("does not set revealTxSignature when callback returns null", async () => {
+      const mockReveal = vi.fn().mockResolvedValue(null)
+      const service = new GamingService({
+        mode: "simulation",
+        onRevealTransaction: mockReveal,
+      })
+
+      const result = await service.playGame(validPlayParams)
+
+      expect(mockReveal).toHaveBeenCalled()
+      expect(result.revealTxSignature).toBeUndefined()
+    })
+
+    it("does not call onRevealTransaction when callback not provided", async () => {
+      const service = new GamingService({ mode: "simulation" })
+      const result = await service.playGame(validPlayParams)
+
+      expect(result.revealTxSignature).toBeUndefined()
+      expect(result.status).toBe("resolved")
+    })
+
+    it("works alongside onCommitTransaction for full commit-reveal flow", async () => {
+      const mockCommit = vi.fn().mockResolvedValue("commit-sig")
+      const mockReveal = vi.fn().mockResolvedValue("reveal-sig")
+      const steps: GamingStep[] = []
+
+      const service = new GamingService({
+        mode: "simulation",
+        onCommitTransaction: mockCommit,
+        onRevealTransaction: mockReveal,
+        onStepChange: (step) => steps.push(step),
+      })
+
+      const result = await service.playGame(validPlayParams)
+
+      // Both callbacks called
+      expect(mockCommit).toHaveBeenCalledWith("game-stealth-showdown", "rock")
+      expect(mockReveal).toHaveBeenCalledWith(
+        "game-stealth-showdown",
+        "rock",
+        expect.any(String)
+      )
+
+      // Both signatures recorded
+      expect(result.txSignature).toBe("commit-sig")
+      expect(result.revealTxSignature).toBe("reveal-sig")
+
+      // All steps fire in order
+      expect(steps).toEqual([
+        "committing_move",
+        "generating_commitment",
+        "revealing",
+        "resolved",
+      ])
+      expect(result.status).toBe("resolved")
+    })
+  })
+
   describe("onCommitTransaction callback", () => {
     it("calls onCommitTransaction callback during committing_move step", async () => {
       const mockCallback = vi.fn().mockResolvedValue("mock-tx-signature")

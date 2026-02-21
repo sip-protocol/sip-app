@@ -62,8 +62,9 @@ export interface GamingActionRecord {
   rewardTier?: RewardTier
   stealthAddress?: string
   stealthMetaAddress?: string
-  // On-chain transaction
+  // On-chain transactions
   txSignature?: string
+  revealTxSignature?: string
   // Privacy encryption
   viewingKeyHash?: string
   encryptedForAuditor?: string

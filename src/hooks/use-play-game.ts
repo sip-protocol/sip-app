@@ -1,11 +1,13 @@
 "use client"
 
 import { useState, useCallback } from "react"
-import { useWallet } from "@solana/wallet-adapter-react"
+import { useWallet, useConnection } from "@solana/wallet-adapter-react"
 import { useDemoModeStore } from "@/stores/demo-mode"
 import { GamingService } from "@/lib/gaming/gaming-service"
 import { useGamingHistoryStore } from "@/stores/gaming-history"
 import { useTrackEvent } from "@/hooks/useTrackEvent"
+import { createRevealTransaction } from "@/lib/solana/commitment-store"
+import { useSolanaTransaction } from "@/hooks/use-solana-transaction"
 import type {
   GamingStep,
   PlayGameParams,
@@ -25,15 +27,18 @@ export interface UsePlayGameReturn {
 
 export interface UsePlayGameOptions {
   onCommitTransaction?: (gameId: string, move: string) => Promise<string | null>
+  onRevealTransaction?: (gameId: string, move: string, salt: string) => Promise<string | null>
 }
 
 export function usePlayGame(
   options: UsePlayGameOptions = {}
 ): UsePlayGameReturn {
   const { publicKey } = useWallet()
+  const { connection } = useConnection()
   const isDemoMode = useDemoModeStore((s) => s.isDemoMode)
   const { addAction, addResult } = useGamingHistoryStore()
   const { trackGaming } = useTrackEvent()
+  const revealTx = useSolanaTransaction()
 
   const [status, setStatus] = useState<PlayGameStatus>("idle")
   const [activeRecord, setActiveRecord] = useState<GamingActionRecord | null>(
@@ -58,6 +63,23 @@ export function usePlayGame(
       try {
         setError(null)
 
+        // Default reveal callback: build SIP-REVEAL memo transaction on-chain
+        const defaultReveal = async (
+          gameId: string,
+          move: string,
+          salt: string
+        ): Promise<string | null> => {
+          if (isDemoMode || !publicKey) return null
+          const tx = await createRevealTransaction(
+            `${gameId}:${move}`,
+            salt,
+            "move",
+            publicKey,
+            connection.rpcEndpoint
+          )
+          return revealTx.sendTransaction(tx)
+        }
+
         const service = new GamingService({
           mode: "simulation",
           onStepChange: (step, record) => {
@@ -65,6 +87,7 @@ export function usePlayGame(
             setActiveRecord({ ...record })
           },
           onCommitTransaction: options.onCommitTransaction,
+          onRevealTransaction: options.onRevealTransaction ?? defaultReveal,
         })
 
         const validationError = service.validate("play", params)
@@ -115,11 +138,14 @@ export function usePlayGame(
     },
     [
       publicKey,
+      connection,
       isDemoMode,
       addAction,
       addResult,
       trackGaming,
+      revealTx,
       options.onCommitTransaction,
+      options.onRevealTransaction,
     ]
   )
 
