@@ -99,9 +99,10 @@ export function AuditTrail({ walletAddress }: AuditTrailProps) {
         id: v.id,
         type: "vote",
         label: `Vote on ${proposalSnippet}...`,
-        detail: v.status === "revealed" && v.revealedChoice !== undefined
-          ? v.choiceLabel
-          : "Encrypted",
+        detail:
+          v.status === "revealed" && v.revealedChoice !== undefined
+            ? v.choiceLabel
+            : "Encrypted",
         status: v.status,
         timestamp: v.startedAt,
         txSignature: v.txSignature,
@@ -114,7 +115,8 @@ export function AuditTrail({ walletAddress }: AuditTrailProps) {
 
   const filtered = useMemo(() => {
     if (filter === "all") return entries
-    if (filter === "payments") return entries.filter((e) => e.type === "payment")
+    if (filter === "payments")
+      return entries.filter((e) => e.type === "payment")
     if (filter === "swaps") return entries.filter((e) => e.type === "swap")
     return entries.filter((e) => e.type === "vote")
   }, [entries, filter])
@@ -185,7 +187,12 @@ export function AuditTrail({ walletAddress }: AuditTrailProps) {
             </div>
 
             <div className="flex items-center gap-4 shrink-0">
-              <span className={cn("text-xs font-medium capitalize", getStatusColor(entry.status))}>
+              <span
+                className={cn(
+                  "text-xs font-medium capitalize",
+                  getStatusColor(entry.status)
+                )}
+              >
                 {entry.status}
               </span>
               <span className="text-xs text-[var(--text-secondary)]">

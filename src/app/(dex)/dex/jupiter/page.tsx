@@ -91,7 +91,9 @@ export default function JupiterPage() {
   // Swap execution state
   const [isSwapping, setIsSwapping] = useState(false)
   const [swapTxSignature, setSwapTxSignature] = useState<string | null>(null)
-  const [swapStatus, setSwapStatus] = useState<"idle" | "signing" | "confirming" | "success" | "error">("idle")
+  const [swapStatus, setSwapStatus] = useState<
+    "idle" | "signing" | "confirming" | "success" | "error"
+  >("idle")
 
   // UI state
   const [copied, setCopied] = useState<string | null>(null)
@@ -221,9 +223,10 @@ export default function JupiterPage() {
         await getJupiterSwapTransaction({
           quoteResponse: quote,
           userPublicKey: publicKey.toBase58(),
-          destinationTokenAccount: privacyEnabled && privacyLayer
-            ? privacyLayer.stealthAddress
-            : undefined,
+          destinationTokenAccount:
+            privacyEnabled && privacyLayer
+              ? privacyLayer.stealthAddress
+              : undefined,
         })
 
       const txBuffer = Buffer.from(swapTransaction, "base64")
@@ -239,7 +242,11 @@ export default function JupiterPage() {
       )
 
       await connection.confirmTransaction(
-        { signature, lastValidBlockHeight, blockhash: transaction.message.recentBlockhash },
+        {
+          signature,
+          lastValidBlockHeight,
+          blockhash: transaction.message.recentBlockhash,
+        },
         "confirmed"
       )
 
@@ -254,7 +261,14 @@ export default function JupiterPage() {
     } finally {
       setIsSwapping(false)
     }
-  }, [quote, publicKey, signTransaction, connection, privacyEnabled, privacyLayer])
+  }, [
+    quote,
+    publicKey,
+    signTransaction,
+    connection,
+    privacyEnabled,
+    privacyLayer,
+  ])
 
   return (
     <div className="mx-auto max-w-2xl px-3 py-4 pb-safe sm:px-4 sm:py-12">
@@ -524,7 +538,13 @@ export default function JupiterPage() {
             {/* Swap Button */}
             <button
               onClick={handleSwap}
-              disabled={!quote || isLoadingQuote || isSwapping || !publicKey || !signTransaction}
+              disabled={
+                !quote ||
+                isLoadingQuote ||
+                isSwapping ||
+                !publicKey ||
+                !signTransaction
+              }
               className="min-h-[52px] w-full rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-4 font-medium text-white transition-all hover:from-purple-600 hover:to-pink-600 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isSwapping

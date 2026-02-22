@@ -38,8 +38,8 @@ export function ComplianceDashboard() {
         </div>
         <h2 className="text-xl font-bold mb-2">Connect Wallet</h2>
         <p className="text-[var(--text-secondary)] max-w-md mx-auto">
-          Connect your wallet to view your compliance dashboard,
-          audit trail, and manage viewing keys.
+          Connect your wallet to view your compliance dashboard, audit trail,
+          and manage viewing keys.
         </p>
       </div>
     )

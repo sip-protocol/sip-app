@@ -12,8 +12,8 @@ export default function CompliancePage() {
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-2">Compliance Dashboard</h1>
         <p className="text-[var(--text-secondary)]">
-          Audit trail, viewing key management, and compliance reporting
-          for your private transactions.
+          Audit trail, viewing key management, and compliance reporting for your
+          private transactions.
         </p>
       </div>
       <ComplianceDashboard />

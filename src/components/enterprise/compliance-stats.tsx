@@ -6,13 +6,38 @@ interface ComplianceStatsProps {
 }
 
 const stats = [
-  { key: "payments", label: "Payments", icon: "\uD83D\uDCB8", color: "text-green-400" },
-  { key: "swaps", label: "Swaps", icon: "\uD83D\uDD04", color: "text-blue-400" },
-  { key: "votes", label: "Votes", icon: "\uD83D\uDDF3\uFE0F", color: "text-purple-400" },
-  { key: "viewingKeys", label: "Viewing Keys", icon: "\uD83D\uDD11", color: "text-amber-400" },
+  {
+    key: "payments",
+    label: "Payments",
+    icon: "\uD83D\uDCB8",
+    color: "text-green-400",
+  },
+  {
+    key: "swaps",
+    label: "Swaps",
+    icon: "\uD83D\uDD04",
+    color: "text-blue-400",
+  },
+  {
+    key: "votes",
+    label: "Votes",
+    icon: "\uD83D\uDDF3\uFE0F",
+    color: "text-purple-400",
+  },
+  {
+    key: "viewingKeys",
+    label: "Viewing Keys",
+    icon: "\uD83D\uDD11",
+    color: "text-amber-400",
+  },
 ] as const
 
-export function ComplianceStats({ payments, swaps, votes, viewingKeys }: ComplianceStatsProps) {
+export function ComplianceStats({
+  payments,
+  swaps,
+  votes,
+  viewingKeys,
+}: ComplianceStatsProps) {
   const values: Record<string, number> = { payments, swaps, votes, viewingKeys }
 
   return (
