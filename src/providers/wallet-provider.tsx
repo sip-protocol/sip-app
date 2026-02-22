@@ -6,8 +6,8 @@ import {
   WalletProvider as SolanaWalletProvider,
 } from "@solana/wallet-adapter-react"
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui"
-import { clusterApiUrl } from "@solana/web3.js"
 import { useWalletAccountChange } from "@/hooks/use-wallet-account-change"
+import { useNetworkStore } from "@/stores/network"
 
 // Import wallet adapter styles
 import "@solana/wallet-adapter-react-ui/styles.css"
@@ -22,11 +22,9 @@ interface WalletProviderProps {
 }
 
 export function WalletProvider({ children }: WalletProviderProps) {
-  // Use mainnet-beta by default, override with NEXT_PUBLIC_RPC_URL
-  const endpoint = useMemo(
-    () => process.env.NEXT_PUBLIC_RPC_URL || clusterApiUrl("mainnet-beta"),
-    []
-  )
+  // Derive endpoint from network store (reacts to cluster/custom RPC changes)
+  const rpcUrl = useNetworkStore((s) => s.rpcUrl)
+  const endpoint = useMemo(() => rpcUrl, [rpcUrl])
 
   const wallets = useMemo(() => [], [])
 
