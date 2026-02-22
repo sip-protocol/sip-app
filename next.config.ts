@@ -30,6 +30,7 @@ const nextConfig: NextConfig = {
       "@sip-protocol/react",
     ],
   },
+
 }
 
 export default nextConfig
