@@ -24,6 +24,8 @@ import { sha512 } from "@noble/hashes/sha2.js"
 import { bytesToHex, concatBytes } from "@noble/hashes/utils.js"
 import { ed25519 } from "@noble/curves/ed25519.js"
 import bs58 from "bs58"
+import { estimatePriorityFee } from "./priority-fees"
+import { withRetry } from "./retry"
 
 export interface ClaimParams {
   /** TransferRecord PDA address (base58) */
@@ -178,7 +180,12 @@ export async function buildClaimTransaction(
 
   // Compute budget for claim_transfer
   tx.add(ComputeBudgetProgram.setComputeUnitLimit({ units: 200_000 }))
-  tx.add(ComputeBudgetProgram.setComputeUnitPrice({ microLamports: 50_000 }))
+  // Dynamic priority fee with retry (falls back to 50K on failure)
+  const priorityFee = await withRetry(
+    () => estimatePriorityFee(connection),
+    { maxRetries: 2, baseDelayMs: 500 }
+  )
+  tx.add(ComputeBudgetProgram.setComputeUnitPrice({ microLamports: priorityFee }))
   tx.add(ix)
 
   return {

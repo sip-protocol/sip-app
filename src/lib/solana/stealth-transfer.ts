@@ -33,6 +33,8 @@ import { sha256 } from "@noble/hashes/sha2.js"
 import { xchacha20poly1305 } from "@noble/ciphers/chacha.js"
 import { bytesToHex, concatBytes } from "@noble/hashes/utils.js"
 import bs58 from "bs58"
+import { estimatePriorityFee } from "./priority-fees"
+import { withRetry } from "./retry"
 
 /**
  * NullifierRecord account size (discriminator + fields).
@@ -211,8 +213,13 @@ export async function createStealthTransfer(
 
       // Request 300K compute units for shielded_transfer
       tx.add(ComputeBudgetProgram.setComputeUnitLimit({ units: 300_000 }))
+      // Dynamic priority fee with retry (falls back to 50K on failure)
+      const priorityFee = await withRetry(
+        () => estimatePriorityFee(connection),
+        { maxRetries: 2, baseDelayMs: 500 }
+      )
       tx.add(
-        ComputeBudgetProgram.setComputeUnitPrice({ microLamports: 50_000 })
+        ComputeBudgetProgram.setComputeUnitPrice({ microLamports: priorityFee })
       )
 
       // Ensure fee_collector is rent-exempt
