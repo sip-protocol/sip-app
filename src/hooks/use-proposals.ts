@@ -24,7 +24,7 @@ export function useProposals(): UseProposalsReturn {
   const [selectedDao, setSelectedDao] = useState<string | null>(null)
 
   useEffect(() => {
-    const reader = new RealmsReader("simulation")
+    const reader = new RealmsReader("realms")
 
     async function load() {
       setIsLoading(true)

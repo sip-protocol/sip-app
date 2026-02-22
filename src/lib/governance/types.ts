@@ -35,6 +35,10 @@ export interface Proposal {
   quorum: number
   voterWeight?: string
   encryptionKey: string
+  /** Realm pubkey (populated when fetched from chain) */
+  realmPubkey?: string
+  /** Governance account pubkey (populated when fetched from chain) */
+  governancePubkey?: string
 }
 
 export interface SerializedEncryptedVote {

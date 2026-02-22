@@ -35,6 +35,8 @@ export function VoteForm({ proposal, onBack }: VoteFormProps) {
 
   const { commit: commitOnChain, tx: commitTx } = useOnChainCommit("vote")
 
+  const { weight, tokenOwnerRecordPubkey } = useVoterWeight(proposal.daoId)
+
   const onCommitTransaction = useMemo(
     () => (proposalId: string, choice: number, weight: string) =>
       commitOnChain(proposalId, `${choice}:${weight}`),
@@ -47,9 +49,24 @@ export function VoteForm({ proposal, onBack }: VoteFormProps) {
     error,
     commitVote,
     reset: resetVote,
-  } = useGovernanceVote({ onCommitTransaction })
-
-  const { weight } = useVoterWeight(proposal.daoId)
+  } = useGovernanceVote({
+    onCommitTransaction,
+    sendRealmsVote: !!(
+      proposal.realmPubkey &&
+      proposal.governancePubkey &&
+      tokenOwnerRecordPubkey
+    ),
+    realmVoteData:
+      proposal.realmPubkey &&
+      proposal.governancePubkey &&
+      tokenOwnerRecordPubkey
+        ? {
+            realmPubkey: proposal.realmPubkey,
+            governancePubkey: proposal.governancePubkey,
+            tokenOwnerRecordPubkey,
+          }
+        : undefined,
+  })
 
   const privacyMap: Record<PrivacyOption, PrivacyLevel> = useMemo(
     () => ({

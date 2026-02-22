@@ -72,7 +72,7 @@ export function useGovernanceVote(
         setError(null)
 
         const service = new GovernanceService({
-          mode: "simulation",
+          mode: isDemoMode ? "simulation" : "realms",
           onStepChange: (step, vote) => {
             setStatus(step)
             setActiveVote({ ...vote })
@@ -174,7 +174,7 @@ export function useGovernanceVote(
         setError(null)
 
         const service = new GovernanceService({
-          mode: "simulation",
+          mode: isDemoMode ? "simulation" : "realms",
           onStepChange: (step, vote) => {
             setStatus(step)
             setActiveVote({ ...vote })

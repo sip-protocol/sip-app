@@ -18,8 +18,8 @@ const GOVERNANCE_PROGRAM_ID = new PublicKey(
 
 // Mainnet RPC — use env var or public fallback
 const SOLANA_RPC_URL =
-  typeof process !== "undefined" && process.env?.NEXT_PUBLIC_SOLANA_RPC_URL
-    ? process.env.NEXT_PUBLIC_SOLANA_RPC_URL
+  typeof process !== "undefined" && process.env?.NEXT_PUBLIC_RPC_URL
+    ? process.env.NEXT_PUBLIC_RPC_URL
     : "https://solana-rpc.publicnode.com"
 
 // Curated list of real Solana DAO realm addresses (mainnet)
@@ -364,6 +364,55 @@ export class RealmsReader {
     }
   }
 
+  // ─── getVoterInfo ───────────────────────────────────────────────────
+
+  async getVoterInfo(
+    daoId: string,
+    walletAddress?: string
+  ): Promise<{ weight: string; tokenOwnerRecordPubkey?: string }> {
+    if (this.mode !== "realms" || !walletAddress) {
+      return { weight: this.getSimulatedWeight(daoId) }
+    }
+
+    const realmConfig = KNOWN_REALMS[daoId]
+    if (!realmConfig) return { weight: "0" }
+
+    try {
+      const connection = this.getConnection()
+      const voterPubkey = new PublicKey(walletAddress)
+
+      const tokenOwnerRecords = await getTokenOwnerRecordsByOwner(
+        connection,
+        GOVERNANCE_PROGRAM_ID,
+        voterPubkey
+      )
+
+      const realmRecords = tokenOwnerRecords.filter((record) =>
+        record.account.realm.equals(realmConfig.pubkey)
+      )
+
+      if (realmRecords.length === 0) return { weight: "0" }
+
+      let totalWeight = BigInt(0)
+      for (const record of realmRecords) {
+        totalWeight += BigInt(
+          record.account.governingTokenDepositAmount.toString()
+        )
+      }
+
+      return {
+        weight: totalWeight.toString(),
+        tokenOwnerRecordPubkey: realmRecords[0].pubkey.toBase58(),
+      }
+    } catch (error) {
+      console.warn(
+        `[SIP] Failed to fetch voter info for ${daoId}:`,
+        error instanceof Error ? error.message : error
+      )
+      return { weight: this.getSimulatedWeight(daoId) }
+    }
+  }
+
   // ─── Internal helpers ────────────────────────────────────────────────
 
   private getSimulatedWeight(daoId: string): string {
@@ -491,6 +540,8 @@ export class RealmsReader {
       totalVotes,
       quorum,
       encryptionKey: deterministicKey(id),
+      realmPubkey: KNOWN_REALMS[daoId]?.pubkey.toBase58(),
+      governancePubkey: proposal.governance.toBase58(),
     }
   }
 
