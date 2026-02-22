@@ -5,6 +5,7 @@ import { useWallet, useConnection } from "@solana/wallet-adapter-react"
 import { PublicKey } from "@solana/web3.js"
 import { useStealthKeys } from "./use-stealth-keys"
 import { buildClaimTransaction } from "@/lib/solana/claim-transfer"
+import { confirmTransactionWithRetry } from "@/lib/solana/confirm-transaction"
 import type { DetectedPayment } from "./use-scan-payments"
 import { usePaymentHistoryStore } from "@/stores/payment-history"
 
@@ -61,8 +62,16 @@ export function useClaimTransfer(): UseClaimTransferResult {
           preflightCommitment: "confirmed",
         })
 
-        // Wait for confirmation
-        await connection.confirmTransaction(signature, "confirmed")
+        // Wait for confirmation with retry and timeout
+        const confirmResult = await confirmTransactionWithRetry(
+          connection,
+          signature,
+          { timeoutMs: 30_000 }
+        )
+
+        if (!confirmResult.confirmed) {
+          throw new Error(confirmResult.error || "Transaction confirmation failed")
+        }
 
         // Record in payment history
         usePaymentHistoryStore.getState().addClaimed({
