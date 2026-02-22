@@ -19,15 +19,15 @@ vi.mock("@/stores/wallet", () => ({
 
 // Mock history stores
 vi.mock("@/stores/payment-history", () => ({
-  usePaymentHistoryStore: (sel: Function) => sel({ getAll: () => [] }),
+  usePaymentHistoryStore: (sel: (state: unknown) => unknown) => sel({ getAll: () => [] }),
 }))
 
 vi.mock("@/stores/swap-history", () => ({
-  useSwapHistoryStore: (sel: Function) => sel({ swaps: [] }),
+  useSwapHistoryStore: (sel: (state: unknown) => unknown) => sel({ swaps: [] }),
 }))
 
 vi.mock("@/stores/governance-history", () => ({
-  useGovernanceHistoryStore: (sel: Function) => sel({ votes: [] }),
+  useGovernanceHistoryStore: (sel: (state: unknown) => unknown) => sel({ votes: [] }),
 }))
 
 // Mock viewing key hooks

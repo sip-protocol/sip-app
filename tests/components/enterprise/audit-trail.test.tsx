@@ -7,17 +7,17 @@ let mockSwaps: unknown[] = []
 let mockVotes: unknown[] = []
 
 vi.mock("@/stores/payment-history", () => ({
-  usePaymentHistoryStore: (selector: Function) =>
+  usePaymentHistoryStore: (selector: (state: unknown) => unknown) =>
     selector({ getAll: () => mockPayments }),
 }))
 
 vi.mock("@/stores/swap-history", () => ({
-  useSwapHistoryStore: (selector: Function) =>
+  useSwapHistoryStore: (selector: (state: unknown) => unknown) =>
     selector({ swaps: mockSwaps }),
 }))
 
 vi.mock("@/stores/governance-history", () => ({
-  useGovernanceHistoryStore: (selector: Function) =>
+  useGovernanceHistoryStore: (selector: (state: unknown) => unknown) =>
     selector({ votes: mockVotes }),
 }))
 
