@@ -7,6 +7,7 @@ import { Menu, X, ExternalLink } from "lucide-react"
 import { Logo } from "@/components/ui/logo"
 import { useWallet } from "@solana/wallet-adapter-react"
 import { useWalletModal } from "@solana/wallet-adapter-react-ui"
+import { useNetworkStore } from "@/stores/network"
 
 interface NavItem {
   label: string
@@ -27,6 +28,7 @@ export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const { publicKey, connected, disconnect } = useWallet()
   const { setVisible } = useWalletModal()
+  const isMainnet = useNetworkStore((s) => s.isMainnet)
 
   // Handle scroll effect
   useEffect(() => {
@@ -81,8 +83,19 @@ export function Header() {
       >
         <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
-            {/* Logo */}
-            <Logo size="md" showText={true} href="/" />
+            {/* Logo + Network Badge */}
+            <div className="flex items-center gap-2">
+              <Logo size="md" showText={true} href="/" />
+              <span
+                className={`text-[10px] font-mono px-1.5 py-0.5 rounded ${
+                  isMainnet
+                    ? "bg-green-500/10 text-green-400"
+                    : "bg-purple-500/10 text-purple-400"
+                }`}
+              >
+                {isMainnet ? "mainnet" : "devnet"}
+              </span>
+            </div>
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-1">
