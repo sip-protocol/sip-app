@@ -5,7 +5,7 @@ import { useWallet, useConnection } from "@solana/wallet-adapter-react"
 import type { ViewingKey } from "@sip-protocol/types"
 import type { PrivacyLevel } from "@/components/payments/privacy-toggle"
 import type { Token } from "@/components/payments/amount-input"
-import type { TxStatus } from "@/components/payments/transaction-status"
+import type { TxStatus, ProgressStep } from "@/components/payments/transaction-status"
 import { createStealthTransfer } from "@/lib/solana/stealth-transfer"
 import { useSolanaTransaction } from "@/hooks/use-solana-transaction"
 import { usePaymentHistoryStore } from "@/stores/payment-history"
@@ -27,6 +27,7 @@ interface UseSendPaymentResult {
   status: TxStatus
   txHash: string | null
   error: string | null
+  currentStep: ProgressStep | null
   send: (params: SendPaymentParams) => Promise<SendPaymentResult | undefined>
   reset: () => void
 }
@@ -59,11 +60,13 @@ export function useSendPayment(): UseSendPaymentResult {
   const [status, setStatus] = useState<TxStatus>("idle")
   const [txHash, setTxHash] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [currentStep, setCurrentStep] = useState<ProgressStep | null>(null)
 
   const reset = useCallback(() => {
     setStatus("idle")
     setTxHash(null)
     setError(null)
+    setCurrentStep(null)
     tx.reset()
   }, [tx])
 
@@ -79,6 +82,7 @@ export function useSendPayment(): UseSendPaymentResult {
 
       try {
         setStatus("pending")
+        setCurrentStep("deriving")
         setError(null)
         setTxHash(null)
 
@@ -100,6 +104,7 @@ export function useSendPayment(): UseSendPaymentResult {
         const amountLamports = Math.floor(amountSol * 1_000_000_000)
 
         // 3. Create stealth transfer (DKSAP + encrypted keypair + commitment)
+        setCurrentStep("encrypting")
         const transfer = await createStealthTransfer({
           amountLamports,
           recipientViewingPublicKey: viewingPublicKey,
@@ -107,18 +112,21 @@ export function useSendPayment(): UseSendPaymentResult {
         })
 
         // 4. Build signable Solana transaction
+        setCurrentStep("signing")
         const transaction = await transfer.buildTransaction(
           publicKey,
           connection.rpcEndpoint
         )
 
         // 5. Sign + send + confirm via wallet adapter
+        setCurrentStep("broadcasting")
         const signature = await tx.sendTransaction(transaction)
         if (!signature) {
           throw new Error("Transaction was rejected or failed")
         }
 
         setTxHash(signature)
+        setCurrentStep("confirming")
 
         // Record in payment history
         usePaymentHistoryStore.getState().addSent({
@@ -131,6 +139,7 @@ export function useSendPayment(): UseSendPaymentResult {
           timestamp: Date.now(),
         })
 
+        setCurrentStep("complete")
         setStatus("confirmed")
 
         console.log("Shielded payment sent:", {
@@ -145,6 +154,7 @@ export function useSendPayment(): UseSendPaymentResult {
       } catch (err) {
         console.error("Send payment error:", err)
         setError(err instanceof Error ? err.message : "Transaction failed")
+        setCurrentStep(null)
         setStatus("error")
         return undefined
       }
@@ -152,5 +162,5 @@ export function useSendPayment(): UseSendPaymentResult {
     [publicKey, connection, tx]
   )
 
-  return { status, txHash, error, send, reset }
+  return { status, txHash, error, currentStep, send, reset }
 }

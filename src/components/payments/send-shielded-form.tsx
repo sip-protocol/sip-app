@@ -32,7 +32,7 @@ export function SendShieldedForm() {
   const [viewingKey, setViewingKey] = useState<ViewingKey | null>(null)
 
   // Transaction state
-  const { status, txHash, error, send, reset } = useSendPayment()
+  const { status, txHash, error, currentStep, send, reset } = useSendPayment()
 
   // Fetch balance when connected
   useEffect(() => {
@@ -128,7 +128,7 @@ export function SendShieldedForm() {
   if (status === "confirmed") {
     return (
       <div className="bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-2xl p-6 sm:p-8">
-        <TransactionStatus status={status} txHash={txHash ?? undefined} />
+        <TransactionStatus status={status} txHash={txHash ?? undefined} currentStep={currentStep ?? undefined} />
         <button
           type="button"
           onClick={handleReset}
@@ -220,6 +220,7 @@ export function SendShieldedForm() {
         status={status}
         txHash={txHash ?? undefined}
         error={error ?? undefined}
+        currentStep={currentStep ?? undefined}
       />
 
       {/* Transaction Details */}

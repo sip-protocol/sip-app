@@ -54,6 +54,7 @@ describe("useSendPayment", () => {
     expect(result.current.status).toBe("idle")
     expect(result.current.txHash).toBeNull()
     expect(result.current.error).toBeNull()
+    expect(result.current.currentStep).toBeNull()
   })
 
   it("sends a real stealth transfer and returns tx signature", async () => {
@@ -165,6 +166,46 @@ describe("useSendPayment", () => {
     expect(result.current.status).toBe("idle")
     expect(result.current.txHash).toBeNull()
     expect(result.current.error).toBeNull()
+    expect(result.current.currentStep).toBeNull()
     expect(mockTxReset).toHaveBeenCalled()
+  })
+
+  it("tracks progress steps during send", async () => {
+    const { result } = renderHook(() => useSendPayment())
+
+    // Before send, step is null
+    expect(result.current.currentStep).toBeNull()
+
+    await act(async () => {
+      await result.current.send({
+        recipient:
+          "sip:solana:CVDFLCAjXhVWiPXH9nTCTpCgVzmDVoiPzNJYuccr1dqB:7x3Fh9wKLmPQrYvNJeS5tWXB2kZdGcA4np8Hu1VfRz6E",
+        amount: "0.01",
+        token: "SOL",
+        privacyLevel: "shielded",
+      })
+    })
+
+    // After send completes, step should be "complete"
+    expect(result.current.currentStep).toBe("complete")
+    expect(result.current.status).toBe("confirmed")
+  })
+
+  it("clears step on error", async () => {
+    mockSendTransaction.mockRejectedValue(new Error("Network error"))
+    const { result } = renderHook(() => useSendPayment())
+
+    await act(async () => {
+      await result.current.send({
+        recipient:
+          "sip:solana:CVDFLCAjXhVWiPXH9nTCTpCgVzmDVoiPzNJYuccr1dqB:7x3Fh9wKLmPQrYvNJeS5tWXB2kZdGcA4np8Hu1VfRz6E",
+        amount: "0.01",
+        token: "SOL",
+        privacyLevel: "shielded",
+      })
+    })
+
+    expect(result.current.status).toBe("error")
+    expect(result.current.currentStep).toBeNull()
   })
 })
