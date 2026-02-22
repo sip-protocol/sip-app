@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { ErrorBoundary } from "@/components/shared/error-boundary"
 
 const navItems = [
   { name: "Dashboard", href: "/payments" },
@@ -47,7 +48,9 @@ export default function PaymentsLayout({
       </div>
 
       {/* Main Content */}
-      <main className="flex-1 bg-gray-900/30">{children}</main>
+      <main className="flex-1 bg-gray-900/30">
+        <ErrorBoundary>{children}</ErrorBoundary>
+      </main>
     </div>
   )
 }
