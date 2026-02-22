@@ -145,7 +145,7 @@ vi.mock("@/lib/sip-client", () => ({
 
 vi.mock("bs58", () => ({
   default: {
-    decode: (str: string) => new Uint8Array(32).fill(0xbb),
+    decode: (_str: string) => new Uint8Array(32).fill(0xbb),
     encode: (bytes: Uint8Array) => "MockBase58" + bytes[0].toString(16),
   },
 }))

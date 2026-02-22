@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useCallback, useMemo } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
 import { useDemoModeStore } from "@/stores/demo-mode"
 import { DemoBanner } from "@/components/ui/demo-banner"
@@ -43,11 +43,14 @@ export function StreamForm({ track, onStreamed }: StreamFormProps) {
     reset: resetStream,
   } = useStreamTrack()
 
-  const privacyMap: Record<PrivacyOption, PrivacyLevel> = {
-    shielded: PrivacyLevel.SHIELDED,
-    compliant: PrivacyLevel.COMPLIANT,
-    transparent: PrivacyLevel.TRANSPARENT,
-  }
+  const privacyMap: Record<PrivacyOption, PrivacyLevel> = useMemo(
+    () => ({
+      shielded: PrivacyLevel.SHIELDED,
+      compliant: PrivacyLevel.COMPLIANT,
+      transparent: PrivacyLevel.TRANSPARENT,
+    }),
+    []
+  )
 
   const privacyLabel: Record<PrivacyOption, string> = {
     shielded: "\u{1F512} Shielded",

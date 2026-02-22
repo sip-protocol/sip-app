@@ -82,11 +82,14 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
     reset: resetPlay,
   } = usePlayGame({ onCommitTransaction })
 
-  const privacyMap: Record<PrivacyOption, PrivacyLevel> = {
-    shielded: PrivacyLevel.SHIELDED,
-    compliant: PrivacyLevel.COMPLIANT,
-    transparent: PrivacyLevel.TRANSPARENT,
-  }
+  const privacyMap: Record<PrivacyOption, PrivacyLevel> = useMemo(
+    () => ({
+      shielded: PrivacyLevel.SHIELDED,
+      compliant: PrivacyLevel.COMPLIANT,
+      transparent: PrivacyLevel.TRANSPARENT,
+    }),
+    []
+  )
 
   const canPlay = (connected || isDemoMode) && phase === "select"
 

@@ -113,8 +113,6 @@ function deterministicSeed(input: string): string {
 
 // Map a Helius asset to our GeneratedArt interface
 function mapAssetToGeneratedArt(asset: HeliusAsset): GeneratedArt {
-  const meta = asset.content?.metadata
-  const name = meta?.name ?? "Exchange Art NFT"
   const seed = deterministicSeed(asset.id)
 
   // Derive a style from the asset hash

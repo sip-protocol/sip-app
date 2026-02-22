@@ -20,16 +20,16 @@ const ADDR = {
 
 // Mock spl-governance
 const mockGetGovernanceProgramVersion = vi.fn().mockResolvedValue(3)
-const mockWithCastVote = vi.fn().mockImplementation(
-  async (instructions: unknown[]) => {
+const mockWithCastVote = vi
+  .fn()
+  .mockImplementation(async (instructions: unknown[]) => {
     instructions.push({
       keys: [],
       programId: new PublicKey("GovER5Lthms3bLBqWub97yVRs6buSgstyZvo8jaxYMB6"),
       data: Buffer.from([0]),
     })
     return new PublicKey(ADDR.voteRecord)
-  }
-)
+  })
 const mockGetProposal = vi.fn().mockResolvedValue({
   pubkey: new PublicKey(ADDR.proposal),
   account: {
@@ -82,7 +82,9 @@ const mockConnection = {
     blockhash: "mock-blockhash",
     lastValidBlockHeight: 100,
   }),
-} as unknown as ConstructorParameters<typeof import("@solana/web3.js").Connection>[0]
+} as unknown as ConstructorParameters<
+  typeof import("@solana/web3.js").Connection
+>[0]
 
 const realmPubkey = new PublicKey(ADDR.realm)
 const governancePubkey = new PublicKey(ADDR.governance)
@@ -107,7 +109,9 @@ describe("buildCastVoteTransaction", () => {
     mockWithCastVote.mockImplementation(async (instructions: unknown[]) => {
       instructions.push({
         keys: [],
-        programId: new PublicKey("GovER5Lthms3bLBqWub97yVRs6buSgstyZvo8jaxYMB6"),
+        programId: new PublicKey(
+          "GovER5Lthms3bLBqWub97yVRs6buSgstyZvo8jaxYMB6"
+        ),
         data: Buffer.from([0]),
       })
       return new PublicKey(ADDR.voteRecord)
@@ -158,7 +162,9 @@ describe("buildCastVoteTransaction", () => {
     // args[0] = instructions array
     expect(Array.isArray(args[0])).toBe(true)
     // args[1] = governance program ID
-    expect(args[1].toBase58()).toBe("GovER5Lthms3bLBqWub97yVRs6buSgstyZvo8jaxYMB6")
+    expect(args[1].toBase58()).toBe(
+      "GovER5Lthms3bLBqWub97yVRs6buSgstyZvo8jaxYMB6"
+    )
     // args[2] = program version
     expect(args[2]).toBe(3)
     // args[3] = realm

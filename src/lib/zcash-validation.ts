@@ -25,11 +25,6 @@ export interface ZcashValidationResult {
   privacyNote?: string
 }
 
-// Base58 character set (no 0, O, I, l)
-const BASE58_CHARS =
-  "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
-const BASE58_REGEX = new RegExp(`^[${BASE58_CHARS}]+$`)
-
 // Bech32/Bech32m character set (lowercase alphanumeric, no 1, b, i, o)
 const BECH32_CHARS = "qpzry9x8gf2tvdw0s3jn54khce6mua7l"
 const BECH32_REGEX = new RegExp(`^[${BECH32_CHARS}]+$`)

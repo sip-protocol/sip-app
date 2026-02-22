@@ -96,12 +96,10 @@ describe("useArtGalleryStore", () => {
     useArtGalleryStore
       .getState()
       .addAction(makeMockAction({ id: "update-me", status: "selecting_style" }))
-    useArtGalleryStore
-      .getState()
-      .updateAction("update-me", {
-        status: "generated",
-        completedAt: Date.now(),
-      })
+    useArtGalleryStore.getState().updateAction("update-me", {
+      status: "generated",
+      completedAt: Date.now(),
+    })
 
     const updated = useArtGalleryStore.getState().getAction("update-me")
     expect(updated?.status).toBe("generated")

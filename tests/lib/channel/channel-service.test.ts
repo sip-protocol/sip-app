@@ -174,7 +174,9 @@ describe("ChannelService", () => {
     it("calls buildCNFTMint with correct stealth recipient", async () => {
       const mockTx = new Transaction()
       const buildCNFTMint = vi.fn().mockResolvedValue(mockTx)
-      const onSendTransaction = vi.fn().mockResolvedValue("mock-drop-sig-abc123")
+      const onSendTransaction = vi
+        .fn()
+        .mockResolvedValue("mock-drop-sig-abc123")
 
       const service = new ChannelService({
         mode: "simulation",

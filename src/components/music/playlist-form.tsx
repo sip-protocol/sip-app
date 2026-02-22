@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useCallback, useMemo } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
 import { useDemoModeStore } from "@/stores/demo-mode"
 import { DemoBanner } from "@/components/ui/demo-banner"
@@ -45,11 +45,14 @@ export function PlaylistForm({ onCreated }: PlaylistFormProps) {
     reset: resetPlaylist,
   } = useCreatePlaylist({ onCommitTransaction: commit })
 
-  const privacyMap: Record<PrivacyOption, PrivacyLevel> = {
-    shielded: PrivacyLevel.SHIELDED,
-    compliant: PrivacyLevel.COMPLIANT,
-    transparent: PrivacyLevel.TRANSPARENT,
-  }
+  const privacyMap: Record<PrivacyOption, PrivacyLevel> = useMemo(
+    () => ({
+      shielded: PrivacyLevel.SHIELDED,
+      compliant: PrivacyLevel.COMPLIANT,
+      transparent: PrivacyLevel.TRANSPARENT,
+    }),
+    []
+  )
 
   // Use the first stream as the reviewable item
   const reviewableStream = SAMPLE_STREAMS[0]

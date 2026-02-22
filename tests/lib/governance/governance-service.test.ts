@@ -5,7 +5,7 @@ import type { VoteStep, VoteParams } from "@/lib/governance/types"
 
 // Mock the SDK to avoid WASM/crypto deps in tests
 vi.mock("@sip-protocol/sdk", () => {
-  let callCount = 0
+  let _callCount = 0
   class MockPrivateVoting {
     castVote(params: {
       proposalId: string
@@ -13,7 +13,7 @@ vi.mock("@sip-protocol/sdk", () => {
       weight: bigint
       encryptionKey: string
     }) {
-      callCount++
+      _callCount++
       return {
         ciphertext: `0x${"ab".repeat(32)}`,
         nonce: `0x${"cd".repeat(12)}`,

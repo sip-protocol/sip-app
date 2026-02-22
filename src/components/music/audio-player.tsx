@@ -55,10 +55,11 @@ export function AudioPlayer({ trackId, title, className }: AudioPlayerProps) {
   }, [isPlaying, updateProgress])
 
   useEffect(() => {
+    const audio = audioRef.current
     return () => {
       cancelAnimationFrame(animRef.current)
-      if (audioRef.current) {
-        audioRef.current.pause()
+      if (audio) {
+        audio.pause()
       }
     }
   }, [])

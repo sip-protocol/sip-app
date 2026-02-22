@@ -122,7 +122,7 @@ vi.mock("@noble/curves/ed25519.js", () => ({
 
 vi.mock("bs58", () => ({
   default: {
-    decode: (str: string) => new Uint8Array(32).fill(0xcc),
+    decode: (_str: string) => new Uint8Array(32).fill(0xcc),
     encode: (bytes: Uint8Array) => "MockBase58" + bytes[0].toString(16),
   },
 }))

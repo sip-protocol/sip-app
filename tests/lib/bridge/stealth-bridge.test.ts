@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest"
+import { describe, it, expect } from "vitest"
 import { estimateBridgeFee } from "@/lib/bridge/stealth-bridge"
 
 // Test the fee estimation (stealth generation requires real SDK, tested via integration)

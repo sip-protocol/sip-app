@@ -320,10 +320,7 @@ describe("MigrationService", () => {
       const result = await promise
 
       expect(mockCommit).toHaveBeenCalledOnce()
-      expect(mockCommit).toHaveBeenCalledWith(
-        result.id,
-        `${result.id}:2.5`
-      )
+      expect(mockCommit).toHaveBeenCalledWith(result.id, `${result.id}:2.5`)
       expect(result.txSignature).toBe("mock-tx-signature-abc123")
     })
 

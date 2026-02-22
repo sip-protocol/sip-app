@@ -9,7 +9,6 @@ import {
   Eye,
   Trophy,
   ExternalLink,
-  // eslint-disable-next-line @typescript-eslint/no-deprecated
   Github,
   FileText,
   ChevronDown,

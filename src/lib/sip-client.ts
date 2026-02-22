@@ -126,7 +126,7 @@ export function getProofProvider(): Promise<ProofProvider> {
  * Get base configuration for demo/testnet environment
  */
 async function getSIPConfigAsync(
-  sdk: typeof import("@sip-protocol/sdk")
+  _sdk: typeof import("@sip-protocol/sdk")
 ): Promise<SIPConfig> {
   // Get the initialized proof provider (real Noir in browser, mock for SSR)
   const provider = await getProofProvider()

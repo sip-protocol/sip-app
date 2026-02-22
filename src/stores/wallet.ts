@@ -1,5 +1,4 @@
 import { create } from "zustand"
-import type { ChainId } from "@sip-protocol/types"
 
 export type WalletType =
   | "phantom"

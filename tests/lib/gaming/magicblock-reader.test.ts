@@ -1,5 +1,9 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from "vitest"
-import { MagicBlockReader, BOLT_PROGRAM_IDS, getBoltWorldInfo } from "@/lib/gaming/magicblock-reader"
+import {
+  MagicBlockReader,
+  BOLT_PROGRAM_IDS,
+  getBoltWorldInfo,
+} from "@/lib/gaming/magicblock-reader"
 
 // Mock fetch for RPC calls
 const mockFetch = vi.fn()

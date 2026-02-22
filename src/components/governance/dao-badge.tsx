@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { cn } from "@/lib/utils"
 
 interface DaoBadgeProps {
@@ -25,9 +26,11 @@ export function DaoBadge({
           size === "sm" ? "w-6 h-6" : "w-8 h-8"
         )}
       >
-        <img
+        <Image
           src={icon}
           alt={name}
+          width={size === "sm" ? 24 : 32}
+          height={size === "sm" ? 24 : 32}
           className="w-full h-full object-cover"
           onError={(e) => {
             const target = e.target as HTMLImageElement

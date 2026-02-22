@@ -51,11 +51,14 @@ export function VoteForm({ proposal, onBack }: VoteFormProps) {
 
   const { weight } = useVoterWeight(proposal.daoId)
 
-  const privacyMap: Record<PrivacyOption, PrivacyLevel> = {
-    shielded: PrivacyLevel.SHIELDED,
-    compliant: PrivacyLevel.COMPLIANT,
-    transparent: PrivacyLevel.TRANSPARENT,
-  }
+  const privacyMap: Record<PrivacyOption, PrivacyLevel> = useMemo(
+    () => ({
+      shielded: PrivacyLevel.SHIELDED,
+      compliant: PrivacyLevel.COMPLIANT,
+      transparent: PrivacyLevel.TRANSPARENT,
+    }),
+    []
+  )
 
   const privacyLabel: Record<PrivacyOption, string> = {
     shielded: "🔒 Shielded",

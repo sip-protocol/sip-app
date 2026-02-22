@@ -2,7 +2,11 @@ import { describe, it, expect, beforeEach } from "vitest"
 import { usePaymentHistoryStore } from "@/stores/payment-history"
 import type { HistoryEntry } from "@/stores/payment-history"
 
-function makeSentEntry(overrides?: Partial<HistoryEntry>): Parameters<ReturnType<typeof usePaymentHistoryStore.getState>["addSent"]>[0] {
+function makeSentEntry(
+  overrides?: Partial<HistoryEntry>
+): Parameters<
+  ReturnType<typeof usePaymentHistoryStore.getState>["addSent"]
+>[0] {
   return {
     walletAddress: "wallet-A",
     recipient: "sip:solana:0xspend:0xview",
@@ -15,7 +19,11 @@ function makeSentEntry(overrides?: Partial<HistoryEntry>): Parameters<ReturnType
   }
 }
 
-function makeClaimedEntry(overrides?: Partial<HistoryEntry>): Parameters<ReturnType<typeof usePaymentHistoryStore.getState>["addClaimed"]>[0] {
+function makeClaimedEntry(
+  overrides?: Partial<HistoryEntry>
+): Parameters<
+  ReturnType<typeof usePaymentHistoryStore.getState>["addClaimed"]
+>[0] {
   return {
     walletAddress: "wallet-A",
     transferRecordPda: "pda_abc123",
@@ -61,7 +69,9 @@ describe("usePaymentHistoryStore", () => {
     const store = usePaymentHistoryStore.getState()
     store.addSent(makeSentEntry({ walletAddress: "wallet-A", amount: 10 }))
     store.addSent(makeSentEntry({ walletAddress: "wallet-B", amount: 20 }))
-    store.addClaimed(makeClaimedEntry({ walletAddress: "wallet-A", amount: 30 }))
+    store.addClaimed(
+      makeClaimedEntry({ walletAddress: "wallet-A", amount: 30 })
+    )
 
     const walletAEntries = usePaymentHistoryStore.getState().getAll("wallet-A")
     const walletBEntries = usePaymentHistoryStore.getState().getAll("wallet-B")
@@ -110,9 +120,15 @@ describe("usePaymentHistoryStore", () => {
 
   it("getAll returns sorted by newest first", () => {
     const store = usePaymentHistoryStore.getState()
-    store.addSent(makeSentEntry({ walletAddress: "wallet-A", timestamp: 1000, amount: 1 }))
-    store.addSent(makeSentEntry({ walletAddress: "wallet-A", timestamp: 3000, amount: 3 }))
-    store.addSent(makeSentEntry({ walletAddress: "wallet-A", timestamp: 2000, amount: 2 }))
+    store.addSent(
+      makeSentEntry({ walletAddress: "wallet-A", timestamp: 1000, amount: 1 })
+    )
+    store.addSent(
+      makeSentEntry({ walletAddress: "wallet-A", timestamp: 3000, amount: 3 })
+    )
+    store.addSent(
+      makeSentEntry({ walletAddress: "wallet-A", timestamp: 2000, amount: 2 })
+    )
 
     const entries = usePaymentHistoryStore.getState().getAll("wallet-A")
     expect(entries[0].timestamp).toBe(3000)

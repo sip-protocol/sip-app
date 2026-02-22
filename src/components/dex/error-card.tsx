@@ -6,7 +6,6 @@ import {
   ERROR_MESSAGES,
   type ErrorCode,
   type ErrorAction,
-  type ErrorInfo,
 } from "@/lib/error-messages"
 
 interface ErrorCardProps {
@@ -38,7 +37,6 @@ export function ErrorCard({
   const errorObj = typeof error === "string" ? new Error(error) : error
   const parsed = parseError(errorObj)
 
-  const code = errorCode ?? parsed.code
   const info = errorCode ? ERROR_MESSAGES[errorCode] : parsed.info
 
   const handleAction = useCallback(

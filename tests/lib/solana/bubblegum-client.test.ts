@@ -102,9 +102,8 @@ describe("bubblegum-client", () => {
 
   describe("buildMintCNFTTransaction", () => {
     it("builds a transaction with correct structure", async () => {
-      const { buildMintCNFTTransaction } = await import(
-        "@/lib/solana/bubblegum-client"
-      )
+      const { buildMintCNFTTransaction } =
+        await import("@/lib/solana/bubblegum-client")
       const { PublicKey, Connection } = await import("@solana/web3.js")
 
       const result = await buildMintCNFTTransaction({
@@ -130,9 +129,8 @@ describe("bubblegum-client", () => {
     })
 
     it("fetches recent blockhash from connection", async () => {
-      const { buildMintCNFTTransaction } = await import(
-        "@/lib/solana/bubblegum-client"
-      )
+      const { buildMintCNFTTransaction } =
+        await import("@/lib/solana/bubblegum-client")
       const { PublicKey, Connection } = await import("@solana/web3.js")
 
       await buildMintCNFTTransaction({
@@ -157,12 +155,10 @@ describe("bubblegum-client", () => {
     })
 
     it("adds compute budget instructions", async () => {
-      const { buildMintCNFTTransaction } = await import(
-        "@/lib/solana/bubblegum-client"
-      )
-      const { PublicKey, Connection, ComputeBudgetProgram } = await import(
-        "@solana/web3.js"
-      )
+      const { buildMintCNFTTransaction } =
+        await import("@/lib/solana/bubblegum-client")
+      const { PublicKey, Connection, ComputeBudgetProgram } =
+        await import("@solana/web3.js")
 
       await buildMintCNFTTransaction({
         connection: new Connection("https://api.devnet.solana.com"),
@@ -191,9 +187,8 @@ describe("bubblegum-client", () => {
     })
 
     it("adds 3 instructions (CU limit, CU price, mint)", async () => {
-      const { buildMintCNFTTransaction } = await import(
-        "@/lib/solana/bubblegum-client"
-      )
+      const { buildMintCNFTTransaction } =
+        await import("@/lib/solana/bubblegum-client")
       const { PublicKey, Connection } = await import("@solana/web3.js")
 
       await buildMintCNFTTransaction({
@@ -219,9 +214,8 @@ describe("bubblegum-client", () => {
     })
 
     it("throws on empty metadata name", async () => {
-      const { buildMintCNFTTransaction } = await import(
-        "@/lib/solana/bubblegum-client"
-      )
+      const { buildMintCNFTTransaction } =
+        await import("@/lib/solana/bubblegum-client")
       const { PublicKey, Connection } = await import("@solana/web3.js")
 
       await expect(
@@ -246,9 +240,8 @@ describe("bubblegum-client", () => {
     })
 
     it("throws on empty metadata uri", async () => {
-      const { buildMintCNFTTransaction } = await import(
-        "@/lib/solana/bubblegum-client"
-      )
+      const { buildMintCNFTTransaction } =
+        await import("@/lib/solana/bubblegum-client")
       const { PublicKey, Connection } = await import("@solana/web3.js")
 
       await expect(
@@ -273,9 +266,8 @@ describe("bubblegum-client", () => {
     })
 
     it("throws on invalid sellerFeeBasisPoints", async () => {
-      const { buildMintCNFTTransaction } = await import(
-        "@/lib/solana/bubblegum-client"
-      )
+      const { buildMintCNFTTransaction } =
+        await import("@/lib/solana/bubblegum-client")
       const { PublicKey, Connection } = await import("@solana/web3.js")
 
       await expect(
@@ -301,9 +293,8 @@ describe("bubblegum-client", () => {
     })
 
     it("throws on creator shares not summing to 100", async () => {
-      const { buildMintCNFTTransaction } = await import(
-        "@/lib/solana/bubblegum-client"
-      )
+      const { buildMintCNFTTransaction } =
+        await import("@/lib/solana/bubblegum-client")
       const { PublicKey, Connection } = await import("@solana/web3.js")
 
       await expect(
@@ -344,9 +335,8 @@ describe("bubblegum-client", () => {
     })
 
     it("accepts valid custom creators", async () => {
-      const { buildMintCNFTTransaction } = await import(
-        "@/lib/solana/bubblegum-client"
-      )
+      const { buildMintCNFTTransaction } =
+        await import("@/lib/solana/bubblegum-client")
       const { PublicKey, Connection } = await import("@solana/web3.js")
 
       const result = await buildMintCNFTTransaction({
@@ -387,9 +377,8 @@ describe("bubblegum-client", () => {
     })
 
     it("accepts optional symbol and sellerFeeBasisPoints", async () => {
-      const { buildMintCNFTTransaction } = await import(
-        "@/lib/solana/bubblegum-client"
-      )
+      const { buildMintCNFTTransaction } =
+        await import("@/lib/solana/bubblegum-client")
       const { PublicKey, Connection } = await import("@solana/web3.js")
 
       const result = await buildMintCNFTTransaction({
@@ -418,9 +407,8 @@ describe("bubblegum-client", () => {
 
   describe("buildMintToCollectionV1Instruction", () => {
     it("builds an instruction with 16 account keys", async () => {
-      const { buildMintToCollectionV1Instruction } = await import(
-        "@/lib/solana/bubblegum-client"
-      )
+      const { buildMintToCollectionV1Instruction } =
+        await import("@/lib/solana/bubblegum-client")
       const { PublicKey } = await import("@solana/web3.js")
 
       const ix = buildMintToCollectionV1Instruction({
@@ -445,10 +433,8 @@ describe("bubblegum-client", () => {
     })
 
     it("sets the Bubblegum program ID", async () => {
-      const {
-        buildMintToCollectionV1Instruction,
-        BUBBLEGUM_PROGRAM_ID,
-      } = await import("@/lib/solana/bubblegum-client")
+      const { buildMintToCollectionV1Instruction, BUBBLEGUM_PROGRAM_ID } =
+        await import("@/lib/solana/bubblegum-client")
       const { PublicKey } = await import("@solana/web3.js")
 
       const ix = buildMintToCollectionV1Instruction({
@@ -472,9 +458,8 @@ describe("bubblegum-client", () => {
     })
 
     it("starts instruction data with correct discriminator", async () => {
-      const { buildMintToCollectionV1Instruction } = await import(
-        "@/lib/solana/bubblegum-client"
-      )
+      const { buildMintToCollectionV1Instruction } =
+        await import("@/lib/solana/bubblegum-client")
       const { PublicKey } = await import("@solana/web3.js")
 
       const ix = buildMintToCollectionV1Instruction({
@@ -499,9 +484,8 @@ describe("bubblegum-client", () => {
     })
 
     it("uses recipient as leafOwner (index 1) and leafDelegate (index 2)", async () => {
-      const { buildMintToCollectionV1Instruction } = await import(
-        "@/lib/solana/bubblegum-client"
-      )
+      const { buildMintToCollectionV1Instruction } =
+        await import("@/lib/solana/bubblegum-client")
       const { PublicKey } = await import("@solana/web3.js")
 
       const recipient = new PublicKey(
@@ -533,9 +517,8 @@ describe("bubblegum-client", () => {
     })
 
     it("sets payer as signer on positions 4, 5, 6", async () => {
-      const { buildMintToCollectionV1Instruction } = await import(
-        "@/lib/solana/bubblegum-client"
-      )
+      const { buildMintToCollectionV1Instruction } =
+        await import("@/lib/solana/bubblegum-client")
       const { PublicKey } = await import("@solana/web3.js")
 
       const payer = new PublicKey(
@@ -574,9 +557,8 @@ describe("bubblegum-client", () => {
     })
 
     it("sets merkleTree as writable (index 3)", async () => {
-      const { buildMintToCollectionV1Instruction } = await import(
-        "@/lib/solana/bubblegum-client"
-      )
+      const { buildMintToCollectionV1Instruction } =
+        await import("@/lib/solana/bubblegum-client")
       const { PublicKey } = await import("@solana/web3.js")
 
       const ix = buildMintToCollectionV1Instruction({
@@ -600,9 +582,8 @@ describe("bubblegum-client", () => {
     })
 
     it("includes metadata name in instruction data", async () => {
-      const { buildMintToCollectionV1Instruction } = await import(
-        "@/lib/solana/bubblegum-client"
-      )
+      const { buildMintToCollectionV1Instruction } =
+        await import("@/lib/solana/bubblegum-client")
       const { PublicKey } = await import("@solana/web3.js")
 
       const ix = buildMintToCollectionV1Instruction({
@@ -628,9 +609,8 @@ describe("bubblegum-client", () => {
     })
 
     it("includes metadata uri in instruction data", async () => {
-      const { buildMintToCollectionV1Instruction } = await import(
-        "@/lib/solana/bubblegum-client"
-      )
+      const { buildMintToCollectionV1Instruction } =
+        await import("@/lib/solana/bubblegum-client")
       const { PublicKey } = await import("@solana/web3.js")
 
       const ix = buildMintToCollectionV1Instruction({
@@ -657,9 +637,8 @@ describe("bubblegum-client", () => {
 
   describe("PDA derivation", () => {
     it("findTreeConfigPda returns a PublicKey and bump", async () => {
-      const { findTreeConfigPda } = await import(
-        "@/lib/solana/bubblegum-client"
-      )
+      const { findTreeConfigPda } =
+        await import("@/lib/solana/bubblegum-client")
       const { PublicKey } = await import("@solana/web3.js")
 
       const [pda, bump] = findTreeConfigPda(
@@ -671,9 +650,7 @@ describe("bubblegum-client", () => {
     })
 
     it("findMetadataPda returns a PublicKey and bump", async () => {
-      const { findMetadataPda } = await import(
-        "@/lib/solana/bubblegum-client"
-      )
+      const { findMetadataPda } = await import("@/lib/solana/bubblegum-client")
       const { PublicKey } = await import("@solana/web3.js")
 
       const [pda, bump] = findMetadataPda(
@@ -684,9 +661,8 @@ describe("bubblegum-client", () => {
     })
 
     it("findMasterEditionPda returns a PublicKey and bump", async () => {
-      const { findMasterEditionPda } = await import(
-        "@/lib/solana/bubblegum-client"
-      )
+      const { findMasterEditionPda } =
+        await import("@/lib/solana/bubblegum-client")
       const { PublicKey } = await import("@solana/web3.js")
 
       const [pda, bump] = findMasterEditionPda(
@@ -697,9 +673,8 @@ describe("bubblegum-client", () => {
     })
 
     it("findBubblegumSignerPda returns a PublicKey and bump", async () => {
-      const { findBubblegumSignerPda } = await import(
-        "@/lib/solana/bubblegum-client"
-      )
+      const { findBubblegumSignerPda } =
+        await import("@/lib/solana/bubblegum-client")
 
       const [pda, bump] = findBubblegumSignerPda()
       expect(pda).toBeDefined()
@@ -709,36 +684,32 @@ describe("bubblegum-client", () => {
 
   describe("program constants", () => {
     it("exports BUBBLEGUM_PROGRAM_ID as correct address", async () => {
-      const { BUBBLEGUM_PROGRAM_ID } = await import(
-        "@/lib/solana/bubblegum-client"
-      )
+      const { BUBBLEGUM_PROGRAM_ID } =
+        await import("@/lib/solana/bubblegum-client")
       expect(BUBBLEGUM_PROGRAM_ID.toBase58()).toBe(
         "BGUMAp9Gq7iTEuizy4pqaxsTyUCBK68MDfK752saRPUY"
       )
     })
 
     it("exports SPL_NOOP_PROGRAM_ID as correct address", async () => {
-      const { SPL_NOOP_PROGRAM_ID } = await import(
-        "@/lib/solana/bubblegum-client"
-      )
+      const { SPL_NOOP_PROGRAM_ID } =
+        await import("@/lib/solana/bubblegum-client")
       expect(SPL_NOOP_PROGRAM_ID.toBase58()).toBe(
         "noopb9bkMVfRPU8AsbpTUg8AQkHtKwMYZiFUjNRtMmV"
       )
     })
 
     it("exports SPL_ACCOUNT_COMPRESSION_PROGRAM_ID as correct address", async () => {
-      const { SPL_ACCOUNT_COMPRESSION_PROGRAM_ID } = await import(
-        "@/lib/solana/bubblegum-client"
-      )
+      const { SPL_ACCOUNT_COMPRESSION_PROGRAM_ID } =
+        await import("@/lib/solana/bubblegum-client")
       expect(SPL_ACCOUNT_COMPRESSION_PROGRAM_ID.toBase58()).toBe(
         "cmtDvXumGCrqC1Age74AVPhSRVXJMd8PJS91L8KbNCK"
       )
     })
 
     it("exports TOKEN_METADATA_PROGRAM_ID as correct address", async () => {
-      const { TOKEN_METADATA_PROGRAM_ID } = await import(
-        "@/lib/solana/bubblegum-client"
-      )
+      const { TOKEN_METADATA_PROGRAM_ID } =
+        await import("@/lib/solana/bubblegum-client")
       expect(TOKEN_METADATA_PROGRAM_ID.toBase58()).toBe(
         "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
       )

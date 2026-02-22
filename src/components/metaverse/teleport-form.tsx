@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useCallback, useEffect } from "react"
+import { useState, useCallback, useEffect, useMemo } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
 import { useDemoModeStore } from "@/stores/demo-mode"
 import { DemoBanner } from "@/components/ui/demo-banner"
@@ -47,11 +47,14 @@ export function TeleportForm({ onTeleported }: TeleportFormProps) {
     reset: resetTeleport,
   } = useTeleport({ onCommitTransaction: commit })
 
-  const privacyMap: Record<PrivacyOption, PrivacyLevel> = {
-    shielded: PrivacyLevel.SHIELDED,
-    compliant: PrivacyLevel.COMPLIANT,
-    transparent: PrivacyLevel.TRANSPARENT,
-  }
+  const privacyMap: Record<PrivacyOption, PrivacyLevel> = useMemo(
+    () => ({
+      shielded: PrivacyLevel.SHIELDED,
+      compliant: PrivacyLevel.COMPLIANT,
+      transparent: PrivacyLevel.TRANSPARENT,
+    }),
+    []
+  )
 
   const [worlds, setWorlds] = useState<World[]>(SAMPLE_WORLDS)
 

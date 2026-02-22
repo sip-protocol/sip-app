@@ -249,7 +249,7 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
   } = useQuote(quoteParams)
 
   // Swap execution
-  const { status, error: swapError, execute, reset, cancel } = useSwap()
+  const { status, execute } = useSwap()
 
   const isTransparent = privacyLevel === PrivacyLevel.TRANSPARENT
   const isShielded = privacyLevel === PrivacyLevel.SHIELDED
@@ -319,11 +319,6 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
         ? destinationAddress.trim()
         : undefined,
     })
-  }
-
-  const handleReset = () => {
-    reset()
-    setAmount("")
   }
 
   return (

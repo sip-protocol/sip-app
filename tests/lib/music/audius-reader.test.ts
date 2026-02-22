@@ -68,7 +68,9 @@ describe("AudiusReader", () => {
       const reader = new AudiusReader("simulation")
       const results = await reader.searchTracks("privacy")
       expect(results.length).toBeGreaterThan(0)
-      expect(results.every((t) => t.title.toLowerCase().includes("privacy"))).toBe(true)
+      expect(
+        results.every((t) => t.title.toLowerCase().includes("privacy"))
+      ).toBe(true)
       expect(mockFetch).not.toHaveBeenCalled()
     })
 
@@ -103,8 +105,18 @@ describe("AudiusReader", () => {
     it("getTracks calls /tracks/trending and maps results", async () => {
       const reader = new AudiusReader("audius")
       const rawTracks = [
-        makeAudiusTrack({ id: "t1", title: "Trending One", genre: "Electronic", play_count: 50000 }),
-        makeAudiusTrack({ id: "t2", title: "Trending Two", genre: "Hip Hop/Rap", play_count: 200 }),
+        makeAudiusTrack({
+          id: "t1",
+          title: "Trending One",
+          genre: "Electronic",
+          play_count: 50000,
+        }),
+        makeAudiusTrack({
+          id: "t2",
+          title: "Trending Two",
+          genre: "Hip Hop/Rap",
+          play_count: 200,
+        }),
       ]
       mockFetch.mockResolvedValueOnce(audiusResponse(rawTracks))
 
@@ -134,7 +146,12 @@ describe("AudiusReader", () => {
     it("searchTracks calls /tracks/search and maps results", async () => {
       const reader = new AudiusReader("audius")
       const rawTracks = [
-        makeAudiusTrack({ id: "s1", title: "Search Result", genre: "Jazz", play_count: 3000 }),
+        makeAudiusTrack({
+          id: "s1",
+          title: "Search Result",
+          genre: "Jazz",
+          play_count: 3000,
+        }),
       ]
       mockFetch.mockResolvedValueOnce(audiusResponse(rawTracks))
 
@@ -167,12 +184,14 @@ describe("AudiusReader", () => {
       const results = await reader.searchTracks("electronic")
       // Falls back to filtering SAMPLE_TRACKS
       expect(results.length).toBeGreaterThan(0)
-      expect(results.every(
-        (t) =>
-          t.title.toLowerCase().includes("electronic") ||
-          t.description.toLowerCase().includes("electronic") ||
-          t.genre.toLowerCase().includes("electronic")
-      )).toBe(true)
+      expect(
+        results.every(
+          (t) =>
+            t.title.toLowerCase().includes("electronic") ||
+            t.description.toLowerCase().includes("electronic") ||
+            t.genre.toLowerCase().includes("electronic")
+        )
+      ).toBe(true)
     })
 
     it("getTracks falls back to sample on API error", async () => {

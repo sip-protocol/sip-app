@@ -17,7 +17,7 @@ vi.mock("@solana/wallet-adapter-react", () => ({
 vi.mock("bs58", () => ({
   default: {
     encode: (bytes: Uint8Array) => "MockBase58Key" + bytes[0].toString(16),
-    decode: (str: string) => new Uint8Array(32).fill(0xaa),
+    decode: (_str: string) => new Uint8Array(32).fill(0xaa),
   },
 }))
 

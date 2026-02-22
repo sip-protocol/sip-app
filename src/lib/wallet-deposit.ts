@@ -233,9 +233,9 @@ async function sendNearDeposit(
  * Zcash shielded transactions require a local node or zcashd wallet
  */
 async function sendZcashDeposit(
-  depositAddress: string,
-  amount: string,
-  token: string
+  _depositAddress: string,
+  _amount: string,
+  _token: string
 ): Promise<string> {
   // Zcash shielded deposits require zcashd node with wallet support
   // This is typically handled server-side or through a browser extension

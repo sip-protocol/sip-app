@@ -6,11 +6,23 @@ vi.mock("framer-motion", () => ({
   motion: {
     div: ({ children, ...props }: Record<string, unknown>) => {
       // Strip motion-specific props, keep role/aria/className
-      const { initial, animate, exit, transition, ...rest } = props
-      return <div {...(rest as React.HTMLAttributes<HTMLDivElement>)}>{children as React.ReactNode}</div>
+      const {
+        initial: _initial,
+        animate: _animate,
+        exit: _exit,
+        transition: _transition,
+        ...rest
+      } = props
+      return (
+        <div {...(rest as React.HTMLAttributes<HTMLDivElement>)}>
+          {children as React.ReactNode}
+        </div>
+      )
     },
   },
-  AnimatePresence: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  AnimatePresence: ({ children }: { children: React.ReactNode }) => (
+    <>{children}</>
+  ),
 }))
 
 import { PageTransition } from "@/components/shared/page-transition"
@@ -85,7 +97,11 @@ describe("ActionToast", () => {
   it("renders success message with emerald/green styling", () => {
     const onClose = vi.fn()
     render(
-      <ActionToast message="Transfer complete" type="success" onClose={onClose} />
+      <ActionToast
+        message="Transfer complete"
+        type="success"
+        onClose={onClose}
+      />
     )
     expect(screen.getByText("Transfer complete")).toBeInTheDocument()
     // Success uses emerald color classes
@@ -105,17 +121,13 @@ describe("ActionToast", () => {
 
   it("has role=status for accessibility", () => {
     const onClose = vi.fn()
-    render(
-      <ActionToast message="Done" type="success" onClose={onClose} />
-    )
+    render(<ActionToast message="Done" type="success" onClose={onClose} />)
     expect(screen.getByRole("status")).toBeInTheDocument()
   })
 
   it("has dismiss button with accessible label", () => {
     const onClose = vi.fn()
-    render(
-      <ActionToast message="Done" type="success" onClose={onClose} />
-    )
+    render(<ActionToast message="Done" type="success" onClose={onClose} />)
     expect(screen.getByLabelText("Dismiss notification")).toBeInTheDocument()
   })
 

@@ -89,6 +89,28 @@ export default function JupiterPage() {
   const [showFromDropdown, setShowFromDropdown] = useState(false)
   const [showToDropdown, setShowToDropdown] = useState(false)
 
+  // Generate privacy layer (stealth address)
+  const generatePrivacyLayer = useCallback(async () => {
+    try {
+      const sdk = await getSDK()
+
+      // Generate Ed25519 stealth meta-address for Solana
+      const { metaAddress, viewingPrivateKey } =
+        sdk.generateEd25519StealthMetaAddress("solana")
+
+      // Generate one-time stealth address
+      const { stealthAddress } = sdk.generateEd25519StealthAddress(metaAddress)
+
+      setPrivacyLayer({
+        stealthAddress: stealthAddress.address,
+        ephemeralKey: stealthAddress.ephemeralPublicKey,
+        viewingKey: viewingPrivateKey,
+      })
+    } catch (err) {
+      console.error("Failed to generate privacy layer:", err)
+    }
+  }, [])
+
   // Fetch Jupiter quote
   const fetchQuote = useCallback(async () => {
     if (!amount || parseFloat(amount) <= 0) {
@@ -132,29 +154,7 @@ export default function JupiterPage() {
     } finally {
       setIsLoadingQuote(false)
     }
-  }, [amount, fromToken, toToken, privacyEnabled])
-
-  // Generate privacy layer (stealth address)
-  const generatePrivacyLayer = useCallback(async () => {
-    try {
-      const sdk = await getSDK()
-
-      // Generate Ed25519 stealth meta-address for Solana
-      const { metaAddress, viewingPrivateKey } =
-        sdk.generateEd25519StealthMetaAddress("solana")
-
-      // Generate one-time stealth address
-      const { stealthAddress } = sdk.generateEd25519StealthAddress(metaAddress)
-
-      setPrivacyLayer({
-        stealthAddress: stealthAddress.address,
-        ephemeralKey: stealthAddress.ephemeralPublicKey,
-        viewingKey: viewingPrivateKey,
-      })
-    } catch (err) {
-      console.error("Failed to generate privacy layer:", err)
-    }
-  }, [])
+  }, [amount, fromToken, toToken, privacyEnabled, generatePrivacyLayer])
 
   // Fetch quote when inputs change
   useEffect(() => {

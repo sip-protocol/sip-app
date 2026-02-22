@@ -36,7 +36,9 @@ vi.mock("@/lib/solana/stealth-transfer", () => ({
     ephemeralPublicKey: "0xephem",
     commitment: { commitmentHash: "0xcommit" },
     viewingKeyHash: "0xviewhash",
-    buildTransaction: vi.fn().mockResolvedValue({ /* mock Transaction */ }),
+    buildTransaction: vi.fn().mockResolvedValue({
+      /* mock Transaction */
+    }),
     getExplorerUrl: (sig: string) => `https://solscan.io/tx/${sig}`,
   }),
 }))
@@ -72,9 +74,8 @@ describe("useSendPayment", () => {
   })
 
   it("calls createStealthTransfer with parsed meta-address keys", async () => {
-    const { createStealthTransfer } = await import(
-      "@/lib/solana/stealth-transfer"
-    )
+    const { createStealthTransfer } =
+      await import("@/lib/solana/stealth-transfer")
     const { result } = renderHook(() => useSendPayment())
 
     await act(async () => {
@@ -89,8 +90,7 @@ describe("useSendPayment", () => {
 
     expect(createStealthTransfer).toHaveBeenCalledWith({
       amountLamports: 500_000_000,
-      recipientViewingPublicKey:
-        "7x3Fh9wKLmPQrYvNJeS5tWXB2kZdGcA4np8Hu1VfRz6E",
+      recipientViewingPublicKey: "7x3Fh9wKLmPQrYvNJeS5tWXB2kZdGcA4np8Hu1VfRz6E",
       recipientSpendingPublicKey:
         "CVDFLCAjXhVWiPXH9nTCTpCgVzmDVoiPzNJYuccr1dqB",
     })

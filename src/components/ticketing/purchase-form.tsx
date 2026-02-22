@@ -53,11 +53,14 @@ export function PurchaseForm({ event, onPurchased }: PurchaseFormProps) {
     reset: resetPurchase,
   } = usePurchaseTicket({ onCommitTransaction })
 
-  const privacyMap: Record<PrivacyOption, PrivacyLevel> = {
-    shielded: PrivacyLevel.SHIELDED,
-    compliant: PrivacyLevel.COMPLIANT,
-    transparent: PrivacyLevel.TRANSPARENT,
-  }
+  const privacyMap: Record<PrivacyOption, PrivacyLevel> = useMemo(
+    () => ({
+      shielded: PrivacyLevel.SHIELDED,
+      compliant: PrivacyLevel.COMPLIANT,
+      transparent: PrivacyLevel.TRANSPARENT,
+    }),
+    []
+  )
 
   const privacyLabel: Record<PrivacyOption, string> = {
     shielded: "\u{1F512} Shielded",
