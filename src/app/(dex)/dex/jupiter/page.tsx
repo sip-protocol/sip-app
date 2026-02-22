@@ -1,9 +1,12 @@
 "use client"
 
 import { useState, useEffect, useCallback } from "react"
+import { useWallet, useConnection } from "@solana/wallet-adapter-react"
+import { VersionedTransaction } from "@solana/web3.js"
 import { useWalletStore } from "@/stores"
 import { toast } from "@/stores/toast"
 import { getSDK } from "@/lib"
+import { getJupiterSwapTransaction } from "@/lib/dex/jupiter-client"
 
 // Jupiter API endpoint
 const JUPITER_QUOTE_API = "https://quote-api.jup.ag/v6/quote"
@@ -71,6 +74,8 @@ interface PrivacyLayer {
 
 export default function JupiterPage() {
   const { isConnected, address, openModal } = useWalletStore()
+  const { publicKey, signTransaction, connected: walletConnected } = useWallet()
+  const { connection } = useConnection()
 
   // Swap state
   const [fromToken, setFromToken] = useState<TokenSymbol>("SOL")
@@ -82,6 +87,11 @@ export default function JupiterPage() {
   // Privacy state
   const [privacyEnabled, setPrivacyEnabled] = useState(true)
   const [privacyLayer, setPrivacyLayer] = useState<PrivacyLayer | null>(null)
+
+  // Swap execution state
+  const [isSwapping, setIsSwapping] = useState(false)
+  const [swapTxSignature, setSwapTxSignature] = useState<string | null>(null)
+  const [swapStatus, setSwapStatus] = useState<"idle" | "signing" | "confirming" | "success" | "error">("idle")
 
   // UI state
   const [copied, setCopied] = useState<string | null>(null)
@@ -197,6 +207,54 @@ export default function JupiterPage() {
     setFromToken(toToken)
     setToToken(temp)
   }
+
+  // Execute swap via Jupiter
+  const handleSwap = useCallback(async () => {
+    if (!quote || !publicKey || !signTransaction) return
+
+    setIsSwapping(true)
+    setSwapStatus("signing")
+    setError(null)
+
+    try {
+      const { swapTransaction, lastValidBlockHeight } =
+        await getJupiterSwapTransaction({
+          quoteResponse: quote,
+          userPublicKey: publicKey.toBase58(),
+          destinationTokenAccount: privacyEnabled && privacyLayer
+            ? privacyLayer.stealthAddress
+            : undefined,
+        })
+
+      const txBuffer = Buffer.from(swapTransaction, "base64")
+      const transaction = VersionedTransaction.deserialize(txBuffer)
+
+      const signed = await signTransaction(transaction)
+
+      setSwapStatus("confirming")
+
+      const signature = await connection.sendRawTransaction(
+        signed.serialize(),
+        { skipPreflight: true, maxRetries: 2 }
+      )
+
+      await connection.confirmTransaction(
+        { signature, lastValidBlockHeight, blockhash: transaction.message.recentBlockhash },
+        "confirmed"
+      )
+
+      setSwapTxSignature(signature)
+      setSwapStatus("success")
+      toast.success("Swap Complete", `Transaction: ${signature.slice(0, 8)}...`)
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Swap failed"
+      setError(message)
+      setSwapStatus("error")
+      toast.error("Swap Failed", message)
+    } finally {
+      setIsSwapping(false)
+    }
+  }, [quote, publicKey, signTransaction, connection, privacyEnabled, privacyLayer])
 
   return (
     <div className="mx-auto max-w-2xl px-3 py-4 pb-safe sm:px-4 sm:py-12">
@@ -465,19 +523,40 @@ export default function JupiterPage() {
 
             {/* Swap Button */}
             <button
-              disabled={!quote || isLoadingQuote}
+              onClick={handleSwap}
+              disabled={!quote || isLoadingQuote || isSwapping || !publicKey || !signTransaction}
               className="min-h-[52px] w-full rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-4 font-medium text-white transition-all hover:from-purple-600 hover:to-pink-600 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {isLoadingQuote
-                ? "Loading..."
-                : privacyEnabled
-                  ? "Swap Privately"
-                  : "Swap"}
+              {isSwapping
+                ? swapStatus === "signing"
+                  ? "Sign in Wallet..."
+                  : "Confirming..."
+                : isLoadingQuote
+                  ? "Loading..."
+                  : privacyEnabled
+                    ? "Swap Privately"
+                    : "Swap"}
             </button>
 
-            <p className="text-center text-xs text-gray-500">
-              This is a demonstration. Real swaps require transaction signing.
-            </p>
+            {swapStatus === "success" && swapTxSignature ? (
+              <p className="text-center text-xs text-green-400">
+                Swap confirmed!{" "}
+                <a
+                  href={`https://solscan.io/tx/${swapTxSignature}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline hover:text-green-300"
+                >
+                  View on Solscan
+                </a>
+              </p>
+            ) : swapStatus === "error" && error ? (
+              <p className="text-center text-xs text-red-400">{error}</p>
+            ) : !walletConnected ? (
+              <p className="text-center text-xs text-gray-500">
+                Connect wallet to execute real swaps
+              </p>
+            ) : null}
           </div>
         )}
       </div>
