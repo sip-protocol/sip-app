@@ -33,6 +33,9 @@ export async function confirmTransactionWithRetry(
     return { confirmed: true }
   } catch (error) {
     const msg = error instanceof Error ? error.message : String(error)
-    return { confirmed: false, error: msg.includes("timeout") ? "timeout" : msg }
+    return {
+      confirmed: false,
+      error: msg.includes("timeout") ? "timeout" : msg,
+    }
   }
 }

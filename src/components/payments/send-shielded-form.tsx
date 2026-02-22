@@ -128,7 +128,11 @@ export function SendShieldedForm() {
   if (status === "confirmed") {
     return (
       <div className="bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-2xl p-6 sm:p-8">
-        <TransactionStatus status={status} txHash={txHash ?? undefined} currentStep={currentStep ?? undefined} />
+        <TransactionStatus
+          status={status}
+          txHash={txHash ?? undefined}
+          currentStep={currentStep ?? undefined}
+        />
         <button
           type="button"
           onClick={handleReset}

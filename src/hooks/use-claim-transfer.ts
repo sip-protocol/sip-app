@@ -70,7 +70,9 @@ export function useClaimTransfer(): UseClaimTransferResult {
         )
 
         if (!confirmResult.confirmed) {
-          throw new Error(confirmResult.error || "Transaction confirmation failed")
+          throw new Error(
+            confirmResult.error || "Transaction confirmation failed"
+          )
         }
 
         // Record in payment history

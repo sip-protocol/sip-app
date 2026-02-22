@@ -181,11 +181,13 @@ export async function buildClaimTransaction(
   // Compute budget for claim_transfer
   tx.add(ComputeBudgetProgram.setComputeUnitLimit({ units: 200_000 }))
   // Dynamic priority fee with retry (falls back to 50K on failure)
-  const priorityFee = await withRetry(
-    () => estimatePriorityFee(connection),
-    { maxRetries: 2, baseDelayMs: 500 }
+  const priorityFee = await withRetry(() => estimatePriorityFee(connection), {
+    maxRetries: 2,
+    baseDelayMs: 500,
+  })
+  tx.add(
+    ComputeBudgetProgram.setComputeUnitPrice({ microLamports: priorityFee })
   )
-  tx.add(ComputeBudgetProgram.setComputeUnitPrice({ microLamports: priorityFee }))
   tx.add(ix)
 
   return {

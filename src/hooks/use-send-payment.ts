@@ -5,7 +5,10 @@ import { useWallet, useConnection } from "@solana/wallet-adapter-react"
 import type { ViewingKey } from "@sip-protocol/types"
 import type { PrivacyLevel } from "@/components/payments/privacy-toggle"
 import type { Token } from "@/components/payments/amount-input"
-import type { TxStatus, ProgressStep } from "@/components/payments/transaction-status"
+import type {
+  TxStatus,
+  ProgressStep,
+} from "@/components/payments/transaction-status"
 import { createStealthTransfer } from "@/lib/solana/stealth-transfer"
 import { useSolanaTransaction } from "@/hooks/use-solana-transaction"
 import { usePaymentHistoryStore } from "@/stores/payment-history"
