@@ -35,16 +35,37 @@ export async function generateSocialStealthAddress(): Promise<StealthSocialResul
 }
 
 /**
+ * Reconstruct a ViewingKey from a hex string.
+ * Computes SHA-256 hash to match SDK's generateViewingKey() behavior.
+ */
+async function viewingKeyFromHex(hex: string) {
+  const cleanHex = hex.startsWith("0x") ? hex.slice(2) : hex
+  const bytes = new Uint8Array(
+    cleanHex.match(/.{2}/g)!.map((b) => parseInt(b, 16))
+  )
+  const hashBuffer = await crypto.subtle.digest("SHA-256", bytes)
+  const hashArray = new Uint8Array(hashBuffer)
+  const hashHex = Array.from(hashArray)
+    .map((b) => b.toString(16).padStart(2, "0"))
+    .join("")
+  return {
+    key: `0x${cleanHex}` as `0x${string}`,
+    path: "m/social",
+    hash: `0x${hashHex}` as `0x${string}`,
+  }
+}
+
+/**
  * Encrypt social content using XChaCha20-Poly1305 via the SDK viewing key system.
  * We encode the content as TransactionData (the SDK's standard encrypted payload format).
  */
 export async function encryptSocialContent(
   content: string,
-  _viewingKeyHex: string
+  viewingKeyHex: string
 ): Promise<{ ciphertext: string; nonce: string }> {
   const sdk = await getSDK()
 
-  const viewingKey = sdk.generateViewingKey()
+  const viewingKey = await viewingKeyFromHex(viewingKeyHex)
 
   const payload = {
     sender: "social",
@@ -68,11 +89,11 @@ export async function encryptSocialContent(
 export async function decryptSocialContent(
   ciphertext: string,
   nonce: string,
-  _viewingKeyHex: string
+  viewingKeyHex: string
 ): Promise<string> {
   const sdk = await getSDK()
 
-  const viewingKey = sdk.generateViewingKey()
+  const viewingKey = await viewingKeyFromHex(viewingKeyHex)
 
   const decrypted = sdk.decryptWithViewing(
     {
