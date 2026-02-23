@@ -187,6 +187,40 @@ Record highest-scoring tracks first. If time is short, top 5 are critical.
 
 ---
 
+### 12. Shielded Payments (Core SIP) — `/payments/send`
+
+| Time | Shot | Notes |
+|------|------|-------|
+| 0:00 | "Payments on Solana died because every transfer was public — anyone could trace your spending." | Show payments dashboard |
+| 0:05 | Click "Send Payment" — navigate to send form | |
+| 0:10 | Paste recipient stealth meta-address, enter amount (0.01 SOL) | Show the `sip:solana:` address format |
+| 0:15 | Set privacy to Shielded | Zoom on privacy toggle |
+| 0:20 | Click "Send Shielded Payment" — show pipeline | Generating stealth address > Pedersen commitment > submitting |
+| 0:30 | Payment lands — show one-time stealth recipient address | Highlight derived address |
+| 0:35 | Show commitment hash + tx signature on Solscan | Click to open explorer |
+| 0:40 | "This payment went to a stealth address. The recipient is invisible on-chain." | |
+| 0:50 | "Stealth addresses + Pedersen commitments resurrect private payments." | |
+| 1:00 | SIP Protocol logo | "The Privacy Standard for Web3" |
+
+---
+
+### 13. Private DEX (Jupiter) — `/dex`
+
+| Time | Shot | Notes |
+|------|------|-------|
+| 0:00 | "DEX trading on Solana died because visible swaps were sandwiched and front-run." | Show DEX page |
+| 0:05 | Set privacy toggle to Shielded | Zoom on privacy toggle at top |
+| 0:10 | Select SOL → USDC swap, enter amount | Show token selector |
+| 0:15 | Show Jupiter route quote with privacy overlay | Route details + stealth routing |
+| 0:20 | Click "Shielded Swap" — show swap pipeline | Commitment > stealth route > settlement |
+| 0:30 | Swap confirmed — show stealth swap receipt | Commitment hash + route details |
+| 0:40 | Show tx signature on Solscan — no wallet linkage visible | |
+| 0:45 | "This swap was routed through a stealth address. MEV bots can't see your intent." | |
+| 0:55 | "Stealth-routed swaps on Jupiter resurrect MEV-resistant trading." | |
+| 1:05 | Jupiter logo + SIP Protocol logo | "Powered by Jupiter x SIP Protocol" |
+
+---
+
 ## Recording Tips
 
 1. **Browser**: Chrome, dark mode, 1920x1080
