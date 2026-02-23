@@ -37,7 +37,7 @@ test.describe("Governance Track [mainnet]", () => {
     await page.waitForTimeout(1000)
 
     // Verify vote form renders with choices
-    await expect(page.getByText("Your Vote")).toBeVisible({ timeout: 10_000 })
+    await expect(page.getByText("Your Vote", { exact: true }).first()).toBeVisible({ timeout: 10_000 })
     await expect(page.getByText("For", { exact: true }).first()).toBeVisible()
     await expect(page.getByText("Against")).toBeVisible()
     await expect(page.getByText("Abstain")).toBeVisible()
