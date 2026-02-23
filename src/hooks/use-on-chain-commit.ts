@@ -12,7 +12,7 @@ import { useDemoModeStore } from "@/stores/demo-mode"
 /**
  * Generic on-chain commitment hook for any track.
  *
- * Builds a 1-lamport self-transfer with SIP-COMMIT:{type}:{hash} memo.
+ * Builds a VerifyCommitment instruction via the SIP Privacy program.
  * Returns a `commit(id, data)` function matching the `onCommitTransaction`
  * callback signature used by all track services.
  *
@@ -27,39 +27,23 @@ export function useOnChainCommit(commitmentType: CommitmentType) {
 
   const commit = useCallback(
     async (id: string, data: string): Promise<string | null> => {
-      console.log("[SIP-COMMIT] called", {
-        commitmentType,
-        hasPublicKey: !!publicKey,
-        isDemoMode,
-        hasTestWallet: typeof window !== "undefined" && !!window.__SIP_TEST_WALLET,
-        rpcEndpoint: connection.rpcEndpoint,
-      })
-
-      if (!publicKey) {
-        console.log("[SIP-COMMIT] bail: no publicKey")
-        return null
-      }
+      if (!publicKey) return null
       if (isDemoMode && typeof window !== "undefined" && !window.__SIP_TEST_WALLET) {
-        console.log("[SIP-COMMIT] bail: demo mode without test wallet")
         return null
       }
 
       try {
-        console.log("[SIP-COMMIT] building commitment store...")
         const store = await createCommitmentStore({
           data: `${id}:${data}`,
           commitmentType,
         })
-        console.log("[SIP-COMMIT] store created, building tx...")
 
         const transaction = await store.buildTransaction(
           publicKey,
           connection.rpcEndpoint
         )
-        console.log("[SIP-COMMIT] tx built, sending...")
 
         const sig = await tx.sendTransaction(transaction)
-        console.log("[SIP-COMMIT] result:", sig)
         return sig
       } catch (err) {
         console.error("[SIP-COMMIT] error:", err)
