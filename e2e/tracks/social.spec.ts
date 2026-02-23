@@ -6,9 +6,8 @@ createTrackTest({
   submitButton: /Create Stealth Identity/i,
   completedText: /Create Another Identity/i,
   fillFields: async (page) => {
-    const usernameInput = page.getByPlaceholder(/username|name|handle/i).first()
-    if (await usernameInput.isVisible().catch(() => false)) {
-      await usernameInput.fill("e2e_test_user")
-    }
+    // Fill username (>= 3 chars required for submit to enable)
+    const usernameInput = page.getByPlaceholder("anonymous_builder")
+    await usernameInput.fill("e2e_test_user")
   },
 })

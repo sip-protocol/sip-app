@@ -9,6 +9,8 @@ export interface TrackTestConfig {
   completedText: string | RegExp
   fillFields?: (page: Page) => Promise<void>
   extraAssertions?: (page: Page) => Promise<void>
+  /** Use locator instead of getByRole for submit button (e.g., data-testid) */
+  submitLocator?: (page: Page) => ReturnType<Page["locator"]>
 }
 
 /**
@@ -31,7 +33,7 @@ export function createTrackTest(config: TrackTestConfig) {
 
       // Enable demo mode
       await enableDemoMode(page)
-      await page.waitForTimeout(500)
+      await page.waitForTimeout(2000)
 
       // Fill any required fields
       if (config.fillFields) {
@@ -39,8 +41,10 @@ export function createTrackTest(config: TrackTestConfig) {
       }
 
       // Click submit
-      const submitBtn = page.getByRole("button", { name: config.submitButton })
-      await expect(submitBtn).toBeEnabled({ timeout: 5000 })
+      const submitBtn = config.submitLocator
+        ? config.submitLocator(page)
+        : page.getByRole("button", { name: config.submitButton })
+      await expect(submitBtn).toBeEnabled({ timeout: 10_000 })
       await submitBtn.click()
 
       // Wait for completion

@@ -9,20 +9,25 @@ test.describe("Graveyard Showcase", () => {
     await page.goto("/showcase/graveyard-2026")
     await waitForHydration(page)
 
-    // Should display all 11 sponsor tracks
-    const trackCards = page.locator("[class*='card'], [class*='Card']")
-    await expect(trackCards.first()).toBeVisible()
-
-    // Check key track names are present
+    // Check track heading names as they appear on the showcase page
     const tracks = [
-      "Governance", "Art", "Social", "Ticketing",
-      "Gaming", "Music", "Metaverse", "Loyalty",
-      "DeSci", "Migration", "Channel"
+      "Private Governance",
+      "Anonymous Social",
+      "Privacy Loyalty",
+      "Privacy Art",
+      "Green Migration",
+      "Privacy NFTs",
+      "Privacy Arena",
+      "Privacy Ticketing",
+      "Privacy Metaverse",
+      "Privacy DeSci",
+      "Privacy Music",
     ]
     for (const track of tracks) {
-      await expect(
-        page.getByText(track, { exact: false }).first()
-      ).toBeVisible({ timeout: 5000 })
+      const el = page.getByRole("heading", { name: track }).first()
+      // Scroll into view — cards may be below the fold
+      await el.scrollIntoViewIfNeeded()
+      await expect(el).toBeVisible({ timeout: 10_000 })
     }
 
     assertNoConsoleErrors(errors)

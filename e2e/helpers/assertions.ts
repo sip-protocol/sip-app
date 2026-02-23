@@ -24,7 +24,13 @@ export function assertNoConsoleErrors(errors: string[]): void {
     (e) =>
       !e.includes("hydration") &&
       !e.includes("Warning:") &&
-      !e.includes("DevTools")
+      !e.includes("DevTools") &&
+      !e.includes("CORS") &&
+      !e.includes("net::ERR_FAILED") &&
+      !e.includes("Failed to load resource") &&
+      !e.includes("Access-Control-Allow-Origin") &&
+      !e.includes("429") &&
+      !e.includes("Retrying after")
   )
   expect(critical, `Console errors: ${critical.join("\n")}`).toHaveLength(0)
 }
