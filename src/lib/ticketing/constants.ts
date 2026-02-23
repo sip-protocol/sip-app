@@ -69,6 +69,12 @@ export const SAMPLE_EVENTS: Event[] = [
 
 export const SAMPLE_TICKETS: Ticket[] = [
   {
+    eventId: "event-solana-breakpoint",
+    tier: "vip",
+    commitmentHash: "0x9c4d...b7e2",
+    purchasedAt: now - 7 * DAY,
+  },
+  {
     eventId: "event-privacy-hackathon",
     tier: "general",
     commitmentHash: "0x3a8f...c2d1",

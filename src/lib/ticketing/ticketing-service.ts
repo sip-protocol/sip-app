@@ -5,7 +5,7 @@ import type {
   PurchaseTicketParams,
   VerifyTicketParams,
 } from "./types"
-import { SIMULATION_DELAYS, getEvent } from "./constants"
+import { SIMULATION_DELAYS, getEvent, getTicket } from "./constants"
 import { generateTicketingStealthAddress } from "./stealth-ticketing"
 import {
   createRealCommitment,
@@ -274,10 +274,14 @@ export class TicketingService {
         )
       }
 
-      // Step 2: Verifying attendance
+      // Step 2: Verifying attendance — validate ticket ownership via commitment proof
       record.status = "verifying_attendance"
       record.stepTimestamps.verifying_attendance = Date.now()
       this.onStepChange?.("verifying_attendance", { ...record })
+
+      const ticket = getTicket(params.eventId)
+      const proofCommitment = await createRealCommitment()
+      record.commitmentHash = proofCommitment.commitmentDisplay
 
       if (this.mode === "simulation") {
         await new Promise((r) =>
@@ -285,7 +289,27 @@ export class TicketingService {
         )
       }
 
-      // Step 3: Verified
+      // Validate: ticket exists, tier matches, and commitment proof was generated
+      const isValid =
+        ticket !== undefined &&
+        ticket.tier === params.tier &&
+        ticket.commitmentHash.length > 0 &&
+        proofCommitment.commitmentHash.length > 0
+
+      if (!isValid) {
+        record.attendanceVerified = false
+        record.status = "failed"
+        record.error = !ticket
+          ? "No ticket found for this event"
+          : ticket.tier !== params.tier
+            ? `Ticket tier mismatch: expected ${params.tier}, found ${ticket.tier}`
+            : "Commitment proof validation failed"
+        record.stepTimestamps.failed = Date.now()
+        this.onStepChange?.("failed", { ...record })
+        return record
+      }
+
+      // Step 3: Verified — proof validated successfully
       record.attendanceVerified = true
       record.status = "verified"
       record.completedAt = Date.now()

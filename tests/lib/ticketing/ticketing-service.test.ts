@@ -221,13 +221,40 @@ describe("TicketingService", () => {
       expect(result.status).toBe("verified")
     })
 
-    it("generates stealth address for verification", async () => {
+    it("generates stealth address and validates ticket for verification", async () => {
       const service = new TicketingService({ mode: "simulation" })
       const result = await service.verifyTicket(validVerifyParams)
 
       expect(result.stealthAddress).toBeTruthy()
       expect(result.stealthMetaAddress).toBeTruthy()
       expect(result.attendanceVerified).toBe(true)
+      expect(result.commitmentHash).toBeTruthy()
+    })
+
+    it("fails verification when no ticket exists for event", async () => {
+      const service = new TicketingService({ mode: "simulation" })
+      const result = await service.verifyTicket({
+        eventId: "event-zk-workshop",
+        tier: "early_bird",
+        privacyLevel: PrivacyLevel.SHIELDED,
+      })
+
+      expect(result.attendanceVerified).toBe(false)
+      expect(result.status).toBe("failed")
+      expect(result.error).toBe("No ticket found for this event")
+    })
+
+    it("fails verification when tier does not match", async () => {
+      const service = new TicketingService({ mode: "simulation" })
+      const result = await service.verifyTicket({
+        eventId: "event-solana-breakpoint",
+        tier: "general",
+        privacyLevel: PrivacyLevel.SHIELDED,
+      })
+
+      expect(result.attendanceVerified).toBe(false)
+      expect(result.status).toBe("failed")
+      expect(result.error).toContain("Ticket tier mismatch")
     })
 
     it("records step timestamps", async () => {
