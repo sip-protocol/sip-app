@@ -203,20 +203,24 @@ src/app/
 
 **Tech Stack:** Next.js 16 (App Router), React 19, Tailwind CSS 4, Zustand 5, Vitest
 **Deployment:** app.sip-protocol.org (Docker + GHCR → VPS port 5004 blue / 5005 green)
-**Tests:** 82 test suites, 727 unit tests + 27 E2E tests (Playwright)
+**Tests:** 82 test suites, 727 unit tests + 27 demo E2E + 14 mainnet E2E (Playwright)
 
 **Key Commands:**
 ```bash
 pnpm install              # Install dependencies
 pnpm dev                  # Dev server (localhost:3000)
 pnpm test -- --run        # Run unit tests
-pnpm test:e2e             # Run E2E tests (default: localhost:3000)
-E2E_BASE_URL=https://app.sip-protocol.org pnpm test:e2e  # Against live
+pnpm test:e2e --project=demo      # Demo E2E tests (no wallet required)
+pnpm test:e2e --project=mainnet   # Mainnet E2E (requires E2E_WALLET_SECRET)
+E2E_BASE_URL=https://app.sip-protocol.org pnpm test:e2e --project=demo  # Against live
+E2E_WALLET_SECRET=<base58> E2E_BASE_URL=https://app.sip-protocol.org pnpm test:e2e --project=mainnet  # Real on-chain
 pnpm build                # Build for production
 pnpm typecheck            # Type check
 ```
 
-**E2E Suite:** 27 Playwright tests covering all 13 Graveyard hackathon tracks + showcase page. Tests run in demo mode (no wallet/SOL required). Config at `e2e/playwright.config.ts`.
+**E2E Suite (Phase 1 — Demo):** 27 Playwright tests covering all 13 Graveyard hackathon tracks + showcase page. Tests run in demo mode (no wallet/SOL required). Project: `demo`.
+
+**E2E Suite (Phase 2 — Mainnet):** 14 Playwright tests sending real 1-lamport `SIP-COMMIT` memo transactions to Solana mainnet. Requires `E2E_WALLET_SECRET` (base58-encoded secret key). Skips automatically when not set. Project: `mainnet`. TestWalletAdapter injected via `window.__SIP_TEST_WALLET`.
 
 ---
 

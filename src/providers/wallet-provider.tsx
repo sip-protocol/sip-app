@@ -26,7 +26,14 @@ export function WalletProvider({ children }: WalletProviderProps) {
   const rpcUrl = useNetworkStore((s) => s.rpcUrl)
   const endpoint = useMemo(() => rpcUrl, [rpcUrl])
 
-  const wallets = useMemo(() => [], [])
+  const wallets = useMemo(() => {
+    if (typeof window !== "undefined" && window.__SIP_TEST_WALLET) {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const { TestWalletAdapter } = require("@/lib/test-wallet-adapter")
+      return [new TestWalletAdapter()]
+    }
+    return []
+  }, [])
 
   return (
     <ConnectionProvider endpoint={endpoint}>

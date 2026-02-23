@@ -16,7 +16,8 @@ import { useDemoModeStore } from "@/stores/demo-mode"
  * Returns a `commit(id, data)` function matching the `onCommitTransaction`
  * callback signature used by all track services.
  *
- * In demo mode or without a wallet, returns null (no-op).
+ * In demo mode without a wallet (or without test wallet), returns null.
+ * When __SIP_TEST_WALLET is set, real tx fires even in demo mode.
  */
 export function useOnChainCommit(commitmentType: CommitmentType) {
   const { publicKey } = useWallet()
@@ -26,7 +27,9 @@ export function useOnChainCommit(commitmentType: CommitmentType) {
 
   const commit = useCallback(
     async (id: string, data: string): Promise<string | null> => {
-      if (isDemoMode || !publicKey) return null
+      if (!publicKey) return null
+      if (isDemoMode && typeof window !== "undefined" && !window.__SIP_TEST_WALLET)
+        return null
 
       const store = await createCommitmentStore({
         data: `${id}:${data}`,

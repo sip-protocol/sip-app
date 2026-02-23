@@ -15,7 +15,14 @@ export default defineConfig({
   },
   projects: [
     {
-      name: "chromium",
+      name: "demo",
+      testMatch: ["tracks/**/*.spec.ts", "showcase.spec.ts"],
+      use: { browserName: "chromium" },
+    },
+    {
+      name: "mainnet",
+      testMatch: ["mainnet/**/*.spec.ts"],
+      timeout: 90_000,
       use: { browserName: "chromium" },
     },
   ],

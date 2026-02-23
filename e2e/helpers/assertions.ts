@@ -53,3 +53,27 @@ export async function assertFlowCompleted(
   const status = page.getByText(completedText).first()
   await expect(status).toBeVisible({ timeout: 30_000 })
 }
+
+/**
+ * Assert that the wallet is connected and the truncated address is visible.
+ */
+export async function assertWalletConnected(
+  page: Page,
+  address: string
+): Promise<void> {
+  const shortAddress = `${address.slice(0, 4)}...${address.slice(-4)}`
+  await expect(
+    page.getByText(shortAddress).or(page.getByText(address)).first()
+  ).toBeVisible({ timeout: 15_000 })
+}
+
+/**
+ * Assert a transaction signature is visible (solscan link or 88-char base58).
+ */
+export async function assertTransactionSignature(page: Page): Promise<void> {
+  const txLink = page
+    .locator("a[href*='solscan.io/tx/']")
+    .or(page.locator("text=/[1-9A-HJ-NP-Za-km-z]{87,88}/"))
+    .first()
+  await expect(txLink).toBeVisible({ timeout: 60_000 })
+}
