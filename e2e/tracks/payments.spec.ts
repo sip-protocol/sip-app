@@ -3,8 +3,8 @@ import { createTrackTest } from "../helpers/track-test"
 createTrackTest({
   name: "Payments",
   route: "/payments/send",
-  submitButton: /Send|Shield|Transfer/i,
-  completedText: /sent|confirmed|complete/i,
+  submitButton: /Send Shielded Payment/i,
+  completedText: /Send Another Payment/i,
   fillFields: async (page) => {
     const recipientInput = page.getByPlaceholder(/address|recipient|wallet/i).first()
     if (await recipientInput.isVisible().catch(() => false)) {
