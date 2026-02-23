@@ -42,8 +42,15 @@ export function createMainnetTrackTest(config: MainnetTrackTestConfig) {
       assertNoConsoleErrors(errors)
     })
 
-    test("submits real on-chain transaction", async ({ page }) => {
+    test("submits real on-chain transaction", async ({ page, keypair: _kp }) => {
       const errors = collectConsoleErrors(page)
+      const sipLogs: string[] = []
+      page.on("console", (msg) => {
+        if (msg.text().includes("SIP-COMMIT")) {
+          sipLogs.push(`[${msg.type()}] ${msg.text()}`)
+        }
+      })
+
       await page.goto(config.route)
       await waitForHydration(page)
 
@@ -54,6 +61,17 @@ export function createMainnetTrackTest(config: MainnetTrackTestConfig) {
       await expect(
         page.getByText(config.completedText).first()
       ).toBeVisible({ timeout: 60_000 })
+
+      // Give async commit time to complete
+      await page.waitForTimeout(3000)
+
+      // Report SIP-COMMIT activity
+      if (sipLogs.length > 0) {
+        console.log(`[${config.name}] SIP-COMMIT logs:`)
+        sipLogs.forEach((l) => console.log(`  ${l}`))
+      } else {
+        console.log(`[${config.name}] WARNING: No SIP-COMMIT logs captured`)
+      }
 
       if (config.extraAssertions) {
         await config.extraAssertions(page)
