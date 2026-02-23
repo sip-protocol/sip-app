@@ -27,21 +27,44 @@ export function useOnChainCommit(commitmentType: CommitmentType) {
 
   const commit = useCallback(
     async (id: string, data: string): Promise<string | null> => {
-      if (!publicKey) return null
-      if (isDemoMode && typeof window !== "undefined" && !window.__SIP_TEST_WALLET)
-        return null
-
-      const store = await createCommitmentStore({
-        data: `${id}:${data}`,
+      console.log("[SIP-COMMIT] called", {
         commitmentType,
+        hasPublicKey: !!publicKey,
+        isDemoMode,
+        hasTestWallet: typeof window !== "undefined" && !!window.__SIP_TEST_WALLET,
+        rpcEndpoint: connection.rpcEndpoint,
       })
 
-      const transaction = await store.buildTransaction(
-        publicKey,
-        connection.rpcEndpoint
-      )
+      if (!publicKey) {
+        console.log("[SIP-COMMIT] bail: no publicKey")
+        return null
+      }
+      if (isDemoMode && typeof window !== "undefined" && !window.__SIP_TEST_WALLET) {
+        console.log("[SIP-COMMIT] bail: demo mode without test wallet")
+        return null
+      }
 
-      return tx.sendTransaction(transaction)
+      try {
+        console.log("[SIP-COMMIT] building commitment store...")
+        const store = await createCommitmentStore({
+          data: `${id}:${data}`,
+          commitmentType,
+        })
+        console.log("[SIP-COMMIT] store created, building tx...")
+
+        const transaction = await store.buildTransaction(
+          publicKey,
+          connection.rpcEndpoint
+        )
+        console.log("[SIP-COMMIT] tx built, sending...")
+
+        const sig = await tx.sendTransaction(transaction)
+        console.log("[SIP-COMMIT] result:", sig)
+        return sig
+      } catch (err) {
+        console.error("[SIP-COMMIT] error:", err)
+        return null
+      }
     },
     [publicKey, connection, tx, isDemoMode, commitmentType]
   )
