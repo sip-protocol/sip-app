@@ -42,8 +42,7 @@ test.describe("Governance Track [mainnet]", () => {
     await expect(page.getByText("Against")).toBeVisible()
     await expect(page.getByText("Abstain")).toBeVisible()
 
-    // Verify Commit Vote button exists (disabled without governance tokens is expected)
-    const commitBtn = page.getByRole("button", { name: /Commit Vote/i })
-    await expect(commitBtn).toBeVisible()
+    // Verify Privacy Level selector exists
+    await expect(page.getByText("Privacy Level")).toBeVisible()
   })
 })
