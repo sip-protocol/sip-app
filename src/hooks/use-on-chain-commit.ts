@@ -27,8 +27,12 @@ export function useOnChainCommit(commitmentType: CommitmentType) {
 
   const commit = useCallback(
     async (id: string, data: string): Promise<string | null> => {
-      if (!publicKey) return null
+      if (!publicKey) {
+        console.warn(`[SIP-COMMIT:${commitmentType}] skip: no publicKey`)
+        return null
+      }
       if (isDemoMode && typeof window !== "undefined" && !window.__SIP_TEST_WALLET) {
+        console.warn(`[SIP-COMMIT:${commitmentType}] skip: demo mode without test wallet`)
         return null
       }
 
@@ -44,9 +48,12 @@ export function useOnChainCommit(commitmentType: CommitmentType) {
         )
 
         const sig = await tx.sendTransaction(transaction)
+        if (sig) {
+          console.info(`[SIP-COMMIT:${commitmentType}] tx: ${sig}`)
+        }
         return sig
       } catch (err) {
-        console.error("[SIP-COMMIT] error:", err)
+        console.error(`[SIP-COMMIT:${commitmentType}] error:`, err)
         return null
       }
     },
