@@ -17,8 +17,8 @@ import { logger } from "@/lib/logger"
  * Returns a `commit(id, data)` function matching the `onCommitTransaction`
  * callback signature used by all track services.
  *
- * In demo mode without a wallet (or without test wallet), returns null.
- * When __SIP_TEST_WALLET is set, real tx fires even in demo mode.
+ * Returns null only when no wallet is connected.
+ * Real transactions fire whenever a wallet is connected, even in demo mode.
  */
 export function useOnChainCommit(commitmentType: CommitmentType) {
   const { publicKey } = useWallet()
@@ -35,16 +35,11 @@ export function useOnChainCommit(commitmentType: CommitmentType) {
         )
         return null
       }
-      if (
-        isDemoMode &&
-        typeof window !== "undefined" &&
-        !window.__SIP_TEST_WALLET
-      ) {
-        logger.warn(
-          `[SIP-COMMIT:${commitmentType}] skip: demo mode without test wallet`,
+      if (isDemoMode && typeof window !== "undefined" && !window.__SIP_TEST_WALLET) {
+        logger.info(
+          `[SIP-COMMIT:${commitmentType}] demo mode with real wallet — proceeding with on-chain tx`,
           "useOnChainCommit"
         )
-        return null
       }
 
       try {
