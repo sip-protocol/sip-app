@@ -97,7 +97,7 @@ async function initializeProofProvider(): Promise<ProofProvider> {
       proofProvider = new BrowserNoirProvider()
       await proofProvider.initialize()
       return proofProvider
-    } catch (error) {
+    } catch {
       // Fallback to mock if Noir fails (e.g., WASM not supported)
       logger.warn(
         "[SIP] BrowserNoirProvider failed, falling back to mock",

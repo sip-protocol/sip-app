@@ -154,7 +154,7 @@ export function useScanPayments(): UseScanPaymentsResult {
             claimed: record.claimed,
             transferRecordPda: pubkey.toBase58(),
           })
-        } catch (parseErr) {
+        } catch {
           logger.warn(
             `Failed to parse TransferRecord ${pubkey.toBase58()}`,
             "useScanPayments"
