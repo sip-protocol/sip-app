@@ -3,6 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "description": "World-class privacy application for Web3 - powered by SIP Protocol",
+  "pnpm": {
+    "overrides": {
+      "form-data": ">=4.0.5",
+      "axios": ">=1.13.5"
+    }
+  },
   "scripts": {
     "dev": "next dev --port 3000",
     "build": "next build --webpack",
