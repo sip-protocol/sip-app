@@ -6,9 +6,9 @@ describe("NetworkStore", () => {
     useNetworkStore.getState().reset()
   })
 
-  it("defaults to devnet", () => {
+  it("defaults to mainnet-beta", () => {
     const { cluster } = useNetworkStore.getState()
-    expect(cluster).toBe("devnet")
+    expect(cluster).toBe("mainnet-beta")
   })
 
   it("switches to mainnet-beta", () => {

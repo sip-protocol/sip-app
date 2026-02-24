@@ -8,26 +8,28 @@ describe("NetworkSelector", () => {
     useNetworkStore.getState().reset()
   })
 
-  it("renders with devnet selected by default", () => {
+  it("renders with mainnet selected by default", () => {
     render(<NetworkSelector />)
     expect(screen.getByRole("button", { name: "Devnet" })).toBeInTheDocument()
     expect(screen.getByRole("button", { name: "Mainnet" })).toBeInTheDocument()
   })
 
-  it("shows network badge with purple for devnet", () => {
+  it("shows green badge for mainnet by default", () => {
     render(<NetworkSelector />)
     const badge = screen.getByTestId("network-badge")
-    expect(badge.className).toContain("purple")
-    expect(badge).toHaveTextContent("Devnet")
+    expect(badge.className).toContain("green")
+    expect(badge).toHaveTextContent("Mainnet-Beta")
   })
 
-  it("shows mainnet warning when switching to mainnet", () => {
+  it("shows mainnet warning when switching from devnet to mainnet", () => {
+    useNetworkStore.getState().setCluster("devnet")
     render(<NetworkSelector />)
     fireEvent.click(screen.getByText("Mainnet"))
     expect(screen.getByText(/real SOL/i)).toBeInTheDocument()
   })
 
   it("does not switch to mainnet until confirmed", () => {
+    useNetworkStore.getState().setCluster("devnet")
     render(<NetworkSelector />)
     fireEvent.click(screen.getByText("Mainnet"))
     // Still on devnet
@@ -35,6 +37,7 @@ describe("NetworkSelector", () => {
   })
 
   it("switches to mainnet after confirmation", () => {
+    useNetworkStore.getState().setCluster("devnet")
     render(<NetworkSelector />)
     fireEvent.click(screen.getByText("Mainnet"))
     fireEvent.click(screen.getByText("Confirm"))
@@ -42,6 +45,7 @@ describe("NetworkSelector", () => {
   })
 
   it("dismisses warning on cancel", () => {
+    useNetworkStore.getState().setCluster("devnet")
     render(<NetworkSelector />)
     fireEvent.click(screen.getByText("Mainnet"))
     expect(screen.getByText(/real SOL/i)).toBeInTheDocument()
@@ -50,18 +54,16 @@ describe("NetworkSelector", () => {
   })
 
   it("switches to devnet without warning", () => {
-    // Start on mainnet
-    useNetworkStore.getState().setCluster("mainnet-beta")
     render(<NetworkSelector />)
     fireEvent.click(screen.getByText("Devnet"))
     expect(useNetworkStore.getState().cluster).toBe("devnet")
   })
 
-  it("shows green badge when on mainnet", () => {
-    useNetworkStore.getState().setCluster("mainnet-beta")
+  it("shows purple badge when on devnet", () => {
+    useNetworkStore.getState().setCluster("devnet")
     render(<NetworkSelector />)
     const badge = screen.getByTestId("network-badge")
-    expect(badge.className).toContain("green")
-    expect(badge).toHaveTextContent("Mainnet-Beta")
+    expect(badge.className).toContain("purple")
+    expect(badge).toHaveTextContent("Devnet")
   })
 })
