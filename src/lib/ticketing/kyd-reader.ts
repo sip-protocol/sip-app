@@ -1,5 +1,6 @@
 import type { Event, Ticket, EventCategory, TicketingMode } from "./types"
 import { SAMPLE_EVENTS, SAMPLE_TICKETS } from "./constants"
+import { logger } from "@/lib/logger"
 
 // ---------------------------------------------------------------------------
 // KYD Labs ticketing data (kyd.so)
@@ -245,7 +246,10 @@ async function kydFetch<T>(path: string): Promise<T | null> {
     })
 
     if (!response.ok) {
-      console.warn(`[SIP][KYD] API returned ${response.status} for ${path}`)
+      logger.warn(
+        `[SIP][KYD] API returned ${response.status} for ${path}`,
+        "KYDReader"
+      )
       return null
     }
 
@@ -259,9 +263,9 @@ async function kydFetch<T>(path: string): Promise<T | null> {
 
     return json as T
   } catch (error) {
-    console.warn(
-      "[SIP][KYD] API fetch failed:",
-      error instanceof Error ? error.message : "Unknown error"
+    logger.warn(
+      `[SIP][KYD] API fetch failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+      "KYDReader"
     )
     return null
   }
@@ -289,7 +293,10 @@ export class KYDReader {
       if (result?.length) {
         const events = result.map(mapKYDEvent)
         setCache("kyd:events", events)
-        console.info(`[SIP][KYD] Fetched ${events.length} live events`)
+        logger.info(
+          `[SIP][KYD] Fetched ${events.length} live events`,
+          "KYDReader"
+        )
         return events
       }
 
@@ -299,13 +306,17 @@ export class KYDReader {
       if (altResult?.length) {
         const events = altResult.map(mapKYDEvent)
         setCache("kyd:events", events)
-        console.info(`[SIP][KYD] Fetched ${events.length} events from v1 API`)
+        logger.info(
+          `[SIP][KYD] Fetched ${events.length} events from v1 API`,
+          "KYDReader"
+        )
         return events
       }
 
       // Fall back to curated KYD event data
-      console.warn(
-        "[SIP][KYD] Could not fetch live events, using curated cNFT ticket data"
+      logger.warn(
+        "[SIP][KYD] Could not fetch live events, using curated cNFT ticket data",
+        "KYDReader"
       )
       setCache("kyd:events", KYD_EVENTS)
       return KYD_EVENTS
@@ -344,8 +355,9 @@ export class KYDReader {
 
       // Ticket ownership requires wallet authentication
       // Use curated data referencing cNFT ticket patterns
-      console.warn(
-        "[SIP][KYD] Ticket lookup requires wallet auth, using curated data"
+      logger.warn(
+        "[SIP][KYD] Ticket lookup requires wallet auth, using curated data",
+        "KYDReader"
       )
       setCache("kyd:tickets", KYD_TICKETS)
       return KYD_TICKETS

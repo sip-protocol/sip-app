@@ -4,6 +4,7 @@ import { useState, useCallback, useEffect } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
 import { getSDK } from "@/lib/sip-client"
 import bs58 from "bs58"
+import { logger } from "@/lib/logger"
 
 export interface StealthKeys {
   metaAddress: string
@@ -70,7 +71,11 @@ export function useStealthKeys(): UseStealthKeysResult {
       )
       setHasBackedUp(backedUp === "true")
     } catch {
-      console.error("Failed to load stealth keys from storage")
+      logger.error(
+        "Failed to load stealth keys from storage",
+        undefined,
+        "useStealthKeys"
+      )
     }
   }, [connected, publicKey])
 
@@ -122,7 +127,7 @@ export function useStealthKeys(): UseStealthKeysResult {
 
       setKeys(newKeys)
     } catch (err) {
-      console.error("Failed to generate stealth keys:", err)
+      logger.error("Failed to generate stealth keys", err, "useStealthKeys")
       setError(err instanceof Error ? err.message : "Failed to generate keys")
     } finally {
       setIsLoading(false)

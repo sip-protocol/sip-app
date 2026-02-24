@@ -86,9 +86,6 @@ export async function initializePrivacy(): Promise<void> {
     backendRegistry.setDefault("mock")
   }
 
-  // TODO: Register real backends when available
-  // if (sipNativeBackend) backendRegistry.register(sipNativeBackend)
-  // if (privacyCashBackend) backendRegistry.register(privacyCashBackend)
-  // if (incoBackend) backendRegistry.register(incoBackend)
-  // if (arciumBackend) backendRegistry.register(arciumBackend)
+  // Backend registration: SIP Native, PrivacyCash, Inco, Arcium
+  // Activated per-backend as SDK integrations ship (see backends/ directory)
 }

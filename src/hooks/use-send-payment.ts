@@ -12,6 +12,7 @@ import type {
 import { createStealthTransfer } from "@/lib/solana/stealth-transfer"
 import { useSolanaTransaction } from "@/hooks/use-solana-transaction"
 import { usePaymentHistoryStore } from "@/stores/payment-history"
+import { logger } from "@/lib/logger"
 
 interface SendPaymentParams {
   recipient: string
@@ -145,17 +146,11 @@ export function useSendPayment(): UseSendPaymentResult {
         setCurrentStep("complete")
         setStatus("confirmed")
 
-        console.log("Shielded payment sent:", {
-          recipient: params.recipient,
-          amount: params.amount,
-          stealthAddress: transfer.stealthAddress,
-          txSignature: signature,
-          explorerUrl: transfer.getExplorerUrl(signature),
-        })
+        logger.debug("Shielded payment sent", "useSendPayment")
 
         return { txHash: signature }
       } catch (err) {
-        console.error("Send payment error:", err)
+        logger.error("Send payment error", err, "useSendPayment")
         setError(err instanceof Error ? err.message : "Transaction failed")
         setCurrentStep(null)
         setStatus("error")

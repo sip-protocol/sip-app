@@ -14,6 +14,7 @@ import { ViewingKeyPanel } from "./viewing-key"
 import { useSendPayment } from "@/hooks/use-send-payment"
 import { useViewingKeyStorage } from "@/hooks/use-viewing-key-storage"
 import { cn } from "@/lib/utils"
+import { logger } from "@/lib/logger"
 
 export function SendShieldedForm() {
   const { publicKey, connected } = useWallet()
@@ -79,7 +80,11 @@ export function SendShieldedForm() {
 
       // For compliant mode, require viewing key
       if (privacyLevel === "compliant" && !viewingKey) {
-        console.error("Viewing key required for compliant mode")
+        logger.error(
+          "Viewing key required for compliant mode",
+          undefined,
+          "SendShieldedForm"
+        )
         return
       }
 

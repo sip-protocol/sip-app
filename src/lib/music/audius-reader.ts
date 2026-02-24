@@ -1,5 +1,6 @@
 import type { Track, MusicGenre, ListenerTier, MusicMode } from "./types"
 import { SAMPLE_TRACKS } from "./constants"
+import { logger } from "@/lib/logger"
 
 // ---------------------------------------------------------------------------
 // Audius Public API config
@@ -155,9 +156,9 @@ export class AudiusReader {
       setCache(cacheKey, tracks)
       return tracks
     } catch (err) {
-      console.warn(
-        "[SIP] Audius API fetch failed for getTracks, falling back to simulation:",
-        err instanceof Error ? err.message : err
+      logger.warn(
+        `[SIP] Audius API fetch failed for getTracks, falling back to simulation: ${err instanceof Error ? err.message : err}`,
+        "AudiusReader"
       )
       return SAMPLE_TRACKS
     }
@@ -179,9 +180,9 @@ export class AudiusReader {
       setCache(cacheKey, track)
       return track
     } catch (err) {
-      console.warn(
-        `[SIP] Audius API fetch failed for getTrack(${id}), falling back to simulation:`,
-        err instanceof Error ? err.message : err
+      logger.warn(
+        `[SIP] Audius API fetch failed for getTrack(${id}), falling back to simulation: ${err instanceof Error ? err.message : err}`,
+        "AudiusReader"
       )
       return SAMPLE_TRACKS.find((t) => t.id === id)
     }
@@ -226,9 +227,9 @@ export class AudiusReader {
       setCache(cacheKey, tracks)
       return tracks
     } catch (err) {
-      console.warn(
-        `[SIP] Audius API fetch failed for searchTracks("${query}"), falling back to simulation:`,
-        err instanceof Error ? err.message : err
+      logger.warn(
+        `[SIP] Audius API fetch failed for searchTracks("${query}"), falling back to simulation: ${err instanceof Error ? err.message : err}`,
+        "AudiusReader"
       )
       const q = query.toLowerCase()
       return SAMPLE_TRACKS.filter(
@@ -273,9 +274,9 @@ export class AudiusReader {
         ? filtered
         : SAMPLE_TRACKS.filter((t) => t.genre === genre)
     } catch (err) {
-      console.warn(
-        `[SIP] Audius API fetch failed for getTracksByGenre(${genre}), falling back to simulation:`,
-        err instanceof Error ? err.message : err
+      logger.warn(
+        `[SIP] Audius API fetch failed for getTracksByGenre(${genre}), falling back to simulation: ${err instanceof Error ? err.message : err}`,
+        "AudiusReader"
       )
       return SAMPLE_TRACKS.filter((t) => t.genre === genre)
     }

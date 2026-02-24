@@ -4,6 +4,7 @@ import { useState, useCallback, useRef } from "react"
 import { QRCodeSVG } from "qrcode.react"
 import type { ViewingKey } from "@sip-protocol/types"
 import { cn } from "@/lib/utils"
+import { logger } from "@/lib/logger"
 
 interface ViewingKeyQRCodeProps {
   viewingKey: ViewingKey
@@ -71,14 +72,18 @@ export function ViewingKeyQRCode({
       }
 
       img.onerror = () => {
-        console.error("Failed to load QR code image for download")
+        logger.error(
+          "Failed to load QR code image for download",
+          undefined,
+          "ViewingKeyQRCode"
+        )
         URL.revokeObjectURL(url)
         setDownloading(false)
       }
 
       img.src = url
     } catch (err) {
-      console.error("Failed to download QR code:", err)
+      logger.error("Failed to download QR code", err, "ViewingKeyQRCode")
       setDownloading(false)
     }
   }, [viewingKey.hash, size])

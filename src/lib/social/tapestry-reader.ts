@@ -13,6 +13,7 @@ import type {
   SocialMode,
 } from "./types"
 import { SAMPLE_PROFILES, SAMPLE_POSTS, SAMPLE_CONNECTIONS } from "./constants"
+import { logger } from "@/lib/logger"
 
 // ---------------------------------------------------------------------------
 // Cache — 5-minute TTL, keyed by method + args
@@ -175,8 +176,9 @@ export class TapestryReader {
       const client = getClient()
 
       if (!client || !apiKey) {
-        console.warn(
-          "[SIP] Tapestry API key not configured, falling back to simulation"
+        logger.warn(
+          "[SIP] Tapestry API key not configured, falling back to simulation",
+          "TapestryReader"
         )
         return SAMPLE_PROFILES
       }
@@ -191,9 +193,9 @@ export class TapestryReader {
         setCache(cacheKey, profiles)
         return profiles
       } catch (err) {
-        console.warn(
-          "[SIP] Tapestry getProfiles failed, using simulation:",
-          err
+        logger.warn(
+          `[SIP] Tapestry getProfiles failed, using simulation: ${err instanceof Error ? err.message : err}`,
+          "TapestryReader"
         )
         return SAMPLE_PROFILES
       }
@@ -208,8 +210,9 @@ export class TapestryReader {
       const client = getClient()
 
       if (!client || !apiKey) {
-        console.warn(
-          "[SIP] Tapestry API key not configured, falling back to simulation"
+        logger.warn(
+          "[SIP] Tapestry API key not configured, falling back to simulation",
+          "TapestryReader"
         )
         return SAMPLE_PROFILES.find((p) => p.id === id)
       }
@@ -224,7 +227,10 @@ export class TapestryReader {
         setCache(cacheKey, profile)
         return profile
       } catch (err) {
-        console.warn("[SIP] Tapestry getProfile failed, using simulation:", err)
+        logger.warn(
+          `[SIP] Tapestry getProfile failed, using simulation: ${err instanceof Error ? err.message : err}`,
+          "TapestryReader"
+        )
         return SAMPLE_PROFILES.find((p) => p.id === id)
       }
     }
@@ -240,8 +246,9 @@ export class TapestryReader {
       const client = getClient()
 
       if (!client || !apiKey) {
-        console.warn(
-          "[SIP] Tapestry API key not configured, falling back to simulation"
+        logger.warn(
+          "[SIP] Tapestry API key not configured, falling back to simulation",
+          "TapestryReader"
         )
         return profileId
           ? SAMPLE_POSTS.filter((p) => p.authorProfileId === profileId)
@@ -264,7 +271,10 @@ export class TapestryReader {
         setCache(cacheKey, posts)
         return posts
       } catch (err) {
-        console.warn("[SIP] Tapestry getPosts failed, using simulation:", err)
+        logger.warn(
+          `[SIP] Tapestry getPosts failed, using simulation: ${err instanceof Error ? err.message : err}`,
+          "TapestryReader"
+        )
         return profileId
           ? SAMPLE_POSTS.filter((p) => p.authorProfileId === profileId)
           : SAMPLE_POSTS
@@ -285,8 +295,9 @@ export class TapestryReader {
       const client = getClient()
 
       if (!client || !apiKey) {
-        console.warn(
-          "[SIP] Tapestry API key not configured, falling back to simulation"
+        logger.warn(
+          "[SIP] Tapestry API key not configured, falling back to simulation",
+          "TapestryReader"
         )
         return SAMPLE_CONNECTIONS.filter(
           (c) => c.fromProfileId === profileId || c.toProfileId === profileId
@@ -314,9 +325,9 @@ export class TapestryReader {
         setCache(cacheKey, connections)
         return connections
       } catch (err) {
-        console.warn(
-          "[SIP] Tapestry getConnections failed, using simulation:",
-          err
+        logger.warn(
+          `[SIP] Tapestry getConnections failed, using simulation: ${err instanceof Error ? err.message : err}`,
+          "TapestryReader"
         )
         return SAMPLE_CONNECTIONS.filter(
           (c) => c.fromProfileId === profileId || c.toProfileId === profileId
@@ -337,8 +348,9 @@ export class TapestryReader {
       const client = getClient()
 
       if (!client || !apiKey) {
-        console.warn(
-          "[SIP] Tapestry API key not configured, falling back to simulation"
+        logger.warn(
+          "[SIP] Tapestry API key not configured, falling back to simulation",
+          "TapestryReader"
         )
         return [...SAMPLE_POSTS].sort((a, b) => b.timestamp - a.timestamp)
       }
@@ -357,7 +369,10 @@ export class TapestryReader {
         return posts
       } catch {
         // Content-based feed failed — fall back to simulation
-        console.warn("[SIP] Tapestry getFeed failed, using simulation")
+        logger.warn(
+          "[SIP] Tapestry getFeed failed, using simulation",
+          "TapestryReader"
+        )
         return [...SAMPLE_POSTS].sort((a, b) => b.timestamp - a.timestamp)
       }
     }

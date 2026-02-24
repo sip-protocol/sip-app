@@ -1,5 +1,6 @@
 import type { World, WorldCategory, MetaverseMode } from "./types"
 import { SAMPLE_WORLDS } from "./constants"
+import { logger } from "@/lib/logger"
 
 // ---------------------------------------------------------------------------
 // Portals metaverse data (theportal.to)
@@ -239,7 +240,10 @@ async function portalsFetch<T>(path: string): Promise<T | null> {
     })
 
     if (!response.ok) {
-      console.warn(`[SIP][Portals] API returned ${response.status} for ${path}`)
+      logger.warn(
+        `[SIP][Portals] API returned ${response.status} for ${path}`,
+        "PortalsReader"
+      )
       return null
     }
 
@@ -254,9 +258,9 @@ async function portalsFetch<T>(path: string): Promise<T | null> {
 
     return json as T
   } catch (error) {
-    console.warn(
-      "[SIP][Portals] API fetch failed:",
-      error instanceof Error ? error.message : "Unknown error"
+    logger.warn(
+      `[SIP][Portals] API fetch failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+      "PortalsReader"
     )
     return null
   }
@@ -284,7 +288,10 @@ export class PortalsReader {
       if (result?.length) {
         const worlds = result.map(mapPortalsWorld)
         setCache("portals:worlds", worlds)
-        console.info(`[SIP][Portals] Fetched ${worlds.length} live worlds`)
+        logger.info(
+          `[SIP][Portals] Fetched ${worlds.length} live worlds`,
+          "PortalsReader"
+        )
         return worlds
       }
 
@@ -294,15 +301,17 @@ export class PortalsReader {
       if (altResult?.length) {
         const worlds = altResult.map(mapPortalsWorld)
         setCache("portals:worlds", worlds)
-        console.info(
-          `[SIP][Portals] Fetched ${worlds.length} worlds from v1 API`
+        logger.info(
+          `[SIP][Portals] Fetched ${worlds.length} worlds from v1 API`,
+          "PortalsReader"
         )
         return worlds
       }
 
       // Fall back to curated Portals world data
-      console.warn(
-        "[SIP][Portals] Could not fetch live worlds, using curated 3D space data"
+      logger.warn(
+        "[SIP][Portals] Could not fetch live worlds, using curated 3D space data",
+        "PortalsReader"
       )
       setCache("portals:worlds", PORTALS_WORLDS)
       return PORTALS_WORLDS

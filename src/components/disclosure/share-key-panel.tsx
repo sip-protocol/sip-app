@@ -8,6 +8,7 @@ import {
   type ShareableKey,
 } from "@/hooks/use-viewing-key-disclosure"
 import { useStealthKeys } from "@/hooks/use-stealth-keys"
+import { logger } from "@/lib/logger"
 
 interface ShareKeyPanelProps {
   onKeyGenerated?: (key: ViewingKey) => void
@@ -39,7 +40,7 @@ export function ShareKeyPanel({ onKeyGenerated }: ShareKeyPanelProps) {
       setStealthKeyCopied(true)
       setTimeout(() => setStealthKeyCopied(false), 2000)
     } catch (err) {
-      console.error("Failed to copy:", err)
+      logger.error("Failed to copy", err, "ShareKeyPanel")
     }
   }, [stealthKeys])
 
@@ -69,7 +70,7 @@ export function ShareKeyPanel({ onKeyGenerated }: ShareKeyPanelProps) {
       setCopySuccess(true)
       setTimeout(() => setCopySuccess(false), 2000)
     } catch (err) {
-      console.error("Failed to copy:", err)
+      logger.error("Failed to copy", err, "ShareKeyPanel")
     }
   }, [])
 

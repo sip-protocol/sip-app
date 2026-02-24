@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react"
 import { cn } from "@/lib/utils"
+import { logger } from "@/lib/logger"
 
 interface AddressDisplayProps {
   address: string
@@ -22,7 +23,7 @@ export function AddressDisplay({
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch (err) {
-      console.error("Failed to copy:", err)
+      logger.error("Failed to copy", err, "AddressDisplay")
     }
   }, [address])
 

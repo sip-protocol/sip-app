@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react"
 import type { ViewingKey } from "@sip-protocol/types"
 import { cn } from "@/lib/utils"
+import { logger } from "@/lib/logger"
 
 interface ViewingKeyDisplayProps {
   viewingKey: ViewingKey
@@ -48,7 +49,7 @@ export function ViewingKeyDisplay({
       onCopy?.()
       setTimeout(() => setCopied(false), 2000)
     } catch (err) {
-      console.error("Failed to copy viewing key:", err)
+      logger.error("Failed to copy viewing key", err, "ViewingKeyDisplay")
     }
   }, [viewingKey.key, onCopy])
 

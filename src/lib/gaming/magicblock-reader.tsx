@@ -18,6 +18,7 @@ import {
   LightningIcon,
 } from "@phosphor-icons/react"
 import type { Game, GameResult, GameType, GamingMode } from "./types"
+import { logger } from "@/lib/logger"
 import { SAMPLE_GAMES, SAMPLE_RESULTS } from "./constants"
 
 // ---------------------------------------------------------------------------
@@ -264,15 +265,19 @@ async function fetchMagicBlockPrograms(): Promise<Game[] | null> {
     })
 
     if (!response.ok) {
-      console.warn(`[SIP][MagicBlock] RPC returned ${response.status}`)
+      logger.warn(
+        `[SIP][MagicBlock] RPC returned ${response.status}`,
+        "MagicBlockReader"
+      )
       return null
     }
 
     const json = await response.json()
 
     if (json?.result?.length > 0) {
-      console.info(
-        `[SIP][MagicBlock] Found ${json.result.length} BOLT World accounts on-chain`
+      logger.info(
+        `[SIP][MagicBlock] Found ${json.result.length} BOLT World accounts on-chain`,
+        "MagicBlockReader"
       )
       // On-chain accounts exist but can't be decoded without deployed IDL
       // Return curated data enriched with live account count
@@ -281,9 +286,9 @@ async function fetchMagicBlockPrograms(): Promise<Game[] | null> {
 
     return null
   } catch (error) {
-    console.warn(
-      "[SIP][MagicBlock] RPC fetch failed:",
-      error instanceof Error ? error.message : "Unknown error"
+    logger.warn(
+      `[SIP][MagicBlock] RPC fetch failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+      "MagicBlockReader"
     )
     return null
   }
@@ -313,8 +318,9 @@ export class MagicBlockReader {
       }
 
       // Use curated MagicBlock BOLT ECS game data
-      console.warn(
-        "[SIP][MagicBlock] No public API available, using curated BOLT ECS data"
+      logger.warn(
+        "[SIP][MagicBlock] No public API available, using curated BOLT ECS data",
+        "MagicBlockReader"
       )
       setCache("magicblock:games", MAGICBLOCK_GAMES)
       return MAGICBLOCK_GAMES

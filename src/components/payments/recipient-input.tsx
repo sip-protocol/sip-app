@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react"
 import { cn } from "@/lib/utils"
+import { logger } from "@/lib/logger"
 
 // SIP stealth address format: sip:solana:<spendingKey(base58)>:<viewingKey(base58)>
 // Base58 alphabet: [1-9A-HJ-NP-Za-km-z], 32-byte key = 32-44 base58 chars
@@ -53,7 +54,7 @@ export function RecipientInput({
       localStorage.setItem(CONTACTS_KEY, JSON.stringify(newContacts))
       setContacts(newContacts)
     } catch (err) {
-      console.error("Failed to save contacts:", err)
+      logger.error("Failed to save contacts", err, "RecipientInput")
     }
   }, [])
 

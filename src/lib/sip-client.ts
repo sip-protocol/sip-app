@@ -11,6 +11,7 @@
 
 // Type-only imports (no runtime dependency)
 import type { SIP, SIPConfig, ProofProvider } from "@sip-protocol/sdk"
+import { logger } from "@/lib/logger"
 
 // Dynamic SDK import to avoid WASM loading during SSG
 const loadSDK = () => import("@sip-protocol/sdk")
@@ -58,9 +59,9 @@ export async function getSDK(): Promise<typeof import("@sip-protocol/sdk")> {
 export function preloadSDK(): void {
   getSDK().catch((err) => {
     // Expected failure: SDK preload is opportunistic, will retry on actual use
-    console.debug(
-      "[SIP SDK] Preload failed (non-critical):",
-      err instanceof Error ? err.message : "Unknown error"
+    logger.debug(
+      `[SIP SDK] Preload failed (non-critical): ${err instanceof Error ? err.message : "Unknown error"}`,
+      "SIPClient"
     )
   })
 }
@@ -98,9 +99,9 @@ async function initializeProofProvider(): Promise<ProofProvider> {
       return proofProvider
     } catch (error) {
       // Fallback to mock if Noir fails (e.g., WASM not supported)
-      console.warn(
-        "[SIP] BrowserNoirProvider failed, falling back to mock:",
-        error
+      logger.warn(
+        "[SIP] BrowserNoirProvider failed, falling back to mock",
+        "SIPClient"
       )
     }
   }

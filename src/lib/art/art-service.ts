@@ -17,6 +17,7 @@ import {
 import { renderArt } from "./art-engine"
 import { encryptForViewingKey } from "@/lib/crypto-helpers"
 import { PrivacyLevel } from "@sip-protocol/types"
+import { logger } from "@/lib/logger"
 import type { Transaction } from "@solana/web3.js"
 
 function generateId(prefix: string): string {
@@ -334,14 +335,15 @@ export class ArtService {
         setCache(cacheKey, nfts)
         return nfts
       }
-      console.warn(
-        "[SIP] Exchange Art fetch returned no results, using sample gallery"
+      logger.warn(
+        "[SIP] Exchange Art fetch returned no results, using sample gallery",
+        "ArtService"
       )
       return SAMPLE_GALLERY
     } catch (err) {
-      console.warn(
-        "[SIP] Exchange Art live fetch failed, using sample gallery:",
-        err instanceof Error ? err.message : err
+      logger.warn(
+        `[SIP] Exchange Art live fetch failed, using sample gallery: ${err instanceof Error ? err.message : err}`,
+        "ArtService"
       )
       return SAMPLE_GALLERY
     }
@@ -393,9 +395,9 @@ export class ArtService {
           }
         }
       } catch (err) {
-        console.warn(
-          "[SIP] Exchange Art single asset fetch failed:",
-          err instanceof Error ? err.message : err
+        logger.warn(
+          `[SIP] Exchange Art single asset fetch failed: ${err instanceof Error ? err.message : err}`,
+          "ArtService"
         )
       }
     }

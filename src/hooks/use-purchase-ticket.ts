@@ -17,6 +17,7 @@ import type {
   TicketingActionRecord,
   Ticket,
 } from "@/lib/ticketing/types"
+import { logger } from "@/lib/logger"
 
 export type PurchaseTicketStatus = TicketingStep | "idle" | "error"
 
@@ -95,9 +96,9 @@ export function usePurchaseTicket(
                   })
                   return transaction
                 } catch (err) {
-                  console.warn(
-                    "[SIP] cNFT ticket mint tx build failed, falling back:",
-                    err instanceof Error ? err.message : err
+                  logger.warn(
+                    `[SIP] cNFT ticket mint tx build failed, falling back: ${err instanceof Error ? err.message : err}`,
+                    "usePurchaseTicket"
                   )
                   return null
                 }

@@ -1,4 +1,5 @@
 import { PublicKey } from "@solana/web3.js"
+import { logger } from "@/lib/logger"
 
 /**
  * Read Bubblegum tree configuration from env vars.
@@ -25,7 +26,10 @@ export function getBubblegumConfig(): {
       collectionMint: new PublicKey(collStr),
     }
   } catch {
-    console.warn("[SIP] Invalid Bubblegum config — falling back to simulation")
+    logger.warn(
+      "[SIP] Invalid Bubblegum config — falling back to simulation",
+      "getBubblegumConfig"
+    )
     return null
   }
 }

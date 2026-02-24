@@ -8,6 +8,7 @@ import {
 } from "@/lib/solana/commitment-store"
 import { useSolanaTransaction } from "@/hooks/use-solana-transaction"
 import { useDemoModeStore } from "@/stores/demo-mode"
+import { logger } from "@/lib/logger"
 
 /**
  * Generic on-chain commitment hook for any track.
@@ -28,7 +29,10 @@ export function useOnChainCommit(commitmentType: CommitmentType) {
   const commit = useCallback(
     async (id: string, data: string): Promise<string | null> => {
       if (!publicKey) {
-        console.warn(`[SIP-COMMIT:${commitmentType}] skip: no publicKey`)
+        logger.warn(
+          `[SIP-COMMIT:${commitmentType}] skip: no publicKey`,
+          "useOnChainCommit"
+        )
         return null
       }
       if (
@@ -36,8 +40,9 @@ export function useOnChainCommit(commitmentType: CommitmentType) {
         typeof window !== "undefined" &&
         !window.__SIP_TEST_WALLET
       ) {
-        console.warn(
-          `[SIP-COMMIT:${commitmentType}] skip: demo mode without test wallet`
+        logger.warn(
+          `[SIP-COMMIT:${commitmentType}] skip: demo mode without test wallet`,
+          "useOnChainCommit"
         )
         return null
       }
@@ -55,11 +60,18 @@ export function useOnChainCommit(commitmentType: CommitmentType) {
 
         const sig = await tx.sendTransaction(transaction)
         if (sig) {
-          console.info(`[SIP-COMMIT:${commitmentType}] tx: ${sig}`)
+          logger.info(
+            `[SIP-COMMIT:${commitmentType}] tx: ${sig}`,
+            "useOnChainCommit"
+          )
         }
         return sig
       } catch (err) {
-        console.error(`[SIP-COMMIT:${commitmentType}] error:`, err)
+        logger.error(
+          `[SIP-COMMIT:${commitmentType}] error`,
+          err,
+          "useOnChainCommit"
+        )
         return null
       }
     },

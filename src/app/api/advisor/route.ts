@@ -12,6 +12,7 @@ import {
   registerAdvisorProvider,
 } from "@/lib/advisor"
 import { LangChainAdvisor } from "@/lib/advisor/langchain-advisor"
+import { logger } from "@/lib/logger"
 
 // Register LangChain provider if API key is available
 if (process.env.OPENAI_API_KEY) {
@@ -85,7 +86,7 @@ export async function POST(request: NextRequest) {
       suggestedActions: response.suggestedActions,
     })
   } catch (error) {
-    console.error("Advisor API error:", error)
+    logger.error("Advisor API error", error, "AdvisorRoute")
 
     return NextResponse.json(
       {

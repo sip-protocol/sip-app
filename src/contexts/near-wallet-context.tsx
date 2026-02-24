@@ -39,7 +39,7 @@ export function NearWalletProvider({ children }: NearWalletProviderProps) {
   const [accountId, setAccountId] = useState<string | null>(null)
 
   const connect = async () => {
-    // TODO: Integrate with @near-wallet-selector/core
+    // NEAR wallet connection via @near-wallet-selector/core (Solana-focused for now)
     throw new Error("NEAR wallet connection not yet implemented")
   }
 
@@ -82,8 +82,7 @@ export async function sendNearTransaction(
   receiverId: string,
   amount: string
 ): Promise<string> {
-  // TODO: Implement with @near-wallet-selector/core
-  // This will use the active wallet from the selector to send a transaction
+  // NEAR transaction signing via @near-wallet-selector/core (Solana-focused for now)
   throw new Error(
     `NEAR transactions not yet implemented. ` +
       `Would send ${amount} yoctoNEAR to ${receiverId}`

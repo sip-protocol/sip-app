@@ -6,6 +6,7 @@ import type {
   ChannelMode,
 } from "./types"
 import { SAMPLE_DROPS, SAMPLE_SUBSCRIPTIONS } from "./constants"
+import { logger } from "@/lib/logger"
 
 // ---------------------------------------------------------------------------
 // Cache — 5-minute TTL
@@ -248,14 +249,15 @@ export class DripReader {
         setCache(cacheKey, drops)
         return drops
       }
-      console.warn(
-        "[SIP] DRiP Helius fetch returned no results, using simulation data"
+      logger.warn(
+        "[SIP] DRiP Helius fetch returned no results, using simulation data",
+        "DripReader"
       )
       return SAMPLE_DROPS
     } catch (err) {
-      console.warn(
-        "[SIP] DRiP live fetch failed, using simulation data:",
-        err instanceof Error ? err.message : err
+      logger.warn(
+        `[SIP] DRiP live fetch failed, using simulation data: ${err instanceof Error ? err.message : err}`,
+        "DripReader"
       )
       return SAMPLE_DROPS
     }
@@ -305,9 +307,9 @@ export class DripReader {
           }
         }
       } catch (err) {
-        console.warn(
-          "[SIP] DRiP single asset fetch failed:",
-          err instanceof Error ? err.message : err
+        logger.warn(
+          `[SIP] DRiP single asset fetch failed: ${err instanceof Error ? err.message : err}`,
+          "DripReader"
         )
       }
     }

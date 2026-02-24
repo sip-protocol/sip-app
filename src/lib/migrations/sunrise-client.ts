@@ -5,6 +5,7 @@ import {
   SUNRISE_PROGRAM_ID,
 } from "./constants"
 import type { MigrationMode } from "./types"
+import { logger } from "@/lib/logger"
 
 // Sunrise Stake on-chain addresses (verified from sunrise-stake/app repo)
 // String constants — PublicKey instances created lazily to support test mocking
@@ -113,16 +114,16 @@ export class SunriseClient {
       // Until then, simulate the tx hash while using real on-chain data context
       const txHash = this.generateSimulatedTxHash()
 
-      console.info(
-        `[SIP] Sunrise deposit: ${amount} SOL → ${gsolAmount} gSOL ` +
-          `(TVL: ${details.tvl.toLocaleString()} SOL, source: ${details.source})`
+      logger.info(
+        `[SIP] Sunrise deposit: ${amount} SOL → ${gsolAmount} gSOL (TVL: ${details.tvl.toLocaleString()} SOL, source: ${details.source})`,
+        "SunriseClient"
       )
 
       return { gsolAmount, carbonOffsetKg, txHash }
     } catch (error) {
-      console.warn(
-        "[SIP] On-chain Sunrise deposit data unavailable, using simulation:",
-        error instanceof Error ? error.message : error
+      logger.warn(
+        `[SIP] On-chain Sunrise deposit data unavailable, using simulation: ${error instanceof Error ? error.message : error}`,
+        "SunriseClient"
       )
       return this.simulateDeposit(amount)
     }
@@ -153,9 +154,9 @@ export class SunriseClient {
       this.detailsCache = { data: details, timestamp: Date.now() }
       return details
     } catch (error) {
-      console.warn(
-        "[SIP] Sunrise on-chain fetch failed, using simulation:",
-        error instanceof Error ? error.message : error
+      logger.warn(
+        `[SIP] Sunrise on-chain fetch failed, using simulation: ${error instanceof Error ? error.message : error}`,
+        "SunriseClient"
       )
       const fallback = this.getSimulationDetails()
       // Cache the fallback too to avoid repeated RPC failures
@@ -209,10 +210,9 @@ export class SunriseClient {
     const tvl =
       gsolSupply > 0 ? gsolSupply : holdingBalanceSol + stateBalanceSol
 
-    console.info(
-      `[SIP] Sunrise on-chain data: gSOL supply=${gsolSupply.toFixed(2)}, ` +
-        `holding=${holdingBalanceSol.toFixed(4)} SOL, ` +
-        `state=${stateBalanceSol.toFixed(4)} SOL`
+    logger.info(
+      `[SIP] Sunrise on-chain data: gSOL supply=${gsolSupply.toFixed(2)}, holding=${holdingBalanceSol.toFixed(4)} SOL, state=${stateBalanceSol.toFixed(4)} SOL`,
+      "SunriseClient"
     )
 
     return {

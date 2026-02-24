@@ -5,6 +5,7 @@ import { useWallet, useConnection } from "@solana/wallet-adapter-react"
 import { PublicKey } from "@solana/web3.js"
 import { useDemoModeStore } from "@/stores/demo-mode"
 import { GSOL_MINT } from "@/lib/migrations/constants"
+import { logger } from "@/lib/logger"
 
 const gsolMintPubkey = new PublicKey(GSOL_MINT)
 
@@ -57,9 +58,9 @@ export function useSunriseBalance(): UseSunriseBalanceReturn {
 
       setGsolBalance(balance)
     } catch (err) {
-      console.warn(
-        "[SIP] Failed to fetch gSOL balance, defaulting to 0:",
-        err instanceof Error ? err.message : err
+      logger.warn(
+        `[SIP] Failed to fetch gSOL balance, defaulting to 0: ${err instanceof Error ? err.message : err}`,
+        "useSunriseBalance"
       )
       setGsolBalance(0)
       setError(

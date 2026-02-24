@@ -8,6 +8,7 @@ import { SIP_PROGRAM_ID } from "@/lib/solana/program-client"
 import { NULLIFIER_ACCOUNT_SIZE } from "@/lib/solana/stealth-transfer"
 import { sha256 } from "@noble/hashes/sha2.js"
 import bs58 from "bs58"
+import { logger } from "@/lib/logger"
 
 export interface DetectedPayment {
   /** TransferRecord PDA address (base58) */
@@ -154,9 +155,9 @@ export function useScanPayments(): UseScanPaymentsResult {
             transferRecordPda: pubkey.toBase58(),
           })
         } catch (parseErr) {
-          console.warn(
-            `Failed to parse TransferRecord ${pubkey.toBase58()}:`,
-            parseErr
+          logger.warn(
+            `Failed to parse TransferRecord ${pubkey.toBase58()}`,
+            "useScanPayments"
           )
         }
       }
@@ -167,7 +168,7 @@ export function useScanPayments(): UseScanPaymentsResult {
       setPayments(detected)
       setProgress(100)
     } catch (err) {
-      console.error("Scan error:", err)
+      logger.error("Scan error", err, "useScanPayments")
       setError(err instanceof Error ? err.message : "Scan failed")
     } finally {
       setIsScanning(false)

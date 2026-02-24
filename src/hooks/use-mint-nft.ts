@@ -12,6 +12,7 @@ import { useTrackEvent } from "@/hooks/useTrackEvent"
 import { useSolanaTransaction } from "@/hooks/use-solana-transaction"
 import { getBubblegumConfig } from "@/lib/solana/bubblegum-config"
 import type { ArtStep, MintArtParams, ArtActionRecord } from "@/lib/art/types"
+import { logger } from "@/lib/logger"
 
 export type MintNFTStatus = ArtStep | "idle" | "error"
 
@@ -76,9 +77,9 @@ export function useMintNFT(): UseMintNFTReturn {
                   })
                   return transaction
                 } catch (err) {
-                  console.warn(
-                    "[SIP] cNFT mint tx build failed, falling back:",
-                    err instanceof Error ? err.message : err
+                  logger.warn(
+                    `[SIP] cNFT mint tx build failed, falling back: ${err instanceof Error ? err.message : err}`,
+                    "useMintNFT"
                   )
                   return null
                 }

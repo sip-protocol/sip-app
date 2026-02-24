@@ -5,6 +5,8 @@
  * Includes caching with TTL and fallback to hardcoded prices.
  */
 
+import { logger } from "@/lib/logger"
+
 // CoinGecko ID mapping for supported tokens
 const COINGECKO_IDS: Record<string, string> = {
   SOL: "solana",
@@ -175,9 +177,9 @@ async function fetchPricesFromAPI(): Promise<Record<string, number>> {
     return prices
   } catch (err) {
     // Expected failure: Network error or API rate limit - use cached or fallback prices
-    console.debug(
-      "[Prices] Fetch failed, using cache/fallback:",
-      err instanceof Error ? err.message : "Unknown error"
+    logger.debug(
+      `[Prices] Fetch failed, using cache/fallback: ${err instanceof Error ? err.message : "Unknown error"}`,
+      "PriceService"
     )
     return getCachedOrFallbackPrices()
   }

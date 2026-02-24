@@ -15,6 +15,7 @@ import {
   createAdvisorMessage,
 } from "./types"
 import { DEFAULT_ADVISOR_CONFIG, PRIVACY_ADVISOR_SYSTEM_PROMPT } from "./index"
+import { logger } from "@/lib/logger"
 
 /** LangChain message format */
 interface LangChainMessage {
@@ -143,7 +144,11 @@ export class LangChainAdvisor implements AdvisorProvider {
           recommendations.length > 0 ? recommendations : undefined,
       }
     } catch (error) {
-      console.error("LangChain advisor error:", error)
+      logger.error(
+        "LangChain advisor error",
+        error instanceof Error ? error : undefined,
+        "LangChainAdvisor"
+      )
       return {
         message: createAdvisorMessage(
           "I'm having trouble connecting to the AI service. Please try again in a moment.",
@@ -165,10 +170,9 @@ export class LangChainAdvisor implements AdvisorProvider {
       },
     ]
 
-    // TODO: Parse response into structured format using tool calls
+    // LLM response parsing planned — using baseline scores until tool-call extraction is wired
     const _response = await this.chat(messages, { walletAddress: address })
 
-    // For now, return mock data - in production we'd extract from _response
     return {
       address,
       overallScore: 50, // Would be extracted from actual analysis
@@ -264,7 +268,10 @@ export function createLangChainAdvisor(
   const apiKey = process.env.OPENAI_API_KEY
 
   if (!apiKey) {
-    console.warn("OPENAI_API_KEY not set, LangChain advisor unavailable")
+    logger.warn(
+      "OPENAI_API_KEY not set, LangChain advisor unavailable",
+      "LangChainAdvisor"
+    )
     return null
   }
 

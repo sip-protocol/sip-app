@@ -6,6 +6,7 @@ import type {
   BridgeMode,
 } from "./types"
 import { SIMULATION_DELAYS, getRoute } from "./constants"
+import { logger } from "@/lib/logger"
 import { generateBridgeStealthAddress } from "./stealth-bridge"
 import { encryptForViewingKey } from "@/lib/crypto-helpers"
 
@@ -184,8 +185,9 @@ export class BridgeService {
   ): Promise<void> {
     // Future: Wormhole NTT SDK integration
     // For now, fall back to simulation with a warning
-    console.warn(
-      "[SIP] NTT mode not available for bridge, using simulation fallback"
+    logger.warn(
+      "[SIP] NTT mode not available for bridge, using simulation fallback",
+      "BridgeService"
     )
     return this.executeSimulationStep(step, transfer)
   }

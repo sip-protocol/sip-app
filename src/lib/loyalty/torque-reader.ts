@@ -14,6 +14,7 @@ import {
   SAMPLE_REWARDS,
   calculateTier,
 } from "./constants"
+import { logger } from "@/lib/logger"
 
 // ---------------------------------------------------------------------------
 // Torque REST API configuration
@@ -72,7 +73,10 @@ async function torqueFetch<T>(
     })
 
     if (!response.ok) {
-      console.warn(`[SIP][Torque] API returned ${response.status} for ${path}`)
+      logger.warn(
+        `[SIP][Torque] API returned ${response.status} for ${path}`,
+        "TorqueReader"
+      )
       return null
     }
 
@@ -88,12 +92,15 @@ async function torqueFetch<T>(
       return json as T
     }
 
-    console.warn("[SIP][Torque] Unexpected response shape", json?.status)
+    logger.warn(
+      `[SIP][Torque] Unexpected response shape: ${json?.status}`,
+      "TorqueReader"
+    )
     return null
   } catch (error) {
-    console.warn(
-      "[SIP][Torque] API fetch failed:",
-      error instanceof Error ? error.message : "Unknown error"
+    logger.warn(
+      `[SIP][Torque] API fetch failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+      "TorqueReader"
     )
     return null
   }
@@ -249,7 +256,10 @@ export class TorqueReader {
       if (result?.campaigns?.length) {
         const campaigns = result.campaigns.map(mapTorqueCampaign)
         setCache("torque:campaigns", campaigns)
-        console.info(`[SIP][Torque] Fetched ${campaigns.length} live campaigns`)
+        logger.info(
+          `[SIP][Torque] Fetched ${campaigns.length} live campaigns`,
+          "TorqueReader"
+        )
         return campaigns
       }
 
@@ -262,14 +272,16 @@ export class TorqueReader {
       if (offersResult?.campaigns?.length) {
         const campaigns = offersResult.campaigns.map(mapTorqueCampaign)
         setCache("torque:campaigns", campaigns)
-        console.info(
-          `[SIP][Torque] Fetched ${campaigns.length} campaigns from offers`
+        logger.info(
+          `[SIP][Torque] Fetched ${campaigns.length} campaigns from offers`,
+          "TorqueReader"
         )
         return campaigns
       }
 
-      console.warn(
-        "[SIP][Torque] Could not fetch live campaigns, using simulation data"
+      logger.warn(
+        "[SIP][Torque] Could not fetch live campaigns, using simulation data",
+        "TorqueReader"
       )
     }
 
@@ -314,8 +326,9 @@ export class TorqueReader {
     if (this.mode === "torque") {
       // Progress requires user authentication (journey endpoint needs wallet)
       // Fall back to simulation data for now
-      console.warn(
-        "[SIP][Torque] Progress tracking requires wallet auth, using simulation"
+      logger.warn(
+        "[SIP][Torque] Progress tracking requires wallet auth, using simulation",
+        "TorqueReader"
       )
     }
 
@@ -330,8 +343,9 @@ export class TorqueReader {
     if (this.mode === "torque") {
       // Rewards/payouts require user authentication
       // Fall back to simulation data for now
-      console.warn(
-        "[SIP][Torque] Rewards require wallet auth, using simulation"
+      logger.warn(
+        "[SIP][Torque] Rewards require wallet auth, using simulation",
+        "TorqueReader"
       )
     }
 
@@ -346,8 +360,9 @@ export class TorqueReader {
     if (this.mode === "torque") {
       // Tier calculation based on user journey data (requires auth)
       // Fall back to simulation-based tier
-      console.warn(
-        "[SIP][Torque] Tier calculation requires wallet auth, using simulation"
+      logger.warn(
+        "[SIP][Torque] Tier calculation requires wallet auth, using simulation",
+        "TorqueReader"
       )
     }
 

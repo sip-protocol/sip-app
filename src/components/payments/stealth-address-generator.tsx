@@ -7,6 +7,7 @@ import { KeyBackupWarning } from "./key-backup-warning"
 import { AddressDisplay } from "./address-display"
 import { QRCodeDisplay } from "./qr-code-display"
 import { cn } from "@/lib/utils"
+import { logger } from "@/lib/logger"
 
 interface StealthAddressGeneratorProps {
   className?: string
@@ -324,7 +325,7 @@ function KeyDetailRow({ label, value, description }: KeyDetailRowProps) {
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch (err) {
-      console.error("Failed to copy:", err)
+      logger.error("Failed to copy", err, "StealthAddressGenerator")
     }
   }
 

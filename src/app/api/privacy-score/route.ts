@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createSurveillanceAnalyzer } from "@sip-protocol/sdk"
+import { logger } from "@/lib/logger"
 
 // Basic Solana address validation (base58, 32-44 chars)
 function isValidSolanaAddress(address: string): boolean {
@@ -31,7 +32,10 @@ export async function POST(request: NextRequest) {
     const heliusApiKey = process.env.HELIUS_API_KEY
     if (!heliusApiKey) {
       // Fall back to mock data if no API key configured
-      console.warn("HELIUS_API_KEY not set, using mock data")
+      logger.warn(
+        "HELIUS_API_KEY not set, using mock data",
+        "PrivacyScoreRoute"
+      )
       const mockResult = generateMockResult(walletAddress)
       await new Promise((resolve) => setTimeout(resolve, 1500))
       return NextResponse.json(mockResult)
@@ -50,7 +54,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(result)
   } catch (error) {
-    console.error("Privacy score analysis error:", error)
+    logger.error("Privacy score analysis error", error, "PrivacyScoreRoute")
     return NextResponse.json(
       {
         error:

@@ -7,6 +7,7 @@ import { ViewingKeyDisplay } from "./viewing-key-display"
 import { ViewingKeyQRCode } from "./viewing-key-qr-code"
 import { AuditorShareModal } from "./auditor-share-modal"
 import { cn } from "@/lib/utils"
+import { logger } from "@/lib/logger"
 
 interface AuditorShare {
   auditorId: string
@@ -66,7 +67,7 @@ export function ViewingKeyPanel({
         setViewingKey(key)
         onViewingKeyChangeRef.current?.(key)
       } catch (err) {
-        console.error("Failed to generate viewing key:", err)
+        logger.error("Failed to generate viewing key", err, "ViewingKeyPanel")
       } finally {
         setIsGenerating(false)
       }
@@ -83,7 +84,7 @@ export function ViewingKeyPanel({
       setSharedWith([]) // Reset shares on new key
       onViewingKeyChange?.(key)
     } catch (err) {
-      console.error("Failed to generate viewing key:", err)
+      logger.error("Failed to generate viewing key", err, "ViewingKeyPanel")
     } finally {
       setIsGenerating(false)
     }

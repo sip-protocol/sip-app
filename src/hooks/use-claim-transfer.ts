@@ -8,6 +8,7 @@ import { buildClaimTransaction } from "@/lib/solana/claim-transfer"
 import { confirmTransactionWithRetry } from "@/lib/solana/confirm-transaction"
 import type { DetectedPayment } from "./use-scan-payments"
 import { usePaymentHistoryStore } from "@/stores/payment-history"
+import { logger } from "@/lib/logger"
 
 interface UseClaimTransferResult {
   /** Claim a detected stealth payment, returns tx signature or null */
@@ -88,7 +89,7 @@ export function useClaimTransfer(): UseClaimTransferResult {
 
         return signature
       } catch (err) {
-        console.error("Claim failed:", err)
+        logger.error("Claim failed", err, "useClaimTransfer")
         setError(err instanceof Error ? err.message : "Claim failed")
         return null
       } finally {

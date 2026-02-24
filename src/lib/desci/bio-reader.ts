@@ -1,5 +1,6 @@
 import type { Project, ResearchCategory, FundingTier, DeSciMode } from "./types"
 import { SAMPLE_PROJECTS } from "./constants"
+import { logger } from "@/lib/logger"
 
 // ---------------------------------------------------------------------------
 // Cache — 5-minute TTL
@@ -239,9 +240,9 @@ export class BioReader {
         return liveProjects
       }
     } catch (err) {
-      console.warn(
-        "[SIP] bio.xyz API fetch failed:",
-        err instanceof Error ? err.message : err
+      logger.warn(
+        `[SIP] bio.xyz API fetch failed: ${err instanceof Error ? err.message : err}`,
+        "BioReader"
       )
     }
 

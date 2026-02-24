@@ -7,6 +7,7 @@ import { useWalletStore } from "@/stores"
 import { toast } from "@/stores/toast"
 import { getSDK } from "@/lib"
 import { getJupiterSwapTransaction } from "@/lib/dex/jupiter-client"
+import { logger } from "@/lib/logger"
 
 // Jupiter API endpoint
 const JUPITER_QUOTE_API = "https://quote-api.jup.ag/v6/quote"
@@ -119,7 +120,7 @@ export default function JupiterPage() {
         viewingKey: viewingPrivateKey,
       })
     } catch (err) {
-      console.error("Failed to generate privacy layer:", err)
+      logger.error("Failed to generate privacy layer", err, "JupiterPage")
     }
   }, [])
 

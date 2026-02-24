@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react"
 import type { ViewingKey } from "@sip-protocol/types"
+import { logger } from "@/lib/logger"
 
 const STORAGE_KEY = "sip-viewing-keys"
 
@@ -51,10 +52,17 @@ function loadStorageSync(key: string | null): ViewingKeyStorage {
       if (isValidStorage(parsed)) {
         return parsed
       }
-      console.warn("Invalid viewing key storage format, resetting")
+      logger.warn(
+        "Invalid viewing key storage format, resetting",
+        "useViewingKeyStorage"
+      )
     }
   } catch (err) {
-    console.error("Failed to load viewing keys from storage:", err)
+    logger.error(
+      "Failed to load viewing keys from storage",
+      err,
+      "useViewingKeyStorage"
+    )
   }
   return EMPTY_STORAGE
 }
@@ -97,11 +105,18 @@ export function useViewingKeyStorage(walletAddress: string | null) {
           if (isValidStorage(parsed)) {
             setStorage(parsed)
           } else {
-            console.warn("Invalid viewing key storage format, resetting")
+            logger.warn(
+              "Invalid viewing key storage format, resetting",
+              "useViewingKeyStorage"
+            )
           }
         }
       } catch (err) {
-        console.error("Failed to load viewing keys from storage:", err)
+        logger.error(
+          "Failed to load viewing keys from storage",
+          err,
+          "useViewingKeyStorage"
+        )
       }
       if (isMounted) setIsLoaded(true)
     }
@@ -121,7 +136,11 @@ export function useViewingKeyStorage(walletAddress: string | null) {
     try {
       localStorage.setItem(storageKey, JSON.stringify(storage))
     } catch (err) {
-      console.error("Failed to save viewing keys to storage:", err)
+      logger.error(
+        "Failed to save viewing keys to storage",
+        err,
+        "useViewingKeyStorage"
+      )
     }
   }, [storageKey, storage, isLoaded])
 

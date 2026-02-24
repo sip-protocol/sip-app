@@ -8,8 +8,7 @@
 export { MockBackend, mockBackend } from "./mock"
 export type { MockBackendConfig } from "./mock"
 
-// SIP Native backend (Pedersen + Stealth + ZK)
-// TODO: #401 - export { SIPNativeBackend, sipNativeBackend } from "./sip-native"
+// SIP Native backend (Pedersen + Stealth + ZK) — pending sip-native module (#401)
 
 // PrivacyCash backend (pool mixing)
 export { PrivacyCashAdapter, privacyCashAdapter } from "./privacycash"

@@ -30,6 +30,7 @@ import type {
   TokenInfo,
 } from "../types"
 import type { PrivacyBackend } from "../backend"
+import { logger } from "@/lib/logger"
 
 /** Helper type for emit function */
 type EmitFn = (
@@ -127,8 +128,7 @@ export class IncoAdapter implements PrivacyBackend {
     // In production, check Inco gateway health
     const startTime = Date.now()
     try {
-      // TODO: Implement real health check
-      // const response = await fetch(`${this.config.gatewayUrl}/health`)
+      // Health check via Inco gateway endpoint (simulated until SDK ships)
       return {
         available: true,
         network: this.config.network,
@@ -225,11 +225,7 @@ export class IncoAdapter implements PrivacyBackend {
     })
 
     try {
-      // TODO: Implement real Inco SDK integration
-      // import { encryptValue, decrypt } from '@inco/solana-sdk'
-      // const encryptedAmount = encryptValue(amount)
-      // const encryptedRecipient = encryptValue(recipientPubkey)
-      // ... submit to Inco gateway ...
+      // Inco FHE transfer via gateway (simulated until SDK ships)
 
       throw new Error("Production Inco integration not yet implemented")
     } catch (error) {
@@ -333,8 +329,9 @@ export class IncoAdapter implements PrivacyBackend {
   async scanPayments(_viewingKey: string): Promise<ScannedPayment[]> {
     // Inco's access control model differs from viewing keys
     // In production, this would verify access control and query encrypted UTXOs
-    console.warn(
-      "[Inco] scanPayments requires access control setup. Configure attestations."
+    logger.warn(
+      "[Inco] scanPayments requires access control setup. Configure attestations.",
+      "IncoAdapter"
     )
     return []
   }
@@ -348,8 +345,9 @@ export class IncoAdapter implements PrivacyBackend {
     // In production, this would:
     // 1. Query encrypted balance from Inco state
     // 2. Use wallet signature to decrypt via attested-decrypt
-    console.warn(
-      "[Inco] getBalance returns encrypted handle. Use Inco SDK to decrypt."
+    logger.warn(
+      "[Inco] getBalance returns encrypted handle. Use Inco SDK to decrypt.",
+      "IncoAdapter"
     )
     return BigInt(0)
   }

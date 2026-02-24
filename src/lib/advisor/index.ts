@@ -7,6 +7,7 @@
 
 import { AdvisorProvider, AdvisorConfig } from "./types"
 import { MockAdvisor } from "./mock-advisor"
+import { logger } from "@/lib/logger"
 
 // Re-export types
 export * from "./types"
@@ -35,7 +36,10 @@ export function getAdvisorProvider(
 ): AdvisorProvider {
   const factory = providers.get(name)
   if (!factory) {
-    console.warn(`Advisor provider "${name}" not found, falling back to mock`)
+    logger.warn(
+      `Advisor provider "${name}" not found, falling back to mock`,
+      "AdvisorRegistry"
+    )
     return new MockAdvisor()
   }
   return factory()

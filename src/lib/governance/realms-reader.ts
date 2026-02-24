@@ -10,6 +10,7 @@ import {
 import type { Proposal as SplProposal } from "@solana/spl-governance"
 import type { DAO, Proposal, GovernanceMode, ProposalStatus } from "./types"
 import { SAMPLE_DAOS, SAMPLE_PROPOSALS } from "./constants"
+import { logger } from "@/lib/logger"
 
 // SPL Governance v3 program ID (used by Realms)
 const GOVERNANCE_PROGRAM_ID = new PublicKey(
@@ -193,8 +194,9 @@ export class RealmsReader {
       }
 
       if (daos.length === 0) {
-        console.warn(
-          "[SIP] Failed to fetch any Realms DAOs, falling back to simulation"
+        logger.warn(
+          "[SIP] Failed to fetch any Realms DAOs, falling back to simulation",
+          "RealmsReader"
         )
         return SAMPLE_DAOS
       }
@@ -202,9 +204,9 @@ export class RealmsReader {
       this.daoCache = { data: daos, timestamp: Date.now() }
       return daos
     } catch (error) {
-      console.warn(
-        "[SIP] Realms on-chain fetch failed, falling back to simulation:",
-        error instanceof Error ? error.message : error
+      logger.warn(
+        `[SIP] Realms on-chain fetch failed, falling back to simulation: ${error instanceof Error ? error.message : error}`,
+        "RealmsReader"
       )
       return SAMPLE_DAOS
     }
@@ -249,8 +251,9 @@ export class RealmsReader {
         allProposals.push(...result.value.proposals)
       } else {
         // On failure for a specific realm, merge in simulation data
-        console.warn(
-          "[SIP] Partial realm fetch failed, merging simulation fallback"
+        logger.warn(
+          "[SIP] Partial realm fetch failed, merging simulation fallback",
+          "RealmsReader"
         )
       }
     }
@@ -356,9 +359,9 @@ export class RealmsReader {
 
       return totalWeight.toString()
     } catch (error) {
-      console.warn(
-        `[SIP] Failed to fetch voter weight for ${daoId}:`,
-        error instanceof Error ? error.message : error
+      logger.warn(
+        `[SIP] Failed to fetch voter weight for ${daoId}: ${error instanceof Error ? error.message : error}`,
+        "RealmsReader"
       )
       return this.getSimulatedWeight(daoId)
     }
@@ -405,9 +408,9 @@ export class RealmsReader {
         tokenOwnerRecordPubkey: realmRecords[0].pubkey.toBase58(),
       }
     } catch (error) {
-      console.warn(
-        `[SIP] Failed to fetch voter info for ${daoId}:`,
-        error instanceof Error ? error.message : error
+      logger.warn(
+        `[SIP] Failed to fetch voter info for ${daoId}: ${error instanceof Error ? error.message : error}`,
+        "RealmsReader"
       )
       return { weight: this.getSimulatedWeight(daoId) }
     }

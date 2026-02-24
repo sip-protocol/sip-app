@@ -54,9 +54,6 @@ export const logger = {
         error instanceof Error ? error.message : error
       )
     }
-    // TODO: In production, send to error monitoring service (e.g., Sentry)
-    // if (!isDev && error) {
-    //   Sentry.captureException(error)
-    // }
+    // Production: integrate error monitoring (Sentry) when available
   },
 }

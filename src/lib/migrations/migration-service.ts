@@ -6,6 +6,7 @@ import type {
   MigrationMode,
 } from "./types"
 import { SIMULATION_DELAYS } from "./constants"
+import { logger } from "@/lib/logger"
 import { generateMigrationStealthAddress } from "./stealth-migration"
 import { SunriseClient } from "./sunrise-client"
 import { encryptForViewingKey } from "@/lib/crypto-helpers"
@@ -193,8 +194,9 @@ export class MigrationService {
     step: MigrationStep,
     migration: Migration
   ): Promise<void> {
-    console.warn(
-      "[SIP] Devnet mode not available for migrations, using simulation fallback"
+    logger.warn(
+      "[SIP] Devnet mode not available for migrations, using simulation fallback",
+      "MigrationService"
     )
     return this.executeSimulationStep(step, migration)
   }

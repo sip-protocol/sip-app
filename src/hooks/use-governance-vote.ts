@@ -9,6 +9,7 @@ import { useGovernanceHistoryStore } from "@/stores/governance-history"
 import { useTrackEvent } from "@/hooks/useTrackEvent"
 import { useSolanaTransaction } from "@/hooks/use-solana-transaction"
 import { buildCastVoteTransaction } from "@/lib/governance/realms-vote-builder"
+import { logger } from "@/lib/logger"
 import type {
   VoteStep,
   VoteParams,
@@ -117,9 +118,9 @@ export function useGovernanceVote(
             }
           } catch (realmsErr) {
             // Log but don't fail the overall vote — the SIP commitment succeeded
-            console.warn(
-              "[SIP] Realms castVote failed (commitment still valid):",
-              realmsErr instanceof Error ? realmsErr.message : realmsErr
+            logger.warn(
+              `[SIP] Realms castVote failed (commitment still valid): ${realmsErr instanceof Error ? realmsErr.message : realmsErr}`,
+              "useGovernanceVote"
             )
           }
         }

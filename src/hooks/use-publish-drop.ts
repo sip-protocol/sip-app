@@ -16,6 +16,7 @@ import type {
   PublishDropParams,
   ChannelActionRecord,
 } from "@/lib/channel/types"
+import { logger } from "@/lib/logger"
 
 export type PublishDropStatus = ChannelStep | "idle" | "error"
 
@@ -92,9 +93,9 @@ export function usePublishDrop(
                   })
                   return transaction
                 } catch (err) {
-                  console.warn(
-                    "[SIP] cNFT drop mint tx build failed, falling back:",
-                    err instanceof Error ? err.message : err
+                  logger.warn(
+                    `[SIP] cNFT drop mint tx build failed, falling back: ${err instanceof Error ? err.message : err}`,
+                    "usePublishDrop"
                   )
                   return null
                 }
