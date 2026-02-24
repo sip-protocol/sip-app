@@ -28,10 +28,10 @@ function getRpcUrl(cluster: Cluster, customRpc: string | null): string {
 export const useNetworkStore = create<NetworkState>()(
   persist(
     (set, get) => ({
-      cluster: "devnet" as Cluster,
+      cluster: "mainnet-beta" as Cluster,
       customRpc: null,
-      rpcUrl: clusterApiUrl("devnet"),
-      isMainnet: false,
+      rpcUrl: HELIUS_MAINNET,
+      isMainnet: true,
 
       setCluster: (cluster) =>
         set({
@@ -53,10 +53,10 @@ export const useNetworkStore = create<NetworkState>()(
 
       reset: () =>
         set({
-          cluster: "devnet",
+          cluster: "mainnet-beta",
           customRpc: null,
-          rpcUrl: clusterApiUrl("devnet"),
-          isMainnet: false,
+          rpcUrl: HELIUS_MAINNET,
+          isMainnet: true,
         }),
     }),
     { name: "sip-network" }
