@@ -12,13 +12,14 @@ interface MainnetFixtures {
  *
  * Skips automatically when E2E_WALLET_SECRET is not set.
  */
+/* eslint-disable react-hooks/rules-of-hooks -- Playwright fixture `use()` is not a React Hook */
 export const test = base.extend<MainnetFixtures>({
   keypair: async ({ page }, use) => {
     const keypair = await injectTestWallet(page)
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     await use(keypair)
   },
 })
+/* eslint-enable react-hooks/rules-of-hooks */
 
 /**
  * Skip the current test file when wallet secret is not available.
