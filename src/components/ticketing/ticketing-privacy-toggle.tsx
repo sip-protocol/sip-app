@@ -2,7 +2,11 @@
 
 import type { ReactNode } from "react"
 import { useState } from "react"
-import { LockSimple, Eye, LockSimpleOpen } from "@phosphor-icons/react"
+import {
+  LockSimpleIcon,
+  EyeIcon,
+  LockSimpleOpenIcon,
+} from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 
 type PrivacyOption = "shielded" | "compliant" | "transparent"
@@ -24,7 +28,7 @@ const OPTIONS: {
     level: "shielded",
     label: "Shielded",
     desc: "Hidden ticket & identity",
-    icon: <LockSimple size={18} weight="duotone" />,
+    icon: <LockSimpleIcon size={18} weight="duotone" />,
     tooltip:
       "Your ticket is a stealth address. No one can link your attendance to your wallet. Anti-scalping by default — tickets are non-transferable without viewing key.",
   },
@@ -32,7 +36,7 @@ const OPTIONS: {
     level: "compliant",
     label: "Compliant",
     desc: "Verifiable attendance",
-    icon: <Eye size={18} weight="duotone" />,
+    icon: <EyeIcon size={18} weight="duotone" />,
     tooltip:
       "Event organizers can verify your ticket via viewing key. Your wallet identity stays hidden from other attendees and third parties.",
   },
@@ -40,7 +44,7 @@ const OPTIONS: {
     level: "transparent",
     label: "Transparent",
     desc: "Public ticket",
-    icon: <LockSimpleOpen size={18} weight="duotone" />,
+    icon: <LockSimpleOpenIcon size={18} weight="duotone" />,
     tooltip:
       "Ticket is publicly linked to your wallet. Anyone can see your attendance history. No privacy applied.",
   },

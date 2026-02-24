@@ -2,13 +2,13 @@
 
 import type { ReactNode } from "react"
 import {
-  Target,
-  NotePencil,
-  CheckCircle,
-  MagnifyingGlass,
-  Export,
-  LockSimple,
-  CurrencyDollar,
+  TargetIcon,
+  NotePencilIcon,
+  CheckCircleIcon,
+  MagnifyingGlassIcon,
+  ExportIcon,
+  LockSimpleIcon,
+  CurrencyDollarIcon,
 } from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 import type { LoyaltyStep } from "@/lib/loyalty/types"
@@ -32,19 +32,19 @@ const JOIN_STEPS: StepConfig[] = [
     id: "selecting_campaign",
     label: "Select Campaign",
     description: "Choosing privacy campaign to join",
-    icon: <Target size={16} weight="duotone" />,
+    icon: <TargetIcon size={16} weight="duotone" />,
   },
   {
     id: "joining",
     label: "Joining Campaign",
     description: "Registering participation via Torque Protocol",
-    icon: <NotePencil size={16} weight="duotone" />,
+    icon: <NotePencilIcon size={16} weight="duotone" />,
   },
   {
     id: "joined",
     label: "Joined",
     description: "Campaign joined — complete actions to earn rewards",
-    icon: <CheckCircle size={16} weight="duotone" />,
+    icon: <CheckCircleIcon size={16} weight="duotone" />,
   },
 ]
 
@@ -53,19 +53,19 @@ const ACTION_STEPS: StepConfig[] = [
     id: "verifying_action",
     label: "Verify Action",
     description: "Confirming privacy action meets campaign requirements",
-    icon: <MagnifyingGlass size={16} weight="duotone" />,
+    icon: <MagnifyingGlassIcon size={16} weight="duotone" />,
   },
   {
     id: "recording",
     label: "Record Progress",
     description: "Recording action completion via Torque off-chain events",
-    icon: <Export size={16} weight="duotone" />,
+    icon: <ExportIcon size={16} weight="duotone" />,
   },
   {
     id: "recorded",
     label: "Recorded",
     description: "Action recorded — progress updated toward reward",
-    icon: <CheckCircle size={16} weight="duotone" />,
+    icon: <CheckCircleIcon size={16} weight="duotone" />,
   },
 ]
 
@@ -75,19 +75,19 @@ const CLAIM_STEPS: StepConfig[] = [
     label: "Generate Stealth Address",
     description:
       "Creating one-time stealth address for private reward delivery",
-    icon: <LockSimple size={16} weight="duotone" />,
+    icon: <LockSimpleIcon size={16} weight="duotone" />,
   },
   {
     id: "claiming",
     label: "Claiming Reward",
     description: "Sending reward to your stealth address via Torque",
-    icon: <CurrencyDollar size={16} weight="duotone" />,
+    icon: <CurrencyDollarIcon size={16} weight="duotone" />,
   },
   {
     id: "claimed",
     label: "Claimed",
     description: "Reward delivered to stealth address — only you can access it",
-    icon: <CheckCircle size={16} weight="duotone" />,
+    icon: <CheckCircleIcon size={16} weight="duotone" />,
   },
 ]
 

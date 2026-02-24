@@ -2,13 +2,13 @@
 
 import type { ReactNode } from "react"
 import {
-  Broadcast,
-  NotePencil,
-  Check,
-  CheckCircle,
-  LockKey,
-  MaskHappy,
-  PaperPlaneRight,
+  BroadcastIcon,
+  NotePencilIcon,
+  CheckIcon,
+  CheckCircleIcon,
+  LockKeyIcon,
+  MaskHappyIcon,
+  PaperPlaneRightIcon,
 } from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 import type { ChannelStep } from "@/lib/channel/types"
@@ -32,19 +32,19 @@ const SUBSCRIBE_STEPS: StepConfig[] = [
     id: "selecting_channel",
     label: "Select Drop",
     description: "Choosing privacy content to subscribe to",
-    icon: <Broadcast size={16} weight="duotone" />,
+    icon: <BroadcastIcon size={16} weight="duotone" />,
   },
   {
     id: "subscribing",
     label: "Subscribing",
     description: "Registering subscription via DRiP Protocol",
-    icon: <NotePencil size={16} weight="duotone" />,
+    icon: <NotePencilIcon size={16} weight="duotone" />,
   },
   {
     id: "subscribed",
     label: "Subscribed",
     description: "Content unlocked — viewing key access granted",
-    icon: <CheckCircle size={16} weight="duotone" />,
+    icon: <CheckCircleIcon size={16} weight="duotone" />,
   },
 ]
 
@@ -53,25 +53,25 @@ const PUBLISH_STEPS: StepConfig[] = [
     id: "encrypting_content",
     label: "Encrypt Content",
     description: "Encrypting drop with viewing key-gated access",
-    icon: <LockKey size={16} weight="duotone" />,
+    icon: <LockKeyIcon size={16} weight="duotone" />,
   },
   {
     id: "generating_stealth",
     label: "Generate Stealth Address",
     description: "Creating one-time address for anonymous publishing",
-    icon: <MaskHappy size={16} weight="duotone" />,
+    icon: <MaskHappyIcon size={16} weight="duotone" />,
   },
   {
     id: "publishing",
     label: "Publishing Drop",
     description: "Distributing encrypted content via DRiP",
-    icon: <PaperPlaneRight size={16} weight="duotone" />,
+    icon: <PaperPlaneRightIcon size={16} weight="duotone" />,
   },
   {
     id: "published",
     label: "Published",
     description: "Drop live — subscribers can decrypt with viewing key",
-    icon: <CheckCircle size={16} weight="duotone" />,
+    icon: <CheckCircleIcon size={16} weight="duotone" />,
   },
 ]
 
@@ -186,7 +186,7 @@ export function ChannelStatus({
                     )}
                   >
                     {isStepComplete ? (
-                      <Check size={16} weight="bold" />
+                      <CheckIcon size={16} weight="bold" />
                     ) : (
                       <span>{step.icon}</span>
                     )}

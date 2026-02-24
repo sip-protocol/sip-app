@@ -1,7 +1,11 @@
 "use client"
 
 import { useState, type ReactNode } from "react"
-import { LockSimple, Eye, LockSimpleOpen } from "@phosphor-icons/react"
+import {
+  LockSimpleIcon,
+  EyeIcon,
+  LockSimpleOpenIcon,
+} from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 
 type PrivacyOption = "shielded" | "compliant" | "transparent"
@@ -23,7 +27,7 @@ const OPTIONS: {
     level: "shielded",
     label: "Shielded",
     desc: "Private subscription",
-    icon: <LockSimple size={18} weight="duotone" />,
+    icon: <LockSimpleIcon size={18} weight="duotone" />,
     tooltip:
       "Your subscription uses a stealth address. No one can link your content access to your wallet. Maximum privacy for channel activity.",
   },
@@ -31,7 +35,7 @@ const OPTIONS: {
     level: "compliant",
     label: "Compliant",
     desc: "Auditable access",
-    icon: <Eye size={18} weight="duotone" />,
+    icon: <EyeIcon size={18} weight="duotone" />,
     tooltip:
       "Auditors can verify your subscription via viewing key. Your wallet identity stays hidden from casual observers.",
   },
@@ -39,7 +43,7 @@ const OPTIONS: {
     level: "transparent",
     label: "Transparent",
     desc: "Public access",
-    icon: <LockSimpleOpen size={18} weight="duotone" />,
+    icon: <LockSimpleOpenIcon size={18} weight="duotone" />,
     tooltip:
       "Subscription is publicly linked to your wallet. Anyone can see your channel activity. No privacy applied.",
   },

@@ -3,11 +3,11 @@
 import type { ReactNode } from "react"
 import { useState } from "react"
 import {
-  LockSimple,
-  Eye,
-  LockSimpleOpen,
-  ClipboardText,
-  Check,
+  LockSimpleIcon,
+  EyeIcon,
+  LockSimpleOpenIcon,
+  ClipboardTextIcon,
+  CheckIcon,
 } from "@phosphor-icons/react"
 import { cn, truncate, copyToClipboard } from "@/lib/utils"
 import { ArtCanvas } from "./art-canvas"
@@ -41,7 +41,7 @@ export function GeneratedArtDisplay({
     shielded: {
       label: (
         <>
-          <LockSimple
+          <LockSimpleIcon
             size={14}
             weight="duotone"
             className="inline-block align-[-2px]"
@@ -54,7 +54,7 @@ export function GeneratedArtDisplay({
     compliant: {
       label: (
         <>
-          <Eye
+          <EyeIcon
             size={14}
             weight="duotone"
             className="inline-block align-[-2px]"
@@ -67,7 +67,7 @@ export function GeneratedArtDisplay({
     transparent: {
       label: (
         <>
-          <LockSimpleOpen
+          <LockSimpleOpenIcon
             size={14}
             weight="duotone"
             className="inline-block align-[-2px]"
@@ -125,9 +125,9 @@ export function GeneratedArtDisplay({
             </code>
             <span className="text-[var(--text-tertiary)]">
               {copied === "seed" ? (
-                <Check size={14} weight="duotone" />
+                <CheckIcon size={14} weight="duotone" />
               ) : (
-                <ClipboardText size={14} weight="duotone" />
+                <ClipboardTextIcon size={14} weight="duotone" />
               )}
             </span>
           </button>
@@ -148,9 +148,9 @@ export function GeneratedArtDisplay({
             </code>
             <span className="text-[var(--text-tertiary)]">
               {copied === "stealth" ? (
-                <Check size={14} weight="duotone" />
+                <CheckIcon size={14} weight="duotone" />
               ) : (
-                <ClipboardText size={14} weight="duotone" />
+                <ClipboardTextIcon size={14} weight="duotone" />
               )}
             </span>
           </button>
@@ -171,9 +171,9 @@ export function GeneratedArtDisplay({
             </code>
             <span className="text-[var(--text-tertiary)]">
               {copied === "meta" ? (
-                <Check size={14} weight="duotone" />
+                <CheckIcon size={14} weight="duotone" />
               ) : (
-                <ClipboardText size={14} weight="duotone" />
+                <ClipboardTextIcon size={14} weight="duotone" />
               )}
             </span>
           </button>

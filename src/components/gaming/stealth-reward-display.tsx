@@ -1,7 +1,12 @@
 "use client"
 
 import { useState } from "react"
-import { Trophy, ClipboardText, Check, LockSimple } from "@phosphor-icons/react"
+import {
+  TrophyIcon,
+  ClipboardTextIcon,
+  CheckIcon,
+  LockSimpleIcon,
+} from "@phosphor-icons/react"
 import { cn, truncate, copyToClipboard } from "@/lib/utils"
 import { REWARD_TIER_COLORS } from "@/lib/gaming/constants"
 import type { RewardTier } from "@/lib/gaming/types"
@@ -42,7 +47,7 @@ export function StealthRewardDisplay({
     >
       {/* Reward callout */}
       <div className="flex items-center gap-2 mb-4">
-        <Trophy size={18} weight="duotone" />
+        <TrophyIcon size={18} weight="duotone" />
         <div>
           <p className="text-sm font-medium text-orange-300">
             Reward claimed to stealth address
@@ -84,9 +89,9 @@ export function StealthRewardDisplay({
             </code>
             <span className="text-[var(--text-tertiary)]">
               {copied === "stealth" ? (
-                <Check size={14} weight="duotone" />
+                <CheckIcon size={14} weight="duotone" />
               ) : (
-                <ClipboardText size={14} weight="duotone" />
+                <ClipboardTextIcon size={14} weight="duotone" />
               )}
             </span>
           </button>
@@ -107,9 +112,9 @@ export function StealthRewardDisplay({
             </code>
             <span className="text-[var(--text-tertiary)]">
               {copied === "meta" ? (
-                <Check size={14} weight="duotone" />
+                <CheckIcon size={14} weight="duotone" />
               ) : (
-                <ClipboardText size={14} weight="duotone" />
+                <ClipboardTextIcon size={14} weight="duotone" />
               )}
             </span>
           </button>
@@ -119,7 +124,7 @@ export function StealthRewardDisplay({
       {/* Privacy badge */}
       <div className="mt-4 flex items-center gap-2">
         <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-orange-500/20 border border-orange-500/30 text-orange-300">
-          <LockSimple size={14} weight="duotone" /> Private Reward
+          <LockSimpleIcon size={14} weight="duotone" /> Private Reward
         </span>
       </div>
     </div>

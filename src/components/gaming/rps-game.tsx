@@ -5,15 +5,15 @@ import type { ReactNode } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
 import { motion, AnimatePresence } from "framer-motion"
 import {
-  HandFist,
-  Hand,
-  Scissors,
-  Confetti,
-  Skull,
-  Handshake,
-  LockSimple,
-  MagnifyingGlass,
-  CheckCircle,
+  HandFistIcon,
+  HandIcon,
+  ScissorsIcon,
+  ConfettiIcon,
+  SkullIcon,
+  HandshakeIcon,
+  LockSimpleIcon,
+  MagnifyingGlassIcon,
+  CheckCircleIcon,
 } from "@phosphor-icons/react"
 import { useDemoModeStore } from "@/stores/demo-mode"
 import { DemoBanner } from "@/components/ui/demo-banner"
@@ -40,19 +40,19 @@ const MOVES: {
 }[] = [
   {
     id: "rock",
-    emoji: <HandFist size={48} weight="duotone" />,
+    emoji: <HandFistIcon size={48} weight="duotone" />,
     label: "Rock",
     beats: "scissors",
   },
   {
     id: "paper",
-    emoji: <Hand size={48} weight="duotone" />,
+    emoji: <HandIcon size={48} weight="duotone" />,
     label: "Paper",
     beats: "rock",
   },
   {
     id: "scissors",
-    emoji: <Scissors size={48} weight="duotone" />,
+    emoji: <ScissorsIcon size={48} weight="duotone" />,
     label: "Scissors",
     beats: "paper",
   },
@@ -200,21 +200,21 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
         color: "text-emerald-400",
         bg: "bg-emerald-500/10",
         border: "border-emerald-500/20",
-        emoji: <Confetti size={32} weight="duotone" />,
+        emoji: <ConfettiIcon size={32} weight="duotone" />,
       },
       lose: {
         label: "DEFEATED",
         color: "text-red-400",
         bg: "bg-red-500/10",
         border: "border-red-500/20",
-        emoji: <Skull size={32} weight="duotone" />,
+        emoji: <SkullIcon size={32} weight="duotone" />,
       },
       draw: {
         label: "TIE",
         color: "text-amber-400",
         bg: "bg-amber-500/10",
         border: "border-amber-500/20",
-        emoji: <Handshake size={32} weight="duotone" />,
+        emoji: <HandshakeIcon size={32} weight="duotone" />,
       },
     }
     const cfg = outcomeConfig[outcome]
@@ -429,7 +429,7 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
             animate={{ rotate: [0, -10, 10, 0] }}
             transition={{ duration: 0.4 }}
           >
-            <LockSimple size={32} weight="duotone" />
+            <LockSimpleIcon size={32} weight="duotone" />
           </motion.div>
           <p className="text-sm font-medium text-orange-300">
             Move locked! Generating commitment...
@@ -602,7 +602,7 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
           <div className="grid grid-cols-3 gap-2 text-center">
             <div className="p-2 rounded-lg bg-[var(--surface-secondary)]">
               <div className="flex justify-center mb-0.5">
-                <LockSimple size={20} weight="duotone" />
+                <LockSimpleIcon size={20} weight="duotone" />
               </div>
               <p className="text-[10px] text-[var(--text-tertiary)] leading-tight">
                 Both commit hashed moves
@@ -610,7 +610,7 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
             </div>
             <div className="p-2 rounded-lg bg-[var(--surface-secondary)]">
               <div className="flex justify-center mb-0.5">
-                <MagnifyingGlass size={20} weight="duotone" />
+                <MagnifyingGlassIcon size={20} weight="duotone" />
               </div>
               <p className="text-[10px] text-[var(--text-tertiary)] leading-tight">
                 Reveal simultaneously
@@ -618,7 +618,7 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
             </div>
             <div className="p-2 rounded-lg bg-[var(--surface-secondary)]">
               <div className="flex justify-center mb-0.5">
-                <CheckCircle size={20} weight="duotone" />
+                <CheckCircleIcon size={20} weight="duotone" />
               </div>
               <p className="text-[10px] text-[var(--text-tertiary)] leading-tight">
                 Verify commitments match

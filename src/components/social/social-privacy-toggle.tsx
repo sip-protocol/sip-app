@@ -2,7 +2,11 @@
 
 import { useState } from "react"
 import type { ReactNode } from "react"
-import { LockSimple, Eye, LockSimpleOpen } from "@phosphor-icons/react"
+import {
+  LockSimpleIcon,
+  EyeIcon,
+  LockSimpleOpenIcon,
+} from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 
 type PrivacyOption = "shielded" | "compliant" | "transparent"
@@ -24,7 +28,7 @@ const OPTIONS: {
     level: "shielded",
     label: "Shielded",
     desc: "Anonymous post",
-    icon: <LockSimple size={18} weight="duotone" />,
+    icon: <LockSimpleIcon size={18} weight="duotone" />,
     tooltip:
       "Only viewing key holders can see the author. Content is encrypted with XChaCha20-Poly1305 and identity is hidden behind a stealth address.",
   },
@@ -32,7 +36,7 @@ const OPTIONS: {
     level: "compliant",
     label: "Compliant",
     desc: "Auditable author",
-    icon: <Eye size={18} weight="duotone" />,
+    icon: <EyeIcon size={18} weight="duotone" />,
     tooltip:
       "Auditors can verify authorship via viewing key. Post content is public but your wallet identity stays hidden from casual observers.",
   },
@@ -40,7 +44,7 @@ const OPTIONS: {
     level: "transparent",
     label: "Transparent",
     desc: "Public identity",
-    icon: <LockSimpleOpen size={18} weight="duotone" />,
+    icon: <LockSimpleOpenIcon size={18} weight="duotone" />,
     tooltip:
       "Public post linked to your stealth identity. Anyone can see the author and content. No encryption applied.",
   },

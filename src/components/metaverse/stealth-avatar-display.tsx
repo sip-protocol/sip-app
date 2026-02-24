@@ -2,10 +2,10 @@
 
 import { useState } from "react"
 import {
-  MaskHappy,
-  ClipboardText,
-  Check,
-  LockSimple,
+  MaskHappyIcon,
+  ClipboardTextIcon,
+  CheckIcon,
+  LockSimpleIcon,
 } from "@phosphor-icons/react"
 import { cn, truncate, copyToClipboard } from "@/lib/utils"
 import { AVATAR_TIER_COLORS } from "@/lib/metaverse/constants"
@@ -47,7 +47,7 @@ export function StealthAvatarDisplay({
     >
       {/* Avatar callout */}
       <div className="flex items-center gap-2 mb-4">
-        <MaskHappy
+        <MaskHappyIcon
           size={20}
           weight="duotone"
           className="text-indigo-400 flex-shrink-0"
@@ -93,9 +93,9 @@ export function StealthAvatarDisplay({
             </code>
             <span className="text-[var(--text-tertiary)]">
               {copied === "stealth" ? (
-                <Check size={14} weight="duotone" />
+                <CheckIcon size={14} weight="duotone" />
               ) : (
-                <ClipboardText size={14} weight="duotone" />
+                <ClipboardTextIcon size={14} weight="duotone" />
               )}
             </span>
           </button>
@@ -116,9 +116,9 @@ export function StealthAvatarDisplay({
             </code>
             <span className="text-[var(--text-tertiary)]">
               {copied === "meta" ? (
-                <Check size={14} weight="duotone" />
+                <CheckIcon size={14} weight="duotone" />
               ) : (
-                <ClipboardText size={14} weight="duotone" />
+                <ClipboardTextIcon size={14} weight="duotone" />
               )}
             </span>
           </button>
@@ -128,7 +128,7 @@ export function StealthAvatarDisplay({
       {/* Privacy badge */}
       <div className="mt-4 flex items-center gap-2">
         <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-indigo-500/20 border border-indigo-500/30 text-indigo-300">
-          <LockSimple size={12} weight="duotone" /> Stealth Avatar
+          <LockSimpleIcon size={12} weight="duotone" /> Stealth Avatar
         </span>
       </div>
     </div>

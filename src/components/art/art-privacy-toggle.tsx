@@ -2,7 +2,11 @@
 
 import type { ReactNode } from "react"
 import { useState } from "react"
-import { LockSimple, Eye, LockSimpleOpen } from "@phosphor-icons/react"
+import {
+  LockSimpleIcon,
+  EyeIcon,
+  LockSimpleOpenIcon,
+} from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 
 type PrivacyOption = "shielded" | "compliant" | "transparent"
@@ -24,7 +28,7 @@ const OPTIONS: {
     level: "shielded",
     label: "Shielded",
     desc: "Anonymous art",
-    icon: <LockSimple size={18} weight="duotone" />,
+    icon: <LockSimpleIcon size={18} weight="duotone" />,
     tooltip:
       "Art is generated from a stealth address. The creator's identity is hidden — only the viewing key can prove authorship.",
   },
@@ -32,7 +36,7 @@ const OPTIONS: {
     level: "compliant",
     label: "Compliant",
     desc: "Auditable artist",
-    icon: <Eye size={18} weight="duotone" />,
+    icon: <EyeIcon size={18} weight="duotone" />,
     tooltip:
       "Auditors can verify the artist via viewing key. Art is public but creator identity stays hidden from casual observers.",
   },
@@ -40,7 +44,7 @@ const OPTIONS: {
     level: "transparent",
     label: "Transparent",
     desc: "Public artist",
-    icon: <LockSimpleOpen size={18} weight="duotone" />,
+    icon: <LockSimpleOpenIcon size={18} weight="duotone" />,
     tooltip:
       "Art is publicly linked to your stealth identity. Anyone can see the creator and verify authenticity.",
   },

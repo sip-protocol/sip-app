@@ -2,12 +2,12 @@
 
 import type { ReactNode } from "react"
 import {
-  GlobeHemisphereWest,
-  MaskHappy,
-  Rocket,
-  CheckCircle,
-  Key,
-  MagicWand,
+  GlobeHemisphereWestIcon,
+  MaskHappyIcon,
+  RocketIcon,
+  CheckCircleIcon,
+  KeyIcon,
+  MagicWandIcon,
 } from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 import type { MetaverseStep } from "@/lib/metaverse/types"
@@ -31,25 +31,25 @@ const EXPLORE_STEPS: StepConfig[] = [
     id: "selecting_world",
     label: "Select World",
     description: "Validating world availability and avatar tier",
-    icon: <GlobeHemisphereWest size={16} weight="duotone" />,
+    icon: <GlobeHemisphereWestIcon size={16} weight="duotone" />,
   },
   {
     id: "generating_stealth_avatar",
     label: "Generate Stealth Avatar",
     description: "Creating one-time stealth address for private avatar",
-    icon: <MaskHappy size={16} weight="duotone" />,
+    icon: <MaskHappyIcon size={16} weight="duotone" />,
   },
   {
     id: "entering_world",
     label: "Enter World",
     description: "Committing avatar ID as Pedersen commitment",
-    icon: <Rocket size={16} weight="duotone" />,
+    icon: <RocketIcon size={16} weight="duotone" />,
   },
   {
     id: "entered",
     label: "Entered",
     description: "Stealth avatar active — unlinkable to your wallet",
-    icon: <CheckCircle size={16} weight="duotone" />,
+    icon: <CheckCircleIcon size={16} weight="duotone" />,
   },
 ]
 
@@ -58,19 +58,19 @@ const TELEPORT_STEPS: StepConfig[] = [
     id: "generating_proof",
     label: "Generate Teleport Proof",
     description: "Creating private teleport proof from stealth identity",
-    icon: <Key size={16} weight="duotone" />,
+    icon: <KeyIcon size={16} weight="duotone" />,
   },
   {
     id: "teleporting",
     label: "Teleporting",
     description: "Private teleportation with stealth identity preserved",
-    icon: <MagicWand size={16} weight="duotone" />,
+    icon: <MagicWandIcon size={16} weight="duotone" />,
   },
   {
     id: "arrived",
     label: "Arrived",
     description: "Teleportation complete — identity remains private",
-    icon: <CheckCircle size={16} weight="duotone" />,
+    icon: <CheckCircleIcon size={16} weight="duotone" />,
   },
 ]
 

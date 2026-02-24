@@ -1,6 +1,6 @@
 "use client"
 
-import { LockSimple } from "@phosphor-icons/react"
+import { LockSimpleIcon } from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 import { ProfileBadge } from "./profile-badge"
 import { SAMPLE_PROFILES } from "@/lib/social/constants"
@@ -56,7 +56,7 @@ export function ConnectionCard({
           </span>
           {connection.isEncrypted && (
             <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium border bg-amber-500/20 border-amber-500/30 text-amber-300">
-              <LockSimple size={10} weight="duotone" /> Encrypted
+              <LockSimpleIcon size={10} weight="duotone" /> Encrypted
             </span>
           )}
         </div>

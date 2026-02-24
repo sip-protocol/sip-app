@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useCallback } from "react"
-import { MusicNote } from "@phosphor-icons/react"
+import { MusicNoteIcon } from "@phosphor-icons/react"
 import { MusicStats } from "@/components/music/music-stats"
 import { TrackList } from "@/components/music/track-list"
 import { StreamForm } from "@/components/music/stream-form"
@@ -56,7 +56,7 @@ export function MusicPageClient() {
       <div className="mb-10 p-5 rounded-2xl bg-gradient-to-r from-pink-600/20 to-purple-600/20 border border-pink-500/30">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
           <div className="flex-shrink-0 w-14 h-14 rounded-xl bg-pink-500/20 flex items-center justify-center text-pink-400">
-            <MusicNote size={28} weight="duotone" />
+            <MusicNoteIcon size={28} weight="duotone" />
           </div>
           <div className="flex-1 min-w-0">
             <h3 className="text-lg font-semibold text-pink-100">
@@ -109,7 +109,7 @@ export function MusicPageClient() {
       <div className="mt-10 p-4 rounded-xl bg-pink-900/20 border border-pink-800">
         <div className="flex gap-3">
           <span className="text-pink-400">
-            <MusicNote size={20} weight="duotone" />
+            <MusicNoteIcon size={20} weight="duotone" />
           </span>
           <div>
             <p className="font-medium text-pink-100">Powered by Audius</p>

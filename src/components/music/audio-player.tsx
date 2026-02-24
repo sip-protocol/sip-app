@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef, useCallback, useEffect } from "react"
-import { Play, Pause } from "@phosphor-icons/react"
+import { PlayIcon, PauseIcon } from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 
 const AUDIUS_BASE = "https://discoveryprovider.audius.co/v1"
@@ -83,7 +83,7 @@ export function AudioPlayer({ trackId, title, className }: AudioPlayerProps) {
         )}
       >
         <span className="w-7 h-7 rounded-full bg-pink-500/10 flex items-center justify-center text-pink-400/50">
-          <Play size={14} weight="fill" />
+          <PlayIcon size={14} weight="fill" />
         </span>
         <span>Preview in live mode</span>
       </div>
@@ -99,7 +99,7 @@ export function AudioPlayer({ trackId, title, className }: AudioPlayerProps) {
         )}
       >
         <span className="w-7 h-7 rounded-full bg-pink-500/10 flex items-center justify-center text-pink-400/50">
-          <Play size={14} weight="fill" />
+          <PlayIcon size={14} weight="fill" />
         </span>
         <span>Preview unavailable</span>
       </div>
@@ -127,9 +127,9 @@ export function AudioPlayer({ trackId, title, className }: AudioPlayerProps) {
         aria-label={isPlaying ? `Pause ${title}` : `Play ${title}`}
       >
         {isPlaying ? (
-          <Pause size={14} weight="fill" />
+          <PauseIcon size={14} weight="fill" />
         ) : (
-          <Play size={14} weight="fill" />
+          <PlayIcon size={14} weight="fill" />
         )}
       </button>
 

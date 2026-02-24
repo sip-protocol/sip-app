@@ -2,12 +2,12 @@
 
 import type { ReactNode } from "react"
 import {
-  Sword,
-  LockSimple,
-  MagnifyingGlass,
-  CheckCircle,
-  MaskHappy,
-  Trophy,
+  SwordIcon,
+  LockSimpleIcon,
+  MagnifyingGlassIcon,
+  CheckCircleIcon,
+  MaskHappyIcon,
+  TrophyIcon,
 } from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 import type { GamingStep } from "@/lib/gaming/types"
@@ -31,25 +31,25 @@ const PLAY_STEPS: StepConfig[] = [
     id: "committing_move",
     label: "Commit Move",
     description: "Hashing your move with cryptographic commitment",
-    icon: <Sword size={16} weight="duotone" />,
+    icon: <SwordIcon size={16} weight="duotone" />,
   },
   {
     id: "generating_commitment",
     label: "Generate Commitment",
     description: "Creating cryptographic commitment proof",
-    icon: <LockSimple size={16} weight="duotone" />,
+    icon: <LockSimpleIcon size={16} weight="duotone" />,
   },
   {
     id: "revealing",
     label: "Reveal Phase",
     description: "Both players reveal — commitment verified on-chain",
-    icon: <MagnifyingGlass size={16} weight="duotone" />,
+    icon: <MagnifyingGlassIcon size={16} weight="duotone" />,
   },
   {
     id: "resolved",
     label: "Resolved",
     description: "Game outcome determined — commitment proofs verified",
-    icon: <CheckCircle size={16} weight="duotone" />,
+    icon: <CheckCircleIcon size={16} weight="duotone" />,
   },
 ]
 
@@ -58,19 +58,19 @@ const CLAIM_STEPS: StepConfig[] = [
     id: "generating_stealth",
     label: "Generate Stealth Address",
     description: "Creating one-time address for private reward claim",
-    icon: <MaskHappy size={16} weight="duotone" />,
+    icon: <MaskHappyIcon size={16} weight="duotone" />,
   },
   {
     id: "claiming_reward",
     label: "Claiming Reward",
     description: "Sending reward to stealth address via MagicBlock",
-    icon: <Trophy size={16} weight="duotone" />,
+    icon: <TrophyIcon size={16} weight="duotone" />,
   },
   {
     id: "claimed",
     label: "Claimed",
     description: "Reward claimed — stealth address funded privately",
-    icon: <CheckCircle size={16} weight="duotone" />,
+    icon: <CheckCircleIcon size={16} weight="duotone" />,
   },
 ]
 

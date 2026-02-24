@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Handshake } from "@phosphor-icons/react"
+import { HandshakeIcon } from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 import { useConnections } from "@/hooks/use-connections"
 import { ConnectionCard } from "./connection-card"
@@ -32,7 +32,7 @@ export function ConnectionList({ profileId, onFollow }: ConnectionListProps) {
     return (
       <div className="text-center py-12 bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-xl">
         <div className="flex justify-center mb-4">
-          <Handshake
+          <HandshakeIcon
             size={40}
             weight="duotone"
             className="text-[var(--text-tertiary)]"
@@ -85,7 +85,7 @@ export function ConnectionList({ profileId, onFollow }: ConnectionListProps) {
       {displayedConnections.length === 0 ? (
         <div className="text-center py-12 bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-xl">
           <div className="flex justify-center mb-4">
-            <Handshake
+            <HandshakeIcon
               size={40}
               weight="duotone"
               className="text-[var(--text-tertiary)]"

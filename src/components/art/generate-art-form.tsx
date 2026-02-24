@@ -3,7 +3,11 @@
 import type { ReactNode } from "react"
 import { useState, useCallback, useMemo } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
-import { LockSimple, Eye, LockSimpleOpen } from "@phosphor-icons/react"
+import {
+  LockSimpleIcon,
+  EyeIcon,
+  LockSimpleOpenIcon,
+} from "@phosphor-icons/react"
 import { useDemoModeStore } from "@/stores/demo-mode"
 import { DemoBanner } from "@/components/ui/demo-banner"
 import { PrivacyLevel } from "@sip-protocol/types"
@@ -55,7 +59,7 @@ export function GenerateArtForm({
   const privacyLabel: Record<PrivacyOption, ReactNode> = {
     shielded: (
       <>
-        <LockSimple
+        <LockSimpleIcon
           size={14}
           weight="duotone"
           className="inline-block align-[-2px] mr-1"
@@ -65,7 +69,7 @@ export function GenerateArtForm({
     ),
     compliant: (
       <>
-        <Eye
+        <EyeIcon
           size={14}
           weight="duotone"
           className="inline-block align-[-2px] mr-1"
@@ -75,7 +79,7 @@ export function GenerateArtForm({
     ),
     transparent: (
       <>
-        <LockSimpleOpen
+        <LockSimpleOpenIcon
           size={14}
           weight="duotone"
           className="inline-block align-[-2px] mr-1"

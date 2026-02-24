@@ -2,7 +2,11 @@
 
 import { useState } from "react"
 import type { ReactNode } from "react"
-import { LockSimple, Eye, LockSimpleOpen } from "@phosphor-icons/react"
+import {
+  LockSimpleIcon,
+  EyeIcon,
+  LockSimpleOpenIcon,
+} from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 
 type PrivacyOption = "shielded" | "compliant" | "transparent"
@@ -24,7 +28,7 @@ const OPTIONS: {
     level: "shielded",
     label: "Shielded",
     desc: "Hidden avatar & identity",
-    icon: <LockSimple size={18} weight="duotone" />,
+    icon: <LockSimpleIcon size={18} weight="duotone" />,
     tooltip:
       "Your avatar is a stealth address. No one can link your exploration to your wallet. Full anonymity in every world you visit.",
   },
@@ -32,7 +36,7 @@ const OPTIONS: {
     level: "compliant",
     label: "Compliant",
     desc: "Verifiable presence",
-    icon: <Eye size={18} weight="duotone" />,
+    icon: <EyeIcon size={18} weight="duotone" />,
     tooltip:
       "World owners can verify your avatar via viewing key. Your wallet identity stays hidden from other visitors and third parties.",
   },
@@ -40,7 +44,7 @@ const OPTIONS: {
     level: "transparent",
     label: "Transparent",
     desc: "Public avatar",
-    icon: <LockSimpleOpen size={18} weight="duotone" />,
+    icon: <LockSimpleOpenIcon size={18} weight="duotone" />,
     tooltip:
       "Avatar is publicly linked to your wallet. Anyone can see your world visit history. No privacy applied.",
   },

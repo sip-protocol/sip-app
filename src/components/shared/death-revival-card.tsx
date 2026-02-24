@@ -1,6 +1,6 @@
 "use client"
 
-import { Skull, Plant } from "@phosphor-icons/react"
+import { SkullIcon, PlantIcon } from "@phosphor-icons/react"
 import { motion } from "framer-motion"
 
 interface DeathRevivalCardProps {
@@ -40,7 +40,7 @@ export function DeathRevivalCard({
         {/* Death side */}
         <div className="p-4 sm:p-5">
           <div className="flex items-center gap-2 mb-2">
-            <Skull
+            <SkullIcon
               size={20}
               weight="duotone"
               className="text-red-400 flex-shrink-0"
@@ -56,7 +56,7 @@ export function DeathRevivalCard({
         {/* Revival side */}
         <div className="p-4 sm:p-5">
           <div className="flex items-center gap-2 mb-2">
-            <Plant
+            <PlantIcon
               size={20}
               weight="duotone"
               className="text-emerald-400 flex-shrink-0"

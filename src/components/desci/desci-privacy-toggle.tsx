@@ -2,7 +2,11 @@
 
 import type { ReactNode } from "react"
 import { useState } from "react"
-import { LockSimple, Eye, LockSimpleOpen } from "@phosphor-icons/react"
+import {
+  LockSimpleIcon,
+  EyeIcon,
+  LockSimpleOpenIcon,
+} from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 
 type PrivacyOption = "shielded" | "compliant" | "transparent"
@@ -24,7 +28,7 @@ const OPTIONS: {
     level: "shielded",
     label: "Shielded",
     desc: "Hidden funding & identity",
-    icon: <LockSimple size={18} weight="duotone" />,
+    icon: <LockSimpleIcon size={18} weight="duotone" />,
     tooltip:
       "Your contribution is a stealth address. No one can link your funding to your wallet. Full anonymity for controversial or sensitive research.",
   },
@@ -32,7 +36,7 @@ const OPTIONS: {
     level: "compliant",
     label: "Compliant",
     desc: "Verifiable contribution",
-    icon: <Eye size={18} weight="duotone" />,
+    icon: <EyeIcon size={18} weight="duotone" />,
     tooltip:
       "Regulators can verify your contribution via viewing key. Your wallet identity stays hidden from other contributors and the public.",
   },
@@ -40,7 +44,7 @@ const OPTIONS: {
     level: "transparent",
     label: "Transparent",
     desc: "Public contribution",
-    icon: <LockSimpleOpen size={18} weight="duotone" />,
+    icon: <LockSimpleOpenIcon size={18} weight="duotone" />,
     tooltip:
       "Contribution is publicly linked to your wallet. Anyone can see your funding history. No privacy applied.",
   },

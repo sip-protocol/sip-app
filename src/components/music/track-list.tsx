@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { MusicNote } from "@phosphor-icons/react"
+import { MusicNoteIcon } from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 import { TrackCard } from "./track-card"
 import { SAMPLE_TRACKS } from "@/lib/music/constants"
@@ -55,7 +55,7 @@ export function TrackList({ onStream }: TrackListProps) {
       {tracks.length === 0 ? (
         <div className="bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-xl p-12 text-center">
           <div className="text-pink-400 mb-4 flex justify-center">
-            <MusicNote size={40} weight="duotone" />
+            <MusicNoteIcon size={40} weight="duotone" />
           </div>
           <h3 className="text-lg font-semibold mb-2">No tracks found</h3>
           <p className="text-sm text-[var(--text-secondary)] max-w-md mx-auto">

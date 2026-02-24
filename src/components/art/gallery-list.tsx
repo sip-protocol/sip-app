@@ -1,6 +1,6 @@
 "use client"
 
-import { Palette } from "@phosphor-icons/react"
+import { PaletteIcon } from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 import { useArtGallery, type ArtGalleryFilter } from "@/hooks/use-art-gallery"
 import { ArtCard } from "./art-card"
@@ -51,7 +51,7 @@ export function GalleryList({
       {arts.length === 0 ? (
         <div className="bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-xl p-12 text-center">
           <span className="block mb-3 text-[var(--text-tertiary)]">
-            <Palette size={40} weight="duotone" className="mx-auto" />
+            <PaletteIcon size={40} weight="duotone" className="mx-auto" />
           </span>
           <h3 className="text-lg font-semibold mb-2">No art yet</h3>
           <p className="text-sm text-[var(--text-secondary)] max-w-md mx-auto">

@@ -1,6 +1,6 @@
 "use client"
 
-import { ChatCircle } from "@phosphor-icons/react"
+import { ChatCircleIcon } from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 import { useFeed, type FeedFilter } from "@/hooks/use-feed"
 import { PostCard } from "./post-card"
@@ -64,7 +64,7 @@ export function FeedList({ onViewPost }: FeedListProps) {
       {posts.length === 0 ? (
         <div className="text-center py-12 bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-xl">
           <div className="flex justify-center mb-4">
-            <ChatCircle
+            <ChatCircleIcon
               size={40}
               weight="duotone"
               className="text-[var(--text-tertiary)]"

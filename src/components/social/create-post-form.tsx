@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useMemo } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
-import { LockSimple } from "@phosphor-icons/react"
+import { LockSimpleIcon } from "@phosphor-icons/react"
 import { useDemoModeStore } from "@/stores/demo-mode"
 import { DemoBanner } from "@/components/ui/demo-banner"
 import { PrivacyLevel } from "@sip-protocol/types"
@@ -141,8 +141,8 @@ export function CreatePostForm({
           <p className="text-sm text-[var(--text-secondary)] line-clamp-3">
             {privacyLevel === "shielded" ? (
               <span className="inline-flex items-center gap-1">
-                <LockSimple size={14} weight="duotone" /> Content encrypted —
-                only viewing key holders can read
+                <LockSimpleIcon size={14} weight="duotone" /> Content encrypted
+                — only viewing key holders can read
               </span>
             ) : (
               content

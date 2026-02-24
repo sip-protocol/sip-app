@@ -2,12 +2,12 @@
 
 import type { ReactNode } from "react"
 import {
-  Dna,
-  MaskHappy,
-  CreditCard,
-  CheckCircle,
-  Key,
-  MagnifyingGlass,
+  DnaIcon,
+  MaskHappyIcon,
+  CreditCardIcon,
+  CheckCircleIcon,
+  KeyIcon,
+  MagnifyingGlassIcon,
 } from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 import type { DeSciStep } from "@/lib/desci/types"
@@ -31,25 +31,25 @@ const FUND_STEPS: StepConfig[] = [
     id: "selecting_project",
     label: "Select Project",
     description: "Validating project availability and funding tier",
-    icon: <Dna size={16} weight="duotone" />,
+    icon: <DnaIcon size={16} weight="duotone" />,
   },
   {
     id: "generating_stealth_funding",
     label: "Generate Stealth Funding",
     description: "Creating one-time stealth address for anonymous contribution",
-    icon: <MaskHappy size={16} weight="duotone" />,
+    icon: <MaskHappyIcon size={16} weight="duotone" />,
   },
   {
     id: "funding",
     label: "Fund Project",
     description: "Committing funding amount as Pedersen commitment",
-    icon: <CreditCard size={16} weight="duotone" />,
+    icon: <CreditCardIcon size={16} weight="duotone" />,
   },
   {
     id: "funded",
     label: "Funded",
     description: "Stealth contribution complete — unlinkable to your wallet",
-    icon: <CheckCircle size={16} weight="duotone" />,
+    icon: <CheckCircleIcon size={16} weight="duotone" />,
   },
 ]
 
@@ -58,19 +58,19 @@ const REVIEW_STEPS: StepConfig[] = [
     id: "generating_proof",
     label: "Generate Reviewer Proof",
     description: "Creating anonymous reviewer proof from stealth identity",
-    icon: <Key size={16} weight="duotone" />,
+    icon: <KeyIcon size={16} weight="duotone" />,
   },
   {
     id: "submitting_review",
     label: "Submit Review",
     description: "Submitting anonymous peer review",
-    icon: <MagnifyingGlass size={16} weight="duotone" />,
+    icon: <MagnifyingGlassIcon size={16} weight="duotone" />,
   },
   {
     id: "reviewed",
     label: "Reviewed",
     description: "Review submitted — reviewer identity remains private",
-    icon: <CheckCircle size={16} weight="duotone" />,
+    icon: <CheckCircleIcon size={16} weight="duotone" />,
   },
 ]
 

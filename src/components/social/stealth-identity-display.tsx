@@ -1,7 +1,12 @@
 "use client"
 
 import { useState } from "react"
-import { LockKey, ClipboardText, Check, Warning } from "@phosphor-icons/react"
+import {
+  LockKeyIcon,
+  ClipboardTextIcon,
+  CheckIcon,
+  WarningIcon,
+} from "@phosphor-icons/react"
 import { cn, truncate, copyToClipboard } from "@/lib/utils"
 
 interface StealthIdentityDisplayProps {
@@ -37,7 +42,7 @@ export function StealthIdentityDisplay({
       {/* Identity callout */}
       <div className="flex items-center gap-2 mb-4">
         <span className="flex items-center text-pink-300">
-          <LockKey size={20} weight="duotone" />
+          <LockKeyIcon size={20} weight="duotone" />
         </span>
         <div>
           <p className="text-sm font-medium text-pink-300">
@@ -66,9 +71,9 @@ export function StealthIdentityDisplay({
             </code>
             <span className="flex items-center text-[var(--text-tertiary)]">
               {copied === "stealth" ? (
-                <Check size={14} weight="duotone" />
+                <CheckIcon size={14} weight="duotone" />
               ) : (
-                <ClipboardText size={14} weight="duotone" />
+                <ClipboardTextIcon size={14} weight="duotone" />
               )}
             </span>
           </button>
@@ -89,9 +94,9 @@ export function StealthIdentityDisplay({
             </code>
             <span className="flex items-center text-[var(--text-tertiary)]">
               {copied === "meta" ? (
-                <Check size={14} weight="duotone" />
+                <CheckIcon size={14} weight="duotone" />
               ) : (
-                <ClipboardText size={14} weight="duotone" />
+                <ClipboardTextIcon size={14} weight="duotone" />
               )}
             </span>
           </button>
@@ -113,9 +118,9 @@ export function StealthIdentityDisplay({
               </code>
               <span className="flex items-center text-[var(--text-tertiary)]">
                 {copied === "viewingKey" ? (
-                  <Check size={14} weight="duotone" />
+                  <CheckIcon size={14} weight="duotone" />
                 ) : (
-                  <ClipboardText size={14} weight="duotone" />
+                  <ClipboardTextIcon size={14} weight="duotone" />
                 )}
               </span>
             </button>
@@ -126,7 +131,7 @@ export function StealthIdentityDisplay({
       {/* Warning */}
       <div className="mt-4 p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
         <p className="text-xs text-amber-300/80 leading-relaxed flex items-start gap-1.5">
-          <Warning
+          <WarningIcon
             size={14}
             weight="duotone"
             className="flex-shrink-0 mt-0.5"

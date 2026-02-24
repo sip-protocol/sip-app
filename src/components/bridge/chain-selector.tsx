@@ -3,11 +3,11 @@
 import type { ReactNode } from "react"
 import { useState, useCallback } from "react"
 import {
-  SunDim,
-  Diamond,
-  Hexagon,
-  Globe,
-  ArrowsLeftRight,
+  SunDimIcon,
+  DiamondIcon,
+  HexagonIcon,
+  GlobeIcon,
+  ArrowsLeftRightIcon,
 } from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 import { BRIDGE_CHAINS } from "@/lib/bridge/constants"
@@ -106,17 +106,23 @@ function ChainDropdown({
 
 function getChainIcon(chain: BridgeChainId): ReactNode {
   const map: Record<BridgeChainId, ReactNode> = {
-    solana: <SunDim size={20} weight="duotone" className="text-violet-400" />,
-    ethereum: <Diamond size={20} weight="duotone" className="text-blue-400" />,
-    base: <Hexagon size={20} weight="duotone" className="text-blue-500" />,
-    arbitrum: (
-      <Hexagon size={20} weight="duotone" className="text-orange-400" />
+    solana: (
+      <SunDimIcon size={20} weight="duotone" className="text-violet-400" />
     ),
-    optimism: <Hexagon size={20} weight="duotone" className="text-red-400" />,
+    ethereum: (
+      <DiamondIcon size={20} weight="duotone" className="text-blue-400" />
+    ),
+    base: <HexagonIcon size={20} weight="duotone" className="text-blue-500" />,
+    arbitrum: (
+      <HexagonIcon size={20} weight="duotone" className="text-orange-400" />
+    ),
+    optimism: (
+      <HexagonIcon size={20} weight="duotone" className="text-red-400" />
+    ),
   }
   return (
     map[chain] ?? (
-      <Globe
+      <GlobeIcon
         size={20}
         weight="duotone"
         className="text-[var(--text-secondary)]"
@@ -171,7 +177,7 @@ export function ChainSelector({
           }}
           title="Swap chains"
         >
-          <ArrowsLeftRight
+          <ArrowsLeftRightIcon
             size={16}
             weight="bold"
             className="text-[var(--text-secondary)]"

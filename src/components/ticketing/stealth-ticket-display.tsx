@@ -1,7 +1,12 @@
 "use client"
 
 import { useState } from "react"
-import { Ticket, ClipboardText, Check, LockSimple } from "@phosphor-icons/react"
+import {
+  TicketIcon,
+  ClipboardTextIcon,
+  CheckIcon,
+  LockSimpleIcon,
+} from "@phosphor-icons/react"
 import { cn, truncate, copyToClipboard } from "@/lib/utils"
 import { TIER_COLORS } from "@/lib/ticketing/constants"
 import type { TicketTier } from "@/lib/ticketing/types"
@@ -42,7 +47,7 @@ export function StealthTicketDisplay({
     >
       {/* Ticket callout */}
       <div className="flex items-center gap-2 mb-4">
-        <Ticket
+        <TicketIcon
           size={20}
           weight="duotone"
           className="text-teal-400 flex-shrink-0"
@@ -88,9 +93,9 @@ export function StealthTicketDisplay({
             </code>
             <span className="text-[var(--text-tertiary)]">
               {copied === "stealth" ? (
-                <Check size={14} weight="duotone" />
+                <CheckIcon size={14} weight="duotone" />
               ) : (
-                <ClipboardText size={14} weight="duotone" />
+                <ClipboardTextIcon size={14} weight="duotone" />
               )}
             </span>
           </button>
@@ -111,9 +116,9 @@ export function StealthTicketDisplay({
             </code>
             <span className="text-[var(--text-tertiary)]">
               {copied === "meta" ? (
-                <Check size={14} weight="duotone" />
+                <CheckIcon size={14} weight="duotone" />
               ) : (
-                <ClipboardText size={14} weight="duotone" />
+                <ClipboardTextIcon size={14} weight="duotone" />
               )}
             </span>
           </button>
@@ -123,7 +128,7 @@ export function StealthTicketDisplay({
       {/* Privacy badge */}
       <div className="mt-4 flex items-center gap-2">
         <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-teal-500/20 border border-teal-500/30 text-teal-300">
-          <LockSimple size={12} weight="duotone" /> Stealth Ticket
+          <LockSimpleIcon size={12} weight="duotone" /> Stealth Ticket
         </span>
       </div>
     </div>

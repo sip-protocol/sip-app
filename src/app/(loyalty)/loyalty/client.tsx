@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useCallback } from "react"
-import { Trophy } from "@phosphor-icons/react"
+import { TrophyIcon } from "@phosphor-icons/react"
 import { LoyaltyStats } from "@/components/loyalty/loyalty-stats"
 import { CampaignList } from "@/components/loyalty/campaign-list"
 import { JoinCampaignForm } from "@/components/loyalty/join-campaign-form"
@@ -77,7 +77,7 @@ export function LoyaltyPageClient() {
       {/* Info Banner */}
       <div className="mt-10 p-4 rounded-xl bg-amber-900/20 border border-amber-800">
         <div className="flex gap-3">
-          <Trophy
+          <TrophyIcon
             size={24}
             weight="duotone"
             className="text-amber-300 flex-shrink-0"

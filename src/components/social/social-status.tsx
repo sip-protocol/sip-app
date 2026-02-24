@@ -2,12 +2,12 @@
 
 import type { ReactNode } from "react"
 import {
-  LockKey,
-  NotePencil,
-  CheckCircle,
-  LockSimple,
-  UploadSimple,
-  Handshake,
+  LockKeyIcon,
+  NotePencilIcon,
+  CheckCircleIcon,
+  LockSimpleIcon,
+  UploadSimpleIcon,
+  HandshakeIcon,
 } from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 import type { SocialStep } from "@/lib/social/types"
@@ -31,19 +31,19 @@ const PROFILE_STEPS: StepConfig[] = [
     id: "generating_stealth",
     label: "Generate Stealth Identity",
     description: "Creating stealth meta-address with viewing and spending keys",
-    icon: <LockKey size={16} weight="duotone" />,
+    icon: <LockKeyIcon size={16} weight="duotone" />,
   },
   {
     id: "creating_profile",
     label: "Create Tapestry Profile",
     description: "Registering anonymous profile on Tapestry social graph",
-    icon: <NotePencil size={16} weight="duotone" />,
+    icon: <NotePencilIcon size={16} weight="duotone" />,
   },
   {
     id: "profile_created",
     label: "Profile Created",
     description: "Stealth identity is live — post and follow anonymously",
-    icon: <CheckCircle size={16} weight="duotone" />,
+    icon: <CheckCircleIcon size={16} weight="duotone" />,
   },
 ]
 
@@ -52,19 +52,19 @@ const POST_STEPS: StepConfig[] = [
     id: "encrypting_content",
     label: "Encrypt Content",
     description: "Encrypting post with XChaCha20-Poly1305 via viewing key",
-    icon: <LockSimple size={16} weight="duotone" />,
+    icon: <LockSimpleIcon size={16} weight="duotone" />,
   },
   {
     id: "publishing",
     label: "Publish to Feed",
     description: "Publishing encrypted content to the anonymous feed",
-    icon: <UploadSimple size={16} weight="duotone" />,
+    icon: <UploadSimpleIcon size={16} weight="duotone" />,
   },
   {
     id: "published",
     label: "Published",
     description: "Post is live — only viewing key holders can read it",
-    icon: <CheckCircle size={16} weight="duotone" />,
+    icon: <CheckCircleIcon size={16} weight="duotone" />,
   },
 ]
 
@@ -73,19 +73,19 @@ const FOLLOW_STEPS: StepConfig[] = [
     id: "generating_stealth",
     label: "Generate Shared Secret",
     description: "Creating encrypted connection via stealth address derivation",
-    icon: <LockKey size={16} weight="duotone" />,
+    icon: <LockKeyIcon size={16} weight="duotone" />,
   },
   {
     id: "connecting",
     label: "Create Connection",
     description: "Establishing private follow on the social graph",
-    icon: <Handshake size={16} weight="duotone" />,
+    icon: <HandshakeIcon size={16} weight="duotone" />,
   },
   {
     id: "connected",
     label: "Connected",
     description: "Private follow established — your graph is encrypted",
-    icon: <CheckCircle size={16} weight="duotone" />,
+    icon: <CheckCircleIcon size={16} weight="duotone" />,
   },
 ]
 

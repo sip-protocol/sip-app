@@ -1,6 +1,6 @@
 "use client"
 
-import { Target } from "@phosphor-icons/react"
+import { TargetIcon } from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 import { useCampaigns, type CampaignFilter } from "@/hooks/use-campaigns"
 import { CampaignCard } from "./campaign-card"
@@ -64,7 +64,7 @@ export function CampaignList({ onJoin, onClaim }: CampaignListProps) {
       {campaigns.length === 0 ? (
         <div className="bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-xl p-12 text-center">
           <div className="flex justify-center mb-4">
-            <Target size={48} weight="duotone" className="text-amber-400" />
+            <TargetIcon size={48} weight="duotone" className="text-amber-400" />
           </div>
           <h3 className="text-lg font-semibold mb-2">No campaigns found</h3>
           <p className="text-sm text-[var(--text-secondary)] max-w-md mx-auto">

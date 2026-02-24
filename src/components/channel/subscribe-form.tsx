@@ -2,7 +2,11 @@
 
 import { useState, useCallback, useMemo, type ReactNode } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
-import { LockSimple, Eye, LockSimpleOpen } from "@phosphor-icons/react"
+import {
+  LockSimpleIcon,
+  EyeIcon,
+  LockSimpleOpenIcon,
+} from "@phosphor-icons/react"
 import { useDemoModeStore } from "@/stores/demo-mode"
 import { DemoBanner } from "@/components/ui/demo-banner"
 import { PrivacyLevel } from "@sip-protocol/types"
@@ -47,17 +51,17 @@ export function SubscribeForm({ drop, onSubscribed }: SubscribeFormProps) {
   const privacyLabel: Record<PrivacyOption, ReactNode> = {
     shielded: (
       <span className="inline-flex items-center gap-1">
-        <LockSimple size={14} weight="duotone" /> Shielded
+        <LockSimpleIcon size={14} weight="duotone" /> Shielded
       </span>
     ),
     compliant: (
       <span className="inline-flex items-center gap-1">
-        <Eye size={14} weight="duotone" /> Compliant
+        <EyeIcon size={14} weight="duotone" /> Compliant
       </span>
     ),
     transparent: (
       <span className="inline-flex items-center gap-1">
-        <LockSimpleOpen size={14} weight="duotone" /> Transparent
+        <LockSimpleOpenIcon size={14} weight="duotone" /> Transparent
       </span>
     ),
   }

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { GlobeHemisphereWest } from "@phosphor-icons/react"
+import { GlobeHemisphereWestIcon } from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 import { WorldCard } from "./world-card"
 import { SAMPLE_WORLDS } from "@/lib/metaverse/constants"
@@ -62,7 +62,7 @@ export function WorldList({ onExplore }: WorldListProps) {
       {worlds.length === 0 ? (
         <div className="bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-xl p-12 text-center">
           <div className="text-indigo-400 mb-4 flex justify-center">
-            <GlobeHemisphereWest size={48} weight="duotone" />
+            <GlobeHemisphereWestIcon size={48} weight="duotone" />
           </div>
           <h3 className="text-lg font-semibold mb-2">No worlds found</h3>
           <p className="text-sm text-[var(--text-secondary)] max-w-md mx-auto">

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useCallback } from "react"
-import { Ticket } from "@phosphor-icons/react"
+import { TicketIcon } from "@phosphor-icons/react"
 import { TicketingStats } from "@/components/ticketing/ticketing-stats"
 import { EventList } from "@/components/ticketing/event-list"
 import { PurchaseForm } from "@/components/ticketing/purchase-form"
@@ -77,7 +77,7 @@ export function TicketingPageClient() {
       {/* Info Banner */}
       <div className="mt-10 p-4 rounded-xl bg-teal-900/20 border border-teal-800">
         <div className="flex gap-3">
-          <Ticket
+          <TicketIcon
             size={24}
             weight="duotone"
             className="text-teal-400 flex-shrink-0 mt-0.5"

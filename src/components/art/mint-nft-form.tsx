@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useMemo } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
-import { ClipboardText, Check } from "@phosphor-icons/react"
+import { ClipboardTextIcon, CheckIcon } from "@phosphor-icons/react"
 import { useDemoModeStore } from "@/stores/demo-mode"
 import { DemoBanner } from "@/components/ui/demo-banner"
 import { PrivacyLevel } from "@sip-protocol/types"
@@ -113,9 +113,9 @@ export function MintNFTForm({ art, onReset }: MintNFTFormProps) {
               </code>
               <span className="text-[var(--text-tertiary)]">
                 {copied ? (
-                  <Check size={14} weight="duotone" />
+                  <CheckIcon size={14} weight="duotone" />
                 ) : (
-                  <ClipboardText size={14} weight="duotone" />
+                  <ClipboardTextIcon size={14} weight="duotone" />
                 )}
               </span>
             </button>

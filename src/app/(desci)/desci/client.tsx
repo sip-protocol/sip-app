@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useCallback } from "react"
-import { Dna } from "@phosphor-icons/react"
+import { DnaIcon } from "@phosphor-icons/react"
 import { DeSciStats } from "@/components/desci/desci-stats"
 import { ProjectList } from "@/components/desci/project-list"
 import { FundForm } from "@/components/desci/fund-form"
@@ -75,7 +75,7 @@ export function DeSciPageClient() {
       {/* Info Banner */}
       <div className="mt-10 p-4 rounded-xl bg-lime-900/20 border border-lime-800">
         <div className="flex gap-3">
-          <Dna
+          <DnaIcon
             size={24}
             weight="duotone"
             className="text-lime-300 flex-shrink-0"

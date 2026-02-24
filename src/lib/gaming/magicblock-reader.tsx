@@ -9,13 +9,13 @@ import {
 } from "@magicblock-labs/bolt-sdk"
 import { PublicKey } from "@solana/web3.js"
 import {
-  Sword,
-  CurrencyDollar,
-  MagicWand,
-  CloudFog,
-  Trophy,
-  Crown,
-  Lightning,
+  SwordIcon,
+  CurrencyDollarIcon,
+  MagicWandIcon,
+  CloudFogIcon,
+  TrophyIcon,
+  CrownIcon,
+  LightningIcon,
 } from "@phosphor-icons/react"
 import type { Game, GameResult, GameType, GamingMode } from "./types"
 import { SAMPLE_GAMES, SAMPLE_RESULTS } from "./constants"
@@ -72,7 +72,7 @@ const MAGICBLOCK_GAMES: Game[] = [
     rewardTier: "gold",
     playerCount: 2847,
     isActive: true,
-    icon: <Sword size={18} weight="duotone" />,
+    icon: <SwordIcon size={18} weight="duotone" />,
   },
   {
     id: "mb-bolt-auction",
@@ -84,7 +84,7 @@ const MAGICBLOCK_GAMES: Game[] = [
     rewardTier: "silver",
     playerCount: 1563,
     isActive: true,
-    icon: <CurrencyDollar size={18} weight="duotone" />,
+    icon: <CurrencyDollarIcon size={18} weight="duotone" />,
   },
   {
     id: "mb-ephemeral-guess",
@@ -96,7 +96,7 @@ const MAGICBLOCK_GAMES: Game[] = [
     rewardTier: "bronze",
     playerCount: 4210,
     isActive: true,
-    icon: <MagicWand size={18} weight="duotone" />,
+    icon: <MagicWandIcon size={18} weight="duotone" />,
   },
   {
     id: "mb-fog-commander",
@@ -108,7 +108,7 @@ const MAGICBLOCK_GAMES: Game[] = [
     rewardTier: "diamond",
     playerCount: 892,
     isActive: true,
-    icon: <CloudFog size={18} weight="duotone" />,
+    icon: <CloudFogIcon size={18} weight="duotone" />,
   },
   {
     id: "mb-world-tournament",
@@ -120,7 +120,7 @@ const MAGICBLOCK_GAMES: Game[] = [
     rewardTier: "diamond",
     playerCount: 456,
     isActive: true,
-    icon: <Trophy size={18} weight="duotone" />,
+    icon: <TrophyIcon size={18} weight="duotone" />,
   },
   {
     id: "mb-rush-royale",
@@ -132,7 +132,7 @@ const MAGICBLOCK_GAMES: Game[] = [
     rewardTier: "bronze",
     playerCount: 6731,
     isActive: true,
-    icon: <Crown size={18} weight="duotone" />,
+    icon: <CrownIcon size={18} weight="duotone" />,
   },
   {
     id: "mb-staking-duel",
@@ -144,7 +144,7 @@ const MAGICBLOCK_GAMES: Game[] = [
     rewardTier: "gold",
     playerCount: 1105,
     isActive: true,
-    icon: <Lightning size={18} weight="duotone" />,
+    icon: <LightningIcon size={18} weight="duotone" />,
   },
 ]
 

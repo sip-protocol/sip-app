@@ -2,11 +2,11 @@
 
 import type { ReactNode } from "react"
 import {
-  Palette,
-  Sparkle,
-  CheckCircle,
-  Package,
-  Diamond,
+  PaletteIcon,
+  SparkleIcon,
+  CheckCircleIcon,
+  PackageIcon,
+  DiamondIcon,
 } from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 import type { ArtStep } from "@/lib/art/types"
@@ -31,19 +31,19 @@ const GENERATE_STEPS: StepConfig[] = [
     label: "Select Art Style",
     description:
       "Choosing generative art algorithm from stealth address entropy",
-    icon: <Palette size={16} weight="duotone" />,
+    icon: <PaletteIcon size={16} weight="duotone" />,
   },
   {
     id: "generating",
     label: "Generate Art",
     description: "Deriving deterministic art from stealth address seed via SDK",
-    icon: <Sparkle size={16} weight="duotone" />,
+    icon: <SparkleIcon size={16} weight="duotone" />,
   },
   {
     id: "generated",
     label: "Art Generated",
     description: "Unique privacy art created — ready to mint as NFT",
-    icon: <CheckCircle size={16} weight="duotone" />,
+    icon: <CheckCircleIcon size={16} weight="duotone" />,
   },
 ]
 
@@ -52,19 +52,19 @@ const MINT_STEPS: StepConfig[] = [
     id: "preparing_nft",
     label: "Prepare NFT",
     description: "Encoding art metadata and uploading to Arweave",
-    icon: <Package size={16} weight="duotone" />,
+    icon: <PackageIcon size={16} weight="duotone" />,
   },
   {
     id: "minting",
     label: "Mint NFT",
     description: "Minting compressed NFT via Exchange Art",
-    icon: <Diamond size={16} weight="duotone" />,
+    icon: <DiamondIcon size={16} weight="duotone" />,
   },
   {
     id: "minted",
     label: "NFT Minted",
     description: "Compressed NFT live on Solana — viewable on Exchange Art",
-    icon: <CheckCircle size={16} weight="duotone" />,
+    icon: <CheckCircleIcon size={16} weight="duotone" />,
   },
 ]
 
@@ -179,7 +179,7 @@ export function ArtStatus({
                     )}
                   >
                     {isStepComplete ? (
-                      <CheckCircle size={16} weight="duotone" />
+                      <CheckCircleIcon size={16} weight="duotone" />
                     ) : (
                       step.icon
                     )}

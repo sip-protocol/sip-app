@@ -2,14 +2,14 @@
 
 import type { ReactNode } from "react"
 import {
-  Ticket,
-  MaskHappy,
-  CreditCard,
-  CheckCircle,
-  Key,
-  MagnifyingGlass,
-  Check,
-  SpinnerGap,
+  TicketIcon,
+  MaskHappyIcon,
+  CreditCardIcon,
+  CheckCircleIcon,
+  KeyIcon,
+  MagnifyingGlassIcon,
+  CheckIcon,
+  SpinnerGapIcon,
 } from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 import type { TicketingStep } from "@/lib/ticketing/types"
@@ -33,25 +33,25 @@ const PURCHASE_STEPS: StepConfig[] = [
     id: "selecting_event",
     label: "Select Event",
     description: "Validating event availability and ticket tier",
-    icon: <Ticket size={16} weight="duotone" />,
+    icon: <TicketIcon size={16} weight="duotone" />,
   },
   {
     id: "generating_stealth_ticket",
     label: "Generate Stealth Ticket",
     description: "Creating one-time stealth address for private ticket",
-    icon: <MaskHappy size={16} weight="duotone" />,
+    icon: <MaskHappyIcon size={16} weight="duotone" />,
   },
   {
     id: "purchasing",
     label: "Purchase Ticket",
     description: "Committing ticket ID as Pedersen commitment",
-    icon: <CreditCard size={16} weight="duotone" />,
+    icon: <CreditCardIcon size={16} weight="duotone" />,
   },
   {
     id: "purchased",
     label: "Purchased",
     description: "Stealth ticket issued — unlinkable to your wallet",
-    icon: <CheckCircle size={16} weight="duotone" />,
+    icon: <CheckCircleIcon size={16} weight="duotone" />,
   },
 ]
 
@@ -60,19 +60,19 @@ const VERIFY_STEPS: StepConfig[] = [
     id: "generating_proof",
     label: "Generate Viewing Key Proof",
     description: "Creating attendance proof from viewing key",
-    icon: <Key size={16} weight="duotone" />,
+    icon: <KeyIcon size={16} weight="duotone" />,
   },
   {
     id: "verifying_attendance",
     label: "Verify Attendance",
     description: "Organizer verifying ticket without revealing identity",
-    icon: <MagnifyingGlass size={16} weight="duotone" />,
+    icon: <MagnifyingGlassIcon size={16} weight="duotone" />,
   },
   {
     id: "verified",
     label: "Verified",
     description: "Attendance confirmed — identity remains private",
-    icon: <CheckCircle size={16} weight="duotone" />,
+    icon: <CheckCircleIcon size={16} weight="duotone" />,
   },
 ]
 
@@ -187,7 +187,7 @@ export function TicketingStatus({
                     )}
                   >
                     {isStepComplete ? (
-                      <Check size={16} weight="bold" />
+                      <CheckIcon size={16} weight="bold" />
                     ) : (
                       step.icon
                     )}
@@ -228,7 +228,7 @@ export function TicketingStatus({
 
                 {/* Active spinner */}
                 {isCurrent && !isComplete && (
-                  <SpinnerGap
+                  <SpinnerGapIcon
                     size={16}
                     weight="bold"
                     className="animate-spin text-teal-400 ml-auto flex-shrink-0 mt-1"

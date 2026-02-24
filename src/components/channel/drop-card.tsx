@@ -1,6 +1,6 @@
 "use client"
 
-import { LockSimple, LockSimpleOpen } from "@phosphor-icons/react"
+import { LockSimpleIcon, LockSimpleOpenIcon } from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 import { AccessTierBadge } from "./access-tier-badge"
 import { CONTENT_TYPE_LABELS } from "@/lib/channel/constants"
@@ -58,9 +58,9 @@ export function DropCard({
           {drop.isEncrypted && (
             <span className="text-purple-400">
               {isLocked ? (
-                <LockSimple size={14} weight="duotone" />
+                <LockSimpleIcon size={14} weight="duotone" />
               ) : (
-                <LockSimpleOpen size={14} weight="duotone" />
+                <LockSimpleOpenIcon size={14} weight="duotone" />
               )}
             </span>
           )}

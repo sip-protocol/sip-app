@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Ticket } from "@phosphor-icons/react"
+import { TicketIcon } from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 import { EventCard } from "./event-card"
 import { SAMPLE_EVENTS } from "@/lib/ticketing/constants"
@@ -62,7 +62,7 @@ export function EventList({ onPurchase }: EventListProps) {
       {events.length === 0 ? (
         <div className="bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-xl p-12 text-center">
           <div className="flex justify-center mb-4">
-            <Ticket
+            <TicketIcon
               size={48}
               weight="duotone"
               className="text-[var(--text-tertiary)]"
