@@ -18,9 +18,9 @@ export function PhoneMockup({
   variant = "seeker",
 }: PhoneMockupProps) {
   const widthClass = {
-    seeker: "w-[280px]",
-    iphone: "w-[300px]",
-    android: "w-[290px]",
+    seeker: "w-[220px] sm:w-[280px]",
+    iphone: "w-[240px] sm:w-[300px]",
+    android: "w-[230px] sm:w-[290px]",
   }[variant]
 
   return (
