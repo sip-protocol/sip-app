@@ -2,37 +2,59 @@
 
 import Link from "next/link"
 import { SDK_VERSION, TEST_COUNTS } from "@/lib/constants"
+import {
+  PaperPlaneTilt,
+  ShieldCheck,
+  Bridge,
+  Wallet,
+  ArrowsClockwise,
+  Buildings,
+  Scales,
+  MaskHappy,
+  Trophy,
+  Palette,
+  Leaf,
+  Broadcast,
+  GameController,
+  Ticket,
+  GlobeHemisphereWest,
+  Dna,
+  MusicNote,
+} from "@phosphor-icons/react"
+import type { ReactNode } from "react"
 
 interface AppCard {
   name: string
   description: string
   href: string
-  icon: string
+  icon: ReactNode
   gradient: string
   sponsor?: string
   comingSoon?: boolean
 }
+
+const ICON_SIZE = 24
 
 const coreApps: AppCard[] = [
   {
     name: "Private Payments",
     description: "Send and receive shielded payments with stealth addresses",
     href: "/payments",
-    icon: "\u{1F4B8}",
+    icon: <PaperPlaneTilt size={ICON_SIZE} weight="duotone" />,
     gradient: "from-sip-purple-500 to-sip-purple-700",
   },
   {
     name: "Privacy Score",
     description: "Analyze how surveilled your wallet is",
     href: "/privacy-score",
-    icon: "\u{1F50D}",
+    icon: <ShieldCheck size={ICON_SIZE} weight="duotone" />,
     gradient: "from-red-500 to-orange-500",
   },
   {
     name: "Private Bridge",
     description: "Cross-chain transfers with stealth addresses",
     href: "/bridge",
-    icon: "\u{1F309}",
+    icon: <Bridge size={ICON_SIZE} weight="duotone" />,
     gradient: "from-cyan-500 to-cyan-700",
     sponsor: "Wormhole",
   },
@@ -40,7 +62,7 @@ const coreApps: AppCard[] = [
     name: "Wallet",
     description: "Manage your viewing keys and stealth addresses",
     href: "/wallet",
-    icon: "\u{1F45B}",
+    icon: <Wallet size={ICON_SIZE} weight="duotone" />,
     gradient: "from-slate-500 to-slate-700",
     comingSoon: true,
   },
@@ -48,7 +70,7 @@ const coreApps: AppCard[] = [
     name: "Private DEX",
     description: "Swap tokens with cryptographic privacy",
     href: "/dex",
-    icon: "\u{1F504}",
+    icon: <ArrowsClockwise size={ICON_SIZE} weight="duotone" />,
     gradient: "from-emerald-500 to-emerald-700",
     comingSoon: true,
   },
@@ -56,7 +78,7 @@ const coreApps: AppCard[] = [
     name: "Enterprise",
     description: "Compliance dashboard and audit tools",
     href: "/enterprise",
-    icon: "\u{1F3E2}",
+    icon: <Buildings size={ICON_SIZE} weight="duotone" />,
     gradient: "from-gray-500 to-gray-700",
     comingSoon: true,
   },
@@ -67,7 +89,7 @@ const privacyApps: AppCard[] = [
     name: "Private Governance",
     description: "Commit-reveal voting on DAOs with Pedersen commitments",
     href: "/governance",
-    icon: "\u{1F5F3}\uFE0F",
+    icon: <Scales size={ICON_SIZE} weight="duotone" />,
     gradient: "from-blue-500 to-blue-700",
     sponsor: "Realms",
   },
@@ -75,7 +97,7 @@ const privacyApps: AppCard[] = [
     name: "Anonymous Social",
     description: "Privacy-first social with stealth identities",
     href: "/social",
-    icon: "\u{1F3AD}",
+    icon: <MaskHappy size={ICON_SIZE} weight="duotone" />,
     gradient: "from-pink-500 to-pink-700",
     sponsor: "Tapestry",
   },
@@ -83,7 +105,7 @@ const privacyApps: AppCard[] = [
     name: "Privacy Loyalty",
     description: "Earn rewards for privacy actions via campaigns",
     href: "/loyalty",
-    icon: "\u{1F3C6}",
+    icon: <Trophy size={ICON_SIZE} weight="duotone" />,
     gradient: "from-amber-500 to-amber-700",
     sponsor: "Torque",
   },
@@ -91,7 +113,7 @@ const privacyApps: AppCard[] = [
     name: "Privacy Art",
     description: "Generate unique art from transactions, mint as NFTs",
     href: "/art",
-    icon: "\u{1F3A8}",
+    icon: <Palette size={ICON_SIZE} weight="duotone" />,
     gradient: "from-rose-500 to-rose-700",
     sponsor: "Exchange Art",
   },
@@ -99,7 +121,7 @@ const privacyApps: AppCard[] = [
     name: "Green Migration",
     description: "Migrate dead protocols with privacy-preserving staking",
     href: "/migrations",
-    icon: "\u{1F331}",
+    icon: <Leaf size={ICON_SIZE} weight="duotone" />,
     gradient: "from-green-500 to-green-700",
     sponsor: "Sunrise Stake",
   },
@@ -107,7 +129,7 @@ const privacyApps: AppCard[] = [
     name: "Privacy NFTs",
     description: "Encrypted NFT drops and privacy education",
     href: "/channel",
-    icon: "\u{1F4E1}",
+    icon: <Broadcast size={ICON_SIZE} weight="duotone" />,
     gradient: "from-violet-500 to-violet-700",
     sponsor: "DRiP",
   },
@@ -115,7 +137,7 @@ const privacyApps: AppCard[] = [
     name: "Privacy Arena",
     description: "Commit-reveal games with cryptographic commitments",
     href: "/gaming",
-    icon: "\u{1F3AE}",
+    icon: <GameController size={ICON_SIZE} weight="duotone" />,
     gradient: "from-orange-500 to-orange-700",
     sponsor: "MagicBlock",
   },
@@ -123,7 +145,7 @@ const privacyApps: AppCard[] = [
     name: "Privacy Ticketing",
     description: "Anti-scalping stealth tickets and private attendance",
     href: "/ticketing",
-    icon: "\u{1F3AB}",
+    icon: <Ticket size={ICON_SIZE} weight="duotone" />,
     gradient: "from-teal-500 to-teal-700",
     sponsor: "KYD Labs",
   },
@@ -132,7 +154,7 @@ const privacyApps: AppCard[] = [
     description:
       "Stealth avatars, private teleportation, anonymous exploration",
     href: "/metaverse",
-    icon: "\u{1F310}",
+    icon: <GlobeHemisphereWest size={ICON_SIZE} weight="duotone" />,
     gradient: "from-indigo-500 to-indigo-700",
     sponsor: "Portals",
   },
@@ -141,7 +163,7 @@ const privacyApps: AppCard[] = [
     description:
       "Anonymous research funding, private peer review, stealth contributions",
     href: "/desci",
-    icon: "\u{1F9EC}",
+    icon: <Dna size={ICON_SIZE} weight="duotone" />,
     gradient: "from-lime-500 to-lime-700",
     sponsor: "BIO Protocol",
   },
@@ -150,7 +172,7 @@ const privacyApps: AppCard[] = [
     description:
       "Private streaming, stealth royalty payments, encrypted playlists",
     href: "/music",
-    icon: "\u{1F3B5}",
+    icon: <MusicNote size={ICON_SIZE} weight="duotone" />,
     gradient: "from-pink-500 to-pink-700",
     sponsor: "Audius",
   },
@@ -163,23 +185,25 @@ const STATS = [
   { label: "SDK", value: SDK_VERSION.display },
 ]
 
+import { Detective, LockKey, Eye } from "@phosphor-icons/react"
+
 const HOW_IT_WORKS = [
   {
-    icon: "\u{1F3AD}",
+    icon: <Detective size={28} weight="duotone" />,
     title: "Stealth Addresses",
     description: "Unlinkable recipients",
     detail:
       "One-time addresses generated per transaction. No one can link sender to receiver.",
   },
   {
-    icon: "\u{1F510}",
+    icon: <LockKey size={28} weight="duotone" />,
     title: "Pedersen Commitments",
     description: "Hidden amounts",
     detail:
       "Cryptographic commitments hide transaction amounts while remaining mathematically verifiable.",
   },
   {
-    icon: "\u{1F441}\uFE0F",
+    icon: <Eye size={28} weight="duotone" />,
     title: "Viewing Keys",
     description: "Compliance without surveillance",
     detail:
@@ -209,7 +233,7 @@ function AppCardComponent({ app }: { app: AppCard }) {
       )}
       <div
         className={`
-          w-12 h-12 rounded-lg flex items-center justify-center text-2xl mb-4
+          w-12 h-12 rounded-lg flex items-center justify-center mb-4
           bg-gradient-to-br ${app.gradient} text-white
         `}
       >
@@ -279,7 +303,7 @@ export default function HubPage() {
                 key={item.title}
                 className="p-6 rounded-xl border border-[var(--border-default)] bg-[var(--surface-primary)] text-center"
               >
-                <span className="text-3xl mb-3 block">{item.icon}</span>
+                <span className="mb-3 block text-sip-purple-400">{item.icon}</span>
                 <h3 className="font-semibold text-sm mb-1">{item.title}</h3>
                 <p className="text-sm text-sip-green-500 font-medium mb-2">
                   {item.description}

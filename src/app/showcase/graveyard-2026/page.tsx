@@ -19,6 +19,20 @@ import {
   Sparkles,
   CheckCircle,
 } from "lucide-react"
+import {
+  Scales,
+  MaskHappy,
+  Trophy as TrophyPhosphor,
+  Palette,
+  Leaf,
+  Broadcast,
+  GameController,
+  Ticket,
+  GlobeHemisphereWest,
+  Dna,
+  MusicNote,
+} from "@phosphor-icons/react"
+import type { ReactNode } from "react"
 import { DEPLOYMENTS } from "@/lib/constants"
 
 // ============================================================================
@@ -31,7 +45,7 @@ interface SponsorTrack {
   name: string
   sponsor: string
   href: string
-  icon: string
+  icon: ReactNode
   gradient: string
   primitive: string
   whyDied: string
@@ -49,7 +63,7 @@ const SPONSOR_TRACKS: SponsorTrack[] = [
     name: "Private Governance",
     sponsor: "Realms",
     href: "/governance",
-    icon: "\u{1F5F3}\uFE0F",
+    icon: <Scales size={18} weight="duotone" />,
     gradient: "from-blue-500 to-blue-700",
     primitive: "Commit-reveal voting",
     whyDied: "Visible votes enabled whale manipulation",
@@ -70,7 +84,7 @@ const SPONSOR_TRACKS: SponsorTrack[] = [
     name: "Anonymous Social",
     sponsor: "Tapestry",
     href: "/social",
-    icon: "\u{1F3AD}",
+    icon: <MaskHappy size={18} weight="duotone" />,
     gradient: "from-pink-500 to-pink-700",
     primitive: "Stealth social identities",
     whyDied: "Public wallets enabled doxxing",
@@ -91,7 +105,7 @@ const SPONSOR_TRACKS: SponsorTrack[] = [
     name: "Privacy Loyalty",
     sponsor: "Torque",
     href: "/loyalty",
-    icon: "\u{1F3C6}",
+    icon: <TrophyPhosphor size={18} weight="duotone" />,
     gradient: "from-amber-500 to-amber-700",
     primitive: "Anonymous reward claims",
     whyDied: "Transparent rewards exposed behavior",
@@ -112,7 +126,7 @@ const SPONSOR_TRACKS: SponsorTrack[] = [
     name: "Privacy Art",
     sponsor: "Exchange Art",
     href: "/art",
-    icon: "\u{1F3A8}",
+    icon: <Palette size={18} weight="duotone" />,
     gradient: "from-rose-500 to-rose-700",
     primitive: "Stealth NFT minting",
     whyDied: "Public minting revealed collectors",
@@ -133,7 +147,7 @@ const SPONSOR_TRACKS: SponsorTrack[] = [
     name: "Green Migration",
     sponsor: "Sunrise Stake",
     href: "/migrations",
-    icon: "\u{1F331}",
+    icon: <Leaf size={18} weight="duotone" />,
     gradient: "from-green-500 to-green-700",
     primitive: "Private protocol migration",
     whyDied: "Visible migrations were front-run",
@@ -154,7 +168,7 @@ const SPONSOR_TRACKS: SponsorTrack[] = [
     name: "Privacy NFTs",
     sponsor: "DRiP",
     href: "/channel",
-    icon: "\u{1F4E1}",
+    icon: <Broadcast size={18} weight="duotone" />,
     gradient: "from-violet-500 to-violet-700",
     primitive: "Encrypted NFT drops",
     whyDied: "Subscriber lists became spam targets",
@@ -175,7 +189,7 @@ const SPONSOR_TRACKS: SponsorTrack[] = [
     name: "Privacy Arena",
     sponsor: "MagicBlock",
     href: "/gaming",
-    icon: "\u{1F3AE}",
+    icon: <GameController size={18} weight="duotone" />,
     gradient: "from-orange-500 to-orange-700",
     primitive: "Commit-reveal gameplay",
     whyDied: "Transparent state enabled cheating",
@@ -196,7 +210,7 @@ const SPONSOR_TRACKS: SponsorTrack[] = [
     name: "Privacy Ticketing",
     sponsor: "KYD Labs",
     href: "/ticketing",
-    icon: "\u{1F3AB}",
+    icon: <Ticket size={18} weight="duotone" />,
     gradient: "from-teal-500 to-teal-700",
     primitive: "Anti-scalping stealth tickets",
     whyDied: "Visible ownership enabled scalping",
@@ -217,7 +231,7 @@ const SPONSOR_TRACKS: SponsorTrack[] = [
     name: "Privacy Metaverse",
     sponsor: "Portals",
     href: "/metaverse",
-    icon: "\u{1F310}",
+    icon: <GlobeHemisphereWest size={18} weight="duotone" />,
     gradient: "from-indigo-500 to-indigo-700",
     primitive: "Stealth avatar identities",
     whyDied: "Wallet-linked avatars killed anonymity",
@@ -238,7 +252,7 @@ const SPONSOR_TRACKS: SponsorTrack[] = [
     name: "Privacy DeSci",
     sponsor: "BIO Protocol",
     href: "/desci",
-    icon: "\u{1F9EC}",
+    icon: <Dna size={18} weight="duotone" />,
     gradient: "from-lime-500 to-lime-700",
     primitive: "Anonymous research funding",
     whyDied: "Public funding biased peer review",
@@ -259,7 +273,7 @@ const SPONSOR_TRACKS: SponsorTrack[] = [
     name: "Privacy Music",
     sponsor: "Audius",
     href: "/music",
-    icon: "\u{1F3B5}",
+    icon: <MusicNote size={18} weight="duotone" />,
     gradient: "from-pink-500 to-pink-700",
     primitive: "Stealth listener identity",
     whyDied: "Public listening data was monetized",
@@ -710,7 +724,7 @@ function TracksSection() {
                 >
                   <div className="flex items-start gap-4">
                     <div
-                      className={`w-10 h-10 rounded-lg flex items-center justify-center text-lg flex-shrink-0 bg-gradient-to-br ${track.gradient} text-white`}
+                      className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 bg-gradient-to-br ${track.gradient} text-white`}
                     >
                       {track.icon}
                     </div>
