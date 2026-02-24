@@ -30,8 +30,8 @@ importers:
         specifier: ^0.1.0
         version: 0.1.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@sip-protocol/sdk':
-        specifier: 0.7.4
-        version: 0.7.4(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(openai@4.104.0(ws@8.19.0(bufferutil@4.1.0)(utf-8-validate@5.0.10))(zod@4.3.6))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3)(utf-8-validate@5.0.10)(ws@8.19.0(bufferutil@4.1.0)(utf-8-validate@5.0.10))(zod-to-json-schema@3.25.1(zod@4.3.6))
+        specifier: 0.8.1
+        version: 0.8.1(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(openai@4.104.0(ws@8.19.0(bufferutil@4.1.0)(utf-8-validate@5.0.10))(zod@4.3.6))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3)(utf-8-validate@5.0.10)(ws@8.19.0(bufferutil@4.1.0)(utf-8-validate@5.0.10))(zod-to-json-schema@3.25.1(zod@4.3.6))
       '@sip-protocol/types':
         specifier: ^0.2.2
         version: 0.2.2
@@ -1921,8 +1921,8 @@ packages:
   '@sip-protocol/sdk@0.6.26':
     resolution: {integrity: sha512-FbFkU6pHBWE2Sio6aSOwSav7hqOMmvGqZeU9gg5TGPD1MljNHvcKhPfKJ/W03G8XrhQu0oWUtVbSR39px24KlQ==}
 
-  '@sip-protocol/sdk@0.7.4':
-    resolution: {integrity: sha512-tbdoto6okq7C8zQjqulNbXp5oqCPjj8tWe5K/uKIres32ouFjrN7lXytTPB+zQkB1Gv4ECHvGoaqf5EV4AaDrQ==}
+  '@sip-protocol/sdk@0.8.1':
+    resolution: {integrity: sha512-W6x7S9MgFhRnEIFqaMRhYSu3fgH5tv07WLvu1F78AO3OunJxEpLYknhhdJAJWLvVA6c9zq4z75tQu7wSE3FNhg==}
 
   '@sip-protocol/types@0.2.2':
     resolution: {integrity: sha512-FvJosQIp/dnADchEFmjdqCBlKolL4RrW15W2MPR1zlSZax9UbIR3vZjkm/j3mWewjO/bBfXii3FSxnqFlSBSkQ==}
@@ -9247,7 +9247,7 @@ snapshots:
 
   '@confio/ics23@0.6.8':
     dependencies:
-      '@noble/hashes': 1.3.0
+      '@noble/hashes': 1.8.0
       protobufjs: 6.11.4
 
   '@coral-xyz/anchor-errors@0.30.1': {}
@@ -9345,7 +9345,7 @@ snapshots:
       '@cosmjs/encoding': 0.32.4
       '@cosmjs/math': 0.32.4
       '@cosmjs/utils': 0.32.4
-      '@noble/hashes': 1.3.0
+      '@noble/hashes': 1.8.0
       bn.js: 5.2.3
       elliptic: 6.6.1
       libsodium-wrappers-sumo: 0.7.16
@@ -11048,7 +11048,7 @@ snapshots:
   '@scure/bip39@1.2.1':
     dependencies:
       '@noble/hashes': 1.3.3
-      '@scure/base': 1.1.1
+      '@scure/base': 1.1.9
 
   '@scure/bip39@1.3.0':
     dependencies:
@@ -11108,7 +11108,7 @@ snapshots:
       '@scure/base': 2.0.0
       '@sip-protocol/types': 0.2.2
 
-  '@sip-protocol/sdk@0.7.4(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(openai@4.104.0(ws@8.19.0(bufferutil@4.1.0)(utf-8-validate@5.0.10))(zod@4.3.6))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3)(utf-8-validate@5.0.10)(ws@8.19.0(bufferutil@4.1.0)(utf-8-validate@5.0.10))(zod-to-json-schema@3.25.1(zod@4.3.6))':
+  '@sip-protocol/sdk@0.8.1(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(openai@4.104.0(ws@8.19.0(bufferutil@4.1.0)(utf-8-validate@5.0.10))(zod@4.3.6))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3)(utf-8-validate@5.0.10)(ws@8.19.0(bufferutil@4.1.0)(utf-8-validate@5.0.10))(zod-to-json-schema@3.25.1(zod@4.3.6))':
     dependencies:
       '@aztec/bb.js': 3.0.2
       '@ethereumjs/rlp': 10.1.1
@@ -15625,7 +15625,7 @@ snapshots:
   axios@1.7.4:
     dependencies:
       follow-redirects: 1.15.11
-      form-data: 4.0.0
+      form-data: 4.0.5
       proxy-from-env: 1.1.0
     transitivePeerDependencies:
       - debug
@@ -18918,10 +18918,10 @@ snapshots:
   ox@0.6.7(typescript@5.9.3)(zod@4.3.6):
     dependencies:
       '@adraffy/ens-normalize': 1.11.1
-      '@noble/curves': 1.8.1
-      '@noble/hashes': 1.7.1
-      '@scure/bip32': 1.6.2
-      '@scure/bip39': 1.5.4
+      '@noble/curves': 1.9.7
+      '@noble/hashes': 1.8.0
+      '@scure/bip32': 1.7.0
+      '@scure/bip39': 1.6.0
       abitype: 1.0.8(typescript@5.9.3)(zod@4.3.6)
       eventemitter3: 5.0.1
     optionalDependencies:
@@ -19614,7 +19614,7 @@ snapshots:
       '@types/uuid': 8.3.4
       '@types/ws': 8.18.1
       buffer: 6.0.3
-      eventemitter3: 5.0.1
+      eventemitter3: 5.0.4
       uuid: 8.3.2
       ws: 8.19.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
     optionalDependencies:
@@ -20660,8 +20660,8 @@ snapshots:
 
   webauthn-p256@0.0.10:
     dependencies:
-      '@noble/curves': 1.6.0
-      '@noble/hashes': 1.5.0
+      '@noble/curves': 1.9.7
+      '@noble/hashes': 1.8.0
 
   webidl-conversions@3.0.1: {}
 

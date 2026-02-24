@@ -1023,7 +1023,7 @@ function LinksSection() {
         <div className="mt-8 text-center">
           <p className="text-xs text-gray-600">
             Built with{" "}
-            <code className="text-purple-500/70">@sip-protocol/sdk v0.7.4</code>{" "}
+            <code className="text-purple-500/70">@sip-protocol/sdk v0.8.1</code>{" "}
             &mdash; Anchor program live on Solana mainnet
           </p>
         </div>
