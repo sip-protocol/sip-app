@@ -27,7 +27,7 @@
     "@noble/curves": "^2.0.1",
     "@noble/hashes": "^2.0.1",
     "@sip-protocol/react": "^0.1.0",
-    "@sip-protocol/sdk": "0.7.3",
+    "@sip-protocol/sdk": "0.7.4",
     "@sip-protocol/types": "^0.2.2",
     "@solana/spl-governance": "^0.3.28",
     "@solana/spl-memo": "^0.2.5",

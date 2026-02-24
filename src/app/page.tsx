@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import { SDK_VERSION, TEST_COUNTS } from "@/lib/constants"
 
 interface AppCard {
   name: string
@@ -156,10 +157,10 @@ const privacyApps: AppCard[] = [
 ]
 
 const STATS = [
-  { label: "Privacy Apps", value: "14" },
-  { label: "Tests", value: "950+" },
+  { label: "Privacy Apps", value: "13" },
+  { label: "Tests", value: TEST_COUNTS.totalDisplay },
   { label: "Status", value: "Mainnet" },
-  { label: "SDK", value: "v0.7.3" },
+  { label: "SDK", value: SDK_VERSION.display },
 ]
 
 const HOW_IT_WORKS = [
@@ -327,7 +328,7 @@ export default function HubPage() {
             <p className="text-sm text-[var(--text-tertiary)]">
               Built with{" "}
               <code className="text-sip-purple-400 font-mono text-xs">
-                @sip-protocol/sdk v0.7.3
+                {SDK_VERSION.full}
               </code>{" "}
               &mdash; Anchor program live on mainnet
             </p>

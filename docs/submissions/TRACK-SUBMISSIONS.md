@@ -10,14 +10,14 @@
 **Project:** SIP Protocol — Privacy Resurrects Dead Categories on Solana
 **Showcase:** https://app.sip-protocol.org/showcase/graveyard-2026
 **Source:** https://github.com/sip-protocol/sip-app
-**SDK:** https://www.npmjs.com/package/@sip-protocol/sdk (v0.7.3)
+**SDK:** https://www.npmjs.com/package/@sip-protocol/sdk (v0.8.0)
 **Anchor Program:** `S1PMFspo4W6BYKHWkHNF7kZ3fnqibEXg3LQjxepS9at` (mainnet-beta)
 
 ### Stats
 
 | Metric | Value |
 |--------|-------|
-| Tests | 1,108+ across 110 files |
+| Tests | 1,184 unit + 25 mainnet E2E across 122 suites |
 | Tracks | 11 sponsor tracks, all live |
 | On-chain | Anchor program on mainnet-beta |
 | Crypto | Real Pedersen commitments, stealth addresses, viewing keys |
@@ -50,7 +50,7 @@ For compliance-sensitive DAOs, viewing keys enable authorized auditors to verify
 - Three privacy levels: transparent, shielded, and compliant with viewing key disclosure
 - On-chain commitment storage with Solscan-verifiable transaction signatures
 
-**Tech Stack:** Next.js 16, React 19, @sip-protocol/sdk v0.7.3, @solana/spl-governance, Anchor (mainnet), Vitest
+**Tech Stack:** Next.js 16, React 19, @sip-protocol/sdk v0.8.0, @solana/spl-governance, Anchor (mainnet), Vitest
 
 **Links:**
 - App: https://app.sip-protocol.org/governance
@@ -80,7 +80,7 @@ Viewing keys allow selective disclosure. A user can prove they authored a post t
 - Post commitment hashing with Pedersen — proves authorship without identity linkage
 - Selective identity disclosure through viewing keys for moderation and trust
 
-**Tech Stack:** Next.js 16, React 19, @sip-protocol/sdk v0.7.3, Tapestry socialfi SDK, Anchor (mainnet), Vitest
+**Tech Stack:** Next.js 16, React 19, @sip-protocol/sdk v0.8.0, Tapestry socialfi SDK, Anchor (mainnet), Vitest
 
 **Links:**
 - App: https://app.sip-protocol.org/social
@@ -110,7 +110,7 @@ For brands that need aggregate analytics without individual tracking, compliant 
 - Pedersen commitment-hidden reward amounts — correct distribution proven, not exposed
 - Compliant mode with viewing keys for brand analytics without individual tracking
 
-**Tech Stack:** Next.js 16, React 19, @sip-protocol/sdk v0.7.3, @torque-labs/torque-ts-sdk, Anchor (mainnet), Vitest
+**Tech Stack:** Next.js 16, React 19, @sip-protocol/sdk v0.8.0, @torque-labs/torque-ts-sdk, Anchor (mainnet), Vitest
 
 **Links:**
 - App: https://app.sip-protocol.org/loyalty
@@ -140,7 +140,7 @@ This is not just theoretical privacy — it is compressed NFT infrastructure (Bu
 - Pedersen commitment proofs for mint events — verifiable without revealing collector
 - Viewing key disclosure for artist-to-collector verification on allowlists
 
-**Tech Stack:** Next.js 16, React 19, @sip-protocol/sdk v0.7.3, @metaplex-foundation/mpl-bubblegum, Helius DAS, Anchor (mainnet), Vitest
+**Tech Stack:** Next.js 16, React 19, @sip-protocol/sdk v0.8.0, @metaplex-foundation/mpl-bubblegum, Helius DAS, Anchor (mainnet), Vitest
 
 **Links:**
 - App: https://app.sip-protocol.org/art
@@ -170,7 +170,7 @@ For sustainability reporting and carbon credit verification, compliant mode with
 - Real Solana RPC integration for validator data and gSOL balance scanning
 - Viewing key disclosure for ESG auditors and sustainability reporting
 
-**Tech Stack:** Next.js 16, React 19, @sip-protocol/sdk v0.7.3, @solana/web3.js, Anchor (mainnet), Vitest
+**Tech Stack:** Next.js 16, React 19, @sip-protocol/sdk v0.8.0, @solana/web3.js, Anchor (mainnet), Vitest
 
 **Links:**
 - App: https://app.sip-protocol.org/migrations
@@ -200,7 +200,7 @@ For creators who need to verify subscriber counts for sponsorship or analytics, 
 - Real Helius DAS integration for live channel data and compressed NFT queries
 - Aggregate verification via viewing keys for creator analytics and sponsor validation
 
-**Tech Stack:** Next.js 16, React 19, @sip-protocol/sdk v0.7.3, Helius DAS API, Anchor (mainnet), Vitest
+**Tech Stack:** Next.js 16, React 19, @sip-protocol/sdk v0.8.0, Helius DAS API, Anchor (mainnet), Vitest
 
 **Links:**
 - App: https://app.sip-protocol.org/channel
@@ -230,7 +230,7 @@ This is not just a game — it is a demonstration of commit-reveal as a reusable
 - MagicBlock BOLT SDK integration for on-chain game state management
 - Verifiable fairness — both commitment and reveal transactions visible on Solscan
 
-**Tech Stack:** Next.js 16, React 19, @sip-protocol/sdk v0.7.3, @magicblock-labs/bolt-sdk, Anchor (mainnet), Vitest
+**Tech Stack:** Next.js 16, React 19, @sip-protocol/sdk v0.8.0, @magicblock-labs/bolt-sdk, Anchor (mainnet), Vitest
 
 **Links:**
 - App: https://app.sip-protocol.org/gaming
@@ -260,7 +260,7 @@ For event organizers who need to verify ticket authenticity and prevent counterf
 - Viewing key verification for organizers — ticket authenticity without holder deanonymization
 - Real event data integration with compressed NFT infrastructure on Solana
 
-**Tech Stack:** Next.js 16, React 19, @sip-protocol/sdk v0.7.3, @metaplex-foundation/mpl-bubblegum, Anchor (mainnet), Vitest
+**Tech Stack:** Next.js 16, React 19, @sip-protocol/sdk v0.8.0, @metaplex-foundation/mpl-bubblegum, Anchor (mainnet), Vitest
 
 **Links:**
 - App: https://app.sip-protocol.org/ticketing
@@ -290,7 +290,7 @@ This transforms the metaverse from a surveillance space into a privacy-respectin
 - Portals iframe integration for real virtual world embedding and room data
 - Viewing key revelation for trusted identity disclosure to friends and world owners
 
-**Tech Stack:** Next.js 16, React 19, @sip-protocol/sdk v0.7.3, Portals iframe API, Anchor (mainnet), Vitest
+**Tech Stack:** Next.js 16, React 19, @sip-protocol/sdk v0.8.0, Portals iframe API, Anchor (mainnet), Vitest
 
 **Links:**
 - App: https://app.sip-protocol.org/metaverse
@@ -320,7 +320,7 @@ For regulatory compliance (a real concern in DeSci, where funding sources may ne
 - Real BioDAO project data integration via bio.xyz API references
 - Viewing key audit trail for regulatory compliance and institutional review boards
 
-**Tech Stack:** Next.js 16, React 19, @sip-protocol/sdk v0.7.3, bio.xyz API, Anchor (mainnet), Vitest
+**Tech Stack:** Next.js 16, React 19, @sip-protocol/sdk v0.8.0, bio.xyz API, Anchor (mainnet), Vitest
 
 **Links:**
 - App: https://app.sip-protocol.org/desci
@@ -350,7 +350,7 @@ For rights management and royalty distribution, viewing keys allow authorized pa
 - Anonymous artist tipping through stealth SOL transfers — fans support without exposure
 - Viewing key disclosure for rights management and authorized royalty auditing
 
-**Tech Stack:** Next.js 16, React 19, @sip-protocol/sdk v0.7.3, @audius/sdk, Anchor (mainnet), Vitest
+**Tech Stack:** Next.js 16, React 19, @sip-protocol/sdk v0.8.0, @audius/sdk, Anchor (mainnet), Vitest
 
 **Links:**
 - App: https://app.sip-protocol.org/music

@@ -128,7 +128,7 @@
 
 > "All 11 tracks are built on the same production stack — with real sponsor API integrations."
 >
-> "The core SDK has over 7,500 tests. The app has 865+ tests across 93 test suites. Every track has a 'Why It Died / How We Revive It' narrative powered by real data from sponsor APIs — SPL Governance, Tapestry SocialFi, Torque campaigns, Audius tracks, Helius DAS, and more."
+> "The core SDK has over 7,500 tests. The app has 1,184 tests across 122 suites — plus 25 mainnet E2E tests that send real Pedersen commitment transactions to Solana mainnet. Every track has a 'Why It Died / How We Revive It' narrative powered by real data from sponsor APIs — SPL Governance, Tapestry SocialFi, Torque campaigns, Audius tracks, Helius DAS, and more."
 >
 > "This isn't a hackathon prototype. SIP won the Zypherpunk Hackathon in December 2025 — $6,500 across three tracks. We have a $10K Superteam grant approved. The Anchor program is deployed on Solana mainnet."
 
@@ -168,7 +168,7 @@ Try it: https://app.sip-protocol.org[ROUTE]
 Showcase: https://app.sip-protocol.org/showcase/graveyard-2026
 Source: https://github.com/sip-protocol/sip-app
 
-SDK: 7,500+ tests | App: 865+ tests | Mainnet program live
+SDK: 7,500+ tests | App: 1,184 tests + 25 mainnet E2E | Mainnet program live
 Previous winner: Zypherpunk Hackathon 2025 ($6,500, #9/93, 3 tracks)
 ```
 

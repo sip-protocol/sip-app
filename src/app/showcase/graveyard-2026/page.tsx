@@ -307,7 +307,7 @@ const CRYPTO_PRIMITIVES = [
 
 const STATS = [
   { value: "11", label: "Sponsor Tracks" },
-  { value: "1,108+", label: "Tests Passing" },
+  { value: "8,688+", label: "Tests Passing" },
   { value: "Mainnet", label: "Anchor Program" },
   { value: "11/11", label: "On-Chain" },
 ]
@@ -869,9 +869,9 @@ function TractionSection() {
       text: "from-yellow-400 to-amber-400",
     },
     {
-      value: "1,108+",
+      value: "8,688+",
       label: "Tests Passing",
-      detail: "SDK + React + App + 11 Tracks",
+      detail: "SDK: 6,691 | React: 543 | CLI: 62 | API: 198 | App: 1,184",
       color: "from-green-900/30 to-emerald-900/30 border-green-500/20",
       text: "from-green-400 to-emerald-400",
     },
@@ -949,7 +949,7 @@ function LinksSection() {
           <div className="px-8 py-12 sm:px-16 text-center">
             <h2 className="text-2xl sm:text-3xl font-bold">Try It Live</h2>
             <p className="mt-3 text-gray-400 max-w-xl mx-auto">
-              All 11 tracks are live at app.sip-protocol.org. Real cryptography,
+              All 13 privacy apps are live at app.sip-protocol.org. Real cryptography,
               real stealth addresses, real Anchor program on mainnet.
             </p>
 
@@ -1023,7 +1023,7 @@ function LinksSection() {
         <div className="mt-8 text-center">
           <p className="text-xs text-gray-600">
             Built with{" "}
-            <code className="text-purple-500/70">@sip-protocol/sdk v0.7.3</code>{" "}
+            <code className="text-purple-500/70">@sip-protocol/sdk v0.7.4</code>{" "}
             &mdash; Anchor program live on Solana mainnet
           </p>
         </div>

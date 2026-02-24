@@ -30,14 +30,14 @@ export const SDK_VERSION = {
   npmUrl: "https://www.npmjs.com/package/@sip-protocol/sdk",
 }
 
-// Test counts - updated 2026-01-31
+// Test counts - updated 2026-02-24
 export const TEST_COUNTS = {
-  sdk: 6603,
-  react: 82,
-  cli: 10,
-  api: 18,
+  sdk: 6691,
+  react: 543,
+  cli: 62,
+  api: 198,
   reactNative: 10,
-  app: 25,
+  app: 1184,
   get total() {
     return (
       this.sdk + this.react + this.cli + this.api + this.reactNative + this.app
