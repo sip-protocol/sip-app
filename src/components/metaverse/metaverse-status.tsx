@@ -1,5 +1,14 @@
 "use client"
 
+import type { ReactNode } from "react"
+import {
+  GlobeHemisphereWest,
+  MaskHappy,
+  Rocket,
+  CheckCircle,
+  Key,
+  MagicWand,
+} from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 import type { MetaverseStep } from "@/lib/metaverse/types"
 
@@ -14,7 +23,7 @@ interface StepConfig {
   id: MetaverseStep
   label: string
   description: string
-  icon: string
+  icon: ReactNode
 }
 
 const EXPLORE_STEPS: StepConfig[] = [
@@ -22,25 +31,25 @@ const EXPLORE_STEPS: StepConfig[] = [
     id: "selecting_world",
     label: "Select World",
     description: "Validating world availability and avatar tier",
-    icon: "\u{1F30D}",
+    icon: <GlobeHemisphereWest size={16} weight="duotone" />,
   },
   {
     id: "generating_stealth_avatar",
     label: "Generate Stealth Avatar",
     description: "Creating one-time stealth address for private avatar",
-    icon: "\u{1F3AD}",
+    icon: <MaskHappy size={16} weight="duotone" />,
   },
   {
     id: "entering_world",
     label: "Enter World",
     description: "Committing avatar ID as Pedersen commitment",
-    icon: "\u{1F680}",
+    icon: <Rocket size={16} weight="duotone" />,
   },
   {
     id: "entered",
     label: "Entered",
     description: "Stealth avatar active — unlinkable to your wallet",
-    icon: "\u2705",
+    icon: <CheckCircle size={16} weight="duotone" />,
   },
 ]
 
@@ -49,19 +58,19 @@ const TELEPORT_STEPS: StepConfig[] = [
     id: "generating_proof",
     label: "Generate Teleport Proof",
     description: "Creating private teleport proof from stealth identity",
-    icon: "\u{1F511}",
+    icon: <Key size={16} weight="duotone" />,
   },
   {
     id: "teleporting",
     label: "Teleporting",
     description: "Private teleportation with stealth identity preserved",
-    icon: "\u{1FA84}",
+    icon: <MagicWand size={16} weight="duotone" />,
   },
   {
     id: "arrived",
     label: "Arrived",
     description: "Teleportation complete — identity remains private",
-    icon: "\u2705",
+    icon: <CheckCircle size={16} weight="duotone" />,
   },
 ]
 
@@ -178,7 +187,7 @@ export function MetaverseStatus({
                     {isStepComplete ? (
                       <CheckIcon className="w-4 h-4" />
                     ) : (
-                      <span className="text-base">{step.icon}</span>
+                      <span>{step.icon}</span>
                     )}
                   </div>
                   {/* Connector line */}

@@ -1,6 +1,8 @@
 "use client"
 
 import { useState } from "react"
+import type { ReactNode } from "react"
+import { LockSimple, Eye, LockSimpleOpen } from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 
 type PrivacyOption = "shielded" | "compliant" | "transparent"
@@ -15,14 +17,14 @@ const OPTIONS: {
   level: PrivacyOption
   label: string
   desc: string
-  icon: string
+  icon: ReactNode
   tooltip: string
 }[] = [
   {
     level: "shielded",
     label: "Shielded",
     desc: "Anonymous post",
-    icon: "\u{1F512}",
+    icon: <LockSimple size={18} weight="duotone" />,
     tooltip:
       "Only viewing key holders can see the author. Content is encrypted with XChaCha20-Poly1305 and identity is hidden behind a stealth address.",
   },
@@ -30,7 +32,7 @@ const OPTIONS: {
     level: "compliant",
     label: "Compliant",
     desc: "Auditable author",
-    icon: "\u{1F441}\uFE0F",
+    icon: <Eye size={18} weight="duotone" />,
     tooltip:
       "Auditors can verify authorship via viewing key. Post content is public but your wallet identity stays hidden from casual observers.",
   },
@@ -38,7 +40,7 @@ const OPTIONS: {
     level: "transparent",
     label: "Transparent",
     desc: "Public identity",
-    icon: "\u{1F513}",
+    icon: <LockSimpleOpen size={18} weight="duotone" />,
     tooltip:
       "Public post linked to your stealth identity. Anyone can see the author and content. No encryption applied.",
   },
@@ -92,7 +94,7 @@ export function SocialPrivacyToggle({
               <div className="flex items-center gap-2 mb-1">
                 <span
                   className={cn(
-                    "text-lg transition-transform duration-200",
+                    "flex items-center transition-transform duration-200",
                     isActive && "scale-110"
                   )}
                 >
@@ -126,7 +128,7 @@ export function SocialPrivacyToggle({
         )}
       >
         <div className="flex items-start gap-2">
-          <span className="text-lg mt-0.5">
+          <span className="flex items-center mt-0.5">
             {(hoveredOption || activeOption)?.icon}
           </span>
           <div>

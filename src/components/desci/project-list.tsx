@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { Dna } from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 import { ProjectCard } from "./project-card"
 import { SAMPLE_PROJECTS } from "@/lib/desci/constants"
@@ -53,7 +54,9 @@ export function ProjectList({ onFund }: ProjectListProps) {
       {/* Project grid */}
       {projects.length === 0 ? (
         <div className="bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-xl p-12 text-center">
-          <p className="text-4xl mb-4">{"\u{1F9EC}"}</p>
+          <div className="flex justify-center mb-4">
+            <Dna size={48} weight="duotone" className="text-lime-400" />
+          </div>
           <h3 className="text-lg font-semibold mb-2">No projects found</h3>
           <p className="text-sm text-[var(--text-secondary)] max-w-md mx-auto">
             {filter === "all"

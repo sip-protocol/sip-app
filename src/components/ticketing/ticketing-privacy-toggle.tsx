@@ -1,6 +1,8 @@
 "use client"
 
+import type { ReactNode } from "react"
 import { useState } from "react"
+import { LockSimple, Eye, LockSimpleOpen } from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 
 type PrivacyOption = "shielded" | "compliant" | "transparent"
@@ -15,14 +17,14 @@ const OPTIONS: {
   level: PrivacyOption
   label: string
   desc: string
-  icon: string
+  icon: ReactNode
   tooltip: string
 }[] = [
   {
     level: "shielded",
     label: "Shielded",
     desc: "Hidden ticket & identity",
-    icon: "\u{1F512}",
+    icon: <LockSimple size={18} weight="duotone" />,
     tooltip:
       "Your ticket is a stealth address. No one can link your attendance to your wallet. Anti-scalping by default — tickets are non-transferable without viewing key.",
   },
@@ -30,7 +32,7 @@ const OPTIONS: {
     level: "compliant",
     label: "Compliant",
     desc: "Verifiable attendance",
-    icon: "\u{1F441}\uFE0F",
+    icon: <Eye size={18} weight="duotone" />,
     tooltip:
       "Event organizers can verify your ticket via viewing key. Your wallet identity stays hidden from other attendees and third parties.",
   },
@@ -38,7 +40,7 @@ const OPTIONS: {
     level: "transparent",
     label: "Transparent",
     desc: "Public ticket",
-    icon: "\u{1F513}",
+    icon: <LockSimpleOpen size={18} weight="duotone" />,
     tooltip:
       "Ticket is publicly linked to your wallet. Anyone can see your attendance history. No privacy applied.",
   },
@@ -92,8 +94,8 @@ export function TicketingPrivacyToggle({
               <div className="flex items-center gap-2 mb-1">
                 <span
                   className={cn(
-                    "text-lg transition-transform duration-200",
-                    isActive && "scale-110"
+                    "text-[var(--text-secondary)] transition-transform duration-200",
+                    isActive && "scale-110 text-teal-400"
                   )}
                 >
                   {option.icon}
@@ -126,7 +128,7 @@ export function TicketingPrivacyToggle({
         )}
       >
         <div className="flex items-start gap-2">
-          <span className="text-lg mt-0.5">
+          <span className="text-[var(--text-secondary)] mt-0.5">
             {(hoveredOption || activeOption)?.icon}
           </span>
           <div>

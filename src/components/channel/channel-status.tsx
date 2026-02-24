@@ -1,5 +1,15 @@
 "use client"
 
+import type { ReactNode } from "react"
+import {
+  Broadcast,
+  NotePencil,
+  Check,
+  CheckCircle,
+  LockKey,
+  MaskHappy,
+  PaperPlaneRight,
+} from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 import type { ChannelStep } from "@/lib/channel/types"
 
@@ -14,7 +24,7 @@ interface StepConfig {
   id: ChannelStep
   label: string
   description: string
-  icon: string
+  icon: ReactNode
 }
 
 const SUBSCRIBE_STEPS: StepConfig[] = [
@@ -22,19 +32,19 @@ const SUBSCRIBE_STEPS: StepConfig[] = [
     id: "selecting_channel",
     label: "Select Drop",
     description: "Choosing privacy content to subscribe to",
-    icon: "\u{1F4E1}",
+    icon: <Broadcast size={16} weight="duotone" />,
   },
   {
     id: "subscribing",
     label: "Subscribing",
     description: "Registering subscription via DRiP Protocol",
-    icon: "\u{1F4DD}",
+    icon: <NotePencil size={16} weight="duotone" />,
   },
   {
     id: "subscribed",
     label: "Subscribed",
     description: "Content unlocked — viewing key access granted",
-    icon: "\u2705",
+    icon: <CheckCircle size={16} weight="duotone" />,
   },
 ]
 
@@ -43,25 +53,25 @@ const PUBLISH_STEPS: StepConfig[] = [
     id: "encrypting_content",
     label: "Encrypt Content",
     description: "Encrypting drop with viewing key-gated access",
-    icon: "\u{1F510}",
+    icon: <LockKey size={16} weight="duotone" />,
   },
   {
     id: "generating_stealth",
     label: "Generate Stealth Address",
     description: "Creating one-time address for anonymous publishing",
-    icon: "\u{1F3AD}",
+    icon: <MaskHappy size={16} weight="duotone" />,
   },
   {
     id: "publishing",
     label: "Publishing Drop",
     description: "Distributing encrypted content via DRiP",
-    icon: "\u{1F4E4}",
+    icon: <PaperPlaneRight size={16} weight="duotone" />,
   },
   {
     id: "published",
     label: "Published",
     description: "Drop live — subscribers can decrypt with viewing key",
-    icon: "\u2705",
+    icon: <CheckCircle size={16} weight="duotone" />,
   },
 ]
 
@@ -176,9 +186,9 @@ export function ChannelStatus({
                     )}
                   >
                     {isStepComplete ? (
-                      <CheckIcon className="w-4 h-4" />
+                      <Check size={16} weight="bold" />
                     ) : (
-                      <span className="text-base">{step.icon}</span>
+                      <span>{step.icon}</span>
                     )}
                   </div>
                   {/* Connector line */}
@@ -225,20 +235,6 @@ export function ChannelStatus({
         </div>
       </div>
     </div>
-  )
-}
-
-function CheckIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={3}
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-    </svg>
   )
 }
 

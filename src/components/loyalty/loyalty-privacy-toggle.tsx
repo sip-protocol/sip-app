@@ -1,6 +1,8 @@
 "use client"
 
+import type { ReactNode } from "react"
 import { useState } from "react"
+import { LockSimple, Eye, LockSimpleOpen } from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 
 type PrivacyOption = "shielded" | "compliant" | "transparent"
@@ -15,14 +17,14 @@ const OPTIONS: {
   level: PrivacyOption
   label: string
   desc: string
-  icon: string
+  icon: ReactNode
   tooltip: string
 }[] = [
   {
     level: "shielded",
     label: "Shielded",
     desc: "Private reward claim",
-    icon: "\u{1F512}",
+    icon: <LockSimple size={18} weight="duotone" />,
     tooltip:
       "Reward is sent to a stealth address. No one can link this reward to your wallet. Maximum privacy for loyalty earnings.",
   },
@@ -30,7 +32,7 @@ const OPTIONS: {
     level: "compliant",
     label: "Compliant",
     desc: "Auditable claim",
-    icon: "\u{1F441}\uFE0F",
+    icon: <Eye size={18} weight="duotone" />,
     tooltip:
       "Auditors can verify your reward claim via viewing key. Your wallet identity stays hidden from casual observers.",
   },
@@ -38,7 +40,7 @@ const OPTIONS: {
     level: "transparent",
     label: "Transparent",
     desc: "Public claim",
-    icon: "\u{1F513}",
+    icon: <LockSimpleOpen size={18} weight="duotone" />,
     tooltip:
       "Reward claim is publicly linked to your wallet. Anyone can see you earned this reward. No privacy applied.",
   },
@@ -92,7 +94,7 @@ export function LoyaltyPrivacyToggle({
               <div className="flex items-center gap-2 mb-1">
                 <span
                   className={cn(
-                    "text-lg transition-transform duration-200",
+                    "transition-transform duration-200",
                     isActive && "scale-110"
                   )}
                 >
@@ -126,7 +128,7 @@ export function LoyaltyPrivacyToggle({
         )}
       >
         <div className="flex items-start gap-2">
-          <span className="text-lg mt-0.5">
+          <span className="mt-0.5">
             {(hoveredOption || activeOption)?.icon}
           </span>
           <div>

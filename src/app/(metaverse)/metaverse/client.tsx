@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useCallback } from "react"
+import { GlobeHemisphereWest } from "@phosphor-icons/react"
 import { MetaverseStats } from "@/components/metaverse/metaverse-stats"
 import { WorldList } from "@/components/metaverse/world-list"
 import { ExploreForm } from "@/components/metaverse/explore-form"
@@ -56,8 +57,8 @@ export function MetaversePageClient() {
       {/* Portals Platform Card */}
       <div className="mb-10 p-5 rounded-2xl bg-gradient-to-r from-indigo-600/20 to-purple-600/20 border border-indigo-500/30">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-          <div className="flex-shrink-0 w-14 h-14 rounded-xl bg-indigo-500/20 flex items-center justify-center text-3xl">
-            {"\u{1F30D}"}
+          <div className="flex-shrink-0 w-14 h-14 rounded-xl bg-indigo-500/20 flex items-center justify-center text-indigo-400">
+            <GlobeHemisphereWest size={32} weight="duotone" />
           </div>
           <div className="flex-1 min-w-0">
             <h3 className="text-lg font-semibold text-indigo-100">
@@ -146,7 +147,11 @@ export function MetaversePageClient() {
       {/* Info Banner */}
       <div className="mt-10 p-4 rounded-xl bg-indigo-900/20 border border-indigo-800">
         <div className="flex gap-3">
-          <span className="text-xl">{"\u{1F30D}"}</span>
+          <GlobeHemisphereWest
+            size={24}
+            weight="duotone"
+            className="text-indigo-400 flex-shrink-0 mt-0.5"
+          />
           <div>
             <p className="font-medium text-indigo-100">Powered by Portals</p>
             <p className="text-sm text-indigo-300 mt-1">

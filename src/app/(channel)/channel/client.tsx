@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useCallback } from "react"
+import { Broadcast } from "@phosphor-icons/react"
 import { ChannelStats } from "@/components/channel/channel-stats"
 import { DropList } from "@/components/channel/drop-list"
 import { SubscribeForm } from "@/components/channel/subscribe-form"
@@ -54,8 +55,8 @@ export function ChannelPageClient() {
       {/* DRiP Channel Card */}
       <div className="mb-10 p-5 rounded-2xl bg-gradient-to-r from-violet-600/20 to-purple-600/20 border border-violet-500/30">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-          <div className="flex-shrink-0 w-14 h-14 rounded-xl bg-violet-500/20 flex items-center justify-center text-3xl">
-            {"\u{1F4E1}"}
+          <div className="flex-shrink-0 w-14 h-14 rounded-xl bg-violet-500/20 flex items-center justify-center text-violet-300">
+            <Broadcast size={32} weight="duotone" />
           </div>
           <div className="flex-1 min-w-0">
             <h3 className="text-lg font-semibold text-violet-100">
@@ -68,9 +69,9 @@ export function ChannelPageClient() {
             </p>
             <div className="flex flex-wrap gap-3 mt-2 text-xs text-violet-400">
               <span>5 drops published</span>
-              <span>{"\u{2022}"}</span>
+              <span aria-hidden="true">&middot;</span>
               <span>3 tiers: Free / Subscriber / Premium</span>
-              <span>{"\u{2022}"}</span>
+              <span aria-hidden="true">&middot;</span>
               <span>Encrypted content with viewing key access</span>
             </div>
           </div>
@@ -108,7 +109,9 @@ export function ChannelPageClient() {
       {/* Info Banner */}
       <div className="mt-10 p-4 rounded-xl bg-purple-900/20 border border-purple-800">
         <div className="flex gap-3">
-          <span className="text-xl">{"\u{1F4E1}"}</span>
+          <span className="text-purple-400">
+            <Broadcast size={24} weight="duotone" />
+          </span>
           <div>
             <p className="font-medium text-purple-100">
               Powered by DRiP Protocol

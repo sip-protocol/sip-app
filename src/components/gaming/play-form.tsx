@@ -1,7 +1,9 @@
 "use client"
 
 import { useState, useCallback, useMemo } from "react"
+import type { ReactNode } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
+import { LockSimple, Eye, LockSimpleOpen } from "@phosphor-icons/react"
 import { useDemoModeStore } from "@/stores/demo-mode"
 import { DemoBanner } from "@/components/ui/demo-banner"
 import { PrivacyLevel } from "@sip-protocol/types"
@@ -53,10 +55,22 @@ export function PlayForm({ game, onResolved }: PlayFormProps) {
     []
   )
 
-  const privacyLabel: Record<PrivacyOption, string> = {
-    shielded: "\u{1F512} Shielded",
-    compliant: "\u{1F441}\uFE0F Compliant",
-    transparent: "\u{1F513} Transparent",
+  const privacyLabel: Record<PrivacyOption, ReactNode> = {
+    shielded: (
+      <span className="inline-flex items-center gap-1">
+        <LockSimple size={14} weight="duotone" /> Shielded
+      </span>
+    ),
+    compliant: (
+      <span className="inline-flex items-center gap-1">
+        <Eye size={14} weight="duotone" /> Compliant
+      </span>
+    ),
+    transparent: (
+      <span className="inline-flex items-center gap-1">
+        <LockSimpleOpen size={14} weight="duotone" /> Transparent
+      </span>
+    ),
   }
 
   const isFormReady =
@@ -166,7 +180,7 @@ export function PlayForm({ game, onResolved }: PlayFormProps) {
       {/* Header */}
       <div className="mb-6">
         <div className="flex items-center gap-3 mb-2">
-          <span className="text-2xl">{game.icon}</span>
+          <span>{game.icon}</span>
           <h2 className="text-lg font-semibold">{game.title}</h2>
         </div>
         <p className="text-sm text-[var(--text-tertiary)]">

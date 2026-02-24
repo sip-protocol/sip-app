@@ -1,8 +1,20 @@
 "use client"
 
 import { useState, useCallback, useRef, useMemo } from "react"
+import type { ReactNode } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
 import { motion, AnimatePresence } from "framer-motion"
+import {
+  HandFist,
+  Hand,
+  Scissors,
+  Confetti,
+  Skull,
+  Handshake,
+  LockSimple,
+  MagnifyingGlass,
+  CheckCircle,
+} from "@phosphor-icons/react"
 import { useDemoModeStore } from "@/stores/demo-mode"
 import { DemoBanner } from "@/components/ui/demo-banner"
 import { PrivacyLevel } from "@sip-protocol/types"
@@ -20,12 +32,27 @@ type RpsMove = "rock" | "paper" | "scissors"
 type PrivacyOption = "shielded" | "compliant" | "transparent"
 type GamePhase = "select" | "locked" | "committing" | "revealing" | "result"
 
-const MOVES: { id: RpsMove; emoji: string; label: string; beats: RpsMove }[] = [
-  { id: "rock", emoji: "\u{270A}", label: "Rock", beats: "scissors" },
-  { id: "paper", emoji: "\u{270B}", label: "Paper", beats: "rock" },
+const MOVES: {
+  id: RpsMove
+  emoji: ReactNode
+  label: string
+  beats: RpsMove
+}[] = [
+  {
+    id: "rock",
+    emoji: <HandFist size={48} weight="duotone" />,
+    label: "Rock",
+    beats: "scissors",
+  },
+  {
+    id: "paper",
+    emoji: <Hand size={48} weight="duotone" />,
+    label: "Paper",
+    beats: "rock",
+  },
   {
     id: "scissors",
-    emoji: "\u{270C}\uFE0F",
+    emoji: <Scissors size={48} weight="duotone" />,
     label: "Scissors",
     beats: "paper",
   },
@@ -158,27 +185,36 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
 
   // ─── Result screen ───────────────────────────────────────────────
   if (phase === "result" && outcome) {
-    const outcomeConfig = {
+    const outcomeConfig: Record<
+      string,
+      {
+        label: string
+        color: string
+        bg: string
+        border: string
+        emoji: ReactNode
+      }
+    > = {
       win: {
         label: "VICTORY",
         color: "text-emerald-400",
         bg: "bg-emerald-500/10",
         border: "border-emerald-500/20",
-        emoji: "\u{1F389}",
+        emoji: <Confetti size={32} weight="duotone" />,
       },
       lose: {
         label: "DEFEATED",
         color: "text-red-400",
         bg: "bg-red-500/10",
         border: "border-red-500/20",
-        emoji: "\u{1F480}",
+        emoji: <Skull size={32} weight="duotone" />,
       },
       draw: {
         label: "TIE",
         color: "text-amber-400",
         bg: "bg-amber-500/10",
         border: "border-amber-500/20",
-        emoji: "\u{1F91D}",
+        emoji: <Handshake size={32} weight="duotone" />,
       },
     }
     const cfg = outcomeConfig[outcome]
@@ -209,7 +245,7 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
           animate={{ scale: [0, 1.15, 1], opacity: 1 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
         >
-          <div className="text-4xl mb-2">{cfg.emoji}</div>
+          <div className="flex justify-center mb-2">{cfg.emoji}</div>
           <h2 className={cn("text-2xl font-bold", cfg.color)}>{cfg.label}</h2>
         </motion.div>
 
@@ -221,7 +257,9 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.4, delay: 0.2 }}
           >
-            <div className="text-6xl mb-2">{playerMoveData.emoji}</div>
+            <div className="flex justify-center mb-2">
+              {playerMoveData.emoji}
+            </div>
             <p className="text-sm font-medium text-[var(--text-primary)]">
               You
             </p>
@@ -243,7 +281,9 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.4, delay: 0.2 }}
           >
-            <div className="text-6xl mb-2">{opponentMoveData.emoji}</div>
+            <div className="flex justify-center mb-2">
+              {opponentMoveData.emoji}
+            </div>
             <p className="text-sm font-medium text-[var(--text-primary)]">
               Opponent
             </p>
@@ -368,7 +408,7 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
       {/* Header */}
       <div className="text-center mb-6">
         <div className="flex items-center justify-center gap-3 mb-2">
-          <span className="text-2xl">{game.icon}</span>
+          <span>{game.icon}</span>
           <h2 className="text-lg font-semibold">{game.title}</h2>
         </div>
         <p className="text-sm text-[var(--text-secondary)]">
@@ -385,11 +425,11 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
           animate={{ opacity: 1, scale: 1 }}
         >
           <motion.div
-            className="text-4xl mb-2"
+            className="flex justify-center mb-2"
             animate={{ rotate: [0, -10, 10, 0] }}
             transition={{ duration: 0.4 }}
           >
-            {"\u{1F512}"}
+            <LockSimple size={32} weight="duotone" />
           </motion.div>
           <p className="text-sm font-medium text-orange-300">
             Move locked! Generating commitment...
@@ -449,7 +489,7 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
                     : {}
                 }
               >
-                <span className="text-6xl mb-1">{move.emoji}</span>
+                <span className="flex justify-center mb-1">{move.emoji}</span>
                 <span
                   className={cn(
                     "text-sm font-medium",
@@ -561,19 +601,25 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
           </h3>
           <div className="grid grid-cols-3 gap-2 text-center">
             <div className="p-2 rounded-lg bg-[var(--surface-secondary)]">
-              <div className="text-lg mb-0.5">{"\u{1F512}"}</div>
+              <div className="flex justify-center mb-0.5">
+                <LockSimple size={20} weight="duotone" />
+              </div>
               <p className="text-[10px] text-[var(--text-tertiary)] leading-tight">
                 Both commit hashed moves
               </p>
             </div>
             <div className="p-2 rounded-lg bg-[var(--surface-secondary)]">
-              <div className="text-lg mb-0.5">{"\u{1F50D}"}</div>
+              <div className="flex justify-center mb-0.5">
+                <MagnifyingGlass size={20} weight="duotone" />
+              </div>
               <p className="text-[10px] text-[var(--text-tertiary)] leading-tight">
                 Reveal simultaneously
               </p>
             </div>
             <div className="p-2 rounded-lg bg-[var(--surface-secondary)]">
-              <div className="text-lg mb-0.5">{"\u{2705}"}</div>
+              <div className="flex justify-center mb-0.5">
+                <CheckCircle size={20} weight="duotone" />
+              </div>
               <p className="text-[10px] text-[var(--text-tertiary)] leading-tight">
                 Verify commitments match
               </p>

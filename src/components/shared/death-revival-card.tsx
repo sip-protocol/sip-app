@@ -1,5 +1,6 @@
 "use client"
 
+import { Skull, Plant } from "@phosphor-icons/react"
 import { motion } from "framer-motion"
 
 interface DeathRevivalCardProps {
@@ -39,9 +40,12 @@ export function DeathRevivalCard({
         {/* Death side */}
         <div className="p-4 sm:p-5">
           <div className="flex items-center gap-2 mb-2">
-            <span className="text-lg" aria-hidden="true">
-              {"\u{1F480}"}
-            </span>
+            <Skull
+              size={20}
+              weight="duotone"
+              className="text-red-400 flex-shrink-0"
+              aria-hidden="true"
+            />
             <h3 className="text-sm font-semibold text-red-400">Why It Died</h3>
           </div>
           <p className="text-sm text-[var(--text-secondary)] leading-relaxed">
@@ -52,9 +56,12 @@ export function DeathRevivalCard({
         {/* Revival side */}
         <div className="p-4 sm:p-5">
           <div className="flex items-center gap-2 mb-2">
-            <span className="text-lg" aria-hidden="true">
-              {"\u{1F331}"}
-            </span>
+            <Plant
+              size={20}
+              weight="duotone"
+              className="text-emerald-400 flex-shrink-0"
+              aria-hidden="true"
+            />
             <h3 className="text-sm font-semibold text-emerald-400">
               How We Revive It
             </h3>

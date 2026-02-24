@@ -1,6 +1,12 @@
 "use client"
 
 import { useState } from "react"
+import {
+  MaskHappy,
+  ClipboardText,
+  Check,
+  LockSimple,
+} from "@phosphor-icons/react"
 import { cn, truncate, copyToClipboard } from "@/lib/utils"
 import { AVATAR_TIER_COLORS } from "@/lib/metaverse/constants"
 import type { AvatarTier } from "@/lib/metaverse/types"
@@ -41,7 +47,11 @@ export function StealthAvatarDisplay({
     >
       {/* Avatar callout */}
       <div className="flex items-center gap-2 mb-4">
-        <span className="text-lg">{"\u{1F3AD}"}</span>
+        <MaskHappy
+          size={20}
+          weight="duotone"
+          className="text-indigo-400 flex-shrink-0"
+        />
         <div>
           <p className="text-sm font-medium text-indigo-300">
             Avatar linked to stealth address
@@ -81,8 +91,12 @@ export function StealthAvatarDisplay({
             <code className="text-xs font-mono text-[var(--text-tertiary)] group-hover:text-[var(--text-primary)] transition-colors">
               {truncate(stealthAddress, 12, 6)}
             </code>
-            <span className="text-xs text-[var(--text-tertiary)]">
-              {copied === "stealth" ? "\u2713" : "\u{1F4CB}"}
+            <span className="text-[var(--text-tertiary)]">
+              {copied === "stealth" ? (
+                <Check size={14} weight="duotone" />
+              ) : (
+                <ClipboardText size={14} weight="duotone" />
+              )}
             </span>
           </button>
         </div>
@@ -100,8 +114,12 @@ export function StealthAvatarDisplay({
             <code className="text-xs font-mono text-[var(--text-tertiary)] group-hover:text-[var(--text-primary)] transition-colors">
               {truncate(metaAddress, 12, 6)}
             </code>
-            <span className="text-xs text-[var(--text-tertiary)]">
-              {copied === "meta" ? "\u2713" : "\u{1F4CB}"}
+            <span className="text-[var(--text-tertiary)]">
+              {copied === "meta" ? (
+                <Check size={14} weight="duotone" />
+              ) : (
+                <ClipboardText size={14} weight="duotone" />
+              )}
             </span>
           </button>
         </div>
@@ -109,8 +127,8 @@ export function StealthAvatarDisplay({
 
       {/* Privacy badge */}
       <div className="mt-4 flex items-center gap-2">
-        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-indigo-500/20 border border-indigo-500/30 text-indigo-300">
-          {"\u{1F512}"} Stealth Avatar
+        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-indigo-500/20 border border-indigo-500/30 text-indigo-300">
+          <LockSimple size={12} weight="duotone" /> Stealth Avatar
         </span>
       </div>
     </div>

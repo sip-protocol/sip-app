@@ -1,6 +1,14 @@
 "use client"
 
+import type { ReactNode } from "react"
 import { useState } from "react"
+import {
+  LockSimple,
+  Eye,
+  LockSimpleOpen,
+  ClipboardText,
+  Check,
+} from "@phosphor-icons/react"
 import { cn, truncate, copyToClipboard } from "@/lib/utils"
 import { ArtCanvas } from "./art-canvas"
 import { getArtStyle } from "@/lib/art/constants"
@@ -29,17 +37,44 @@ export function GeneratedArtDisplay({
     }
   }
 
-  const privacyBadge: Record<string, { label: string; color: string }> = {
+  const privacyBadge: Record<string, { label: ReactNode; color: string }> = {
     shielded: {
-      label: "\u{1F512} Shielded",
+      label: (
+        <>
+          <LockSimple
+            size={14}
+            weight="duotone"
+            className="inline-block align-[-2px]"
+          />{" "}
+          Shielded
+        </>
+      ),
       color: "bg-rose-500/20 text-rose-300 border-rose-500/30",
     },
     compliant: {
-      label: "\u{1F441}\uFE0F Compliant",
+      label: (
+        <>
+          <Eye
+            size={14}
+            weight="duotone"
+            className="inline-block align-[-2px]"
+          />{" "}
+          Compliant
+        </>
+      ),
       color: "bg-amber-500/20 text-amber-300 border-amber-500/30",
     },
     transparent: {
-      label: "\u{1F513} Transparent",
+      label: (
+        <>
+          <LockSimpleOpen
+            size={14}
+            weight="duotone"
+            className="inline-block align-[-2px]"
+          />{" "}
+          Transparent
+        </>
+      ),
       color: "bg-gray-500/20 text-gray-300 border-gray-500/30",
     },
   }
@@ -88,8 +123,12 @@ export function GeneratedArtDisplay({
             <code className="text-xs font-mono text-[var(--text-tertiary)] group-hover:text-[var(--text-primary)] transition-colors">
               {truncate(art.seed, 12, 6)}
             </code>
-            <span className="text-xs text-[var(--text-tertiary)]">
-              {copied === "seed" ? "\u2713" : "\u{1F4CB}"}
+            <span className="text-[var(--text-tertiary)]">
+              {copied === "seed" ? (
+                <Check size={14} weight="duotone" />
+              ) : (
+                <ClipboardText size={14} weight="duotone" />
+              )}
             </span>
           </button>
         </div>
@@ -107,8 +146,12 @@ export function GeneratedArtDisplay({
             <code className="text-xs font-mono text-[var(--text-tertiary)] group-hover:text-[var(--text-primary)] transition-colors">
               {truncate(art.stealthAddress, 12, 6)}
             </code>
-            <span className="text-xs text-[var(--text-tertiary)]">
-              {copied === "stealth" ? "\u2713" : "\u{1F4CB}"}
+            <span className="text-[var(--text-tertiary)]">
+              {copied === "stealth" ? (
+                <Check size={14} weight="duotone" />
+              ) : (
+                <ClipboardText size={14} weight="duotone" />
+              )}
             </span>
           </button>
         </div>
@@ -126,8 +169,12 @@ export function GeneratedArtDisplay({
             <code className="text-xs font-mono text-[var(--text-tertiary)] group-hover:text-[var(--text-primary)] transition-colors">
               {truncate(art.metaAddress, 12, 6)}
             </code>
-            <span className="text-xs text-[var(--text-tertiary)]">
-              {copied === "meta" ? "\u2713" : "\u{1F4CB}"}
+            <span className="text-[var(--text-tertiary)]">
+              {copied === "meta" ? (
+                <Check size={14} weight="duotone" />
+              ) : (
+                <ClipboardText size={14} weight="duotone" />
+              )}
             </span>
           </button>
         </div>

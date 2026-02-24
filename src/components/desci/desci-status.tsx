@@ -1,5 +1,14 @@
 "use client"
 
+import type { ReactNode } from "react"
+import {
+  Dna,
+  MaskHappy,
+  CreditCard,
+  CheckCircle,
+  Key,
+  MagnifyingGlass,
+} from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 import type { DeSciStep } from "@/lib/desci/types"
 
@@ -14,7 +23,7 @@ interface StepConfig {
   id: DeSciStep
   label: string
   description: string
-  icon: string
+  icon: ReactNode
 }
 
 const FUND_STEPS: StepConfig[] = [
@@ -22,25 +31,25 @@ const FUND_STEPS: StepConfig[] = [
     id: "selecting_project",
     label: "Select Project",
     description: "Validating project availability and funding tier",
-    icon: "\u{1F9EC}",
+    icon: <Dna size={16} weight="duotone" />,
   },
   {
     id: "generating_stealth_funding",
     label: "Generate Stealth Funding",
     description: "Creating one-time stealth address for anonymous contribution",
-    icon: "\u{1F3AD}",
+    icon: <MaskHappy size={16} weight="duotone" />,
   },
   {
     id: "funding",
     label: "Fund Project",
     description: "Committing funding amount as Pedersen commitment",
-    icon: "\u{1F4B3}",
+    icon: <CreditCard size={16} weight="duotone" />,
   },
   {
     id: "funded",
     label: "Funded",
     description: "Stealth contribution complete — unlinkable to your wallet",
-    icon: "\u2705",
+    icon: <CheckCircle size={16} weight="duotone" />,
   },
 ]
 
@@ -49,19 +58,19 @@ const REVIEW_STEPS: StepConfig[] = [
     id: "generating_proof",
     label: "Generate Reviewer Proof",
     description: "Creating anonymous reviewer proof from stealth identity",
-    icon: "\u{1F511}",
+    icon: <Key size={16} weight="duotone" />,
   },
   {
     id: "submitting_review",
     label: "Submit Review",
     description: "Submitting anonymous peer review",
-    icon: "\u{1F50D}",
+    icon: <MagnifyingGlass size={16} weight="duotone" />,
   },
   {
     id: "reviewed",
     label: "Reviewed",
     description: "Review submitted — reviewer identity remains private",
-    icon: "\u2705",
+    icon: <CheckCircle size={16} weight="duotone" />,
   },
 ]
 
@@ -178,7 +187,7 @@ export function DeSciStatus({
                     {isStepComplete ? (
                       <CheckIcon className="w-4 h-4" />
                     ) : (
-                      <span className="text-base">{step.icon}</span>
+                      step.icon
                     )}
                   </div>
                   {/* Connector line */}

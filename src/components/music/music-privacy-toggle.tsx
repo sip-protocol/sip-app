@@ -1,6 +1,8 @@
 "use client"
 
+import type { ReactNode } from "react"
 import { useState } from "react"
+import { LockSimple, Eye, LockSimpleOpen } from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 
 type PrivacyOption = "shielded" | "compliant" | "transparent"
@@ -15,14 +17,14 @@ const OPTIONS: {
   level: PrivacyOption
   label: string
   desc: string
-  icon: string
+  icon: ReactNode
   tooltip: string
 }[] = [
   {
     level: "shielded",
     label: "Shielded",
     desc: "Hidden listening & identity",
-    icon: "\u{1F512}",
+    icon: <LockSimple size={18} weight="duotone" />,
     tooltip:
       "Your listening is a stealth address. No one can link your streams to your wallet. Full anonymity for your music taste.",
   },
@@ -30,7 +32,7 @@ const OPTIONS: {
     level: "compliant",
     label: "Compliant",
     desc: "Verifiable stream",
-    icon: "\u{1F441}\uFE0F",
+    icon: <Eye size={18} weight="duotone" />,
     tooltip:
       "Rights holders can verify your stream via viewing key. Your wallet identity stays hidden from other listeners and the public.",
   },
@@ -38,7 +40,7 @@ const OPTIONS: {
     level: "transparent",
     label: "Transparent",
     desc: "Public stream",
-    icon: "\u{1F513}",
+    icon: <LockSimpleOpen size={18} weight="duotone" />,
     tooltip:
       "Stream is publicly linked to your wallet. Anyone can see your listening history. No privacy applied.",
   },
@@ -92,7 +94,7 @@ export function MusicPrivacyToggle({
               <div className="flex items-center gap-2 mb-1">
                 <span
                   className={cn(
-                    "text-lg transition-transform duration-200",
+                    "transition-transform duration-200",
                     isActive && "scale-110"
                   )}
                 >
@@ -126,7 +128,7 @@ export function MusicPrivacyToggle({
         )}
       >
         <div className="flex items-start gap-2">
-          <span className="text-lg mt-0.5">
+          <span className="mt-0.5">
             {(hoveredOption || activeOption)?.icon}
           </span>
           <div>

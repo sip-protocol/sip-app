@@ -1,6 +1,8 @@
 "use client"
 
 import { useState } from "react"
+import type { ReactNode } from "react"
+import { LockSimple, Eye, LockSimpleOpen } from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 
 type PrivacyOption = "shielded" | "compliant" | "transparent"
@@ -15,14 +17,14 @@ const OPTIONS: {
   level: PrivacyOption
   label: string
   desc: string
-  icon: string
+  icon: ReactNode
   tooltip: string
 }[] = [
   {
     level: "shielded",
     label: "Shielded",
     desc: "Hidden moves & rewards",
-    icon: "\u{1F512}",
+    icon: <LockSimple size={18} weight="duotone" />,
     tooltip:
       "Your moves are cryptographically committed. Rewards claimed via stealth addresses. No one can link your gameplay to your wallet.",
   },
@@ -30,7 +32,7 @@ const OPTIONS: {
     level: "compliant",
     label: "Compliant",
     desc: "Auditable gameplay",
-    icon: "\u{1F441}\uFE0F",
+    icon: <Eye size={18} weight="duotone" />,
     tooltip:
       "Tournament organizers can verify your moves via viewing key. Your wallet identity stays hidden from other players.",
   },
@@ -38,7 +40,7 @@ const OPTIONS: {
     level: "transparent",
     label: "Transparent",
     desc: "Public play",
-    icon: "\u{1F513}",
+    icon: <LockSimpleOpen size={18} weight="duotone" />,
     tooltip:
       "Moves and rewards are publicly linked to your wallet. Anyone can see your gameplay history. No privacy applied.",
   },
@@ -92,7 +94,7 @@ export function GamingPrivacyToggle({
               <div className="flex items-center gap-2 mb-1">
                 <span
                   className={cn(
-                    "text-lg transition-transform duration-200",
+                    "transition-transform duration-200",
                     isActive && "scale-110"
                   )}
                 >
@@ -126,7 +128,7 @@ export function GamingPrivacyToggle({
         )}
       >
         <div className="flex items-start gap-2">
-          <span className="text-lg mt-0.5">
+          <span className="mt-0.5">
             {(hoveredOption || activeOption)?.icon}
           </span>
           <div>

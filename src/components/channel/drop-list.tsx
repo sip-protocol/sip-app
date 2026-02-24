@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { Broadcast } from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 import { DropCard } from "./drop-card"
 import { SAMPLE_SUBSCRIPTIONS } from "@/lib/channel/constants"
@@ -100,7 +101,9 @@ export function DropList({ onSubscribe }: DropListProps) {
         </div>
       ) : drops.length === 0 ? (
         <div className="bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-xl p-12 text-center">
-          <p className="text-4xl mb-4">{"\u{1F4E1}"}</p>
+          <div className="text-purple-400 mb-4 flex justify-center">
+            <Broadcast size={48} weight="duotone" />
+          </div>
           <h3 className="text-lg font-semibold mb-2">No drops found</h3>
           <p className="text-sm text-[var(--text-secondary)] max-w-md mx-auto">
             {filter === "all"

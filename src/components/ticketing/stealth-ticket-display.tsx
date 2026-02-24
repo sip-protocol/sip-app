@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { Ticket, ClipboardText, Check, LockSimple } from "@phosphor-icons/react"
 import { cn, truncate, copyToClipboard } from "@/lib/utils"
 import { TIER_COLORS } from "@/lib/ticketing/constants"
 import type { TicketTier } from "@/lib/ticketing/types"
@@ -41,7 +42,11 @@ export function StealthTicketDisplay({
     >
       {/* Ticket callout */}
       <div className="flex items-center gap-2 mb-4">
-        <span className="text-lg">{"\u{1F3AB}"}</span>
+        <Ticket
+          size={20}
+          weight="duotone"
+          className="text-teal-400 flex-shrink-0"
+        />
         <div>
           <p className="text-sm font-medium text-teal-300">
             Ticket issued to stealth address
@@ -81,8 +86,12 @@ export function StealthTicketDisplay({
             <code className="text-xs font-mono text-[var(--text-tertiary)] group-hover:text-[var(--text-primary)] transition-colors">
               {truncate(stealthAddress, 12, 6)}
             </code>
-            <span className="text-xs text-[var(--text-tertiary)]">
-              {copied === "stealth" ? "\u2713" : "\u{1F4CB}"}
+            <span className="text-[var(--text-tertiary)]">
+              {copied === "stealth" ? (
+                <Check size={14} weight="duotone" />
+              ) : (
+                <ClipboardText size={14} weight="duotone" />
+              )}
             </span>
           </button>
         </div>
@@ -100,8 +109,12 @@ export function StealthTicketDisplay({
             <code className="text-xs font-mono text-[var(--text-tertiary)] group-hover:text-[var(--text-primary)] transition-colors">
               {truncate(metaAddress, 12, 6)}
             </code>
-            <span className="text-xs text-[var(--text-tertiary)]">
-              {copied === "meta" ? "\u2713" : "\u{1F4CB}"}
+            <span className="text-[var(--text-tertiary)]">
+              {copied === "meta" ? (
+                <Check size={14} weight="duotone" />
+              ) : (
+                <ClipboardText size={14} weight="duotone" />
+              )}
             </span>
           </button>
         </div>
@@ -109,8 +122,8 @@ export function StealthTicketDisplay({
 
       {/* Privacy badge */}
       <div className="mt-4 flex items-center gap-2">
-        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-teal-500/20 border border-teal-500/30 text-teal-300">
-          {"\u{1F512}"} Stealth Ticket
+        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-teal-500/20 border border-teal-500/30 text-teal-300">
+          <LockSimple size={12} weight="duotone" /> Stealth Ticket
         </span>
       </div>
     </div>

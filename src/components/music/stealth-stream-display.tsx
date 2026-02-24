@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { MusicNote, Copy, Check, LockSimple } from "@phosphor-icons/react"
 import { cn, truncate, copyToClipboard } from "@/lib/utils"
 import { LISTENER_TIER_COLORS } from "@/lib/music/constants"
 import type { ListenerTier } from "@/lib/music/types"
@@ -41,7 +42,9 @@ export function StealthStreamDisplay({
     >
       {/* Stream callout */}
       <div className="flex items-center gap-2 mb-4">
-        <span className="text-lg">{"\u{1F3B5}"}</span>
+        <span className="text-pink-400">
+          <MusicNote size={18} weight="duotone" />
+        </span>
         <div>
           <p className="text-sm font-medium text-pink-300">
             Stream sent to stealth address
@@ -81,8 +84,12 @@ export function StealthStreamDisplay({
             <code className="text-xs font-mono text-[var(--text-tertiary)] group-hover:text-[var(--text-primary)] transition-colors">
               {truncate(stealthAddress, 12, 6)}
             </code>
-            <span className="text-xs text-[var(--text-tertiary)]">
-              {copied === "stealth" ? "\u2713" : "\u{1F4CB}"}
+            <span className="text-[var(--text-tertiary)]">
+              {copied === "stealth" ? (
+                <Check size={14} weight="bold" />
+              ) : (
+                <Copy size={14} weight="duotone" />
+              )}
             </span>
           </button>
         </div>
@@ -100,8 +107,12 @@ export function StealthStreamDisplay({
             <code className="text-xs font-mono text-[var(--text-tertiary)] group-hover:text-[var(--text-primary)] transition-colors">
               {truncate(metaAddress, 12, 6)}
             </code>
-            <span className="text-xs text-[var(--text-tertiary)]">
-              {copied === "meta" ? "\u2713" : "\u{1F4CB}"}
+            <span className="text-[var(--text-tertiary)]">
+              {copied === "meta" ? (
+                <Check size={14} weight="bold" />
+              ) : (
+                <Copy size={14} weight="duotone" />
+              )}
             </span>
           </button>
         </div>
@@ -109,8 +120,8 @@ export function StealthStreamDisplay({
 
       {/* Privacy badge */}
       <div className="mt-4 flex items-center gap-2">
-        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-pink-500/20 border border-pink-500/30 text-pink-300">
-          {"\u{1F512}"} Stealth Stream
+        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-pink-500/20 border border-pink-500/30 text-pink-300">
+          <LockSimple size={14} weight="duotone" /> Stealth Stream
         </span>
       </div>
     </div>

@@ -1,6 +1,7 @@
 "use client"
 
 import { cn } from "@/lib/utils"
+import { GENRE_ICON_MAP } from "./track-icon-map"
 import { ListenerTierBadge } from "./listener-tier-badge"
 import { AudioPlayer } from "./audio-player"
 import { TipButton } from "./tip-button"
@@ -25,7 +26,7 @@ export function TrackCard({ track, onStream, className }: TrackCardProps) {
       {/* Header */}
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-3">
-          <span className="text-2xl">{track.icon}</span>
+          <span className="text-pink-400">{GENRE_ICON_MAP[track.genre]}</span>
           <div>
             <h3 className="font-semibold text-sm">{track.title}</h3>
             <p className="text-xs text-[var(--text-tertiary)]">

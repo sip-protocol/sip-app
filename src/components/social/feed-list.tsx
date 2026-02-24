@@ -1,5 +1,6 @@
 "use client"
 
+import { ChatCircle } from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 import { useFeed, type FeedFilter } from "@/hooks/use-feed"
 import { PostCard } from "./post-card"
@@ -62,7 +63,13 @@ export function FeedList({ onViewPost }: FeedListProps) {
       {/* Post grid */}
       {posts.length === 0 ? (
         <div className="text-center py-12 bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-xl">
-          <p className="text-4xl mb-4">{"\u{1F4AC}"}</p>
+          <div className="flex justify-center mb-4">
+            <ChatCircle
+              size={40}
+              weight="duotone"
+              className="text-[var(--text-tertiary)]"
+            />
+          </div>
           <p className="text-sm text-[var(--text-secondary)]">
             No posts match your filters
           </p>

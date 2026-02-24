@@ -1,8 +1,10 @@
 "use client"
 
+import { LockSimple, LockSimpleOpen } from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 import { AccessTierBadge } from "./access-tier-badge"
 import { CONTENT_TYPE_LABELS } from "@/lib/channel/constants"
+import { resolveDropIcon } from "./drop-icon-map"
 import type { Drop } from "@/lib/channel/types"
 
 interface DropCardProps {
@@ -31,7 +33,7 @@ export function DropCard({
       {/* Header */}
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-3">
-          <span className="text-2xl">{drop.icon}</span>
+          <span className="text-purple-400">{resolveDropIcon(drop.icon)}</span>
           <div>
             <h3 className="font-semibold text-sm">{drop.title}</h3>
             <p className="text-xs text-[var(--text-tertiary)]">
@@ -54,8 +56,12 @@ export function DropCard({
             {CONTENT_TYPE_LABELS[drop.contentType]}
           </span>
           {drop.isEncrypted && (
-            <span className="text-xs text-purple-400">
-              {isLocked ? "\u{1F512}" : "\u{1F513}"}
+            <span className="text-purple-400">
+              {isLocked ? (
+                <LockSimple size={14} weight="duotone" />
+              ) : (
+                <LockSimpleOpen size={14} weight="duotone" />
+              )}
             </span>
           )}
         </div>

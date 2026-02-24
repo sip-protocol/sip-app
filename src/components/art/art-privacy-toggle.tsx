@@ -1,6 +1,8 @@
 "use client"
 
+import type { ReactNode } from "react"
 import { useState } from "react"
+import { LockSimple, Eye, LockSimpleOpen } from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 
 type PrivacyOption = "shielded" | "compliant" | "transparent"
@@ -15,14 +17,14 @@ const OPTIONS: {
   level: PrivacyOption
   label: string
   desc: string
-  icon: string
+  icon: ReactNode
   tooltip: string
 }[] = [
   {
     level: "shielded",
     label: "Shielded",
     desc: "Anonymous art",
-    icon: "\u{1F512}",
+    icon: <LockSimple size={18} weight="duotone" />,
     tooltip:
       "Art is generated from a stealth address. The creator's identity is hidden — only the viewing key can prove authorship.",
   },
@@ -30,7 +32,7 @@ const OPTIONS: {
     level: "compliant",
     label: "Compliant",
     desc: "Auditable artist",
-    icon: "\u{1F441}\uFE0F",
+    icon: <Eye size={18} weight="duotone" />,
     tooltip:
       "Auditors can verify the artist via viewing key. Art is public but creator identity stays hidden from casual observers.",
   },
@@ -38,7 +40,7 @@ const OPTIONS: {
     level: "transparent",
     label: "Transparent",
     desc: "Public artist",
-    icon: "\u{1F513}",
+    icon: <LockSimpleOpen size={18} weight="duotone" />,
     tooltip:
       "Art is publicly linked to your stealth identity. Anyone can see the creator and verify authenticity.",
   },
@@ -92,8 +94,8 @@ export function ArtPrivacyToggle({
               <div className="flex items-center gap-2 mb-1">
                 <span
                   className={cn(
-                    "text-lg transition-transform duration-200",
-                    isActive && "scale-110"
+                    "transition-transform duration-200 text-[var(--text-secondary)]",
+                    isActive && "scale-110 text-rose-400"
                   )}
                 >
                   {option.icon}
@@ -126,7 +128,7 @@ export function ArtPrivacyToggle({
         )}
       >
         <div className="flex items-start gap-2">
-          <span className="text-lg mt-0.5">
+          <span className="mt-0.5 text-[var(--text-secondary)]">
             {(hoveredOption || activeOption)?.icon}
           </span>
           <div>

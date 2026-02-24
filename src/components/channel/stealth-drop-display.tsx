@@ -1,6 +1,12 @@
 "use client"
 
 import { useState } from "react"
+import {
+  Broadcast,
+  ClipboardText,
+  Check,
+  LockSimple,
+} from "@phosphor-icons/react"
 import { cn, truncate, copyToClipboard } from "@/lib/utils"
 import { CONTENT_TYPE_LABELS } from "@/lib/channel/constants"
 import type { ContentType } from "@/lib/channel/types"
@@ -39,7 +45,9 @@ export function StealthDropDisplay({
     >
       {/* Drop callout */}
       <div className="flex items-center gap-2 mb-4">
-        <span className="text-lg">{"\u{1F4E1}"}</span>
+        <span className="text-purple-400">
+          <Broadcast size={20} weight="duotone" />
+        </span>
         <div>
           <p className="text-sm font-medium text-purple-300">
             Drop published to stealth address
@@ -75,8 +83,12 @@ export function StealthDropDisplay({
             <code className="text-xs font-mono text-[var(--text-tertiary)] group-hover:text-[var(--text-primary)] transition-colors">
               {truncate(stealthAddress, 12, 6)}
             </code>
-            <span className="text-xs text-[var(--text-tertiary)]">
-              {copied === "stealth" ? "\u2713" : "\u{1F4CB}"}
+            <span className="text-[var(--text-tertiary)]">
+              {copied === "stealth" ? (
+                <Check size={14} weight="duotone" />
+              ) : (
+                <ClipboardText size={14} weight="duotone" />
+              )}
             </span>
           </button>
         </div>
@@ -94,8 +106,12 @@ export function StealthDropDisplay({
             <code className="text-xs font-mono text-[var(--text-tertiary)] group-hover:text-[var(--text-primary)] transition-colors">
               {truncate(metaAddress, 12, 6)}
             </code>
-            <span className="text-xs text-[var(--text-tertiary)]">
-              {copied === "meta" ? "\u2713" : "\u{1F4CB}"}
+            <span className="text-[var(--text-tertiary)]">
+              {copied === "meta" ? (
+                <Check size={14} weight="duotone" />
+              ) : (
+                <ClipboardText size={14} weight="duotone" />
+              )}
             </span>
           </button>
         </div>
@@ -103,8 +119,8 @@ export function StealthDropDisplay({
 
       {/* Privacy badge */}
       <div className="mt-4 flex items-center gap-2">
-        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-purple-500/20 border border-purple-500/30 text-purple-300">
-          {"\u{1F512}"} Encrypted Drop
+        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-purple-500/20 border border-purple-500/30 text-purple-300">
+          <LockSimple size={12} weight="duotone" /> Encrypted Drop
         </span>
       </div>
     </div>

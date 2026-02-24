@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useMemo } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
+import { ClipboardText, Check } from "@phosphor-icons/react"
 import { useDemoModeStore } from "@/stores/demo-mode"
 import { DemoBanner } from "@/components/ui/demo-banner"
 import { PrivacyLevel } from "@sip-protocol/types"
@@ -110,8 +111,12 @@ export function MintNFTForm({ art, onReset }: MintNFTFormProps) {
               <code className="text-xs font-mono text-[var(--text-tertiary)] group-hover:text-[var(--text-primary)] transition-colors">
                 {truncate(activeRecord.mintAddress ?? "", 12, 6)}
               </code>
-              <span className="text-xs text-[var(--text-tertiary)]">
-                {copied ? "\u2713" : "\u{1F4CB}"}
+              <span className="text-[var(--text-tertiary)]">
+                {copied ? (
+                  <Check size={14} weight="duotone" />
+                ) : (
+                  <ClipboardText size={14} weight="duotone" />
+                )}
               </span>
             </button>
           </div>

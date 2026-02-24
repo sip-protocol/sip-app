@@ -1,5 +1,23 @@
 "use client"
 
+import type { ReactNode } from "react"
+import {
+  Fish,
+  Ghost,
+  Fire,
+  WaveSine,
+  Rainbow,
+  Star,
+  Rocket,
+  Plant,
+  Palette,
+  MaskHappy,
+  Diamond,
+  Sneaker,
+  Spiral,
+  Lightning,
+  DiamondsFour,
+} from "@phosphor-icons/react"
 import { cn, truncate } from "@/lib/utils"
 
 interface ProfileBadgeProps {
@@ -9,30 +27,30 @@ interface ProfileBadgeProps {
   className?: string
 }
 
-function avatarEmoji(address: string): string {
-  const emojis = [
-    "\u{1F42C}",
-    "\u{1F47B}",
-    "\u{1F525}",
-    "\u{1F30A}",
-    "\u{1F308}",
-    "\u{2B50}",
-    "\u{1F680}",
-    "\u{1F331}",
-    "\u{1F3A8}",
-    "\u{1F3AD}",
-    "\u{1F9CA}",
-    "\u{1F52E}",
-    "\u{1FA90}",
-    "\u{1F30C}",
-    "\u{26A1}",
-    "\u{1F48E}",
+function avatarIcon(address: string, size: number = 16): ReactNode {
+  const icons = [
+    <Fish key="fish" size={size} weight="duotone" />,
+    <Ghost key="ghost" size={size} weight="duotone" />,
+    <Fire key="fire" size={size} weight="duotone" />,
+    <WaveSine key="wave" size={size} weight="duotone" />,
+    <Rainbow key="rainbow" size={size} weight="duotone" />,
+    <Star key="star" size={size} weight="duotone" />,
+    <Rocket key="rocket" size={size} weight="duotone" />,
+    <Plant key="plant" size={size} weight="duotone" />,
+    <Palette key="palette" size={size} weight="duotone" />,
+    <MaskHappy key="mask" size={size} weight="duotone" />,
+    <Fish key="whale" size={size} weight="duotone" />,
+    <Diamond key="diamond" size={size} weight="duotone" />,
+    <Sneaker key="sneaker" size={size} weight="duotone" />,
+    <Spiral key="spiral" size={size} weight="duotone" />,
+    <Lightning key="lightning" size={size} weight="duotone" />,
+    <DiamondsFour key="gem" size={size} weight="duotone" />,
   ]
   let hash = 0
   for (let i = 0; i < address.length; i++) {
     hash = ((hash << 5) - hash + address.charCodeAt(i)) | 0
   }
-  return emojis[Math.abs(hash) % emojis.length]
+  return icons[Math.abs(hash) % icons.length]
 }
 
 function avatarColor(address: string): string {
@@ -57,19 +75,19 @@ export function ProfileBadge({
   size = "md",
   className,
 }: ProfileBadgeProps) {
-  const emoji = avatarEmoji(stealthAddress)
+  const icon = avatarIcon(stealthAddress, size === "sm" ? 14 : 16)
   const gradient = avatarColor(stealthAddress)
 
   return (
     <div className={cn("flex items-center gap-2", className)}>
       <div
         className={cn(
-          "rounded-full bg-gradient-to-br flex items-center justify-center flex-shrink-0",
+          "rounded-full bg-gradient-to-br flex items-center justify-center flex-shrink-0 text-white",
           gradient,
-          size === "sm" ? "w-7 h-7 text-sm" : "w-9 h-9 text-lg"
+          size === "sm" ? "w-7 h-7" : "w-9 h-9"
         )}
       >
-        {emoji}
+        {icon}
       </div>
       <div className="min-w-0">
         <p

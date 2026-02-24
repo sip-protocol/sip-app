@@ -1,5 +1,15 @@
 "use client"
 
+import type { ReactNode } from "react"
+import {
+  Target,
+  NotePencil,
+  CheckCircle,
+  MagnifyingGlass,
+  Export,
+  LockSimple,
+  CurrencyDollar,
+} from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 import type { LoyaltyStep } from "@/lib/loyalty/types"
 
@@ -14,7 +24,7 @@ interface StepConfig {
   id: LoyaltyStep
   label: string
   description: string
-  icon: string
+  icon: ReactNode
 }
 
 const JOIN_STEPS: StepConfig[] = [
@@ -22,19 +32,19 @@ const JOIN_STEPS: StepConfig[] = [
     id: "selecting_campaign",
     label: "Select Campaign",
     description: "Choosing privacy campaign to join",
-    icon: "\u{1F3AF}",
+    icon: <Target size={16} weight="duotone" />,
   },
   {
     id: "joining",
     label: "Joining Campaign",
     description: "Registering participation via Torque Protocol",
-    icon: "\u{1F4DD}",
+    icon: <NotePencil size={16} weight="duotone" />,
   },
   {
     id: "joined",
     label: "Joined",
     description: "Campaign joined — complete actions to earn rewards",
-    icon: "\u2705",
+    icon: <CheckCircle size={16} weight="duotone" />,
   },
 ]
 
@@ -43,19 +53,19 @@ const ACTION_STEPS: StepConfig[] = [
     id: "verifying_action",
     label: "Verify Action",
     description: "Confirming privacy action meets campaign requirements",
-    icon: "\u{1F50D}",
+    icon: <MagnifyingGlass size={16} weight="duotone" />,
   },
   {
     id: "recording",
     label: "Record Progress",
     description: "Recording action completion via Torque off-chain events",
-    icon: "\u{1F4E4}",
+    icon: <Export size={16} weight="duotone" />,
   },
   {
     id: "recorded",
     label: "Recorded",
     description: "Action recorded — progress updated toward reward",
-    icon: "\u2705",
+    icon: <CheckCircle size={16} weight="duotone" />,
   },
 ]
 
@@ -65,19 +75,19 @@ const CLAIM_STEPS: StepConfig[] = [
     label: "Generate Stealth Address",
     description:
       "Creating one-time stealth address for private reward delivery",
-    icon: "\u{1F510}",
+    icon: <LockSimple size={16} weight="duotone" />,
   },
   {
     id: "claiming",
     label: "Claiming Reward",
     description: "Sending reward to your stealth address via Torque",
-    icon: "\u{1F4B0}",
+    icon: <CurrencyDollar size={16} weight="duotone" />,
   },
   {
     id: "claimed",
     label: "Claimed",
     description: "Reward delivered to stealth address — only you can access it",
-    icon: "\u2705",
+    icon: <CheckCircle size={16} weight="duotone" />,
   },
 ]
 
@@ -200,7 +210,7 @@ export function LoyaltyStatus({
                     {isStepComplete ? (
                       <CheckIcon className="w-4 h-4" />
                     ) : (
-                      <span className="text-base">{step.icon}</span>
+                      step.icon
                     )}
                   </div>
                   {/* Connector line */}

@@ -1,3 +1,10 @@
+import {
+  Sword,
+  CurrencyDollar,
+  MagicWand,
+  CloudFog,
+  Trophy,
+} from "@phosphor-icons/react"
 import type {
   Game,
   GameResult,
@@ -21,7 +28,7 @@ export const SAMPLE_GAMES: Game[] = [
     rewardTier: "bronze",
     playerCount: 1247,
     isActive: true,
-    icon: "\u{1F94A}",
+    icon: <Sword size={18} weight="duotone" />,
   },
   {
     id: "game-sealed-auction",
@@ -33,7 +40,7 @@ export const SAMPLE_GAMES: Game[] = [
     rewardTier: "silver",
     playerCount: 834,
     isActive: true,
-    icon: "\u{1F4B0}",
+    icon: <CurrencyDollar size={18} weight="duotone" />,
   },
   {
     id: "game-number-oracle",
@@ -45,7 +52,7 @@ export const SAMPLE_GAMES: Game[] = [
     rewardTier: "bronze",
     playerCount: 2103,
     isActive: true,
-    icon: "\u{1F52E}",
+    icon: <MagicWand size={18} weight="duotone" />,
   },
   {
     id: "game-shadow-battalion",
@@ -57,7 +64,7 @@ export const SAMPLE_GAMES: Game[] = [
     rewardTier: "gold",
     playerCount: 567,
     isActive: true,
-    icon: "\u{1F9CA}",
+    icon: <CloudFog size={18} weight="duotone" />,
   },
   {
     id: "game-private-tournament",
@@ -69,7 +76,7 @@ export const SAMPLE_GAMES: Game[] = [
     rewardTier: "diamond",
     playerCount: 198,
     isActive: true,
-    icon: "\u{1F3C6}",
+    icon: <Trophy size={18} weight="duotone" />,
   },
 ]
 

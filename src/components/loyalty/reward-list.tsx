@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { Gift } from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 import { TorqueReader } from "@/lib/loyalty/torque-reader"
 import { RewardCard } from "./reward-card"
@@ -84,7 +85,9 @@ export function RewardList({ onClaim }: RewardListProps) {
       {/* Reward grid */}
       {rewards.length === 0 ? (
         <div className="bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-xl p-12 text-center">
-          <p className="text-4xl mb-4">{"\u{1F381}"}</p>
+          <div className="flex justify-center mb-4">
+            <Gift size={48} weight="duotone" className="text-amber-400" />
+          </div>
           <h3 className="text-lg font-semibold mb-2">
             {filter === "unclaimed"
               ? "No rewards to claim"

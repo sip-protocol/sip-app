@@ -1,5 +1,14 @@
 "use client"
 
+import type { ReactNode } from "react"
+import {
+  Sword,
+  LockSimple,
+  MagnifyingGlass,
+  CheckCircle,
+  MaskHappy,
+  Trophy,
+} from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 import type { GamingStep } from "@/lib/gaming/types"
 
@@ -14,7 +23,7 @@ interface StepConfig {
   id: GamingStep
   label: string
   description: string
-  icon: string
+  icon: ReactNode
 }
 
 const PLAY_STEPS: StepConfig[] = [
@@ -22,25 +31,25 @@ const PLAY_STEPS: StepConfig[] = [
     id: "committing_move",
     label: "Commit Move",
     description: "Hashing your move with cryptographic commitment",
-    icon: "\u{1F94A}",
+    icon: <Sword size={16} weight="duotone" />,
   },
   {
     id: "generating_commitment",
     label: "Generate Commitment",
     description: "Creating cryptographic commitment proof",
-    icon: "\u{1F510}",
+    icon: <LockSimple size={16} weight="duotone" />,
   },
   {
     id: "revealing",
     label: "Reveal Phase",
     description: "Both players reveal — commitment verified on-chain",
-    icon: "\u{1F50D}",
+    icon: <MagnifyingGlass size={16} weight="duotone" />,
   },
   {
     id: "resolved",
     label: "Resolved",
     description: "Game outcome determined — commitment proofs verified",
-    icon: "\u2705",
+    icon: <CheckCircle size={16} weight="duotone" />,
   },
 ]
 
@@ -49,19 +58,19 @@ const CLAIM_STEPS: StepConfig[] = [
     id: "generating_stealth",
     label: "Generate Stealth Address",
     description: "Creating one-time address for private reward claim",
-    icon: "\u{1F3AD}",
+    icon: <MaskHappy size={16} weight="duotone" />,
   },
   {
     id: "claiming_reward",
     label: "Claiming Reward",
     description: "Sending reward to stealth address via MagicBlock",
-    icon: "\u{1F3C6}",
+    icon: <Trophy size={16} weight="duotone" />,
   },
   {
     id: "claimed",
     label: "Claimed",
     description: "Reward claimed — stealth address funded privately",
-    icon: "\u2705",
+    icon: <CheckCircle size={16} weight="duotone" />,
   },
 ]
 
@@ -178,7 +187,7 @@ export function GamingStatus({
                     {isStepComplete ? (
                       <CheckIcon className="w-4 h-4" />
                     ) : (
-                      <span className="text-base">{step.icon}</span>
+                      <span>{step.icon}</span>
                     )}
                   </div>
                   {/* Connector line */}

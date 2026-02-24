@@ -1,3 +1,4 @@
+import type { ReactNode } from "react"
 import type { PrivacyLevel } from "@sip-protocol/types"
 
 export type PlayStep =
@@ -35,7 +36,7 @@ export interface Game {
   rewardTier: RewardTier
   playerCount: number
   isActive: boolean
-  icon: string
+  icon: ReactNode
 }
 
 export interface GameResult {

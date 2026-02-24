@@ -23,7 +23,7 @@ export function GameCard({ game, onPlay, className }: GameCardProps) {
       {/* Header */}
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-3">
-          <span className="text-2xl">{game.icon}</span>
+          <span>{game.icon}</span>
           <div>
             <h3 className="font-semibold text-sm">{game.title}</h3>
             <p className="text-xs text-[var(--text-tertiary)]">

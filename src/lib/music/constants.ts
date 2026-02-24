@@ -19,7 +19,7 @@ export const SAMPLE_TRACKS: Track[] = [
     tier: "supporter",
     listenerCount: 4200,
     isActive: true,
-    icon: "\u{1F3B5}",
+    icon: "electronic",
   },
   {
     id: "track-solana-symphony",
@@ -30,7 +30,7 @@ export const SAMPLE_TRACKS: Track[] = [
     tier: "patron",
     listenerCount: 1800,
     isActive: true,
-    icon: "\u{1F3BB}",
+    icon: "classical",
   },
   {
     id: "track-privacy-anthem",
@@ -41,7 +41,7 @@ export const SAMPLE_TRACKS: Track[] = [
     tier: "premium",
     listenerCount: 6700,
     isActive: true,
-    icon: "\u{1F3A4}",
+    icon: "hip_hop",
   },
   {
     id: "track-anonymous-groove",
@@ -52,7 +52,7 @@ export const SAMPLE_TRACKS: Track[] = [
     tier: "free",
     listenerCount: 3100,
     isActive: true,
-    icon: "\u{1F3B7}",
+    icon: "jazz",
   },
   {
     id: "track-encrypted-melodies",
@@ -63,7 +63,7 @@ export const SAMPLE_TRACKS: Track[] = [
     tier: "supporter",
     listenerCount: 2400,
     isActive: true,
-    icon: "\u{1F3B6}",
+    icon: "ambient",
   },
 ]
 

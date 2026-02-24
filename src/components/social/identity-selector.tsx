@@ -1,5 +1,23 @@
 "use client"
 
+import type { ReactNode } from "react"
+import {
+  Fish,
+  Ghost,
+  Fire,
+  WaveSine,
+  Rainbow,
+  Star,
+  Rocket,
+  Plant,
+  Palette,
+  MaskHappy,
+  Diamond,
+  Sneaker,
+  Spiral,
+  Lightning,
+  DiamondsFour,
+} from "@phosphor-icons/react"
 import { cn, truncate } from "@/lib/utils"
 import type { StealthProfile } from "@/lib/social/types"
 
@@ -11,30 +29,30 @@ interface IdentitySelectorProps {
   disabled?: boolean
 }
 
-function avatarEmoji(address: string): string {
-  const emojis = [
-    "\u{1F42C}",
-    "\u{1F47B}",
-    "\u{1F525}",
-    "\u{1F30A}",
-    "\u{1F308}",
-    "\u{2B50}",
-    "\u{1F680}",
-    "\u{1F331}",
-    "\u{1F3A8}",
-    "\u{1F3AD}",
-    "\u{1F9CA}",
-    "\u{1F52E}",
-    "\u{1FA90}",
-    "\u{1F30C}",
-    "\u{26A1}",
-    "\u{1F48E}",
+function avatarIcon(address: string): ReactNode {
+  const icons = [
+    <Fish key="fish" size={18} weight="duotone" />,
+    <Ghost key="ghost" size={18} weight="duotone" />,
+    <Fire key="fire" size={18} weight="duotone" />,
+    <WaveSine key="wave" size={18} weight="duotone" />,
+    <Rainbow key="rainbow" size={18} weight="duotone" />,
+    <Star key="star" size={18} weight="duotone" />,
+    <Rocket key="rocket" size={18} weight="duotone" />,
+    <Plant key="plant" size={18} weight="duotone" />,
+    <Palette key="palette" size={18} weight="duotone" />,
+    <MaskHappy key="mask" size={18} weight="duotone" />,
+    <Fish key="whale" size={18} weight="duotone" />,
+    <Diamond key="diamond" size={18} weight="duotone" />,
+    <Sneaker key="sneaker" size={18} weight="duotone" />,
+    <Spiral key="spiral" size={18} weight="duotone" />,
+    <Lightning key="lightning" size={18} weight="duotone" />,
+    <DiamondsFour key="gem" size={18} weight="duotone" />,
   ]
   let hash = 0
   for (let i = 0; i < address.length; i++) {
     hash = ((hash << 5) - hash + address.charCodeAt(i)) | 0
   }
-  return emojis[Math.abs(hash) % emojis.length]
+  return icons[Math.abs(hash) % icons.length]
 }
 
 export function IdentitySelector({
@@ -52,7 +70,7 @@ export function IdentitySelector({
       <div className="space-y-2">
         {profiles.map((profile) => {
           const isSelected = selected === profile.id
-          const emoji = avatarEmoji(profile.stealthAddress)
+          const icon = avatarIcon(profile.stealthAddress)
 
           return (
             <button
@@ -85,7 +103,7 @@ export function IdentitySelector({
               </div>
 
               {/* Avatar + info */}
-              <span className="text-lg">{emoji}</span>
+              <span className="flex items-center">{icon}</span>
               <div className="flex-1 min-w-0">
                 <span
                   className={cn(

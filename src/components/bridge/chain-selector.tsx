@@ -1,6 +1,14 @@
 "use client"
 
+import type { ReactNode } from "react"
 import { useState, useCallback } from "react"
+import {
+  SunDim,
+  Diamond,
+  Hexagon,
+  Globe,
+  ArrowsLeftRight,
+} from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 import { BRIDGE_CHAINS } from "@/lib/bridge/constants"
 import type { BridgeChainId } from "@/lib/bridge/types"
@@ -60,7 +68,7 @@ function ChainDropdown({
       >
         {selected ? (
           <>
-            <span className="text-xl">{getChainEmoji(selected.id)}</span>
+            {getChainIcon(selected.id)}
             <span className="font-medium text-[var(--text-primary)]">
               {selected.name}
             </span>
@@ -86,7 +94,7 @@ function ChainDropdown({
                 selected?.id === chain.id && "text-cyan-400 font-medium"
               )}
             >
-              <span className="text-lg">{getChainEmoji(chain.id)}</span>
+              {getChainIcon(chain.id)}
               <span>{chain.name}</span>
             </button>
           ))}
@@ -96,15 +104,25 @@ function ChainDropdown({
   )
 }
 
-function getChainEmoji(chain: BridgeChainId): string {
-  const map: Record<BridgeChainId, string> = {
-    solana: "\u{2600}\uFE0F",
-    ethereum: "\u{1F48E}",
-    base: "\u{1F535}",
-    arbitrum: "\u{1F7E0}",
-    optimism: "\u{1F534}",
+function getChainIcon(chain: BridgeChainId): ReactNode {
+  const map: Record<BridgeChainId, ReactNode> = {
+    solana: <SunDim size={20} weight="duotone" className="text-violet-400" />,
+    ethereum: <Diamond size={20} weight="duotone" className="text-blue-400" />,
+    base: <Hexagon size={20} weight="duotone" className="text-blue-500" />,
+    arbitrum: (
+      <Hexagon size={20} weight="duotone" className="text-orange-400" />
+    ),
+    optimism: <Hexagon size={20} weight="duotone" className="text-red-400" />,
   }
-  return map[chain] ?? "\u{1F30D}"
+  return (
+    map[chain] ?? (
+      <Globe
+        size={20}
+        weight="duotone"
+        className="text-[var(--text-secondary)]"
+      />
+    )
+  )
 }
 
 export function ChainSelector({
@@ -153,7 +171,11 @@ export function ChainSelector({
           }}
           title="Swap chains"
         >
-          <SwapIcon className="w-4 h-4 text-[var(--text-secondary)]" />
+          <ArrowsLeftRight
+            size={16}
+            weight="bold"
+            className="text-[var(--text-secondary)]"
+          />
         </button>
 
         <ChainDropdown
@@ -165,23 +187,5 @@ export function ChainSelector({
         />
       </div>
     </div>
-  )
-}
-
-function SwapIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"
-      />
-    </svg>
   )
 }

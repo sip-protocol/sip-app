@@ -1,6 +1,12 @@
 "use client"
 
 import { useState } from "react"
+import {
+  CurrencyDollar,
+  ClipboardText,
+  Check,
+  LockSimple,
+} from "@phosphor-icons/react"
 import { cn, truncate, copyToClipboard } from "@/lib/utils"
 
 interface StealthRewardDisplayProps {
@@ -37,7 +43,11 @@ export function StealthRewardDisplay({
     >
       {/* Reward callout */}
       <div className="flex items-center gap-2 mb-4">
-        <span className="text-lg">{"\u{1F4B0}"}</span>
+        <CurrencyDollar
+          size={20}
+          weight="duotone"
+          className="text-amber-300 flex-shrink-0"
+        />
         <div>
           <p className="text-sm font-medium text-amber-300">
             Reward delivered to stealth address
@@ -71,8 +81,12 @@ export function StealthRewardDisplay({
             <code className="text-xs font-mono text-[var(--text-tertiary)] group-hover:text-[var(--text-primary)] transition-colors">
               {truncate(stealthAddress, 12, 6)}
             </code>
-            <span className="text-xs text-[var(--text-tertiary)]">
-              {copied === "stealth" ? "\u2713" : "\u{1F4CB}"}
+            <span className="text-[var(--text-tertiary)]">
+              {copied === "stealth" ? (
+                <Check size={14} weight="duotone" />
+              ) : (
+                <ClipboardText size={14} weight="duotone" />
+              )}
             </span>
           </button>
         </div>
@@ -90,8 +104,12 @@ export function StealthRewardDisplay({
             <code className="text-xs font-mono text-[var(--text-tertiary)] group-hover:text-[var(--text-primary)] transition-colors">
               {truncate(metaAddress, 12, 6)}
             </code>
-            <span className="text-xs text-[var(--text-tertiary)]">
-              {copied === "meta" ? "\u2713" : "\u{1F4CB}"}
+            <span className="text-[var(--text-tertiary)]">
+              {copied === "meta" ? (
+                <Check size={14} weight="duotone" />
+              ) : (
+                <ClipboardText size={14} weight="duotone" />
+              )}
             </span>
           </button>
         </div>
@@ -99,8 +117,8 @@ export function StealthRewardDisplay({
 
       {/* Privacy badge */}
       <div className="mt-4 flex items-center gap-2">
-        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-amber-500/20 border border-amber-500/30 text-amber-300">
-          {"\u{1F512}"} Private Reward
+        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-amber-500/20 border border-amber-500/30 text-amber-300">
+          <LockSimple size={12} weight="duotone" /> Private Reward
         </span>
       </div>
     </div>

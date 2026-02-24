@@ -1,10 +1,12 @@
 "use client"
 
 import { useState, useCallback, useMemo } from "react"
+import type { ReactNode } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
 import { useDemoModeStore } from "@/stores/demo-mode"
 import { DemoBanner } from "@/components/ui/demo-banner"
 import { PrivacyLevel } from "@sip-protocol/types"
+import { LockSimple, Eye, LockSimpleOpen } from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 import { useExploreWorld } from "@/hooks/use-explore-world"
 import { MetaversePrivacyToggle } from "./metaverse-privacy-toggle"
@@ -12,6 +14,7 @@ import { MetaverseStatus } from "./metaverse-status"
 import { StealthAvatarDisplay } from "./stealth-avatar-display"
 import { AvatarTierBadge } from "./avatar-tier-badge"
 import { WORLD_CATEGORY_LABELS } from "@/lib/metaverse/constants"
+import { getWorldIcon } from "./world-icon-map"
 import type { World, AvatarTier } from "@/lib/metaverse/types"
 
 type PrivacyOption = "shielded" | "compliant" | "transparent"
@@ -53,10 +56,22 @@ export function ExploreForm({ world, onExplored }: ExploreFormProps) {
     []
   )
 
-  const privacyLabel: Record<PrivacyOption, string> = {
-    shielded: "\u{1F512} Shielded",
-    compliant: "\u{1F441}\uFE0F Compliant",
-    transparent: "\u{1F513} Transparent",
+  const privacyLabel: Record<PrivacyOption, ReactNode> = {
+    shielded: (
+      <span className="inline-flex items-center gap-1">
+        <LockSimple size={14} weight="duotone" /> Shielded
+      </span>
+    ),
+    compliant: (
+      <span className="inline-flex items-center gap-1">
+        <Eye size={14} weight="duotone" /> Compliant
+      </span>
+    ),
+    transparent: (
+      <span className="inline-flex items-center gap-1">
+        <LockSimpleOpen size={14} weight="duotone" /> Transparent
+      </span>
+    ),
   }
 
   const isFormReady = (connected || isDemoMode) && status === "idle"
@@ -148,7 +163,7 @@ export function ExploreForm({ world, onExplored }: ExploreFormProps) {
       {/* Header */}
       <div className="mb-6">
         <div className="flex items-center gap-3 mb-2">
-          <span className="text-2xl">{world.icon}</span>
+          <span className="text-indigo-400">{getWorldIcon(world)}</span>
           <h2 className="text-lg font-semibold">{world.title}</h2>
         </div>
         <p className="text-sm text-[var(--text-tertiary)]">

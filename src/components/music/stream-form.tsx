@@ -1,12 +1,15 @@
 "use client"
 
+import type { ReactNode } from "react"
 import { useState, useCallback, useMemo } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
+import { LockSimple, Eye, LockSimpleOpen } from "@phosphor-icons/react"
 import { useDemoModeStore } from "@/stores/demo-mode"
 import { DemoBanner } from "@/components/ui/demo-banner"
 import { PrivacyLevel } from "@sip-protocol/types"
 import { cn } from "@/lib/utils"
 import { useStreamTrack } from "@/hooks/use-stream-track"
+import { GENRE_ICON_MAP } from "./track-icon-map"
 import { MusicPrivacyToggle } from "./music-privacy-toggle"
 import { MusicStatus } from "./music-status"
 import { StealthStreamDisplay } from "./stealth-stream-display"
@@ -52,10 +55,22 @@ export function StreamForm({ track, onStreamed }: StreamFormProps) {
     []
   )
 
-  const privacyLabel: Record<PrivacyOption, string> = {
-    shielded: "\u{1F512} Shielded",
-    compliant: "\u{1F441}\uFE0F Compliant",
-    transparent: "\u{1F513} Transparent",
+  const privacyLabel: Record<PrivacyOption, ReactNode> = {
+    shielded: (
+      <span className="inline-flex items-center gap-1">
+        <LockSimple size={14} weight="duotone" /> Shielded
+      </span>
+    ),
+    compliant: (
+      <span className="inline-flex items-center gap-1">
+        <Eye size={14} weight="duotone" /> Compliant
+      </span>
+    ),
+    transparent: (
+      <span className="inline-flex items-center gap-1">
+        <LockSimpleOpen size={14} weight="duotone" /> Transparent
+      </span>
+    ),
   }
 
   const isFormReady = (connected || isDemoMode) && status === "idle"
@@ -147,7 +162,7 @@ export function StreamForm({ track, onStreamed }: StreamFormProps) {
       {/* Header */}
       <div className="mb-6">
         <div className="flex items-center gap-3 mb-2">
-          <span className="text-2xl">{track.icon}</span>
+          <span className="text-pink-400">{GENRE_ICON_MAP[track.genre]}</span>
           <h2 className="text-lg font-semibold">{track.title}</h2>
         </div>
         <p className="text-sm text-[var(--text-tertiary)]">

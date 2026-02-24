@@ -1,5 +1,14 @@
 "use client"
 
+import type { ReactNode } from "react"
+import {
+  MusicNote,
+  MaskHappy,
+  Headphones,
+  CheckCircle,
+  Key,
+  LockKey,
+} from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 import type { MusicStep } from "@/lib/music/types"
 
@@ -14,7 +23,7 @@ interface StepConfig {
   id: MusicStep
   label: string
   description: string
-  icon: string
+  icon: ReactNode
 }
 
 const STREAM_STEPS: StepConfig[] = [
@@ -22,25 +31,25 @@ const STREAM_STEPS: StepConfig[] = [
     id: "selecting_track",
     label: "Select Track",
     description: "Validating track availability and listener tier",
-    icon: "\u{1F3B5}",
+    icon: <MusicNote size={16} weight="duotone" />,
   },
   {
     id: "generating_stealth_listener",
     label: "Generate Stealth Listener",
     description: "Creating one-time stealth address for anonymous streaming",
-    icon: "\u{1F3AD}",
+    icon: <MaskHappy size={16} weight="duotone" />,
   },
   {
     id: "streaming",
     label: "Stream Track",
     description: "Streaming with anonymous listener identity",
-    icon: "\u{1F3A7}",
+    icon: <Headphones size={16} weight="duotone" />,
   },
   {
     id: "streamed",
     label: "Streamed",
     description: "Stealth stream complete — unlinkable to your wallet",
-    icon: "\u2705",
+    icon: <CheckCircle size={16} weight="duotone" />,
   },
 ]
 
@@ -49,19 +58,19 @@ const PLAYLIST_STEPS: StepConfig[] = [
     id: "generating_proof",
     label: "Generate Playlist Proof",
     description: "Creating anonymous playlist proof from stealth identity",
-    icon: "\u{1F511}",
+    icon: <Key size={16} weight="duotone" />,
   },
   {
     id: "encrypting_playlist",
     label: "Encrypt Playlist",
     description: "Encrypting playlist with XChaCha20-Poly1305",
-    icon: "\u{1F510}",
+    icon: <LockKey size={16} weight="duotone" />,
   },
   {
     id: "created",
     label: "Created",
     description: "Encrypted playlist created — only you control access",
-    icon: "\u2705",
+    icon: <CheckCircle size={16} weight="duotone" />,
   },
 ]
 
@@ -178,7 +187,7 @@ export function MusicStatus({
                     {isStepComplete ? (
                       <CheckIcon className="w-4 h-4" />
                     ) : (
-                      <span className="text-base">{step.icon}</span>
+                      step.icon
                     )}
                   </div>
                   {/* Connector line */}

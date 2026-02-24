@@ -3,6 +3,7 @@
 import { cn } from "@/lib/utils"
 import { AvatarTierBadge } from "./avatar-tier-badge"
 import { WORLD_CATEGORY_LABELS } from "@/lib/metaverse/constants"
+import { getWorldIcon } from "./world-icon-map"
 import type { World } from "@/lib/metaverse/types"
 
 interface WorldCardProps {
@@ -23,7 +24,7 @@ export function WorldCard({ world, onExplore, className }: WorldCardProps) {
       {/* Header */}
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-3">
-          <span className="text-2xl">{world.icon}</span>
+          <span className="text-indigo-400">{getWorldIcon(world)}</span>
           <div>
             <h3 className="font-semibold text-sm">{world.title}</h3>
             <p className="text-xs text-[var(--text-tertiary)]">

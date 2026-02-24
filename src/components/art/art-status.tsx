@@ -1,5 +1,13 @@
 "use client"
 
+import type { ReactNode } from "react"
+import {
+  Palette,
+  Sparkle,
+  CheckCircle,
+  Package,
+  Diamond,
+} from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 import type { ArtStep } from "@/lib/art/types"
 
@@ -14,7 +22,7 @@ interface StepConfig {
   id: ArtStep
   label: string
   description: string
-  icon: string
+  icon: ReactNode
 }
 
 const GENERATE_STEPS: StepConfig[] = [
@@ -23,19 +31,19 @@ const GENERATE_STEPS: StepConfig[] = [
     label: "Select Art Style",
     description:
       "Choosing generative art algorithm from stealth address entropy",
-    icon: "\u{1F3A8}",
+    icon: <Palette size={16} weight="duotone" />,
   },
   {
     id: "generating",
     label: "Generate Art",
     description: "Deriving deterministic art from stealth address seed via SDK",
-    icon: "\u{1F338}",
+    icon: <Sparkle size={16} weight="duotone" />,
   },
   {
     id: "generated",
     label: "Art Generated",
     description: "Unique privacy art created — ready to mint as NFT",
-    icon: "\u2705",
+    icon: <CheckCircle size={16} weight="duotone" />,
   },
 ]
 
@@ -44,19 +52,19 @@ const MINT_STEPS: StepConfig[] = [
     id: "preparing_nft",
     label: "Prepare NFT",
     description: "Encoding art metadata and uploading to Arweave",
-    icon: "\u{1F4E6}",
+    icon: <Package size={16} weight="duotone" />,
   },
   {
     id: "minting",
     label: "Mint NFT",
     description: "Minting compressed NFT via Exchange Art",
-    icon: "\u{1F48E}",
+    icon: <Diamond size={16} weight="duotone" />,
   },
   {
     id: "minted",
     label: "NFT Minted",
     description: "Compressed NFT live on Solana — viewable on Exchange Art",
-    icon: "\u2705",
+    icon: <CheckCircle size={16} weight="duotone" />,
   },
 ]
 
@@ -171,9 +179,9 @@ export function ArtStatus({
                     )}
                   >
                     {isStepComplete ? (
-                      <CheckIcon className="w-4 h-4" />
+                      <CheckCircle size={16} weight="duotone" />
                     ) : (
-                      <span className="text-base">{step.icon}</span>
+                      step.icon
                     )}
                   </div>
                   {/* Connector line */}
@@ -220,20 +228,6 @@ export function ArtStatus({
         </div>
       </div>
     </div>
-  )
-}
-
-function CheckIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={3}
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-    </svg>
   )
 }
 

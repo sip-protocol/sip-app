@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { Handshake } from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 import { useConnections } from "@/hooks/use-connections"
 import { ConnectionCard } from "./connection-card"
@@ -30,7 +31,13 @@ export function ConnectionList({ profileId, onFollow }: ConnectionListProps) {
   if (!profileId) {
     return (
       <div className="text-center py-12 bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-xl">
-        <p className="text-4xl mb-4">{"\u{1F91D}"}</p>
+        <div className="flex justify-center mb-4">
+          <Handshake
+            size={40}
+            weight="duotone"
+            className="text-[var(--text-tertiary)]"
+          />
+        </div>
         <h3 className="text-lg font-semibold mb-2">No identity selected</h3>
         <p className="text-sm text-[var(--text-secondary)] max-w-md mx-auto">
           Select a stealth identity to view your encrypted follow graph.
@@ -77,7 +84,13 @@ export function ConnectionList({ profileId, onFollow }: ConnectionListProps) {
       {/* Connection grid */}
       {displayedConnections.length === 0 ? (
         <div className="text-center py-12 bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-xl">
-          <p className="text-4xl mb-4">{"\u{1F91D}"}</p>
+          <div className="flex justify-center mb-4">
+            <Handshake
+              size={40}
+              weight="duotone"
+              className="text-[var(--text-tertiary)]"
+            />
+          </div>
           <h3 className="text-lg font-semibold mb-2">
             {tab === "following" ? "Not following anyone" : "No followers yet"}
           </h3>
