@@ -31,8 +31,14 @@ export function useOnChainCommit(commitmentType: CommitmentType) {
         console.warn(`[SIP-COMMIT:${commitmentType}] skip: no publicKey`)
         return null
       }
-      if (isDemoMode && typeof window !== "undefined" && !window.__SIP_TEST_WALLET) {
-        console.warn(`[SIP-COMMIT:${commitmentType}] skip: demo mode without test wallet`)
+      if (
+        isDemoMode &&
+        typeof window !== "undefined" &&
+        !window.__SIP_TEST_WALLET
+      ) {
+        console.warn(
+          `[SIP-COMMIT:${commitmentType}] skip: demo mode without test wallet`
+        )
         return null
       }
 

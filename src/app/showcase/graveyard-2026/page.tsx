@@ -963,8 +963,9 @@ function LinksSection() {
           <div className="px-8 py-12 sm:px-16 text-center">
             <h2 className="text-2xl sm:text-3xl font-bold">Try It Live</h2>
             <p className="mt-3 text-gray-400 max-w-xl mx-auto">
-              All 13 privacy apps are live at app.sip-protocol.org. Real cryptography,
-              real stealth addresses, real Anchor program on mainnet.
+              All 13 privacy apps are live at app.sip-protocol.org. Real
+              cryptography, real stealth addresses, real Anchor program on
+              mainnet.
             </p>
 
             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">

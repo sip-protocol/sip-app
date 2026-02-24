@@ -16,7 +16,8 @@ import {
 } from "@solana/wallet-adapter-base"
 import { Keypair, Transaction, PublicKey } from "@solana/web3.js"
 
-export const TEST_WALLET_NAME = "SIP Test Wallet" as WalletName<"SIP Test Wallet">
+export const TEST_WALLET_NAME =
+  "SIP Test Wallet" as WalletName<"SIP Test Wallet">
 
 export class TestWalletAdapter extends BaseSignerWalletAdapter {
   name = TEST_WALLET_NAME

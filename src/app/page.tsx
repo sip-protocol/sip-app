@@ -303,7 +303,9 @@ export default function HubPage() {
                 key={item.title}
                 className="p-6 rounded-xl border border-[var(--border-default)] bg-[var(--surface-primary)] text-center"
               >
-                <span className="mb-3 block text-sip-purple-400">{item.icon}</span>
+                <span className="mb-3 block text-sip-purple-400">
+                  {item.icon}
+                </span>
                 <h3 className="font-semibold text-sm mb-1">{item.title}</h3>
                 <p className="text-sm text-sip-green-500 font-medium mb-2">
                   {item.description}
