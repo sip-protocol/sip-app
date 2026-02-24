@@ -5,7 +5,7 @@
   "description": "World-class privacy application for Web3 - powered by SIP Protocol",
   "scripts": {
     "dev": "next dev --port 3000",
-    "build": "next build",
+    "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
@@ -20,7 +20,6 @@
     "validate": "pnpm typecheck && pnpm lint && pnpm test:run"
   },
   "dependencies": {
-    "@audius/sdk": "^12.0.1",
     "@magicblock-labs/bolt-sdk": "^0.2.4",
     "@metaplex-foundation/mpl-bubblegum": "^5.0.2",
     "@noble/ciphers": "^2.1.1",
