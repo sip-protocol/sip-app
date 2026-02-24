@@ -13,6 +13,7 @@ interface MainnetFixtures {
  * Skips automatically when E2E_WALLET_SECRET is not set.
  */
 export const test = base.extend<MainnetFixtures>({
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   keypair: async ({ page }, use) => {
     const keypair = await injectTestWallet(page)
     await use(keypair)
