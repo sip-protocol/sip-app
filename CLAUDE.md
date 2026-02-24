@@ -203,7 +203,7 @@ src/app/
 
 **Tech Stack:** Next.js 16 (App Router), React 19, Tailwind CSS 4, Zustand 5, Vitest
 **Deployment:** app.sip-protocol.org (Docker + GHCR → VPS port 5004 blue / 5005 green)
-**Tests:** 82 test suites, 727 unit tests + 27 demo E2E + 14 mainnet E2E (Playwright)
+**Tests:** 122 test suites, 1,184 unit tests + 27 demo E2E + 25 mainnet E2E (Playwright)
 
 **Key Commands:**
 ```bash
@@ -220,14 +220,14 @@ pnpm typecheck            # Type check
 
 **E2E Suite (Phase 1 — Demo):** 27 Playwright tests covering all 13 Graveyard hackathon tracks + showcase page. Tests run in demo mode (no wallet/SOL required). Project: `demo`.
 
-**E2E Suite (Phase 2 — Mainnet):** 14 Playwright tests sending real 1-lamport `SIP-COMMIT` memo transactions to Solana mainnet. Requires `E2E_WALLET_SECRET` (base58-encoded secret key). Skips automatically when not set. Project: `mainnet`. TestWalletAdapter injected via `window.__SIP_TEST_WALLET`.
+**E2E Suite (Phase 2 — Mainnet):** 25 Playwright tests sending real `SIP-COMMIT` Pedersen commitment transactions to Solana mainnet. 8 tracks produce on-chain tx signatures. Requires `E2E_WALLET_SECRET` (base58-encoded secret key). Skips automatically when not set. Project: `mainnet`. TestWalletAdapter injected via `window.__SIP_TEST_WALLET`.
 
 ---
 
 ## Dependencies
 
 **Core:**
-- `@sip-protocol/sdk` - Core privacy SDK
+- `@sip-protocol/sdk` v0.8.1 - Core privacy SDK
 - `@sip-protocol/types` - TypeScript types
 - `@sip-protocol/react` - React hooks (useSIP, useStealthAddress, etc.)
 
@@ -375,7 +375,7 @@ Study these for quality benchmarks:
 
 ---
 
-**Last Updated:** 2026-02-14
-**Status:** Live at app.sip-protocol.org | 14 routes | 82 test suites, 727 tests
+**Last Updated:** 2026-02-24
+**Status:** Live at app.sip-protocol.org | 13 routes | 122 test suites, 1,184 tests + 52 E2E | SDK v0.8.1
 **Positioning:** Privacy Command Center — enterprise, compliance, power users
 **Companion:** sip-mobile ("Privacy in Your Pocket" — consumers, daily use)
