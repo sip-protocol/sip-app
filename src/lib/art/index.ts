@@ -1,7 +1,10 @@
 export { ArtService } from "./art-service"
 export type { ArtServiceOptions } from "./art-service"
 
-export { ExchangeArtReader, EXCHANGE_ART_COLLECTIONS } from "./exchange-art-reader"
+export {
+  ExchangeArtReader,
+  EXCHANGE_ART_COLLECTIONS,
+} from "./exchange-art-reader"
 export type { ExchangeArtCollection } from "./exchange-art-reader"
 
 export {

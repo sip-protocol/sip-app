@@ -1,10 +1,7 @@
 import type { Track, MusicGenre, ListenerTier, MusicMode } from "./types"
 import { SAMPLE_TRACKS } from "./constants"
 import { logger } from "@/lib/logger"
-import {
-  sdk as createAudiusSdk,
-  type AudiusSdk,
-} from "@audius/sdk"
+import { sdk as createAudiusSdk, type AudiusSdk } from "@audius/sdk"
 
 // ---------------------------------------------------------------------------
 // Audius SDK + Public API config
@@ -140,8 +137,7 @@ function mapSdkTrack(raw: {
   return {
     id: raw.id,
     title: raw.title,
-    description:
-      raw.description || `${raw.genre} track by ${raw.user.name}`,
+    description: raw.description || `${raw.genre} track by ${raw.user.name}`,
     genre,
     tier: mapTier(raw.playCount),
     listenerCount: raw.playCount,

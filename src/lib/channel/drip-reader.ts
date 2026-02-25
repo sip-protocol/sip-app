@@ -340,9 +340,10 @@ export class DripReader {
     if (!heliusUrl) return []
 
     const cacheKey = "drip:collection-stats"
-    const cached = getCached<
-      { collection: string; total: number; sampleName: string | null }[]
-    >(cacheKey)
+    const cached =
+      getCached<
+        { collection: string; total: number; sampleName: string | null }[]
+      >(cacheKey)
     if (cached) return cached
 
     const stats: {
