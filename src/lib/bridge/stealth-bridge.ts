@@ -1,6 +1,9 @@
 import type { BridgeChainId } from "./types"
 import { getSDK } from "@/lib/sip-client"
-import { generateStealthAddressBrowser } from "@/lib/stealth-browser-fallback"
+import {
+  generateStealthAddressBrowser,
+  hexToBase58,
+} from "@/lib/stealth-browser-fallback"
 
 export interface StealthBridgeResult {
   stealthAddress: string
@@ -50,7 +53,7 @@ export async function generateBridgeStealthAddress(
     const metaAddressStr = sdk.encodeStealthMetaAddress(metaAddress)
 
     // Format stealth address for display
-    const stealthAddressStr = `sip:${destChain}:${stealthAddress.address}`
+    const stealthAddressStr = `sip:${destChain}:${hexToBase58(stealthAddress.address)}`
 
     return {
       stealthAddress: stealthAddressStr,

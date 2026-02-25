@@ -1,5 +1,8 @@
 import { getSDK } from "@/lib/sip-client"
-import { generateStealthAddressBrowser } from "@/lib/stealth-browser-fallback"
+import {
+  generateStealthAddressBrowser,
+  hexToBase58,
+} from "@/lib/stealth-browser-fallback"
 import type { TransactionData } from "@sip-protocol/sdk"
 
 export interface StealthSocialResult {
@@ -25,7 +28,7 @@ export async function generateSocialStealthAddress(): Promise<StealthSocialResul
       sdk.generateStealthAddress(metaAddress)
 
     const metaAddressStr = sdk.encodeStealthMetaAddress(metaAddress)
-    const stealthAddressStr = `sip:solana:${stealthAddress.address}`
+    const stealthAddressStr = `sip:solana:${hexToBase58(stealthAddress.address)}`
 
     return {
       stealthAddress: stealthAddressStr,

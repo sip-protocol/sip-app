@@ -6,6 +6,7 @@ import { VersionedTransaction } from "@solana/web3.js"
 import { useWalletStore } from "@/stores"
 import { toast } from "@/stores/toast"
 import { getSDK } from "@/lib"
+import { hexToBase58 } from "@/lib/stealth-browser-fallback"
 import { getJupiterSwapTransaction } from "@/lib/dex/jupiter-client"
 import { logger } from "@/lib/logger"
 import {
@@ -126,7 +127,7 @@ export default function JupiterPage() {
       const { stealthAddress } = sdk.generateEd25519StealthAddress(metaAddress)
 
       setPrivacyLayer({
-        stealthAddress: stealthAddress.address,
+        stealthAddress: hexToBase58(stealthAddress.address),
         ephemeralKey: stealthAddress.ephemeralPublicKey,
         viewingKey: viewingPrivateKey,
       })

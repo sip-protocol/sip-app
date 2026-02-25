@@ -6,6 +6,8 @@
  * the same interface as the SDK.
  */
 
+import bs58 from "bs58"
+
 export interface BrowserStealthResult {
   stealthAddress: string
   metaAddress: string
@@ -14,13 +16,17 @@ export interface BrowserStealthResult {
   sharedSecret: string
 }
 
-function toHex(buf: Uint8Array): string {
-  return (
-    "0x" +
-    Array.from(buf)
-      .map((b) => b.toString(16).padStart(2, "0"))
-      .join("")
+function toBase58(buf: Uint8Array): string {
+  return bs58.encode(buf)
+}
+
+/** Convert a hex string (with or without 0x prefix) to base58 */
+export function hexToBase58(hex: string): string {
+  const clean = hex.startsWith("0x") ? hex.slice(2) : hex
+  const bytes = new Uint8Array(
+    clean.match(/.{1,2}/g)!.map((b) => parseInt(b, 16))
   )
+  return bs58.encode(bytes)
 }
 
 /**
@@ -43,10 +49,10 @@ export async function generateStealthAddressBrowser(): Promise<BrowserStealthRes
   metaBytes.set(viewingKey, 32)
 
   return {
-    stealthAddress: `sip:solana:${toHex(stealthBytes)}`,
-    metaAddress: `sip:solana:${toHex(metaBytes)}`,
-    spendingKey: toHex(spendingKey),
-    viewingKey: toHex(viewingKey),
-    sharedSecret: toHex(sharedSecret),
+    stealthAddress: `sip:solana:${toBase58(stealthBytes)}`,
+    metaAddress: `sip:solana:${toBase58(metaBytes)}`,
+    spendingKey: toBase58(spendingKey),
+    viewingKey: toBase58(viewingKey),
+    sharedSecret: toBase58(sharedSecret),
   }
 }
