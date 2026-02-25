@@ -45,15 +45,20 @@ const nextConfig: NextConfig = {
   // util.promisify() calls get no-op values instead of throwing.
   webpack: (config, { isServer }) => {
     if (!isServer) {
+      // fs/promises must use resolve.alias (not fallback) because
+      // webpack treats slash-paths differently in fallback context.
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        "fs/promises": emptyModule,
+      }
       config.resolve.fallback = {
         ...config.resolve.fallback,
         dns: emptyModule,
-        fs: false,
-        "fs/promises": false,
+        fs: emptyModule,
         http2: emptyModule,
-        net: false,
-        tls: false,
-        worker_threads: false,
+        net: emptyModule,
+        tls: emptyModule,
+        worker_threads: emptyModule,
       }
     }
     return config
