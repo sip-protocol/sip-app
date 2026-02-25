@@ -15,6 +15,16 @@ import { logger } from "@/lib/logger"
 const KYD_API_BASE = "https://api.kyd.so"
 const CACHE_TTL_MS = 5 * 60 * 1000 // 5 minutes
 
+function getHeliusUrl(): string | null {
+  const key =
+    (typeof process !== "undefined" &&
+      (process.env?.NEXT_PUBLIC_HELIUS_API_KEY ||
+        process.env?.HELIUS_API_KEY)) ||
+    null
+  if (!key) return null
+  return `https://mainnet.helius-rpc.com/?api-key=${key}`
+}
+
 interface CacheEntry<T> {
   data: T
   timestamp: number
@@ -389,6 +399,79 @@ export class KYDReader {
       { address: "Bx8...k1d", events: 5, tier: "early_bird" },
       { address: "Qm5...r4e", events: 3, tier: "general" },
     ]
+  }
+
+  /**
+   * Verify a cNFT ticket asset via Helius DAS API (getAsset).
+   * KYD mints tickets as compressed NFTs via Metaplex Bubblegum.
+   * This method verifies the asset exists on-chain and returns
+   * ownership and metadata info.
+   */
+  async verifyTicketAsset(assetId: string): Promise<{
+    verified: boolean
+    owner: string | null
+    metadata: Record<string, unknown> | null
+  }> {
+    const heliusUrl = getHeliusUrl()
+    if (!heliusUrl) {
+      return { verified: false, owner: null, metadata: null }
+    }
+
+    const cacheKey = `kyd:asset:${assetId}`
+    const cached = getCached<{
+      verified: boolean
+      owner: string | null
+      metadata: Record<string, unknown> | null
+    }>(cacheKey)
+    if (cached) return cached
+
+    try {
+      const response = await fetch(heliusUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          jsonrpc: "2.0",
+          id: "kyd-verify",
+          method: "getAsset",
+          params: { id: assetId },
+        }),
+        signal: AbortSignal.timeout(8000),
+      })
+
+      if (!response.ok) {
+        logger.warn(
+          `[SIP][KYD] Helius DAS returned ${response.status} for asset ${assetId.slice(0, 8)}...`,
+          "KYDReader"
+        )
+        return { verified: false, owner: null, metadata: null }
+      }
+
+      const data = await response.json()
+      const asset = data?.result
+
+      if (!asset) {
+        return { verified: false, owner: null, metadata: null }
+      }
+
+      const result = {
+        verified: true,
+        owner: asset.ownership?.owner ?? null,
+        metadata: asset.content?.metadata ?? null,
+      }
+
+      setCache(cacheKey, result)
+      logger.info(
+        `[SIP][KYD] Verified cNFT ticket ${assetId.slice(0, 8)}... owner=${result.owner?.slice(0, 8) ?? "unknown"}`,
+        "KYDReader"
+      )
+      return result
+    } catch (err) {
+      logger.warn(
+        `[SIP][KYD] cNFT verification failed: ${err instanceof Error ? err.message : err}`,
+        "KYDReader"
+      )
+      return { verified: false, owner: null, metadata: null }
+    }
   }
 
   clearCache(): void {
