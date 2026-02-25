@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Menu, X, ExternalLink } from "lucide-react"
+import { ListIcon as Menu, XIcon as X, ArrowSquareOutIcon as ExternalLink } from "@phosphor-icons/react"
 import { Logo } from "@/components/ui/logo"
 import { useWallet } from "@solana/wallet-adapter-react"
 import { useWalletModal } from "@solana/wallet-adapter-react-ui"

@@ -1,7 +1,17 @@
 "use client"
 
+import type { ReactNode } from "react"
 import { useState, useRef, type KeyboardEvent } from "react"
 import { PrivacyLevel } from "@sip-protocol/types"
+import {
+  EyeIcon,
+  ShieldCheckIcon,
+  KeyIcon,
+  XIcon,
+  LightbulbIcon,
+  ClipboardTextIcon,
+  LockSimpleIcon,
+} from "@phosphor-icons/react"
 
 interface PrivacyToggleProps {
   value: PrivacyLevel
@@ -13,7 +23,7 @@ interface LevelConfig {
   label: string
   description: string
   hint: {
-    icon: string
+    icon: ReactNode
     text: string
     className: string
   }
@@ -26,7 +36,7 @@ const levels: LevelConfig[] = [
     label: "Public",
     description: "Standard transaction (current NEAR Intents)",
     hint: {
-      icon: "👁️",
+      icon: <EyeIcon size={14} />,
       text: "Transaction details visible to everyone on-chain",
       className: "text-gray-400",
     },
@@ -37,7 +47,7 @@ const levels: LevelConfig[] = [
     label: "Shielded",
     description: "Full privacy via Zcash",
     hint: {
-      icon: "🔒",
+      icon: <LockSimpleIcon size={14} weight="duotone" />,
       text: "Maximum privacy — sender, amount, and recipient hidden",
       className: "text-green-400",
     },
@@ -47,7 +57,7 @@ const levels: LevelConfig[] = [
     label: "Compliant",
     description: "Private with viewing key",
     hint: {
-      icon: "📋",
+      icon: <ClipboardTextIcon size={14} />,
       text: "Audit-ready — save your viewing key for tax reporting",
       className: "text-gray-300",
     },
@@ -138,13 +148,13 @@ export function PrivacyToggle({ value, onChange }: PrivacyToggleProps) {
                 aria-hidden="true"
               >
                 {level.value === PrivacyLevel.TRANSPARENT && (
-                  <EyeOpenIcon className="h-4 w-4" />
+                  <EyeIcon size={16} />
                 )}
                 {level.value === PrivacyLevel.SHIELDED && (
-                  <ShieldIcon className="h-4 w-4" />
+                  <ShieldCheckIcon size={16} />
                 )}
                 {level.value === PrivacyLevel.COMPLIANT && (
-                  <KeyIcon className="h-4 w-4" />
+                  <KeyIcon size={16} />
                 )}
                 {level.label}
               </span>
@@ -184,7 +194,7 @@ export function PrivacyToggle({ value, onChange }: PrivacyToggleProps) {
             onClick={() => onChange(PrivacyLevel.SHIELDED)}
             className="flex items-center gap-1 text-xs text-yellow-400/80 hover:text-yellow-400"
           >
-            <span aria-hidden="true">💡</span>
+            <LightbulbIcon size={14} aria-hidden="true" />
             <span className="underline underline-offset-2">
               {currentLevel.recommendation}
             </span>
@@ -286,7 +296,7 @@ function PrivacyComparisonModal({
             className="rounded-lg p-2 text-gray-400 hover:bg-gray-800 hover:text-white"
             aria-label="Close comparison"
           >
-            <CloseIcon className="h-5 w-5" />
+            <XIcon size={20} />
           </button>
         </div>
 
@@ -363,21 +373,21 @@ function PrivacyComparisonModal({
           <h4 className="mb-3 font-medium">Recommendations</h4>
           <ul className="space-y-2 text-sm text-gray-400">
             <li className="flex items-center gap-2">
-              <ShieldIcon className="h-4 w-4 text-purple-400" />
+              <ShieldCheckIcon size={16} className="text-purple-400" />
               <span>
                 <strong className="text-purple-400">Personal use:</strong>{" "}
                 Shielded for maximum privacy
               </span>
             </li>
             <li className="flex items-center gap-2">
-              <KeyIcon className="h-4 w-4 text-gray-300" />
+              <KeyIcon size={16} className="text-gray-300" />
               <span>
                 <strong className="text-gray-300">Business/DAO:</strong>{" "}
                 Compliant for audit trail
               </span>
             </li>
             <li className="flex items-center gap-2">
-              <EyeOpenIcon className="h-4 w-4 text-gray-400" />
+              <EyeIcon size={16} className="text-gray-400" />
               <span>
                 <strong className="text-gray-300">Public payments:</strong>{" "}
                 Transparent for visibility
@@ -410,79 +420,3 @@ function FeatureValue({ value }: { value: boolean | string }) {
   return <span className="text-gray-300">{value}</span>
 }
 
-function CloseIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M6 18L18 6M6 6l12 12"
-      />
-    </svg>
-  )
-}
-
-function EyeOpenIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
-      />
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-      />
-    </svg>
-  )
-}
-
-function ShieldIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
-      />
-    </svg>
-  )
-}
-
-function KeyIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z"
-      />
-    </svg>
-  )
-}

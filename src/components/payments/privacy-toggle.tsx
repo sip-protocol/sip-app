@@ -1,6 +1,8 @@
 "use client"
 
+import type { ReactNode } from "react"
 import { useState } from "react"
+import { LockSimpleIcon, EyeIcon, LockSimpleOpenIcon } from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 
 export type PrivacyLevel = "shielded" | "compliant" | "transparent"
@@ -15,14 +17,14 @@ const OPTIONS: {
   level: PrivacyLevel
   label: string
   desc: string
-  icon: string
+  icon: ReactNode
   tooltip: string
 }[] = [
   {
     level: "shielded",
     label: "Shielded",
     desc: "Full privacy",
-    icon: "🔒",
+    icon: <LockSimpleIcon size={18} weight="duotone" />,
     tooltip:
       "Maximum privacy: sender, amount, and recipient are all hidden. Only the recipient can see the transaction details using their private keys.",
   },
@@ -30,7 +32,7 @@ const OPTIONS: {
     level: "compliant",
     label: "Compliant",
     desc: "With viewing key",
-    icon: "👁️",
+    icon: <EyeIcon size={18} weight="duotone" />,
     tooltip:
       "Privacy with compliance: transaction is private but you can share a viewing key with auditors to prove the transaction details without revealing your spending keys.",
   },
@@ -38,7 +40,7 @@ const OPTIONS: {
     level: "transparent",
     label: "Transparent",
     desc: "No privacy",
-    icon: "🔓",
+    icon: <LockSimpleOpenIcon size={18} weight="duotone" />,
     tooltip:
       "Standard transaction: no privacy applied. The transaction is fully visible on-chain like a regular Solana transfer.",
   },
@@ -93,8 +95,8 @@ export function PrivacyToggle({
               <div className="flex items-center gap-2 mb-1">
                 <span
                   className={cn(
-                    "text-lg transition-transform duration-200",
-                    isActive && "scale-110"
+                    "transition-transform duration-200 text-[var(--text-secondary)]",
+                    isActive && "scale-110 text-sip-purple-400"
                   )}
                 >
                   {option.icon}
@@ -127,7 +129,7 @@ export function PrivacyToggle({
         )}
       >
         <div className="flex items-start gap-2">
-          <span className="text-lg mt-0.5">
+          <span className="mt-0.5 text-[var(--text-secondary)]">
             {(hoveredOption || activeOption)?.icon}
           </span>
           <div>
