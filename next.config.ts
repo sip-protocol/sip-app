@@ -6,6 +6,7 @@ import path from "path"
 // Uses .js extension so webpack can load it without TypeScript loader.
 const emptyModule = path.resolve(process.cwd(), "src/lib/empty-module.js")
 const utilBrowser = path.resolve(process.cwd(), "src/lib/util-browser.js")
+const yellowstoneStub = path.resolve(process.cwd(), "src/lib/yellowstone-grpc-stub.js")
 
 const nextConfig: NextConfig = {
   // Enable standalone output for Docker deployment
@@ -47,9 +48,11 @@ const nextConfig: NextConfig = {
     if (!isServer) {
       config.resolve.alias = {
         ...config.resolve.alias,
-        // Eliminate gRPC stack from client bundle entirely — the client
-        // never makes gRPC calls, these are only pulled in transitively
-        // via SDK barrel exports (QuickNode/Triton providers)
+        // Eliminate gRPC + WASM stack from client bundle entirely.
+        // yellowstone-grpc loads WASM eagerly on import (fs.readFileSync),
+        // so we replace the whole package with a minimal stub that only
+        // provides CommitmentLevel enum (all the client actually needs).
+        "@triton-one/yellowstone-grpc": yellowstoneStub,
         "@grpc/grpc-js": emptyModule,
         "@grpc/proto-loader": emptyModule,
         // fs/promises must use alias (not fallback) — webpack quirk with
