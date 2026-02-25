@@ -37,19 +37,22 @@ const nextConfig: NextConfig = {
     "@sunrisestake/client",
   ],
 
-  // Stub Node.js built-ins for client bundles (webpack)
-  // @grpc/grpc-js requires dns, fs, http2, net, tls which don't exist in browsers
+  // Stub Node.js built-ins for client bundles (webpack).
+  // @sip-protocol/sdk → @triton-one/yellowstone-grpc → @grpc/grpc-js
+  // pulls in dns, fs, http2, net, tls which don't exist in browsers.
+  // Use the empty-module stub (not `false`) so destructuring and
+  // util.promisify() calls get no-op values instead of throwing.
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,
-        dns: false,
-        fs: false,
-        "fs/promises": false,
+        dns: emptyModule,
+        fs: emptyModule,
+        "fs/promises": emptyModule,
         http2: emptyModule,
-        net: false,
-        tls: false,
-        worker_threads: false,
+        net: emptyModule,
+        tls: emptyModule,
+        worker_threads: emptyModule,
       }
     }
     return config
@@ -60,6 +63,10 @@ const nextConfig: NextConfig = {
   // requires dns, fs, http2, net, tls which don't exist in browsers
   turbopack: {
     resolveAlias: {
+      // Alias Node.js-only packages to empty stubs
+      // Note: can't alias @grpc/grpc-js or @triton-one/yellowstone-grpc
+      // because @sip-protocol/sdk needs real exports (CommitmentLevel, etc.)
+      // Stub Node.js built-ins
       dns: { browser: "./src/lib/empty-module.ts" },
       fs: { browser: "./src/lib/empty-module.ts" },
       "fs/promises": { browser: "./src/lib/empty-module.ts" },
