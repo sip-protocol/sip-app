@@ -38,17 +38,21 @@ const nextConfig: NextConfig = {
     "@sunrisestake/client",
   ],
 
-  // Stub Node.js built-ins for client bundles (webpack).
-  // @sip-protocol/sdk → @triton-one/yellowstone-grpc → @grpc/grpc-js
-  // pulls in dns, fs, http2, net, tls which don't exist in browsers.
-  // Use the empty-module stub (not `false`) so destructuring and
-  // util.promisify() calls get no-op values instead of throwing.
+  // Stub Node.js-only packages for CLIENT bundles (webpack).
+  // The SDK barrel exports QuickNodeProvider/TritonProvider which pull in
+  // @triton-one/yellowstone-grpc → @grpc/grpc-js → dns/fs/http2/net/tls.
+  // The client never uses gRPC at runtime, so alias it entirely to stubs.
   webpack: (config, { isServer }) => {
     if (!isServer) {
-      // fs/promises must use resolve.alias (not fallback) because
-      // webpack treats slash-paths differently in fallback context.
       config.resolve.alias = {
         ...config.resolve.alias,
+        // Eliminate gRPC stack from client bundle entirely — the client
+        // never makes gRPC calls, these are only pulled in transitively
+        // via SDK barrel exports (QuickNode/Triton providers)
+        "@grpc/grpc-js": emptyModule,
+        "@grpc/proto-loader": emptyModule,
+        // fs/promises must use alias (not fallback) — webpack quirk with
+        // slash-separated paths in fallback context
         "fs/promises": emptyModule,
       }
       config.resolve.fallback = {
@@ -64,15 +68,12 @@ const nextConfig: NextConfig = {
     return config
   },
 
-  // Turbopack: stub Node.js built-ins for client/SSR bundles
-  // @grpc/grpc-js (via @sip-protocol/sdk → @triton-one/yellowstone-grpc)
-  // requires dns, fs, http2, net, tls which don't exist in browsers
+  // Turbopack: stub Node.js built-ins for client/SSR bundles.
+  // Note: can't alias @grpc/grpc-js here — Turbopack does strict ESM static
+  // export checking which fails on generic stubs. gRPC aliases are webpack-only
+  // (production). Turbopack handles it via the Node.js built-in stubs below.
   turbopack: {
     resolveAlias: {
-      // Alias Node.js-only packages to empty stubs
-      // Note: can't alias @grpc/grpc-js or @triton-one/yellowstone-grpc
-      // because @sip-protocol/sdk needs real exports (CommitmentLevel, etc.)
-      // Stub Node.js built-ins
       dns: { browser: "./src/lib/empty-module.ts" },
       fs: { browser: "./src/lib/empty-module.ts" },
       "fs/promises": { browser: "./src/lib/empty-module.ts" },
