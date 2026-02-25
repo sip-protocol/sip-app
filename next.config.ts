@@ -1,9 +1,10 @@
 import type { NextConfig } from "next"
 import path from "path"
 
-// Stub module that provides empty named exports (e.g. constants: {})
-// so that destructuring from Node.js built-ins doesn't throw at runtime.
-const emptyModule = path.resolve(process.cwd(), "src/lib/empty-module.ts")
+// Stub module for webpack resolve.fallback — provides no-op functions
+// so destructuring and util.promisify() calls don't throw at runtime.
+// Uses .js extension so webpack can load it without TypeScript loader.
+const emptyModule = path.resolve(process.cwd(), "src/lib/empty-module.js")
 
 const nextConfig: NextConfig = {
   // Enable standalone output for Docker deployment
