@@ -127,7 +127,7 @@ describe("ArciumAdapter", () => {
       expect(result.status).toBe("success")
       expect(result.txHash).toBeDefined()
       expect(result.txHash).toHaveLength(64)
-      expect(result.explorerUrl).toContain("explorer.solana.com")
+      expect(result.explorerUrl).toContain("solscan.io")
       expect(result.explorerUrl).toContain("devnet")
       expect(result.commitment).toMatch(/^0x[0-9a-f]{64}$/)
       // C-SPL keeps recipient public

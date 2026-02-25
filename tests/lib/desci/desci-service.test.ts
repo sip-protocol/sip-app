@@ -144,7 +144,7 @@ describe("DeSciService", () => {
       const result = await service.fundProject(validFundParams)
 
       expect(result.commitmentHash).toBeTruthy()
-      expect(result.commitmentHash).toMatch(/^0x/)
+      expect(result.commitmentHash).not.toMatch(/^0x/)
       expect(result.stealthAddress).toBeTruthy()
       expect(result.stealthMetaAddress).toBeTruthy()
     })

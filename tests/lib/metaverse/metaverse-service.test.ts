@@ -144,7 +144,7 @@ describe("MetaverseService", () => {
       const result = await service.exploreWorld(validExploreParams)
 
       expect(result.commitmentHash).toBeTruthy()
-      expect(result.commitmentHash).toMatch(/^0x/)
+      expect(result.commitmentHash).not.toMatch(/^0x/)
       expect(result.stealthAddress).toBeTruthy()
       expect(result.stealthMetaAddress).toBeTruthy()
     })

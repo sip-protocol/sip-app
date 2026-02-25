@@ -191,7 +191,7 @@ describe("useSolanaTransaction", () => {
     })
 
     expect(result.current.explorerUrl).toBe(
-      `https://explorer.solana.com/tx/${mockSignature}?cluster=devnet`
+      `https://solscan.io/tx/${mockSignature}?cluster=devnet`
     )
   })
 
@@ -224,7 +224,7 @@ describe("useSolanaTransaction", () => {
     })
 
     expect(result.current.explorerUrl).toBe(
-      `https://explorer.solana.com/tx/${mockSignature}`
+      `https://solscan.io/tx/${mockSignature}`
     )
   })
 

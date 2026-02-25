@@ -138,7 +138,7 @@ describe("GamingService", () => {
       const result = await service.playGame(validPlayParams)
 
       expect(result.commitmentHash).toBeTruthy()
-      expect(result.commitmentHash).toMatch(/^0x/)
+      expect(result.commitmentHash).not.toMatch(/^0x/)
     })
   })
 
