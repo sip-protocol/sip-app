@@ -6,18 +6,13 @@
 // TextDecoder/TextEncoder — they're browser globals that Node.js
 // re-exports from util but the polyfill omits.
 //
-// Solution: Load the original polyfill via relative path (bypasses alias),
-// then add the browser globals.
+// Solution: Load the original polyfill via "__original_util__" alias
+// (configured in next.config.ts), then add browser globals.
 
-/* eslint-disable @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/no-require-imports */
+var originalUtil = require("__original_util__");
 
-// Relative path to node_modules bypasses webpack's resolve.alias
-var originalUtil = require("../../node_modules/util");
-
-// Re-export everything from the original polyfill
 var wrapper = Object.create(originalUtil);
-
-// Add TextDecoder/TextEncoder from browser globals
 wrapper.TextDecoder = typeof TextDecoder !== "undefined" ? TextDecoder : undefined;
 wrapper.TextEncoder = typeof TextEncoder !== "undefined" ? TextEncoder : undefined;
 

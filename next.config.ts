@@ -58,7 +58,9 @@ const nextConfig: NextConfig = {
         // WASM-bindgen (yellowstone-grpc) does `const { TextDecoder } = require('util')`
         // but webpack's util polyfill doesn't export TextDecoder/TextEncoder.
         // Exact match (util$) avoids intercepting `util/xxx` sub-imports.
+        // __original_util__ lets util-browser.js load the real polyfill without circular alias.
         "util$": utilBrowser,
+        "__original_util__": require.resolve("util"),
       }
       config.resolve.fallback = {
         ...config.resolve.fallback,
