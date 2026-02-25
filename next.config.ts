@@ -5,6 +5,7 @@ import path from "path"
 // so destructuring and util.promisify() calls don't throw at runtime.
 // Uses .js extension so webpack can load it without TypeScript loader.
 const emptyModule = path.resolve(process.cwd(), "src/lib/empty-module.js")
+const utilBrowser = path.resolve(process.cwd(), "src/lib/util-browser.js")
 
 const nextConfig: NextConfig = {
   // Enable standalone output for Docker deployment
@@ -54,6 +55,10 @@ const nextConfig: NextConfig = {
         // fs/promises must use alias (not fallback) — webpack quirk with
         // slash-separated paths in fallback context
         "fs/promises": emptyModule,
+        // WASM-bindgen (yellowstone-grpc) does `const { TextDecoder } = require('util')`
+        // but webpack's util polyfill doesn't export TextDecoder/TextEncoder.
+        // Exact match (util$) avoids intercepting `util/xxx` sub-imports.
+        "util$": utilBrowser,
       }
       config.resolve.fallback = {
         ...config.resolve.fallback,
