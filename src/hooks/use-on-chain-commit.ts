@@ -46,6 +46,11 @@ export function useOnChainCommit(commitmentType: CommitmentType) {
         )
       }
 
+      // When test wallet is present, emit directly to console so Playwright
+      // can capture SIP-COMMIT logs even against production builds.
+      const isTestWallet =
+        typeof window !== "undefined" && !!window.__SIP_TEST_WALLET
+
       try {
         const store = await createCommitmentStore({
           data: `${id}:${data}`,
@@ -59,18 +64,15 @@ export function useOnChainCommit(commitmentType: CommitmentType) {
 
         const sig = await tx.sendTransaction(transaction)
         if (sig) {
-          logger.info(
-            `[SIP-COMMIT:${commitmentType}] tx: ${sig}`,
-            "useOnChainCommit"
-          )
+          const msg = `[SIP-COMMIT:${commitmentType}] tx: ${sig}`
+          logger.info(msg, "useOnChainCommit")
+          if (isTestWallet) console.info(msg)
         }
         return sig
       } catch (err) {
-        logger.error(
-          `[SIP-COMMIT:${commitmentType}] error`,
-          err,
-          "useOnChainCommit"
-        )
+        const msg = `[SIP-COMMIT:${commitmentType}] error: ${err instanceof Error ? err.message : String(err)}`
+        logger.error(msg, err, "useOnChainCommit")
+        if (isTestWallet) console.error(msg)
         return null
       }
     },

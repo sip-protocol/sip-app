@@ -48,7 +48,7 @@ export function createMainnetTrackTest(config: MainnetTrackTestConfig) {
       const sipLogs: string[] = []
       page.on("console", (msg) => {
         if (msg.text().includes("SIP-COMMIT")) {
-          sipLogs.push(`[${msg.type()}] ${msg.text()}`)
+          sipLogs.push(msg.text())
         }
       })
 
@@ -63,15 +63,34 @@ export function createMainnetTrackTest(config: MainnetTrackTestConfig) {
         page.getByText(config.completedText).first()
       ).toBeVisible({ timeout: 60_000 })
 
-      // Give async commit time to complete
-      await page.waitForTimeout(3000)
+      // Wait for async on-chain commit to complete (mainnet confirmation)
+      await page.waitForTimeout(5000)
 
-      // Report SIP-COMMIT activity
-      if (sipLogs.length > 0) {
-        console.log(`[${config.name}] SIP-COMMIT logs:`)
-        sipLogs.forEach((l) => console.log(`  ${l}`))
-      } else {
-        console.log(`[${config.name}] WARNING: No SIP-COMMIT logs captured`)
+      // Verify SIP-COMMIT transaction was captured
+      console.log(`[${config.name}] SIP-COMMIT logs (${sipLogs.length}):`)
+      sipLogs.forEach((l) => console.log(`  ${l}`))
+
+      // Extract tx signatures from logs
+      const txLogs = sipLogs.filter((l) => l.includes("] tx: "))
+      const errorLogs = sipLogs.filter((l) => l.includes("] error:"))
+
+      if (errorLogs.length > 0) {
+        console.log(`[${config.name}] SIP-COMMIT errors:`)
+        errorLogs.forEach((l) => console.log(`  ${l}`))
+      }
+
+      // At least one SIP-COMMIT log must appear (tx or error)
+      expect(
+        sipLogs.length,
+        `Expected SIP-COMMIT console output for ${config.name} — check that useOnChainCommit fires`
+      ).toBeGreaterThan(0)
+
+      // If a tx signature was captured, log it for Solscan verification
+      if (txLogs.length > 0) {
+        const sig = txLogs[0].split("tx: ")[1]
+        if (sig) {
+          console.log(`[${config.name}] Solscan: https://solscan.io/tx/${sig}`)
+        }
       }
 
       if (config.extraAssertions) {
