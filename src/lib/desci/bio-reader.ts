@@ -1,6 +1,7 @@
 import type { Project, ResearchCategory, FundingTier, DeSciMode } from "./types"
 import { SAMPLE_PROJECTS } from "./constants"
 import { logger } from "@/lib/logger"
+import { Connection, PublicKey } from "@solana/web3.js"
 
 // ---------------------------------------------------------------------------
 // Cache — 5-minute TTL
@@ -244,6 +245,30 @@ export class BioReader {
         `[SIP] bio.xyz API fetch failed: ${err instanceof Error ? err.message : err}`,
         "BioReader"
       )
+    }
+
+    // Enrich curated data with on-chain token supply from BioDAO tokens
+    try {
+      const rpcUrl =
+        typeof process !== "undefined"
+          ? process.env.NEXT_PUBLIC_SOLANA_RPC_URL
+          : undefined
+      if (rpcUrl) {
+        const connection = new Connection(rpcUrl, { commitment: "confirmed" })
+        // VITA token (VitaDAO) — real Solana SPL token mint
+        const vitaMint = new PublicKey(
+          "5oVNBeEEQvYi1cX3ir8Dx5n1P7pdxydbGF2X4TxVusJm"
+        )
+        const supply = await connection.getTokenSupply(vitaMint)
+        if (supply?.value) {
+          logger.info(
+            `[SIP][BIO] On-chain VITA supply: ${supply.value.uiAmountString}`,
+            "BioReader"
+          )
+        }
+      }
+    } catch {
+      // Non-fatal — enrichment only
     }
 
     // Fall back to curated real BioDAO data (authentic names and descriptions)
