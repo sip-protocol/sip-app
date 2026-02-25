@@ -1,4 +1,9 @@
 import type { NextConfig } from "next"
+import path from "path"
+
+// Stub module that provides empty named exports (e.g. constants: {})
+// so that destructuring from Node.js built-ins doesn't throw at runtime.
+const emptyModule = path.resolve(process.cwd(), "src/lib/empty-module.ts")
 
 const nextConfig: NextConfig = {
   // Enable standalone output for Docker deployment
@@ -29,6 +34,7 @@ const nextConfig: NextConfig = {
     "@grpc/grpc-js",
     "@grpc/proto-loader",
     "@triton-one/yellowstone-grpc",
+    "@sunrisestake/client",
   ],
 
   // Stub Node.js built-ins for client bundles (webpack)
@@ -40,7 +46,7 @@ const nextConfig: NextConfig = {
         dns: false,
         fs: false,
         "fs/promises": false,
-        http2: false,
+        http2: emptyModule,
         net: false,
         tls: false,
         worker_threads: false,
