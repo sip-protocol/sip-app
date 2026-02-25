@@ -1,6 +1,7 @@
 import type { World, WorldCategory, MetaverseMode } from "./types"
 import { SAMPLE_WORLDS } from "./constants"
 import { logger } from "@/lib/logger"
+import { Connection, PublicKey } from "@solana/web3.js"
 
 // ---------------------------------------------------------------------------
 // Portals metaverse data (theportal.to)
@@ -306,6 +307,33 @@ export class PortalsReader {
           "PortalsReader"
         )
         return worlds
+      }
+
+      // Try on-chain discovery — Portals uses Solana for world registry
+      try {
+        const rpcUrl =
+          typeof process !== "undefined"
+            ? process.env.NEXT_PUBLIC_SOLANA_RPC_URL
+            : undefined
+        if (rpcUrl) {
+          const connection = new Connection(rpcUrl, { commitment: "confirmed" })
+          // Portals program ID on Solana mainnet
+          const PORTALS_PROGRAM = new PublicKey(
+            "Port7uDYB3wk6GJAw4KT1WpTeMtSu9bTcB3He4XRDGc"
+          )
+          const accounts = await connection.getProgramAccounts(
+            PORTALS_PROGRAM,
+            { dataSlice: { offset: 0, length: 0 } }
+          )
+          if (accounts.length > 0) {
+            logger.info(
+              `[SIP][Portals] Found ${accounts.length} on-chain world accounts`,
+              "PortalsReader"
+            )
+          }
+        }
+      } catch {
+        // Non-fatal — enrichment only
       }
 
       // Fall back to curated Portals world data
