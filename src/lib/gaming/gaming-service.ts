@@ -59,7 +59,8 @@ export class GamingService {
         if (!p.gameId) {
           return "Game ID is required"
         }
-        const game = getGame(p.gameId) ?? MAGICBLOCK_GAMES.find((g) => g.id === p.gameId)
+        const game =
+          getGame(p.gameId) ?? MAGICBLOCK_GAMES.find((g) => g.id === p.gameId)
         if (!game) {
           return "Game not found"
         }

@@ -47,7 +47,8 @@ export function ClaimRewardForm({ reward, onClaimed }: ClaimRewardFormProps) {
     []
   )
 
-  const isFormReady = (connected || isDemoMode) && (status === "idle" || status === "error")
+  const isFormReady =
+    (connected || isDemoMode) && (status === "idle" || status === "error")
   const isClaiming = status === "generating_stealth" || status === "claiming"
   const isClaimed = status === "claimed"
 

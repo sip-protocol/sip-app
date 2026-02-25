@@ -66,7 +66,8 @@ export function SubscribeForm({ drop, onSubscribed }: SubscribeFormProps) {
     ),
   }
 
-  const isFormReady = (connected || isDemoMode) && (status === "idle" || status === "error")
+  const isFormReady =
+    (connected || isDemoMode) && (status === "idle" || status === "error")
   const isSubscribing =
     status === "selecting_channel" || status === "subscribing"
   const isSubscribed = status === "subscribed"

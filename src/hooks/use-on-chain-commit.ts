@@ -35,7 +35,11 @@ export function useOnChainCommit(commitmentType: CommitmentType) {
         )
         return null
       }
-      if (isDemoMode && typeof window !== "undefined" && !window.__SIP_TEST_WALLET) {
+      if (
+        isDemoMode &&
+        typeof window !== "undefined" &&
+        !window.__SIP_TEST_WALLET
+      ) {
         logger.info(
           `[SIP-COMMIT:${commitmentType}] demo mode with real wallet — proceeding with on-chain tx`,
           "useOnChainCommit"

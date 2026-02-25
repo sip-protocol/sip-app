@@ -69,7 +69,8 @@ export function JoinCampaignForm({
     ),
   }
 
-  const isFormReady = (connected || isDemoMode) && (status === "idle" || status === "error")
+  const isFormReady =
+    (connected || isDemoMode) && (status === "idle" || status === "error")
   const isJoining = status === "selecting_campaign" || status === "joining"
   const isJoined = status === "joined"
 

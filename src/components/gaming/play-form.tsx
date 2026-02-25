@@ -78,7 +78,9 @@ export function PlayForm({ game, onResolved }: PlayFormProps) {
   }
 
   const isFormReady =
-    (connected || isDemoMode) && (status === "idle" || status === "error") && move.trim()
+    (connected || isDemoMode) &&
+    (status === "idle" || status === "error") &&
+    move.trim()
   const isPlaying =
     status === "committing_move" ||
     status === "generating_commitment" ||

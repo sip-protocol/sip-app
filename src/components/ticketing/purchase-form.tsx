@@ -86,7 +86,8 @@ export function PurchaseForm({ event, onPurchased }: PurchaseFormProps) {
     ),
   }
 
-  const isFormReady = (connected || isDemoMode) && (status === "idle" || status === "error")
+  const isFormReady =
+    (connected || isDemoMode) && (status === "idle" || status === "error")
   const isPurchasing =
     status === "selecting_event" ||
     status === "generating_stealth_ticket" ||

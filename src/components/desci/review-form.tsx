@@ -57,7 +57,9 @@ export function ReviewForm({ onReviewed }: ReviewFormProps) {
   const reviewableProject = SAMPLE_CONTRIBUTIONS[0]
 
   const isFormReady =
-    (connected || isDemoMode) && (status === "idle" || status === "error") && reviewableProject
+    (connected || isDemoMode) &&
+    (status === "idle" || status === "error") &&
+    reviewableProject
   const isReviewing =
     status === "generating_proof" || status === "submitting_review"
   const isReviewed = status === "reviewed"

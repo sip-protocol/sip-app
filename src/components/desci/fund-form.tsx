@@ -78,7 +78,8 @@ export function FundForm({ project, onFunded }: FundFormProps) {
     ),
   }
 
-  const isFormReady = (connected || isDemoMode) && (status === "idle" || status === "error")
+  const isFormReady =
+    (connected || isDemoMode) && (status === "idle" || status === "error")
   const isFunding =
     status === "selecting_project" ||
     status === "generating_stealth_funding" ||

@@ -138,7 +138,9 @@ async function encryptBrowserAES(
   keyHex: string
 ): Promise<{ ciphertext: string; nonce: string }> {
   const encoder = new TextEncoder()
-  const keyData = encoder.encode(keyHex.replace(/^0x/, "").padEnd(32, "0").slice(0, 32))
+  const keyData = encoder.encode(
+    keyHex.replace(/^0x/, "").padEnd(32, "0").slice(0, 32)
+  )
   const iv = crypto.getRandomValues(new Uint8Array(12))
 
   const cryptoKey = await crypto.subtle.importKey(
@@ -167,7 +169,9 @@ async function decryptBrowserAES(
   keyHex: string
 ): Promise<string> {
   const encoder = new TextEncoder()
-  const keyData = encoder.encode(keyHex.replace(/^0x/, "").padEnd(32, "0").slice(0, 32))
+  const keyData = encoder.encode(
+    keyHex.replace(/^0x/, "").padEnd(32, "0").slice(0, 32)
+  )
 
   const fromHex = (hex: string) => {
     const clean = hex.startsWith("0x") ? hex.slice(2) : hex

@@ -78,7 +78,8 @@ export function ExploreForm({ world, onExplored }: ExploreFormProps) {
     ),
   }
 
-  const isFormReady = (connected || isDemoMode) && (status === "idle" || status === "error")
+  const isFormReady =
+    (connected || isDemoMode) && (status === "idle" || status === "error")
   const isExploring =
     status === "selecting_world" ||
     status === "generating_stealth_avatar" ||

@@ -67,7 +67,9 @@ export function TeleportForm({ onTeleported }: TeleportFormProps) {
   const destination = worlds[0]
 
   const isFormReady =
-    (connected || isDemoMode) && (status === "idle" || status === "error") && destination
+    (connected || isDemoMode) &&
+    (status === "idle" || status === "error") &&
+    destination
   const isTeleporting =
     status === "generating_proof" || status === "teleporting"
   const isArrived = status === "arrived"

@@ -77,7 +77,8 @@ export function StreamForm({ track, onStreamed }: StreamFormProps) {
     ),
   }
 
-  const isFormReady = (connected || isDemoMode) && (status === "idle" || status === "error")
+  const isFormReady =
+    (connected || isDemoMode) && (status === "idle" || status === "error")
   const isStreaming =
     status === "selecting_track" ||
     status === "generating_stealth_listener" ||

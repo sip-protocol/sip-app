@@ -69,7 +69,8 @@ export class TicketingService {
         if (!p.eventId) {
           return "Event ID is required"
         }
-        const event = getEvent(p.eventId) ?? KYD_EVENTS.find((e) => e.id === p.eventId)
+        const event =
+          getEvent(p.eventId) ?? KYD_EVENTS.find((e) => e.id === p.eventId)
         if (!event) {
           return "Event not found"
         }

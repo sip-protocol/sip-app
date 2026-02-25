@@ -118,7 +118,8 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
     []
   )
 
-  const canPlay = (connected || isDemoMode) && (phase === "select" || status === "error")
+  const canPlay =
+    (connected || isDemoMode) && (phase === "select" || status === "error")
 
   const generateOpponentCommitment = useCallback((_move: RpsMove) => {
     const fakeCommitment =
