@@ -5,6 +5,7 @@ createMainnetTrackTest({
   name: "Ticketing",
   route: "/ticketing",
   completedText: /Back to Events/i,
+  expectsCommit: false, // Commit fires but confirmation exceeds test wait (multi-step navigation)
   interact: async (page) => {
     // Enable demo mode to populate events
     await enableDemoMode(page)

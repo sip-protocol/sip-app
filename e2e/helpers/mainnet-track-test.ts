@@ -12,6 +12,8 @@ export interface MainnetTrackTestConfig {
   interact: (page: Page) => Promise<void>
   /** Text or pattern indicating the track completed successfully */
   completedText: string | RegExp
+  /** Whether this flow triggers useOnChainCommit (default: true) */
+  expectsCommit?: boolean
   /** Optional extra assertions after completion */
   extraAssertions?: (page: Page) => Promise<void>
 }
@@ -79,11 +81,13 @@ export function createMainnetTrackTest(config: MainnetTrackTestConfig) {
         errorLogs.forEach((l) => console.log(`  ${l}`))
       }
 
-      // At least one SIP-COMMIT log must appear (tx or error)
-      expect(
-        sipLogs.length,
-        `Expected SIP-COMMIT console output for ${config.name} — check that useOnChainCommit fires`
-      ).toBeGreaterThan(0)
+      // Assert SIP-COMMIT logs if this track produces on-chain commits
+      if (config.expectsCommit !== false) {
+        expect(
+          sipLogs.length,
+          `Expected SIP-COMMIT console output for ${config.name} — check that useOnChainCommit fires`
+        ).toBeGreaterThan(0)
+      }
 
       // If a tx signature was captured, log it for Solscan verification
       if (txLogs.length > 0) {

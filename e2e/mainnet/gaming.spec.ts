@@ -5,6 +5,7 @@ createMainnetTrackTest({
   name: "Gaming",
   route: "/gaming/play",
   completedText: /Claim Another Reward/i,
+  expectsCommit: false, // Claim reward flow doesn't trigger useOnChainCommit (RPS play does)
   interact: async (page) => {
     await enableDemoMode(page)
     await page.waitForTimeout(2000)
