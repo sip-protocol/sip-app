@@ -1,3 +1,10 @@
+/* eslint-disable no-var */
+declare global {
+  interface Window {
+    __SIP_TEST_WALLET?: number[]
+  }
+}
+
 import type { Page } from "@playwright/test"
 import { Keypair } from "@solana/web3.js"
 import bs58 from "bs58"
