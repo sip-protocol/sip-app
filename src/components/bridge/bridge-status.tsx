@@ -170,7 +170,10 @@ export function BridgeStatus({
 
                 {/* Active spinner */}
                 {isCurrent && (
-                  <SpinnerGapIcon size={16} className="animate-spin text-cyan-400 ml-auto flex-shrink-0 mt-1" />
+                  <SpinnerGapIcon
+                    size={16}
+                    className="animate-spin text-cyan-400 ml-auto flex-shrink-0 mt-1"
+                  />
                 )}
               </div>
             )
@@ -180,4 +183,3 @@ export function BridgeStatus({
     </div>
   )
 }
-

@@ -1,3 +1,5 @@
+"use client"
+
 import Link from "next/link"
 import { XLogoIcon, GithubLogoIcon, BookOpenIcon } from "@phosphor-icons/react"
 import { Logo } from "@/components/ui/logo"

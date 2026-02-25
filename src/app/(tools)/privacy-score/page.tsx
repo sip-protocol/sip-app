@@ -347,4 +347,3 @@ interface AnalysisResult {
     }>
   }
 }
-

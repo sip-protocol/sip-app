@@ -138,7 +138,10 @@ export function AuditorShareModal({
         <div className="p-6 space-y-6">
           {/* Revocation Warning Banner */}
           <div className="flex items-start gap-2 p-3 rounded-lg bg-red-500/10 border border-red-500/20">
-            <LockSimpleIcon size={16} className="text-red-400 flex-shrink-0 mt-0.5" />
+            <LockSimpleIcon
+              size={16}
+              className="text-red-400 flex-shrink-0 mt-0.5"
+            />
             <div className="text-xs text-red-400">
               <p className="font-medium">Sharing is permanent</p>
               <p className="mt-1 text-red-400/80">
@@ -202,7 +205,10 @@ export function AuditorShareModal({
                     className="flex items-center justify-between px-3 py-2 rounded-lg bg-[var(--surface-tertiary)]"
                   >
                     <div className="flex items-center gap-2">
-                      <UserIcon size={16} className="text-[var(--text-tertiary)]" />
+                      <UserIcon
+                        size={16}
+                        className="text-[var(--text-tertiary)]"
+                      />
                       <span className="text-sm">{share.auditorId}</span>
                     </div>
                     <span className="text-xs text-[var(--text-tertiary)]">

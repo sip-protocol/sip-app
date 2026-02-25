@@ -616,7 +616,10 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
                   </div>
                   {isZecTransparent && (
                     <div className="mt-2 flex items-start gap-2 rounded-lg border border-orange-500/30 bg-orange-500/10 p-2">
-                      <WarningIcon size={16} className="mt-0.5 flex-shrink-0 text-orange-400" />
+                      <WarningIcon
+                        size={16}
+                        className="mt-0.5 flex-shrink-0 text-orange-400"
+                      />
                       <div className="text-xs text-orange-400">
                         <strong>Privacy Warning:</strong> Transparent addresses
                         expose transaction details publicly. Use a{" "}
@@ -718,9 +721,15 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
         >
           <div className="flex items-start gap-2">
             {isCompliant ? (
-              <KeyIcon size={16} className="mt-0.5 flex-shrink-0 text-purple-400" />
+              <KeyIcon
+                size={16}
+                className="mt-0.5 flex-shrink-0 text-purple-400"
+              />
             ) : (
-              <ShieldIcon size={16} className="mt-0.5 flex-shrink-0 text-purple-400" />
+              <ShieldIcon
+                size={16}
+                className="mt-0.5 flex-shrink-0 text-purple-400"
+              />
             )}
             <div className="flex-1 text-sm">
               <div className="flex items-center justify-between">
@@ -802,7 +811,10 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
             data-testid="destination-verification"
           >
             <div className="flex items-start gap-2">
-              <CheckIcon size={20} className="mt-0.5 flex-shrink-0 text-green-400" />
+              <CheckIcon
+                size={20}
+                className="mt-0.5 flex-shrink-0 text-green-400"
+              />
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-medium text-green-300">
                   Funds will be sent to:
@@ -1165,7 +1177,11 @@ function TokenSelector({
           className="h-5 w-5 rounded-full sm:h-6 sm:w-6"
         />
         <span className="text-sm sm:text-base">{token.symbol}</span>
-        <ChevronDownIcon size={16} className="text-gray-400" aria-hidden="true" />
+        <ChevronDownIcon
+          size={16}
+          className="text-gray-400"
+          aria-hidden="true"
+        />
       </button>
 
       {open && (

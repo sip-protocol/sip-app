@@ -325,14 +325,20 @@ function QRScannerModal({ onScan, onClose }: QRScannerModalProps) {
         <div className="aspect-square bg-black/90 flex items-center justify-center">
           {cameraError ? (
             <div className="text-center px-6">
-              <CameraSlashIcon size={48} className="mx-auto mb-3 text-[var(--text-tertiary)]" />
+              <CameraSlashIcon
+                size={48}
+                className="mx-auto mb-3 text-[var(--text-tertiary)]"
+              />
               <p className="text-sm text-[var(--text-secondary)]">
                 {cameraError}
               </p>
             </div>
           ) : (
             <div className="text-center px-6">
-              <QrCodeIcon size={64} className="mx-auto mb-4 text-sip-purple-400" />
+              <QrCodeIcon
+                size={64}
+                className="mx-auto mb-4 text-sip-purple-400"
+              />
               <p className="text-sm text-[var(--text-secondary)]">
                 Point your camera at a SIP address QR code
               </p>
@@ -455,7 +461,10 @@ function AddressBookModal({
             </div>
           ) : (
             <div className="p-8 text-center">
-              <BookOpenIcon size={48} className="mx-auto mb-3 text-[var(--text-tertiary)]" />
+              <BookOpenIcon
+                size={48}
+                className="mx-auto mb-3 text-[var(--text-tertiary)]"
+              />
               <p className="text-sm text-[var(--text-secondary)]">
                 No saved addresses yet
               </p>

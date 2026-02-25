@@ -196,7 +196,10 @@ export function VoteStatus({
 
                 {/* Active spinner */}
                 {isCurrent && !isComplete && (
-                  <SpinnerGapIcon size={16} className="animate-spin text-sip-purple-400 ml-auto flex-shrink-0 mt-1" />
+                  <SpinnerGapIcon
+                    size={16}
+                    className="animate-spin text-sip-purple-400 ml-auto flex-shrink-0 mt-1"
+                  />
                 )}
               </div>
             )
@@ -206,4 +209,3 @@ export function VoteStatus({
     </div>
   )
 }
-

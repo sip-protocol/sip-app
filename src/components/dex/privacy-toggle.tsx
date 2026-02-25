@@ -419,4 +419,3 @@ function FeatureValue({ value }: { value: boolean | string }) {
   }
   return <span className="text-gray-300">{value}</span>
 }
-

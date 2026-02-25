@@ -184,9 +184,11 @@ export function SlippageDisplay({ onClick }: { onClick: () => void }) {
       aria-label={`Slippage tolerance: ${slippage}%. Click to edit`}
     >
       <span>Slippage: {slippage}%</span>
-      <EditIcon size={12} className="opacity-0 transition-opacity group-hover:opacity-100" />
+      <EditIcon
+        size={12}
+        className="opacity-0 transition-opacity group-hover:opacity-100"
+      />
       {isHighSlippage && <WarningIcon size={12} className="text-orange-400" />}
     </button>
   )
 }
-

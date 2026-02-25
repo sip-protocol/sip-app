@@ -200,7 +200,10 @@ export function StealthAddressGenerator({
             {/* Derivation Info */}
             <div className="p-3 rounded-lg bg-sip-purple-500/10 border border-sip-purple-500/20">
               <div className="flex items-start gap-2">
-                <InfoIcon size={16} className="text-sip-purple-400 flex-shrink-0 mt-0.5" />
+                <InfoIcon
+                  size={16}
+                  className="text-sip-purple-400 flex-shrink-0 mt-0.5"
+                />
                 <p className="text-xs text-sip-purple-300">
                   Keys are derived from your wallet using BIP-340 Schnorr
                   signatures. Each incoming payment creates a unique stealth

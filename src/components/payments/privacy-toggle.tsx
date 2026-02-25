@@ -2,7 +2,11 @@
 
 import type { ReactNode } from "react"
 import { useState } from "react"
-import { LockSimpleIcon, EyeIcon, LockSimpleOpenIcon } from "@phosphor-icons/react"
+import {
+  LockSimpleIcon,
+  EyeIcon,
+  LockSimpleOpenIcon,
+} from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 
 export type PrivacyLevel = "shielded" | "compliant" | "transparent"

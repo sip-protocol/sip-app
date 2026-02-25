@@ -185,14 +185,10 @@ export function QuoteFreshnessIndicator({
                 : "text-gray-300 hover:bg-gray-700/50"
           }`}
         >
-          <RefreshIcon
-            size={14}
-            className={isLoading ? "animate-spin" : ""}
-          />
+          <RefreshIcon size={14} className={isLoading ? "animate-spin" : ""} />
           {isLoading ? "Refreshing..." : "Refresh"}
         </button>
       </div>
     </div>
   )
 }
-

@@ -7,10 +7,7 @@ import {
   type ErrorCode,
   type ErrorAction,
 } from "@/lib/error-messages"
-import {
-  WarningIcon,
-  XCircleIcon,
-} from "@phosphor-icons/react"
+import { WarningIcon, XCircleIcon } from "@phosphor-icons/react"
 
 interface ErrorCardProps {
   /** The error to display - can be Error object or string */
@@ -240,4 +237,3 @@ export function SwapErrorCard({
     />
   )
 }
-

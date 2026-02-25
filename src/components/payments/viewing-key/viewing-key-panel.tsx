@@ -225,7 +225,10 @@ export function ViewingKeyPanel({
       {!disabled && (
         <div className="mt-4 p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
           <div className="flex items-start gap-2">
-            <ShieldWarningIcon size={16} className="text-amber-500 flex-shrink-0 mt-0.5" />
+            <ShieldWarningIcon
+              size={16}
+              className="text-amber-500 flex-shrink-0 mt-0.5"
+            />
             <div className="flex-1">
               <p className="text-xs font-medium text-amber-500">
                 Backup Your Viewing Key
