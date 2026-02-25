@@ -22,9 +22,15 @@ export async function injectTestWallet(page: Page): Promise<Keypair> {
   const secretBytes = Array.from(bs58.decode(secret))
   const keypair = Keypair.fromSecretKey(Uint8Array.from(secretBytes))
 
+  const rpcUrl =
+    process.env.E2E_RPC_URL ||
+    (process.env.NEXT_PUBLIC_HELIUS_API_KEY
+      ? `https://mainnet.helius-rpc.com/?api-key=${process.env.NEXT_PUBLIC_HELIUS_API_KEY}`
+      : "https://api.mainnet-beta.solana.com")
+
   // Inject before page loads — runs in browser context
   await page.addInitScript(
-    ({ secretKey, walletName }) => {
+    ({ secretKey, walletName, rpc }) => {
       // Set the test wallet global
       window.__SIP_TEST_WALLET = secretKey
 
@@ -38,8 +44,7 @@ export async function injectTestWallet(page: Page): Promise<Keypair> {
           state: {
             cluster: "mainnet-beta",
             customRpc: null,
-            rpcUrl:
-              "https://mainnet.helius-rpc.com/?api-key=142fb48a-aa24-4083-99c8-249df5400b30",
+            rpcUrl: rpc,
             isMainnet: true,
           },
           version: 0,
@@ -49,6 +54,7 @@ export async function injectTestWallet(page: Page): Promise<Keypair> {
     {
       secretKey: secretBytes,
       walletName: "SIP Test Wallet",
+      rpc: rpcUrl,
     }
   )
 
