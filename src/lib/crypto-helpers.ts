@@ -11,6 +11,7 @@
  */
 
 import { getSDK } from "@/lib/sip-client"
+import { hexToBase58 } from "@/lib/stealth-browser-fallback"
 
 // ─── Browser-native helpers ──────────────────────────────────────────
 
@@ -23,8 +24,9 @@ function toHex(buf: ArrayBuffer | Uint8Array): string {
   )
 }
 
-function truncateHex(hex: string): string {
-  return hex.length > 16 ? `${hex.slice(0, 10)}...${hex.slice(-8)}` : hex
+function truncateBase58(hex: string): string {
+  const b58 = hexToBase58(hex)
+  return b58.length > 16 ? `${b58.slice(0, 8)}...${b58.slice(-6)}` : b58
 }
 
 // ─── Commitment ──────────────────────────────────────────────────────
@@ -32,7 +34,7 @@ function truncateHex(hex: string): string {
 export interface CommitmentResult {
   /** Full hex commitment value (0x-prefixed) */
   commitmentHash: string
-  /** Truncated display format: 0xabcd...ef01 */
+  /** Truncated base58 display format: 2Kj8Qw...x4mN */
   commitmentDisplay: string
   /** Raw blinding factor hex */
   blindingFactor: string
@@ -52,7 +54,7 @@ export async function createRealCommitment(
     const fullHash = commitment.value as string
     return {
       commitmentHash: fullHash,
-      commitmentDisplay: truncateHex(fullHash),
+      commitmentDisplay: truncateBase58(fullHash),
       blindingFactor: commitment.blindingFactor as string,
     }
   } catch {
@@ -69,7 +71,7 @@ export async function createRealCommitment(
 
     return {
       commitmentHash: fullHash,
-      commitmentDisplay: truncateHex(fullHash),
+      commitmentDisplay: truncateBase58(fullHash),
       blindingFactor: toHex(salt),
     }
   }

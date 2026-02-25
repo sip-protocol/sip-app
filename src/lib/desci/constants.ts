@@ -71,13 +71,13 @@ export const SAMPLE_CONTRIBUTIONS: Contribution[] = [
   {
     projectId: "project-climate-data",
     tier: "micro",
-    commitmentHash: "0x5d2a...e3b1",
+    commitmentHash: "2hN7Qs...vR5k",
     contributedAt: now - 3 * DAY,
   },
   {
     projectId: "project-longevity-dao",
     tier: "grant",
-    commitmentHash: "0x8f1c...b4d7",
+    commitmentHash: "5tK9Fw...jM2p",
     contributedAt: now - 1 * DAY,
   },
 ]

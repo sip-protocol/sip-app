@@ -34,7 +34,7 @@ export function ConnectionCard({
       : connection.fromUsername
 
   const profile = SAMPLE_PROFILES.find((p) => p.id === profileId)
-  const stealthAddress = profile?.stealthAddress ?? "sip:solana:0x0000"
+  const stealthAddress = profile?.stealthAddress ?? "sip:solana:1111111111"
 
   return (
     <div

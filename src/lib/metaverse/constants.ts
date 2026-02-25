@@ -71,13 +71,13 @@ export const SAMPLE_VISITS: Visit[] = [
   {
     worldId: "world-social-hub",
     tier: "citizen",
-    commitmentHash: "0x4c1f...d8e2",
+    commitmentHash: "6nK3Qw...tR7p",
     visitedAt: now - 2 * DAY,
   },
   {
     worldId: "world-crypto-gallery",
     tier: "explorer",
-    commitmentHash: "0x9a3b...f1c7",
+    commitmentHash: "3hD5Jx...mW8k",
     visitedAt: now - 1 * DAY,
   },
 ]

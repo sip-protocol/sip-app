@@ -9,6 +9,7 @@ import {
 } from "@/hooks/use-viewing-key-disclosure"
 import { useStealthKeys } from "@/hooks/use-stealth-keys"
 import { logger } from "@/lib/logger"
+import { hexToBase58 } from "@/lib/stealth-browser-fallback"
 
 interface ShareKeyPanelProps {
   onKeyGenerated?: (key: ViewingKey) => void
@@ -219,7 +220,8 @@ export function ShareKeyPanel({ onKeyGenerated }: ShareKeyPanelProps) {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-medium">
-                      {key.label || `Key ${key.viewingKey.hash.slice(0, 8)}`}
+                      {key.label ||
+                        `Key ${(key.viewingKey.hash.startsWith("0x") ? hexToBase58(key.viewingKey.hash) : key.viewingKey.hash).slice(0, 8)}`}
                     </p>
                     <p className="text-xs text-[var(--text-tertiary)] mt-1">
                       Created {formatDate(key.createdAt)} • Path:{" "}
@@ -254,7 +256,9 @@ export function ShareKeyPanel({ onKeyGenerated }: ShareKeyPanelProps) {
           <div className="p-3 rounded-lg bg-[var(--surface-secondary)]">
             <p className="text-xs text-[var(--text-tertiary)] mb-1">Key Hash</p>
             <p className="font-mono text-xs break-all">
-              {selectedKey.viewingKey.hash}
+              {selectedKey.viewingKey.hash.startsWith("0x")
+                ? hexToBase58(selectedKey.viewingKey.hash)
+                : selectedKey.viewingKey.hash}
             </p>
           </div>
 

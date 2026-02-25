@@ -71,13 +71,13 @@ export const SAMPLE_STREAMS: Stream[] = [
   {
     trackId: "track-anonymous-groove",
     tier: "free",
-    commitmentHash: "0x6e3b...a1c4",
+    commitmentHash: "8pR4Hs...vK2n",
     streamedAt: now - 2 * DAY,
   },
   {
     trackId: "track-decentralized-beats",
     tier: "supporter",
-    commitmentHash: "0x9f2d...c7e3",
+    commitmentHash: "5wB9Lm...jF3s",
     streamedAt: now - 1 * DAY,
   },
 ]

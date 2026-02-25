@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils"
 import { truncate } from "@/lib/utils"
 import { DaoBadge } from "./dao-badge"
 import type { PrivateVoteRecord } from "@/lib/governance/types"
+import { hexToBase58 } from "@/lib/stealth-browser-fallback"
 
 interface VoteHistoryCardProps {
   vote: PrivateVoteRecord
@@ -76,7 +77,13 @@ export function VoteHistoryCard({
         <div className="flex justify-between">
           <span className="text-[var(--text-secondary)]">Commitment</span>
           <code className="font-mono text-[var(--text-tertiary)]">
-            {truncate(vote.encryptedVote.ciphertext, 6, 4)}
+            {truncate(
+              vote.encryptedVote.ciphertext.startsWith("0x")
+                ? hexToBase58(vote.encryptedVote.ciphertext)
+                : vote.encryptedVote.ciphertext,
+              6,
+              4
+            )}
           </code>
         </div>
 

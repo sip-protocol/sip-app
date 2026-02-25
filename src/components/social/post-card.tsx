@@ -31,7 +31,7 @@ export function PostCard({
   className,
 }: PostCardProps) {
   const profile = SAMPLE_PROFILES.find((p) => p.id === post.authorProfileId)
-  const stealthAddress = profile?.stealthAddress ?? "sip:solana:0x0000"
+  const stealthAddress = profile?.stealthAddress ?? "sip:solana:1111111111"
 
   return (
     <div

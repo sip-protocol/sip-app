@@ -4,6 +4,7 @@ import { useState, useCallback } from "react"
 import type { ViewingKey } from "@sip-protocol/types"
 import { CopyIcon, CheckIcon } from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
+import { hexToBase58 } from "@/lib/stealth-browser-fallback"
 import { logger } from "@/lib/logger"
 
 interface ViewingKeyDisplayProps {
@@ -117,7 +118,13 @@ export function ViewingKeyDisplay({
       {/* Key Hash (for verification) */}
       <div className="flex items-center gap-2 text-xs text-[var(--text-tertiary)]">
         <span>Hash:</span>
-        <code className="font-mono">{truncateKey(viewingKey.hash)}</code>
+        <code className="font-mono">
+          {truncateKey(
+            viewingKey.hash.startsWith("0x")
+              ? hexToBase58(viewingKey.hash)
+              : viewingKey.hash
+          )}
+        </code>
       </div>
 
       {/* Derivation Path */}

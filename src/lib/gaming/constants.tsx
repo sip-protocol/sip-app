@@ -85,14 +85,14 @@ export const SAMPLE_RESULTS: GameResult[] = [
     gameId: "game-stealth-showdown",
     won: true,
     rewardTier: "bronze",
-    commitmentHash: "0x7a3f...b2e1",
+    commitmentHash: "4sG6Kp...hN9r",
     revealedAt: now - 2 * DAY,
   },
   {
     gameId: "game-number-oracle",
     won: false,
     rewardTier: "bronze",
-    commitmentHash: "0x9c1d...f4a8",
+    commitmentHash: "2mJ7Tw...bL5x",
     revealedAt: now - 1 * DAY,
   },
 ]

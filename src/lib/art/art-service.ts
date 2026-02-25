@@ -157,8 +157,8 @@ function mapAssetToGeneratedArt(asset: HeliusAsset): GeneratedArt {
     },
     svgData: "", // Will be rendered on-demand by the UI
     seed,
-    stealthAddress: `sip:solana:0x${seed}`,
-    metaAddress: `st:sol:0x${deterministicSeed(asset.id + "-meta")}`,
+    stealthAddress: `sip:solana:${seed}`,
+    metaAddress: `st:sol:${deterministicSeed(asset.id + "-meta")}`,
     privacyLevel:
       styleIndex === 0
         ? PrivacyLevel.SHIELDED

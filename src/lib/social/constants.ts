@@ -12,7 +12,7 @@ function deterministicStealthAddress(seed: string): string {
     hash = ((hash << 5) - hash + seed.charCodeAt(i)) | 0
   }
   const hex = Math.abs(hash).toString(16).padStart(64, "a")
-  return `sip:solana:0x${hex}`
+  return `sip:solana:${hex}`
 }
 
 function deterministicMetaAddress(seed: string): string {
@@ -21,7 +21,7 @@ function deterministicMetaAddress(seed: string): string {
     hash = ((hash << 7) - hash + seed.charCodeAt(i)) | 0
   }
   const hex = Math.abs(hash).toString(16).padStart(64, "b")
-  return `st:sol:0x${hex}`
+  return `st:sol:${hex}`
 }
 
 const now = Date.now()
@@ -126,7 +126,7 @@ export const SAMPLE_POSTS: SocialPost[] = [
     authorProfileId: "profile-cipher",
     authorUsername: "cipher_punk",
     content: "",
-    encryptedContent: "0xencrypted_content_pedersen_commitment_hidden",
+    encryptedContent: "Ek7pRmV2xNqW3sYh...pedersen_hidden",
     timestamp: now - 8 * DAY,
     likeCount: 31,
     commentCount: 7,
@@ -150,7 +150,7 @@ export const SAMPLE_POSTS: SocialPost[] = [
     authorProfileId: "profile-shadow",
     authorUsername: "shadow_dev",
     content: "",
-    encryptedContent: "0xencrypted_dev_update_shielded_content",
+    encryptedContent: "Fj9sKnQ4wBtR7mXv...shielded_content",
     timestamp: now - 5 * DAY,
     likeCount: 9,
     commentCount: 2,
@@ -174,7 +174,7 @@ export const SAMPLE_POSTS: SocialPost[] = [
     authorProfileId: "profile-dolphin",
     authorUsername: "anon_dolphin",
     content: "",
-    encryptedContent: "0xencrypted_alpha_leak_only_viewing_key_holders",
+    encryptedContent: "Hn3vLpW8xJkR5mTq...viewing_key_only",
     timestamp: now - 3 * DAY,
     likeCount: 67,
     commentCount: 22,

@@ -122,11 +122,17 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
     (connected || isDemoMode) && (phase === "select" || status === "error")
 
   const generateOpponentCommitment = useCallback((_move: RpsMove) => {
-    const fakeCommitment =
-      "0x" +
-      Array.from({ length: 16 }, () =>
-        Math.floor(Math.random() * 16).toString(16)
-      ).join("")
+    const fakeBytes = Array.from({ length: 16 }, () =>
+      Math.floor(Math.random() * 16).toString(16)
+    ).join("")
+    const chars = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"
+    const fakeCommitment = Array.from(
+      { length: 32 },
+      (_, i) =>
+        chars[
+          (parseInt(fakeBytes[i % fakeBytes.length], 16) + i) % chars.length
+        ]
+    ).join("")
     setOpponentCommitment(fakeCommitment)
   }, [])
 
@@ -322,7 +328,8 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
                 Encrypted Move
               </span>
               <code className="text-xs font-mono text-[var(--text-tertiary)] truncate">
-                {activeRecord.encryptedContent.slice(0, 24)}...
+                {activeRecord.encryptedContent.replace(/^0x/, "").slice(0, 20)}
+                ...
               </code>
             </div>
           )}

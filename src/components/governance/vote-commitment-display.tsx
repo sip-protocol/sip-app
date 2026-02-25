@@ -4,6 +4,11 @@ import { useState } from "react"
 import { cn } from "@/lib/utils"
 import { truncate, copyToClipboard } from "@/lib/utils"
 import type { SerializedEncryptedVote } from "@/lib/governance/types"
+import { hexToBase58 } from "@/lib/stealth-browser-fallback"
+
+function displayHash(hex: string): string {
+  return hex.startsWith("0x") ? hexToBase58(hex) : hex
+}
 
 interface VoteCommitmentDisplayProps {
   encryptedVote: SerializedEncryptedVote
@@ -76,7 +81,7 @@ export function VoteCommitmentDisplay({
             className="flex items-center gap-1.5 group"
           >
             <code className="text-xs font-mono text-[var(--text-tertiary)] group-hover:text-[var(--text-primary)] transition-colors">
-              {truncate(encryptedVote.ciphertext, 8, 6)}
+              {truncate(displayHash(encryptedVote.ciphertext), 8, 6)}
             </code>
             <span className="text-xs text-[var(--text-tertiary)]">
               {copied === "ciphertext" ? "✓" : "📋"}
@@ -95,7 +100,7 @@ export function VoteCommitmentDisplay({
             className="flex items-center gap-1.5 group"
           >
             <code className="text-xs font-mono text-[var(--text-tertiary)] group-hover:text-[var(--text-primary)] transition-colors">
-              {truncate(encryptedVote.encryptionKeyHash, 8, 6)}
+              {truncate(displayHash(encryptedVote.encryptionKeyHash), 8, 6)}
             </code>
             <span className="text-xs text-[var(--text-tertiary)]">
               {copied === "keyHash" ? "✓" : "📋"}

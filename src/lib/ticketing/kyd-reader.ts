@@ -134,19 +134,19 @@ const KYD_TICKETS: Ticket[] = [
   {
     eventId: "kyd-breakpoint-2026",
     tier: "vip",
-    commitmentHash: "0x8e2f...a1c3",
+    commitmentHash: "3nJ8Tw...dK6m",
     purchasedAt: Date.now() - 14 * 24 * 3600_000,
   },
   {
     eventId: "kyd-hacker-house-dubai",
     tier: "general",
-    commitmentHash: "0x3b7d...f9e2",
+    commitmentHash: "6mQ2Rv...hP9s",
     purchasedAt: Date.now() - 5 * 24 * 3600_000,
   },
   {
     eventId: "kyd-superteam-meetup",
     tier: "general",
-    commitmentHash: "0xc4a1...82d7",
+    commitmentHash: "8wB4Lx...fG3n",
     purchasedAt: Date.now() - 2 * 24 * 3600_000,
   },
 ]

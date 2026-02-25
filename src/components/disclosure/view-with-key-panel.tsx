@@ -6,6 +6,7 @@ import type { TransactionData } from "@sip-protocol/sdk"
 import { ViewingKeyInput } from "./viewing-key-input"
 import { DecryptedTxCard, DecryptionErrorCard } from "./decrypted-tx-card"
 import { useViewingKeyDisclosure } from "@/hooks/use-viewing-key-disclosure"
+import { hexToBase58 } from "@/lib/stealth-browser-fallback"
 
 /**
  * ViewWithKeyPanel - Panel for auditors to view transactions
@@ -122,7 +123,12 @@ export function ViewWithKeyPanel() {
                   Viewing Key Loaded
                 </p>
                 <p className="text-xs text-[var(--text-tertiary)] mt-1 font-mono">
-                  Hash: {viewingKey.hash.slice(0, 16)}...
+                  Hash:{" "}
+                  {(viewingKey.hash.startsWith("0x")
+                    ? hexToBase58(viewingKey.hash)
+                    : viewingKey.hash
+                  ).slice(0, 12)}
+                  ...
                 </p>
               </div>
               <button
@@ -151,7 +157,7 @@ export function ViewWithKeyPanel() {
             setEncryptedData(e.target.value)
             setInputError(null)
           }}
-          placeholder='{"ciphertext": "0x...", "nonce": "0x...", "viewingKeyHash": "0x..."}'
+          placeholder='{"ciphertext": "Ek7p...", "nonce": "Fj9s...", "viewingKeyHash": "3nJ8..."}'
           rows={4}
           className="w-full p-4 rounded-xl border border-[var(--border-default)] bg-transparent text-sm font-mono resize-none focus:outline-none focus:border-sip-purple-500 placeholder:text-[var(--text-tertiary)]"
         />

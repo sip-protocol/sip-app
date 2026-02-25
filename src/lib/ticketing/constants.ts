@@ -71,19 +71,19 @@ export const SAMPLE_TICKETS: Ticket[] = [
   {
     eventId: "event-solana-breakpoint",
     tier: "vip",
-    commitmentHash: "0x9c4d...b7e2",
+    commitmentHash: "4kR7Qm...xN2p",
     purchasedAt: now - 7 * DAY,
   },
   {
     eventId: "event-privacy-hackathon",
     tier: "general",
-    commitmentHash: "0x3a8f...c2d1",
+    commitmentHash: "7vL3Ks...bW8j",
     purchasedAt: now - 3 * DAY,
   },
   {
     eventId: "event-dao-summit",
     tier: "general",
-    commitmentHash: "0x7b2e...a9f3",
+    commitmentHash: "9pF5Hn...cY4r",
     purchasedAt: now - 1 * DAY,
   },
 ]

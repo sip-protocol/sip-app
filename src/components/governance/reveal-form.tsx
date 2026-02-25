@@ -7,6 +7,7 @@ import { useGovernanceVote } from "@/hooks/use-governance-vote"
 import { DaoBadge } from "./dao-badge"
 import { VoteStatus } from "./vote-status"
 import type { PrivateVoteRecord } from "@/lib/governance/types"
+import { hexToBase58 } from "@/lib/stealth-browser-fallback"
 
 interface RevealFormProps {
   vote: PrivateVoteRecord
@@ -81,7 +82,13 @@ export function RevealForm({ vote, daoIcon, onComplete }: RevealFormProps) {
         <div className="flex justify-between text-sm">
           <span className="text-[var(--text-secondary)]">Commitment</span>
           <code className="text-xs font-mono text-[var(--text-tertiary)]">
-            {truncate(vote.encryptedVote.ciphertext, 8, 6)}
+            {truncate(
+              vote.encryptedVote.ciphertext.startsWith("0x")
+                ? hexToBase58(vote.encryptedVote.ciphertext)
+                : vote.encryptedVote.ciphertext,
+              8,
+              6
+            )}
           </code>
         </div>
         <div className="flex justify-between text-sm">

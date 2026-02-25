@@ -8,6 +8,7 @@ import {
   WarningIcon,
 } from "@phosphor-icons/react"
 import { cn, truncate, copyToClipboard } from "@/lib/utils"
+import { hexToBase58 } from "@/lib/stealth-browser-fallback"
 
 interface StealthIdentityDisplayProps {
   stealthAddress: string
@@ -114,7 +115,13 @@ export function StealthIdentityDisplay({
               className="flex items-center gap-1.5 group"
             >
               <code className="text-xs font-mono text-[var(--text-tertiary)] group-hover:text-[var(--text-primary)] transition-colors">
-                {truncate(viewingKeyHash, 8, 6)}
+                {truncate(
+                  viewingKeyHash?.startsWith("0x")
+                    ? hexToBase58(viewingKeyHash)
+                    : (viewingKeyHash ?? ""),
+                  8,
+                  6
+                )}
               </code>
               <span className="flex items-center text-[var(--text-tertiary)]">
                 {copied === "viewingKey" ? (
