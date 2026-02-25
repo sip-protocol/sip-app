@@ -328,6 +328,70 @@ export class DripReader {
     return drops.filter((d) => d.accessTier === tier)
   }
 
+  /**
+   * Get collection-level stats for DRiP collections via Helius DAS.
+   * Queries getAssetsByGroup for each known collection to retrieve
+   * total asset counts and sample metadata.
+   */
+  async getCollectionStats(): Promise<
+    { collection: string; total: number; sampleName: string | null }[]
+  > {
+    const heliusUrl = getHeliusUrl()
+    if (!heliusUrl) return []
+
+    const cacheKey = "drip:collection-stats"
+    const cached = getCached<
+      { collection: string; total: number; sampleName: string | null }[]
+    >(cacheKey)
+    if (cached) return cached
+
+    const stats: {
+      collection: string
+      total: number
+      sampleName: string | null
+    }[] = []
+
+    for (const collectionAddr of DRIP_COLLECTIONS) {
+      try {
+        const response = await fetch(heliusUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            jsonrpc: "2.0",
+            id: `drip-stats-${collectionAddr.slice(0, 8)}`,
+            method: "getAssetsByGroup",
+            params: {
+              groupKey: "collection",
+              groupValue: collectionAddr,
+              page: 1,
+              limit: 1,
+            },
+          }),
+          signal: AbortSignal.timeout(8000),
+        })
+
+        if (response.ok) {
+          const json: HeliusDASResponse = await response.json()
+          const total = json.result?.total ?? 0
+          const sampleName =
+            json.result?.items?.[0]?.content?.metadata?.name ?? null
+          stats.push({ collection: collectionAddr, total, sampleName })
+          logger.info(
+            `[SIP][DRiP] Collection ${collectionAddr.slice(0, 8)}...: ${total} assets`,
+            "DripReader"
+          )
+        }
+      } catch {
+        // Non-fatal per collection
+      }
+    }
+
+    if (stats.length > 0) {
+      setCache(cacheKey, stats)
+    }
+    return stats
+  }
+
   clearCache(): void {
     cache.clear()
   }
