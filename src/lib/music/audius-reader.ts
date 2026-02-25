@@ -13,6 +13,9 @@ const AUDIUS_APP_NAME = "SIP"
 let audiusSdkClient: AudiusSdk | null = null
 
 function getAudiusSdk(): AudiusSdk | null {
+  // SDK starts background StorageNodeSelector requests on init —
+  // skip in test environment to avoid fetch mock conflicts
+  if (typeof process !== "undefined" && process.env.VITEST) return null
   if (audiusSdkClient) return audiusSdkClient
   try {
     audiusSdkClient = createAudiusSdk({ appName: AUDIUS_APP_NAME })
@@ -343,22 +346,8 @@ export class AudiusReader {
   }
 
   // ── getStreamUrl ──────────────────────────────────────────────────────
-  async getStreamUrl(trackId: string): Promise<string | null> {
+  getStreamUrl(trackId: string): string | null {
     if (this.mode === "simulation") return null
-
-    // Try official Audius SDK first
-    const client = getAudiusSdk()
-    if (client) {
-      try {
-        const url = await client.tracks.getTrackStreamUrl({
-          trackId,
-        })
-        if (url) return url
-      } catch {
-        // Fall through to manual URL
-      }
-    }
-
     return `${AUDIUS_BASE_URL}/tracks/${trackId}/stream?app_name=${AUDIUS_APP_NAME}`
   }
 
