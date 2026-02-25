@@ -1,12 +1,29 @@
 import type { Track, MusicGenre, ListenerTier, MusicMode } from "./types"
 import { SAMPLE_TRACKS } from "./constants"
 import { logger } from "@/lib/logger"
+import {
+  sdk as createAudiusSdk,
+  type AudiusSdk,
+} from "@audius/sdk"
 
 // ---------------------------------------------------------------------------
-// Audius Public API config
+// Audius SDK + Public API config
 // ---------------------------------------------------------------------------
 const AUDIUS_BASE_URL = "https://discoveryprovider.audius.co/v1"
 const AUDIUS_APP_NAME = "SIP"
+
+// Lazy-initialized Audius SDK client (singleton)
+let audiusSdkClient: AudiusSdk | null = null
+
+function getAudiusSdk(): AudiusSdk | null {
+  if (audiusSdkClient) return audiusSdkClient
+  try {
+    audiusSdkClient = createAudiusSdk({ appName: AUDIUS_APP_NAME })
+    return audiusSdkClient
+  } catch {
+    return null
+  }
+}
 
 // ---------------------------------------------------------------------------
 // In-memory cache (5-minute TTL)
@@ -107,6 +124,32 @@ function mapAudiusTrack(raw: AudiusTrack): Track {
   }
 }
 
+/**
+ * Map an Audius SDK Track model to our internal Track type.
+ */
+function mapSdkTrack(raw: {
+  id: string
+  title: string
+  description?: string
+  genre: string
+  playCount: number
+  duration: number
+  user: { name: string }
+}): Track {
+  const genre = mapGenre(raw.genre)
+  return {
+    id: raw.id,
+    title: raw.title,
+    description:
+      raw.description || `${raw.genre} track by ${raw.user.name}`,
+    genre,
+    tier: mapTier(raw.playCount),
+    listenerCount: raw.playCount,
+    isActive: true,
+    icon: mapIcon(genre),
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Fetch helper with timeout
 // ---------------------------------------------------------------------------
@@ -150,6 +193,30 @@ export class AudiusReader {
     const cached = getCached<Track[]>(cacheKey)
     if (cached) return cached
 
+    // Try official Audius SDK first
+    const client = getAudiusSdk()
+    if (client) {
+      try {
+        const response = await client.tracks.getTrendingTracks({ limit: 10 })
+        const sdkTracks = response?.data
+        if (sdkTracks?.length) {
+          const tracks = sdkTracks.map(mapSdkTrack)
+          setCache(cacheKey, tracks)
+          logger.info(
+            `[SIP][Audius] SDK fetched ${tracks.length} trending tracks`,
+            "AudiusReader"
+          )
+          return tracks
+        }
+      } catch (err) {
+        logger.warn(
+          `[SIP][Audius] SDK fetch failed, falling back to REST: ${err instanceof Error ? err.message : err}`,
+          "AudiusReader"
+        )
+      }
+    }
+
+    // Fallback: direct REST API
     try {
       const raw = await audiusFetch<AudiusTrack[]>("/tracks/trending?limit=10")
       const tracks = raw.map(mapAudiusTrack)
@@ -174,6 +241,23 @@ export class AudiusReader {
     const cached = getCached<Track>(cacheKey)
     if (cached) return cached
 
+    // Try official Audius SDK first
+    const client = getAudiusSdk()
+    if (client) {
+      try {
+        const response = await client.tracks.getTrack({ trackId: id })
+        const sdkTrack = response?.data
+        if (sdkTrack) {
+          const track = mapSdkTrack(sdkTrack)
+          setCache(cacheKey, track)
+          return track
+        }
+      } catch {
+        // Fall through to REST
+      }
+    }
+
+    // Fallback: direct REST API
     try {
       const raw = await audiusFetch<AudiusTrack>(`/tracks/${id}`)
       const track = mapAudiusTrack(raw)
@@ -219,6 +303,27 @@ export class AudiusReader {
     const cached = getCached<Track[]>(cacheKey)
     if (cached) return cached
 
+    // Try official Audius SDK first
+    const client = getAudiusSdk()
+    if (client) {
+      try {
+        const response = await client.tracks.searchTracks({ query })
+        const sdkTracks = response?.data
+        if (sdkTracks?.length) {
+          const tracks = sdkTracks.slice(0, 10).map(mapSdkTrack)
+          setCache(cacheKey, tracks)
+          logger.info(
+            `[SIP][Audius] SDK search returned ${tracks.length} tracks`,
+            "AudiusReader"
+          )
+          return tracks
+        }
+      } catch {
+        // Fall through to REST
+      }
+    }
+
+    // Fallback: direct REST API
     try {
       const raw = await audiusFetch<AudiusTrack[]>(
         `/tracks/search?query=${encodeURIComponent(query)}&limit=10`
@@ -242,8 +347,22 @@ export class AudiusReader {
   }
 
   // ── getStreamUrl ──────────────────────────────────────────────────────
-  getStreamUrl(trackId: string): string | null {
+  async getStreamUrl(trackId: string): Promise<string | null> {
     if (this.mode === "simulation") return null
+
+    // Try official Audius SDK first
+    const client = getAudiusSdk()
+    if (client) {
+      try {
+        const url = await client.tracks.getTrackStreamUrl({
+          trackId,
+        })
+        if (url) return url
+      } catch {
+        // Fall through to manual URL
+      }
+    }
+
     return `${AUDIUS_BASE_URL}/tracks/${trackId}/stream?app_name=${AUDIUS_APP_NAME}`
   }
 
