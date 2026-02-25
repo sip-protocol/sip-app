@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from "vitest"
 import {
   MagicBlockReader,
-  BOLT_PROGRAM_IDS,
+  getBoltProgramIds,
   getBoltWorldInfo,
 } from "@/lib/gaming/magicblock-reader"
 
@@ -21,32 +21,34 @@ describe("MagicBlockReader", () => {
     // Clear any cached data between tests
   })
 
-  describe("BOLT_PROGRAM_IDS", () => {
-    it("exports valid base58 world program ID", () => {
-      expect(BOLT_PROGRAM_IDS.world).toBeTruthy()
-      expect(typeof BOLT_PROGRAM_IDS.world).toBe("string")
+  describe("getBoltProgramIds", () => {
+    it("exports valid base58 world program ID", async () => {
+      const ids = await getBoltProgramIds()
+      expect(ids.world).toBeTruthy()
+      expect(typeof ids.world).toBe("string")
       // Base58 characters only
-      expect(BOLT_PROGRAM_IDS.world).toMatch(/^[1-9A-HJ-NP-Za-km-z]+$/)
+      expect(ids.world).toMatch(/^[1-9A-HJ-NP-Za-km-z]+$/)
     })
 
-    it("exports valid base58 delegation program ID", () => {
-      expect(BOLT_PROGRAM_IDS.delegation).toBeTruthy()
-      expect(typeof BOLT_PROGRAM_IDS.delegation).toBe("string")
-      expect(BOLT_PROGRAM_IDS.delegation).toMatch(/^[1-9A-HJ-NP-Za-km-z]+$/)
+    it("exports valid base58 delegation program ID", async () => {
+      const ids = await getBoltProgramIds()
+      expect(ids.delegation).toBeTruthy()
+      expect(typeof ids.delegation).toBe("string")
+      expect(ids.delegation).toMatch(/^[1-9A-HJ-NP-Za-km-z]+$/)
     })
   })
 
   describe("getBoltWorldInfo", () => {
-    it("returns world PDA, registry PDA, and program ID", () => {
-      const info = getBoltWorldInfo()
+    it("returns world PDA, registry PDA, and program ID", async () => {
+      const info = await getBoltWorldInfo()
       expect(info.worldPda).toBeTruthy()
       expect(info.registryPda).toBeTruthy()
       expect(info.worldProgramId).toBeTruthy()
     })
 
-    it("returns different world PDAs for different world IDs", () => {
-      const info0 = getBoltWorldInfo(0)
-      const info1 = getBoltWorldInfo(1)
+    it("returns different world PDAs for different world IDs", async () => {
+      const info0 = await getBoltWorldInfo(0)
+      const info1 = await getBoltWorldInfo(1)
       expect(info0.worldPda.toBase58()).not.toBe(info1.worldPda.toBase58())
     })
   })

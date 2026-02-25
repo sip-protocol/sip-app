@@ -1,14 +1,4 @@
 import {
-  FindWorldPda,
-  FindComponentPda,
-  FindEntityPda,
-  FindRegistryPda,
-  WORLD_PROGRAM_ID,
-  DELEGATION_PROGRAM_ID,
-  BN,
-} from "@magicblock-labs/bolt-sdk"
-import { PublicKey } from "@solana/web3.js"
-import {
   SwordIcon,
   CurrencyDollarIcon,
   MagicWandIcon,
@@ -26,14 +16,30 @@ import { SAMPLE_GAMES, SAMPLE_RESULTS } from "./constants"
 // ---------------------------------------------------------------------------
 // MagicBlock provides Solana gaming infrastructure via the BOLT ECS framework
 // (Entity Component System) with ephemeral rollups for low-latency gameplay.
-// BOLT SDK is used for world/entity/component PDA derivation.
+// BOLT SDK is loaded dynamically to avoid pulling Anchor/web3.js into browser bundles.
 // ---------------------------------------------------------------------------
 
+// Lazy-load BOLT SDK to keep it out of client bundles
+async function loadBoltSdk() {
+  const sdk = await import("@magicblock-labs/bolt-sdk")
+  return sdk
+}
+
 // BOLT program addresses (re-exported for visibility in tests and consumers)
-export const BOLT_PROGRAM_IDS = {
-  world: WORLD_PROGRAM_ID.toBase58(),
-  delegation: DELEGATION_PROGRAM_ID.toBase58(),
-} as const
+// Loaded lazily — the constants resolve to the same base58 strings every time.
+let _boltProgramIds: { world: string; delegation: string } | null = null
+export async function getBoltProgramIds() {
+  if (_boltProgramIds) return _boltProgramIds
+  const { WORLD_PROGRAM_ID, DELEGATION_PROGRAM_ID } = await loadBoltSdk()
+  _boltProgramIds = {
+    world: WORLD_PROGRAM_ID.toBase58(),
+    delegation: DELEGATION_PROGRAM_ID.toBase58(),
+  }
+  return _boltProgramIds
+}
+
+// Synchronous constant for use in fetchMagicBlockPrograms (known value)
+const BOLT_WORLD_PROGRAM_ID = "WorLD15A7CrDwLcLy4fRqtaTb9fbd8o8iqiEMUDse2n"
 
 const CACHE_TTL_MS = 5 * 60 * 1000 // 5 minutes
 
@@ -197,8 +203,11 @@ const MAGICBLOCK_LEADERBOARD = [
 /**
  * Derive BOLT World and Entity PDAs for a given world ID using the official SDK.
  * Used to verify world existence and look up game entities on-chain.
+ * Loaded dynamically to avoid bundling Anchor/web3.js into browser.
  */
-export function getBoltWorldInfo(worldId = 0) {
+export async function getBoltWorldInfo(worldId = 0) {
+  const { FindWorldPda, FindRegistryPda, BN, WORLD_PROGRAM_ID } =
+    await loadBoltSdk()
   const worldPda = FindWorldPda({ worldId: new BN(worldId) })
   const registryPda = FindRegistryPda({})
   return { worldPda, registryPda, worldProgramId: WORLD_PROGRAM_ID }
@@ -208,7 +217,8 @@ export function getBoltWorldInfo(worldId = 0) {
  * Derive a BOLT Entity PDA within a world.
  * Each game session is an entity with components for state.
  */
-export function getBoltEntityPda(worldId: number, entityId: number) {
+export async function getBoltEntityPda(worldId: number, entityId: number) {
+  const { FindEntityPda, BN } = await loadBoltSdk()
   return FindEntityPda({
     worldId: new BN(worldId),
     entityId: new BN(entityId),
@@ -220,13 +230,16 @@ export function getBoltEntityPda(worldId: number, entityId: number) {
  * Derive a BOLT Component PDA for a game entity.
  * Components store game state (moves, commitments, results).
  */
-export function getBoltComponentPda(
-  componentProgramId: PublicKey,
-  entityPda: PublicKey
+export async function getBoltComponentPda(
+  componentProgramId: { toBuffer(): Buffer },
+  entityPda: { toBuffer(): Buffer }
 ) {
+  const { FindComponentPda } = await loadBoltSdk()
   return FindComponentPda({
-    componentId: componentProgramId,
-    entity: entityPda,
+    componentId: componentProgramId as Parameters<
+      typeof FindComponentPda
+    >[0]["componentId"],
+    entity: entityPda as Parameters<typeof FindComponentPda>[0]["entity"],
   })
 }
 
@@ -242,8 +255,8 @@ async function fetchMagicBlockPrograms(): Promise<Game[] | null> {
         ? process.env.NEXT_PUBLIC_HELIUS_RPC_URL
         : undefined) ?? "https://api.mainnet-beta.solana.com"
 
-    // Use BOLT SDK's WORLD_PROGRAM_ID for account discovery
-    const worldProgramId = WORLD_PROGRAM_ID.toBase58()
+    // Use known BOLT World program ID for account discovery
+    const worldProgramId = BOLT_WORLD_PROGRAM_ID
 
     const response = await fetch(rpcUrl, {
       method: "POST",
