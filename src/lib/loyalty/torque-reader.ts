@@ -1,4 +1,8 @@
-import type { ApiCampaign, ApiRewardType } from "@torque-labs/torque-ts-sdk"
+import {
+  TorqueAdminClient,
+  type ApiCampaign,
+  type ApiRewardType,
+} from "@torque-labs/torque-ts-sdk"
 import type {
   Campaign,
   CampaignProgress,
@@ -238,6 +242,23 @@ export class TorqueReader {
         : undefined
   }
 
+  /**
+   * Create a TorqueAdminClient instance for SDK-based API calls.
+   * Only needs an API key — no wallet signer required for read operations.
+   */
+  private getAdminClient(): TorqueAdminClient | null {
+    if (!this.apiKey) return null
+    try {
+      return new TorqueAdminClient({
+        apiKey: this.apiKey,
+        apiUrl: TORQUE_API_BASE,
+        network: "mainnet-beta",
+      })
+    } catch {
+      return null
+    }
+  }
+
   // -------------------------------------------------------------------------
   // getCampaigns
   // -------------------------------------------------------------------------
@@ -247,7 +268,29 @@ export class TorqueReader {
       const cached = getCached<Campaign[]>("torque:campaigns")
       if (cached) return cached
 
-      // Try fetching from Torque REST API
+      // Try official Torque SDK first
+      const adminClient = this.getAdminClient()
+      if (adminClient) {
+        try {
+          const sdkResult = await adminClient.getActiveCampaigns()
+          if (sdkResult?.campaigns?.length) {
+            const campaigns = sdkResult.campaigns.map(mapTorqueCampaign)
+            setCache("torque:campaigns", campaigns)
+            logger.info(
+              `[SIP][Torque] SDK fetched ${campaigns.length} campaigns`,
+              "TorqueReader"
+            )
+            return campaigns
+          }
+        } catch (err) {
+          logger.warn(
+            `[SIP][Torque] SDK fetch failed, falling back to REST: ${err instanceof Error ? err.message : err}`,
+            "TorqueReader"
+          )
+        }
+      }
+
+      // Fallback: Try direct REST API
       const result = await torqueFetch<{ campaigns: ApiCampaign[] }>(
         "/campaigns",
         this.apiKey
@@ -298,7 +341,22 @@ export class TorqueReader {
       const cached = getCached<Campaign>(cacheKey)
       if (cached) return cached
 
-      // Try direct campaign fetch by ID
+      // Try official Torque SDK first
+      const adminClient = this.getAdminClient()
+      if (adminClient) {
+        try {
+          const sdkResult = await adminClient.getCampaign(id)
+          if (sdkResult?.id) {
+            const campaign = mapTorqueCampaign(sdkResult)
+            setCache(cacheKey, campaign)
+            return campaign
+          }
+        } catch {
+          // Fall through to REST
+        }
+      }
+
+      // Fallback: direct REST fetch by ID
       const result = await torqueFetch<ApiCampaign>(
         `/campaigns/${id}`,
         this.apiKey
