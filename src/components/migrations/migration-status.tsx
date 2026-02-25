@@ -1,5 +1,9 @@
 "use client"
 
+import {
+  CheckIcon as PhosphorCheckIcon,
+  SpinnerGapIcon,
+} from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 import type { MigrationStep } from "@/lib/migrations/types"
 
@@ -130,7 +134,7 @@ export function MigrationStatus({
                     )}
                   >
                     {isStepComplete ? (
-                      <CheckIcon className="w-4 h-4" />
+                      <PhosphorCheckIcon size={16} weight="bold" />
                     ) : (
                       <span className="text-base">{step.icon}</span>
                     )}
@@ -167,7 +171,7 @@ export function MigrationStatus({
 
                 {/* Active spinner */}
                 {isCurrent && (
-                  <LoadingSpinner className="w-4 h-4 text-green-400 ml-auto flex-shrink-0 mt-1" />
+                  <SpinnerGapIcon size={16} className="animate-spin text-green-400 ml-auto flex-shrink-0 mt-1" />
                 )}
               </div>
             )
@@ -178,40 +182,3 @@ export function MigrationStatus({
   )
 }
 
-function CheckIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={3}
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-    </svg>
-  )
-}
-
-function LoadingSpinner({ className }: { className?: string }) {
-  return (
-    <svg
-      className={cn("animate-spin", className)}
-      fill="none"
-      viewBox="0 0 24 24"
-    >
-      <circle
-        className="opacity-25"
-        cx="12"
-        cy="12"
-        r="10"
-        stroke="currentColor"
-        strokeWidth="4"
-      />
-      <path
-        className="opacity-75"
-        fill="currentColor"
-        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-      />
-    </svg>
-  )
-}

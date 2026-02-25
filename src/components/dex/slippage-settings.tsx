@@ -2,6 +2,11 @@
 
 import { useState, useRef, useMemo } from "react"
 import { useSettingsStore, SLIPPAGE_PRESETS } from "@/stores"
+import {
+  XIcon as CloseIcon,
+  WarningIcon,
+  PencilSimpleIcon as EditIcon,
+} from "@phosphor-icons/react"
 
 interface SlippageSettingsProps {
   /** Called when settings panel should close */
@@ -69,7 +74,7 @@ export function SlippageSettings({ onClose }: SlippageSettingsProps) {
             className="rounded p-1 text-gray-400 transition-colors hover:bg-gray-700 hover:text-white"
             aria-label="Close settings"
           >
-            <CloseIcon className="h-4 w-4" />
+            <CloseIcon size={16} />
           </button>
         )}
       </div>
@@ -119,7 +124,7 @@ export function SlippageSettings({ onClose }: SlippageSettingsProps) {
       {/* Warnings */}
       {isLowSlippage && (
         <div className="mt-3 flex items-start gap-2 text-xs text-yellow-400">
-          <WarningIcon className="mt-0.5 h-4 w-4 flex-shrink-0" />
+          <WarningIcon size={16} className="mt-0.5 flex-shrink-0" />
           <span>
             Low slippage may cause transaction to fail in volatile markets
           </span>
@@ -128,14 +133,14 @@ export function SlippageSettings({ onClose }: SlippageSettingsProps) {
 
       {isHighSlippage && !isVeryHighSlippage && (
         <div className="mt-3 flex items-start gap-2 text-xs text-orange-400">
-          <WarningIcon className="mt-0.5 h-4 w-4 flex-shrink-0" />
+          <WarningIcon size={16} className="mt-0.5 flex-shrink-0" />
           <span>High slippage may result in an unfavorable rate</span>
         </div>
       )}
 
       {isVeryHighSlippage && (
         <div className="mt-3 flex items-start gap-2 text-xs text-red-400">
-          <WarningIcon className="mt-0.5 h-4 w-4 flex-shrink-0" />
+          <WarningIcon size={16} className="mt-0.5 flex-shrink-0" />
           <span>
             Very high slippage! You may receive significantly less than expected
           </span>
@@ -179,62 +184,9 @@ export function SlippageDisplay({ onClick }: { onClick: () => void }) {
       aria-label={`Slippage tolerance: ${slippage}%. Click to edit`}
     >
       <span>Slippage: {slippage}%</span>
-      <EditIcon className="h-3 w-3 opacity-0 transition-opacity group-hover:opacity-100" />
-      {isHighSlippage && <WarningIcon className="h-3 w-3 text-orange-400" />}
+      <EditIcon size={12} className="opacity-0 transition-opacity group-hover:opacity-100" />
+      {isHighSlippage && <WarningIcon size={12} className="text-orange-400" />}
     </button>
   )
 }
 
-function CloseIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M6 18L18 6M6 6l12 12"
-      />
-    </svg>
-  )
-}
-
-function WarningIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
-      />
-    </svg>
-  )
-}
-
-function EditIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"
-      />
-    </svg>
-  )
-}

@@ -1,5 +1,6 @@
 "use client"
 
+import { ChatCircleIcon, XIcon } from "@phosphor-icons/react"
 import { useAdvisorOpen } from "@/hooks/use-advisor"
 import { AdvisorChat } from "./advisor-chat"
 import { cn } from "@/lib/utils"
@@ -34,47 +35,12 @@ export function AdvisorWidget({ className }: AdvisorWidgetProps) {
         aria-label={isOpen ? "Close privacy advisor" : "Open privacy advisor"}
       >
         {isOpen ? (
-          <CloseIcon className="w-6 h-6 text-white" />
+          <XIcon size={24} className="text-white" />
         ) : (
-          <ChatIcon className="w-6 h-6 text-white" />
+          <ChatCircleIcon size={24} className="text-white" />
         )}
       </button>
     </div>
   )
 }
 
-function ChatIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-      />
-    </svg>
-  )
-}
-
-function CloseIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M6 18L18 6M6 6l12 12"
-      />
-    </svg>
-  )
-}

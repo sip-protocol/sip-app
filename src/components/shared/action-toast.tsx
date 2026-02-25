@@ -2,6 +2,7 @@
 
 import { useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import { CheckIcon, XIcon } from "@phosphor-icons/react"
 
 interface ActionToastProps {
   message: string
@@ -41,33 +42,9 @@ export function ActionToast({ message, type, onClose }: ActionToastProps) {
             }`}
           >
             {isSuccess ? (
-              <svg
-                className="w-3 h-3 text-emerald-400"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2.5}
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="m4.5 12.75 6 6 9-13.5"
-                />
-              </svg>
+              <CheckIcon size={12} weight="bold" className="text-emerald-400" />
             ) : (
-              <svg
-                className="w-3 h-3 text-red-400"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={2.5}
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18 18 6M6 6l12 12"
-                />
-              </svg>
+              <XIcon size={12} weight="bold" className="text-red-400" />
             )}
           </div>
 
@@ -85,19 +62,7 @@ export function ActionToast({ message, type, onClose }: ActionToastProps) {
             className="ml-auto flex-shrink-0 text-gray-500 hover:text-gray-300 transition-colors"
             aria-label="Dismiss notification"
           >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={2}
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18 18 6M6 6l12 12"
-              />
-            </svg>
+            <XIcon size={16} />
           </button>
         </div>
       </motion.div>

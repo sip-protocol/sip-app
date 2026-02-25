@@ -7,6 +7,10 @@ import {
   type ErrorCode,
   type ErrorAction,
 } from "@/lib/error-messages"
+import {
+  WarningIcon,
+  XCircleIcon,
+} from "@phosphor-icons/react"
 
 interface ErrorCardProps {
   /** The error to display - can be Error object or string */
@@ -54,7 +58,7 @@ export function ErrorCard({
         data-testid={testId}
         className={`flex items-start gap-2 rounded-lg border border-red-500/30 bg-red-500/10 p-3 ${className}`}
       >
-        <WarningIcon className="mt-0.5 h-4 w-4 flex-shrink-0 text-red-400" />
+        <WarningIcon size={16} className="mt-0.5 flex-shrink-0 text-red-400" />
         <div className="min-w-0 flex-1">
           <p className="text-sm font-medium text-red-300">{info.title}</p>
           <p className="mt-0.5 text-xs text-red-400/80">{info.description}</p>
@@ -84,7 +88,7 @@ export function ErrorCard({
       {/* Header */}
       <div className="flex items-start gap-3">
         <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-red-500/20">
-          <XCircleIcon className="h-5 w-5 text-red-400" />
+          <XCircleIcon size={20} className="text-red-400" />
         </div>
         <div className="min-w-0 flex-1">
           <h4 className="font-medium text-red-300">{info.title}</h4>
@@ -237,40 +241,3 @@ export function SwapErrorCard({
   )
 }
 
-// Icons
-
-function WarningIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
-      />
-    </svg>
-  )
-}
-
-function XCircleIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-      />
-    </svg>
-  )
-}

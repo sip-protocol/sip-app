@@ -1,5 +1,6 @@
 "use client"
 
+import { SpiralIcon } from "@phosphor-icons/react"
 import type { PrivacyLevel } from "@sip-protocol/types"
 import { cn } from "@/lib/utils"
 
@@ -25,7 +26,7 @@ export function BridgeRouteBadge({
       )}
     >
       <div className="flex items-center gap-1.5">
-        <WormholeIcon className="w-4 h-4 text-cyan-500" />
+        <SpiralIcon size={16} className="text-cyan-500" />
         <span className="text-xs font-medium text-[var(--text-secondary)]">
           Via Wormhole NTT
         </span>
@@ -51,12 +52,3 @@ export function BridgeRouteBadge({
   )
 }
 
-function WormholeIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-      <circle cx="12" cy="12" r="10" opacity="0.2" />
-      <circle cx="12" cy="12" r="6" opacity="0.4" />
-      <circle cx="12" cy="12" r="2.5" />
-    </svg>
-  )
-}

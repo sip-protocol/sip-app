@@ -2,6 +2,11 @@
 
 import { useCallback } from "react"
 import type { QuoteFreshness } from "@/hooks"
+import {
+  ArrowsClockwiseIcon as RefreshIcon,
+  ArrowsClockwiseIcon as AutoRefreshIcon,
+  WarningIcon,
+} from "@phosphor-icons/react"
 
 interface QuoteStatusBadgeProps {
   freshness: QuoteFreshness
@@ -37,17 +42,17 @@ export function QuoteStatusBadge({
     >
       {isLoading ? (
         <>
-          <RefreshIcon className="h-3 w-3 animate-spin" />
+          <RefreshIcon size={12} className="animate-spin" />
           <span>Updating...</span>
         </>
       ) : freshness === "stale" ? (
         <>
-          <WarningIcon className="h-3 w-3" />
+          <WarningIcon size={12} />
           <span>Stale ({expiresIn}s)</span>
         </>
       ) : freshness === "expired" ? (
         <>
-          <RefreshIcon className="h-3 w-3" />
+          <RefreshIcon size={12} />
           <span>Refresh quote</span>
         </>
       ) : null}
@@ -131,7 +136,8 @@ export function QuoteFreshnessIndicator({
           title={isLoading ? "Refreshing..." : "Refresh quote"}
         >
           <RefreshIcon
-            className={`h-3.5 w-3.5 text-gray-400 ${isLoading ? "animate-spin" : ""}`}
+            size={14}
+            className={`text-gray-400 ${isLoading ? "animate-spin" : ""}`}
           />
         </button>
       </div>
@@ -164,7 +170,7 @@ export function QuoteFreshnessIndicator({
             autoRefreshEnabled ? "Disable auto-refresh" : "Enable auto-refresh"
           }
         >
-          <AutoRefreshIcon className="h-3.5 w-3.5" />
+          <AutoRefreshIcon size={14} />
           Auto
         </button>
 
@@ -180,7 +186,8 @@ export function QuoteFreshnessIndicator({
           }`}
         >
           <RefreshIcon
-            className={`h-3.5 w-3.5 ${isLoading ? "animate-spin" : ""}`}
+            size={14}
+            className={isLoading ? "animate-spin" : ""}
           />
           {isLoading ? "Refreshing..." : "Refresh"}
         </button>
@@ -189,58 +196,3 @@ export function QuoteFreshnessIndicator({
   )
 }
 
-// Icons
-
-function RefreshIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
-      />
-    </svg>
-  )
-}
-
-function AutoRefreshIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 00-3.7-3.7 48.678 48.678 0 00-7.324 0 4.006 4.006 0 00-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3l-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 003.7 3.7 48.656 48.656 0 007.324 0 4.006 4.006 0 003.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3l-3 3"
-      />
-    </svg>
-  )
-}
-
-function WarningIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
-      />
-    </svg>
-  )
-}

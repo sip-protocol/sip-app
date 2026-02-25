@@ -1,5 +1,6 @@
 "use client"
 
+import { ArrowRightIcon } from "@phosphor-icons/react"
 import { BRIDGE_CHAINS } from "@/lib/bridge/constants"
 import type { BridgeChainId } from "@/lib/bridge/types"
 import { cn } from "@/lib/utils"
@@ -23,26 +24,9 @@ export function ChainPairDisplay({
       className={cn("flex items-center gap-2 text-sm font-medium", className)}
     >
       <span className="text-[var(--text-primary)]">{source.name}</span>
-      <ArrowIcon className="w-4 h-4 text-cyan-500" />
+      <ArrowRightIcon size={16} className="text-cyan-500" />
       <span className="text-[var(--text-primary)]">{dest.name}</span>
     </div>
   )
 }
 
-function ArrowIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"
-      />
-    </svg>
-  )
-}

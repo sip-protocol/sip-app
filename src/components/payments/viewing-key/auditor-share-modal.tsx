@@ -2,6 +2,13 @@
 
 import { useState, useCallback, useEffect } from "react"
 import type { ViewingKey } from "@sip-protocol/types"
+import {
+  XIcon,
+  UserIcon,
+  ExportIcon,
+  WarningIcon,
+  LockSimpleIcon,
+} from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 
 interface AuditorShare {
@@ -123,7 +130,7 @@ export function AuditorShareModal({
             onClick={onClose}
             className="p-1 rounded-lg hover:bg-[var(--surface-tertiary)] transition-colors"
           >
-            <CloseIcon className="w-5 h-5" />
+            <XIcon size={20} />
           </button>
         </div>
 
@@ -131,7 +138,7 @@ export function AuditorShareModal({
         <div className="p-6 space-y-6">
           {/* Revocation Warning Banner */}
           <div className="flex items-start gap-2 p-3 rounded-lg bg-red-500/10 border border-red-500/20">
-            <LockClosedIcon className="w-4 h-4 text-red-400 flex-shrink-0 mt-0.5" />
+            <LockSimpleIcon size={16} className="text-red-400 flex-shrink-0 mt-0.5" />
             <div className="text-xs text-red-400">
               <p className="font-medium">Sharing is permanent</p>
               <p className="mt-1 text-red-400/80">
@@ -195,7 +202,7 @@ export function AuditorShareModal({
                     className="flex items-center justify-between px-3 py-2 rounded-lg bg-[var(--surface-tertiary)]"
                   >
                     <div className="flex items-center gap-2">
-                      <AuditorIcon className="w-4 h-4 text-[var(--text-tertiary)]" />
+                      <UserIcon size={16} className="text-[var(--text-tertiary)]" />
                       <span className="text-sm">{share.auditorId}</span>
                     </div>
                     <span className="text-xs text-[var(--text-tertiary)]">
@@ -212,7 +219,7 @@ export function AuditorShareModal({
             {showExportWarning ? (
               <div className="space-y-3">
                 <div className="flex items-start gap-2 p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/20 text-yellow-500 text-xs">
-                  <WarningIcon className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                  <WarningIcon size={16} className="flex-shrink-0 mt-0.5" />
                   <span>
                     This file contains sensitive cryptographic material. Only
                     share with trusted parties through secure channels.
@@ -245,7 +252,7 @@ export function AuditorShareModal({
                   onClick={() => setShowExportWarning(true)}
                   className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-medium bg-[var(--surface-tertiary)] hover:bg-[var(--surface-secondary)] transition-colors"
                 >
-                  <ExportIcon className="w-4 h-4" />
+                  <ExportIcon size={16} />
                   Export as JSON File
                 </button>
                 <p className="mt-2 text-xs text-[var(--text-tertiary)] text-center">
@@ -257,96 +264,5 @@ export function AuditorShareModal({
         </div>
       </div>
     </div>
-  )
-}
-
-// Icons
-function CloseIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M6 18L18 6M6 6l12 12"
-      />
-    </svg>
-  )
-}
-
-function AuditorIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-      />
-    </svg>
-  )
-}
-
-function ExportIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
-      />
-    </svg>
-  )
-}
-
-function WarningIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-      />
-    </svg>
-  )
-}
-
-function LockClosedIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-      />
-    </svg>
   )
 }

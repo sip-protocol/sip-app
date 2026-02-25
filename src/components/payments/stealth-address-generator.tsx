@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
+import { InfoIcon } from "@phosphor-icons/react"
 import { useStealthKeys } from "@/hooks/use-stealth-keys"
 import { KeyBackupWarning } from "./key-backup-warning"
 import { AddressDisplay } from "./address-display"
@@ -199,7 +200,7 @@ export function StealthAddressGenerator({
             {/* Derivation Info */}
             <div className="p-3 rounded-lg bg-sip-purple-500/10 border border-sip-purple-500/20">
               <div className="flex items-start gap-2">
-                <InfoCircleIcon className="w-4 h-4 text-sip-purple-400 flex-shrink-0 mt-0.5" />
+                <InfoIcon size={16} className="text-sip-purple-400 flex-shrink-0 mt-0.5" />
                 <p className="text-xs text-sip-purple-300">
                   Keys are derived from your wallet using BIP-340 Schnorr
                   signatures. Each incoming payment creates a unique stealth
@@ -443,23 +444,5 @@ function PaymentNotification({
         </div>
       )}
     </div>
-  )
-}
-
-function InfoCircleIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-      />
-    </svg>
   )
 }

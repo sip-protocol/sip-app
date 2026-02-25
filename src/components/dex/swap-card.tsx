@@ -9,6 +9,21 @@ import {
 } from "react"
 import Image from "next/image"
 import { PrivacyLevel } from "@sip-protocol/types"
+import {
+  CheckIcon,
+  ShieldCheckIcon as ShieldIcon,
+  EyeIcon,
+  KeyIcon,
+  ArrowDownIcon,
+  CaretDownIcon as ChevronDownIcon,
+  WarningIcon,
+  CheckCircleIcon,
+  XCircleIcon,
+  GearIcon as SettingsIcon,
+  ClockIcon,
+  WalletIcon,
+  LockSimpleIcon as LockIcon,
+} from "@phosphor-icons/react"
 import { useQuote, useSwap, useBalance, getStatusMessage } from "@/hooks"
 import { useWalletStore, useSwapModeStore, useSettingsStore } from "@/stores"
 import { SlippageSettings, SlippageDisplay } from "./slippage-settings"
@@ -334,7 +349,7 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
             aria-expanded={showSettings}
             data-testid="settings-button"
           >
-            <SettingsIcon className="h-4 w-4" />
+            <SettingsIcon size={16} />
           </button>
         </div>
         <div
@@ -347,17 +362,17 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
         >
           {isShielded ? (
             <>
-              <ShieldIcon className="h-3 w-3" />
+              <ShieldIcon size={12} />
               Shielded
             </>
           ) : isCompliant ? (
             <>
-              <KeyIcon className="h-3 w-3" />
+              <KeyIcon size={12} />
               Compliant
             </>
           ) : (
             <>
-              <EyeIcon className="h-3 w-3" />
+              <EyeIcon size={12} />
               Public
             </>
           )}
@@ -383,7 +398,7 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
           data-testid="preview-mode-banner"
         >
           <div className="flex items-center gap-2 text-sm text-amber-400">
-            <PreviewIcon className="h-4 w-4" />
+            <EyeIcon size={16} />
             <span className="font-medium">Preview Mode</span>
             <span className="text-amber-400/70">
               — Explore quotes safely, no real transactions
@@ -399,7 +414,7 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
           data-testid="same-chain-privacy-banner"
         >
           <div className="flex items-center gap-2 text-sm text-purple-400">
-            <LockIcon className="h-4 w-4" />
+            <LockIcon size={16} />
             <span className="font-medium">Same-Chain Privacy</span>
             <span className="text-purple-400/70">
               — Direct stealth transfer on Solana
@@ -474,7 +489,7 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
             data-testid="insufficient-balance-warning"
             role="alert"
           >
-            <WarningIcon className="h-3 w-3" aria-hidden="true" />
+            <WarningIcon size={12} aria-hidden="true" />
             Insufficient balance
           </p>
         )}
@@ -487,7 +502,7 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
           aria-label="Swap direction"
           className="z-10 rounded-xl border border-gray-700 bg-gray-900 p-2 transition-all hover:rotate-180 hover:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-900"
         >
-          <ArrowDownIcon className="h-4 w-4 text-gray-400" />
+          <ArrowDownIcon size={16} className="text-gray-400" />
         </button>
       </div>
 
@@ -497,7 +512,7 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
           <span>To (estimated)</span>
           {hasPrivacy && (
             <span className="flex items-center gap-1 text-xs text-purple-400 sm:text-sm">
-              <ShieldIcon className="h-3 w-3" />
+              <ShieldIcon size={12} />
               Stealth Address
             </span>
           )}
@@ -582,9 +597,9 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
             {zecRecipient.trim() && (
               <div className="absolute right-3 top-1/2 -translate-y-1/2">
                 {zecValidation?.isValid ? (
-                  <CheckCircleIcon className="h-5 w-5 text-green-400" />
+                  <CheckCircleIcon size={20} className="text-green-400" />
                 ) : (
-                  <XCircleIcon className="h-5 w-5 text-red-400" />
+                  <XCircleIcon size={20} className="text-red-400" />
                 )}
               </div>
             )}
@@ -601,7 +616,7 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
                   </div>
                   {isZecTransparent && (
                     <div className="mt-2 flex items-start gap-2 rounded-lg border border-orange-500/30 bg-orange-500/10 p-2">
-                      <WarningIcon className="mt-0.5 h-4 w-4 flex-shrink-0 text-orange-400" />
+                      <WarningIcon size={16} className="mt-0.5 flex-shrink-0 text-orange-400" />
                       <div className="text-xs text-orange-400">
                         <strong>Privacy Warning:</strong> Transparent addresses
                         expose transaction details publicly. Use a{" "}
@@ -618,7 +633,7 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
                   className="flex items-center gap-1 text-xs text-red-400"
                   role="alert"
                 >
-                  <XCircleIcon className="h-3 w-3" aria-hidden="true" />
+                  <XCircleIcon size={12} aria-hidden="true" />
                   {zecValidation.error}
                 </p>
               )}
@@ -644,14 +659,14 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
             <span className="flex items-center gap-1">
               {isSameChainPrivacy ? (
                 <>
-                  <ShieldIcon className="h-4 w-4 text-purple-500" />
+                  <ShieldIcon size={16} className="text-purple-500" />
                   <span className="text-xs sm:text-sm">
                     Recipient SIP Address
                   </span>
                 </>
               ) : (
                 <>
-                  <WalletIcon className="h-4 w-4 text-gray-300" />
+                  <WalletIcon size={16} className="text-gray-300" />
                   <span className="text-xs sm:text-sm">
                     Destination Address
                   </span>
@@ -703,9 +718,9 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
         >
           <div className="flex items-start gap-2">
             {isCompliant ? (
-              <KeyIcon className="mt-0.5 h-4 w-4 flex-shrink-0 text-purple-400" />
+              <KeyIcon size={16} className="mt-0.5 flex-shrink-0 text-purple-400" />
             ) : (
-              <ShieldIcon className="mt-0.5 h-4 w-4 flex-shrink-0 text-purple-400" />
+              <ShieldIcon size={16} className="mt-0.5 flex-shrink-0 text-purple-400" />
             )}
             <div className="flex-1 text-sm">
               <div className="flex items-center justify-between">
@@ -739,7 +754,8 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
           >
             <div className="flex items-start gap-2">
               <WarningIcon
-                className={`mt-0.5 h-4 w-4 flex-shrink-0 ${
+                size={16}
+                className={`mt-0.5 flex-shrink-0 ${
                   priceImpact.severity === "severe"
                     ? "text-red-400"
                     : "text-orange-400"
@@ -786,7 +802,7 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
             data-testid="destination-verification"
           >
             <div className="flex items-start gap-2">
-              <CheckIcon className="mt-0.5 h-5 w-5 flex-shrink-0 text-green-400" />
+              <CheckIcon size={20} className="mt-0.5 flex-shrink-0 text-green-400" />
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-medium text-green-300">
                   Funds will be sent to:
@@ -853,7 +869,7 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
             </span>
           ) : isPreviewMode ? (
             <span className="flex items-center justify-center gap-2">
-              <PreviewIcon className="h-5 w-5" />
+              <EyeIcon size={20} />
               Preview Quote
             </span>
           ) : (
@@ -916,7 +932,7 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
                 {formatImpact(priceImpact.percentage)}
                 {(priceImpact.severity === "high" ||
                   priceImpact.severity === "severe") && (
-                  <WarningIcon className="h-3 w-3" />
+                  <WarningIcon size={12} />
                 )}
               </span>
             </div>
@@ -929,7 +945,7 @@ export function SwapCard({ privacyLevel }: SwapCardProps) {
             <div className="flex items-center justify-between text-gray-400">
               <span>Est. time</span>
               <span className="flex items-center gap-1">
-                <ClockIcon className="h-3 w-3" />
+                <ClockIcon size={12} />
                 {formatDuration(estimatedTime)}
               </span>
             </div>
@@ -1149,7 +1165,7 @@ function TokenSelector({
           className="h-5 w-5 rounded-full sm:h-6 sm:w-6"
         />
         <span className="text-sm sm:text-base">{token.symbol}</span>
-        <ChevronDownIcon className="h-4 w-4 text-gray-400" aria-hidden="true" />
+        <ChevronDownIcon size={16} className="text-gray-400" aria-hidden="true" />
       </button>
 
       {open && (
@@ -1210,7 +1226,8 @@ function TokenSelector({
                 </div>
                 {t.symbol === token.symbol && (
                   <CheckIcon
-                    className="h-4 w-4 text-purple-400"
+                    size={16}
+                    className="text-purple-400"
                     aria-hidden="true"
                   />
                 )}
@@ -1220,162 +1237,6 @@ function TokenSelector({
         </>
       )}
     </div>
-  )
-}
-
-// Icons
-
-function CheckIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M4.5 12.75l6 6 9-13.5"
-      />
-    </svg>
-  )
-}
-
-function ShieldIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
-      />
-    </svg>
-  )
-}
-
-function EyeIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
-      />
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-      />
-    </svg>
-  )
-}
-
-function KeyIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z"
-      />
-    </svg>
-  )
-}
-
-function ArrowDownIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3"
-      />
-    </svg>
-  )
-}
-
-function ChevronDownIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M19.5 8.25l-7.5 7.5-7.5-7.5"
-      />
-    </svg>
-  )
-}
-
-function PreviewIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
-      />
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-      />
-    </svg>
-  )
-}
-
-function WarningIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
-      />
-    </svg>
   )
 }
 
@@ -1432,119 +1293,6 @@ function LoadingSpinner() {
         className="opacity-75"
         fill="currentColor"
         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-      />
-    </svg>
-  )
-}
-
-function CheckCircleIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-      />
-    </svg>
-  )
-}
-
-function XCircleIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-      />
-    </svg>
-  )
-}
-
-function SettingsIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"
-      />
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-      />
-    </svg>
-  )
-}
-
-function ClockIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
-      />
-    </svg>
-  )
-}
-
-function WalletIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 11-6 0H5.25A2.25 2.25 0 003 12m18 0v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 9m18 0V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v3"
-      />
-    </svg>
-  )
-}
-
-function LockIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
       />
     </svg>
   )

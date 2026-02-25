@@ -1,6 +1,14 @@
 "use client"
 
 import { useState, useCallback } from "react"
+import {
+  QrCodeIcon,
+  BookOpenIcon,
+  ClipboardIcon,
+  XIcon,
+  CameraSlashIcon,
+  TrashIcon,
+} from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 import { logger } from "@/lib/logger"
 
@@ -169,7 +177,7 @@ export function RecipientInput({
             className="p-2 text-[var(--text-tertiary)] hover:text-sip-purple-400 hover:bg-sip-purple-500/10 rounded-lg transition-colors disabled:opacity-50"
             title="Scan QR Code"
           >
-            <QRCodeIcon className="w-4 h-4" />
+            <QrCodeIcon size={16} />
           </button>
 
           {/* Address Book */}
@@ -185,7 +193,7 @@ export function RecipientInput({
             )}
             title="Address Book"
           >
-            <BookIcon className="w-4 h-4" />
+            <BookOpenIcon size={16} />
             {contacts.length > 0 && (
               <span className="absolute -top-1 -right-1 w-4 h-4 flex items-center justify-center text-[10px] font-bold bg-sip-purple-500 text-white rounded-full">
                 {contacts.length}
@@ -201,7 +209,7 @@ export function RecipientInput({
             className="p-2 text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-tertiary)] rounded-lg transition-colors disabled:opacity-50"
             title="Paste from clipboard"
           >
-            <ClipboardIcon className="w-4 h-4" />
+            <ClipboardIcon size={16} />
           </button>
         </div>
       </div>
@@ -309,7 +317,7 @@ function QRScannerModal({ onScan, onClose }: QRScannerModalProps) {
             onClick={onClose}
             className="p-1 rounded-lg hover:bg-[var(--surface-tertiary)] transition-colors"
           >
-            <CloseIcon className="w-5 h-5" />
+            <XIcon size={20} />
           </button>
         </div>
 
@@ -317,14 +325,14 @@ function QRScannerModal({ onScan, onClose }: QRScannerModalProps) {
         <div className="aspect-square bg-black/90 flex items-center justify-center">
           {cameraError ? (
             <div className="text-center px-6">
-              <CameraOffIcon className="w-12 h-12 mx-auto mb-3 text-[var(--text-tertiary)]" />
+              <CameraSlashIcon size={48} className="mx-auto mb-3 text-[var(--text-tertiary)]" />
               <p className="text-sm text-[var(--text-secondary)]">
                 {cameraError}
               </p>
             </div>
           ) : (
             <div className="text-center px-6">
-              <QRCodeIcon className="w-16 h-16 mx-auto mb-4 text-sip-purple-400" />
+              <QrCodeIcon size={64} className="mx-auto mb-4 text-sip-purple-400" />
               <p className="text-sm text-[var(--text-secondary)]">
                 Point your camera at a SIP address QR code
               </p>
@@ -397,7 +405,7 @@ function AddressBookModal({
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-[var(--border-default)]">
           <div className="flex items-center gap-2">
-            <BookIcon className="w-5 h-5 text-sip-purple-400" />
+            <BookOpenIcon size={20} className="text-sip-purple-400" />
             <h3 className="text-lg font-semibold">Address Book</h3>
           </div>
           <button
@@ -405,7 +413,7 @@ function AddressBookModal({
             onClick={onClose}
             className="p-1 rounded-lg hover:bg-[var(--surface-tertiary)] transition-colors"
           >
-            <CloseIcon className="w-5 h-5" />
+            <XIcon size={20} />
           </button>
         </div>
 
@@ -440,14 +448,14 @@ function AddressBookModal({
                     className="p-2 text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
                     title="Delete contact"
                   >
-                    <TrashIcon className="w-4 h-4" />
+                    <TrashIcon size={16} />
                   </button>
                 </div>
               ))}
             </div>
           ) : (
             <div className="p-8 text-center">
-              <BookIcon className="w-12 h-12 mx-auto mb-3 text-[var(--text-tertiary)]" />
+              <BookOpenIcon size={48} className="mx-auto mb-3 text-[var(--text-tertiary)]" />
               <p className="text-sm text-[var(--text-secondary)]">
                 No saved addresses yet
               </p>
@@ -459,115 +467,6 @@ function AddressBookModal({
         </div>
       </div>
     </div>
-  )
-}
-
-// Icons
-function QRCodeIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"
-      />
-    </svg>
-  )
-}
-
-function BookIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
-      />
-    </svg>
-  )
-}
-
-function ClipboardIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"
-      />
-    </svg>
-  )
-}
-
-function CloseIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M6 18L18 6M6 6l12 12"
-      />
-    </svg>
-  )
-}
-
-function CameraOffIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"
-      />
-    </svg>
-  )
-}
-
-function TrashIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-      />
-    </svg>
   )
 }
 

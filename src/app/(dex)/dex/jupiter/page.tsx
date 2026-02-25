@@ -8,6 +8,17 @@ import { toast } from "@/stores/toast"
 import { getSDK } from "@/lib"
 import { getJupiterSwapTransaction } from "@/lib/dex/jupiter-client"
 import { logger } from "@/lib/logger"
+import {
+  ShieldCheckIcon as ShieldIcon,
+  EyeIcon,
+  WalletIcon,
+  ArrowDownIcon,
+  CaretDownIcon as ChevronDownIcon,
+  LockSimpleIcon as LockIcon,
+  CheckIcon,
+  CopyIcon,
+  LightningIcon as ZapIcon,
+} from "@phosphor-icons/react"
 
 // Jupiter API endpoint
 const JUPITER_QUOTE_API = "https://quote-api.jup.ag/v6/quote"
@@ -281,7 +292,7 @@ export default function JupiterPage() {
             Jupiter Aggregator
           </span>
           <span className="inline-flex items-center gap-1.5 rounded-full border border-purple-500/20 bg-purple-500/10 px-3 py-1 text-xs font-medium text-purple-400">
-            <ShieldIcon className="h-3 w-3" />
+            <ShieldIcon size={12} />
             SIP Privacy
           </span>
         </div>
@@ -306,9 +317,9 @@ export default function JupiterPage() {
         <div className="mb-4 flex items-center justify-between border-b border-gray-800 pb-4">
           <div className="flex items-center gap-2">
             {privacyEnabled ? (
-              <ShieldIcon className="h-5 w-5 text-purple-400" />
+              <ShieldIcon size={20} className="text-purple-400" />
             ) : (
-              <EyeIcon className="h-5 w-5 text-gray-400" />
+              <EyeIcon size={20} className="text-gray-400" />
             )}
             <span
               className={`text-sm font-medium ${privacyEnabled ? "text-purple-400" : "text-gray-400"}`}
@@ -335,7 +346,7 @@ export default function JupiterPage() {
         {!isConnected ? (
           <div className="py-8 text-center">
             <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-purple-500/10">
-              <WalletIcon className="h-8 w-8 text-purple-400" />
+              <WalletIcon size={32} className="text-purple-400" />
             </div>
             <h2 className="mb-2 text-xl font-semibold">Connect Wallet</h2>
             <p className="mb-6 text-sm text-gray-400">
@@ -387,7 +398,7 @@ export default function JupiterPage() {
                     <span className="text-base font-medium sm:text-lg">
                       {TOKENS[fromToken].symbol}
                     </span>
-                    <ChevronDownIcon className="h-4 w-4 text-gray-400" />
+                    <ChevronDownIcon size={16} className="text-gray-400" />
                   </button>
                   {showFromDropdown && (
                     <TokenDropdown
@@ -411,7 +422,7 @@ export default function JupiterPage() {
                 className="rounded-lg border border-gray-700 bg-gray-900 p-2 transition-all hover:rotate-180 hover:border-purple-500"
                 aria-label="Swap tokens"
               >
-                <ArrowDownIcon className="h-5 w-5 text-gray-400" />
+                <ArrowDownIcon size={20} className="text-gray-400" />
               </button>
             </div>
 
@@ -421,7 +432,7 @@ export default function JupiterPage() {
                 <span className="text-sm text-gray-400">You receive</span>
                 {privacyEnabled && (
                   <span className="flex items-center gap-1 text-xs text-purple-400">
-                    <LockIcon className="h-3 w-3" />
+                    <LockIcon size={12} />
                     Private
                   </span>
                 )}
@@ -449,7 +460,7 @@ export default function JupiterPage() {
                     <span className="text-base font-medium sm:text-lg">
                       {TOKENS[toToken].symbol}
                     </span>
-                    <ChevronDownIcon className="h-4 w-4 text-gray-400" />
+                    <ChevronDownIcon size={16} className="text-gray-400" />
                   </button>
                   {showToDropdown && (
                     <TokenDropdown
@@ -490,7 +501,7 @@ export default function JupiterPage() {
                 <div className="flex justify-between">
                   <span className="text-gray-400">Powered by</span>
                   <span className="flex items-center gap-1 text-green-400">
-                    <ZapIcon className="h-3 w-3" />
+                    <ZapIcon size={12} />
                     Jupiter
                   </span>
                 </div>
@@ -501,7 +512,7 @@ export default function JupiterPage() {
             {privacyEnabled && privacyLayer && (
               <div className="space-y-3 rounded-xl border border-purple-500/20 bg-purple-500/10 p-3 sm:p-4">
                 <div className="flex items-center gap-2 text-sm font-medium text-purple-400">
-                  <ShieldIcon className="h-4 w-4" />
+                  <ShieldIcon size={16} />
                   Privacy Layer Active
                 </div>
                 <div className="space-y-2">
@@ -522,9 +533,9 @@ export default function JupiterPage() {
                         aria-label="Copy stealth address"
                       >
                         {copied === "Stealth address" ? (
-                          <CheckIcon className="h-3 w-3 text-green-400" />
+                          <CheckIcon size={12} className="text-green-400" />
                         ) : (
-                          <CopyIcon className="h-3 w-3 text-gray-400" />
+                          <CopyIcon size={12} className="text-gray-400" />
                         )}
                       </button>
                     </div>
@@ -622,7 +633,7 @@ export default function JupiterPage() {
       <div className="mt-6 grid gap-4 sm:mt-8 sm:grid-cols-2">
         <div className="rounded-xl border border-red-500/20 bg-red-500/10 p-4">
           <div className="mb-3 flex items-center gap-2">
-            <EyeIcon className="h-5 w-5 text-red-400" />
+            <EyeIcon size={20} className="text-red-400" />
             <h3 className="font-semibold text-red-400">Standard Swap</h3>
           </div>
           <ul className="space-y-2 text-sm text-gray-400">
@@ -642,7 +653,7 @@ export default function JupiterPage() {
         </div>
         <div className="rounded-xl border border-green-500/20 bg-green-500/10 p-4">
           <div className="mb-3 flex items-center gap-2">
-            <ShieldIcon className="h-5 w-5 text-green-400" />
+            <ShieldIcon size={20} className="text-green-400" />
             <h3 className="font-semibold text-green-400">SIP + Jupiter</h3>
           </div>
           <ul className="space-y-2 text-sm text-gray-400">
@@ -695,180 +706,12 @@ function TokenDropdown({
           >
             <span className="font-medium">{symbol}</span>
             {symbol === selected && (
-              <CheckIcon className="ml-auto h-4 w-4 text-purple-400" />
+              <CheckIcon size={16} className="ml-auto text-purple-400" />
             )}
           </button>
         ))}
       </div>
     </>
-  )
-}
-
-// Icons
-function ShieldIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
-      />
-    </svg>
-  )
-}
-
-function EyeIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
-      />
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-      />
-    </svg>
-  )
-}
-
-function WalletIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 11-6 0H5.25A2.25 2.25 0 003 12m18 0v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 9m18 0V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v3"
-      />
-    </svg>
-  )
-}
-
-function ArrowDownIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3"
-      />
-    </svg>
-  )
-}
-
-function ChevronDownIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M19.5 8.25l-7.5 7.5-7.5-7.5"
-      />
-    </svg>
-  )
-}
-
-function LockIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
-      />
-    </svg>
-  )
-}
-
-function CheckIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M4.5 12.75l6 6 9-13.5"
-      />
-    </svg>
-  )
-}
-
-function CopyIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184"
-      />
-    </svg>
-  )
-}
-
-function ZapIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"
-      />
-    </svg>
   )
 }
 

@@ -3,6 +3,14 @@
 import { useState, useEffect, useCallback, useRef } from "react"
 import type { ViewingKey } from "@sip-protocol/types"
 import { generateViewingKey } from "@sip-protocol/sdk"
+import {
+  EyeIcon,
+  QrCodeIcon,
+  ShareNetworkIcon,
+  KeyIcon,
+  ShieldWarningIcon,
+  InfoIcon,
+} from "@phosphor-icons/react"
 import { ViewingKeyDisplay } from "./viewing-key-display"
 import { ViewingKeyQRCode } from "./viewing-key-qr-code"
 import { AuditorShareModal } from "./auditor-share-modal"
@@ -128,7 +136,7 @@ export function ViewingKeyPanel({
             </>
           ) : (
             <>
-              <KeyIcon className="w-4 h-4" />
+              <KeyIcon size={16} />
               No viewing key generated
             </>
           )}
@@ -150,7 +158,7 @@ export function ViewingKeyPanel({
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <div className="p-1.5 rounded-lg bg-sip-purple-500/20">
-            <EyeIcon className="w-4 h-4 text-sip-purple-400" />
+            <EyeIcon size={16} className="text-sip-purple-400" />
           </div>
           <div>
             <h3 className="text-sm font-medium">Viewing Key</h3>
@@ -189,7 +197,7 @@ export function ViewingKeyPanel({
             "border border-[var(--border-default)] transition-colors"
           )}
         >
-          <QRIcon className="w-3.5 h-3.5" />
+          <QrCodeIcon size={14} />
           Show QR
         </button>
 
@@ -203,7 +211,7 @@ export function ViewingKeyPanel({
             "border border-[var(--border-default)] transition-colors"
           )}
         >
-          <ShareIcon className="w-3.5 h-3.5" />
+          <ShareNetworkIcon size={14} />
           Share with Auditor
           {sharedWith.length > 0 && (
             <span className="px-1.5 py-0.5 rounded-full bg-sip-purple-500/20 text-sip-purple-400">
@@ -217,7 +225,7 @@ export function ViewingKeyPanel({
       {!disabled && (
         <div className="mt-4 p-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
           <div className="flex items-start gap-2">
-            <ShieldExclamationIcon className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
+            <ShieldWarningIcon size={16} className="text-amber-500 flex-shrink-0 mt-0.5" />
             <div className="flex-1">
               <p className="text-xs font-medium text-amber-500">
                 Backup Your Viewing Key
@@ -267,7 +275,7 @@ export function ViewingKeyPanel({
           <div className="relative z-10 max-w-sm mx-4 p-6 bg-[var(--surface-primary)] rounded-2xl border border-[var(--border-default)] shadow-2xl">
             <div className="flex items-center gap-3 mb-4">
               <div className="p-2 rounded-lg bg-red-500/10">
-                <InfoIcon className="w-5 h-5 text-red-400" />
+                <InfoIcon size={20} className="text-red-400" />
               </div>
               <h3 className="text-base font-semibold">Key Revocation</h3>
             </div>
@@ -333,84 +341,6 @@ export function ViewingKeyPanel({
   )
 }
 
-// Icons
-function EyeIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-      />
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-      />
-    </svg>
-  )
-}
-
-function QRIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"
-      />
-    </svg>
-  )
-}
-
-function ShareIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
-      />
-    </svg>
-  )
-}
-
-function KeyIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
-      />
-    </svg>
-  )
-}
-
 function LoadingSpinner({ className }: { className?: string }) {
   return (
     <svg
@@ -430,42 +360,6 @@ function LoadingSpinner({ className }: { className?: string }) {
         className="opacity-75"
         fill="currentColor"
         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-      />
-    </svg>
-  )
-}
-
-function ShieldExclamationIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M20.618 5.984A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016zM12 9v2m0 4h.01"
-      />
-    </svg>
-  )
-}
-
-function InfoIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
       />
     </svg>
   )

@@ -3,6 +3,7 @@
 import { useState, useCallback, useRef } from "react"
 import { QRCodeSVG } from "qrcode.react"
 import type { ViewingKey } from "@sip-protocol/types"
+import { WarningIcon } from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 import { logger } from "@/lib/logger"
 
@@ -145,30 +146,12 @@ export function ViewingKeyQRCode({
 
       {/* Security Note */}
       <div className="flex items-start gap-2 p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/20 text-yellow-500 text-xs max-w-xs">
-        <WarningIcon className="w-4 h-4 flex-shrink-0 mt-0.5" />
+        <WarningIcon size={16} className="flex-shrink-0 mt-0.5" />
         <span>
           This viewing key allows decryption of transaction details. Only share
           with trusted auditors.
         </span>
       </div>
     </div>
-  )
-}
-
-function WarningIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-      strokeWidth={2}
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-      />
-    </svg>
   )
 }
