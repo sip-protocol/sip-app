@@ -336,7 +336,7 @@ export class ArciumAdapter implements PrivacyBackend {
     return {
       status: "success",
       txHash,
-      explorerUrl: `https://explorer.solana.com/tx/${txHash}?cluster=${this.config.network}`,
+      explorerUrl: `https://solscan.io/tx/${txHash}?cluster=${this.config.network}`,
       commitment,
       // Arcium uses C-SPL - recipient is public, only amount is hidden
       stealthAddress: recipient, // Same as recipient for C-SPL

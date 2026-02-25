@@ -282,7 +282,7 @@ export class MockBackend implements PrivacyBackend {
     return {
       status: "success",
       txHash,
-      explorerUrl: `https://explorer.solana.com/tx/${txHash}?cluster=${this.config.network}`,
+      explorerUrl: `https://solscan.io/tx/${txHash}?cluster=${this.config.network}`,
       stealthAddress,
       commitment,
       viewingKey:

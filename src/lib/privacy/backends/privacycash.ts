@@ -379,7 +379,7 @@ export class PrivacyCashAdapter implements PrivacyBackend {
     return {
       status: "success",
       txHash: withdrawTxHash,
-      explorerUrl: `https://explorer.solana.com/tx/${withdrawTxHash}?cluster=${this.config.network}`,
+      explorerUrl: `https://solscan.io/tx/${withdrawTxHash}?cluster=${this.config.network}`,
       commitment,
       // PrivacyCash doesn't support stealth addresses - recipient is the withdrawal address
       stealthAddress: recipient,

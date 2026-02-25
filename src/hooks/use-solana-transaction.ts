@@ -18,7 +18,7 @@ export interface UseSolanaTransactionReturn {
   status: SolanaTxStatus
   /** Transaction signature after successful send */
   txSignature: string | null
-  /** Solana Explorer URL auto-computed from signature + cluster */
+  /** Solscan URL auto-computed from signature + cluster */
   explorerUrl: string | null
   /** Error message if status is "error" */
   error: string | null
@@ -41,10 +41,10 @@ function detectCluster(rpcEndpoint: string): string {
 }
 
 /**
- * Builds a Solana Explorer URL for a transaction signature.
+ * Builds a Solscan URL for a transaction signature.
  */
 function buildExplorerUrl(signature: string, cluster: string): string {
-  const base = `https://explorer.solana.com/tx/${signature}`
+  const base = `https://solscan.io/tx/${signature}`
   if (cluster === "mainnet-beta") return base
   return `${base}?cluster=${cluster}`
 }
