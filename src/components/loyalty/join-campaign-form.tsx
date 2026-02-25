@@ -69,7 +69,7 @@ export function JoinCampaignForm({
     ),
   }
 
-  const isFormReady = (connected || isDemoMode) && status === "idle"
+  const isFormReady = (connected || isDemoMode) && (status === "idle" || status === "error")
   const isJoining = status === "selecting_campaign" || status === "joining"
   const isJoined = status === "joined"
 
@@ -203,7 +203,7 @@ export function JoinCampaignForm({
       )}
 
       {/* Error state */}
-      {status === "failed" && (
+      {(status === "failed" || status === "error") && (
         <div className="mb-6">
           <LoyaltyStatus currentStep="failed" mode="join" error={error} />
         </div>

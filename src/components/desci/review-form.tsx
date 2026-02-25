@@ -57,7 +57,7 @@ export function ReviewForm({ onReviewed }: ReviewFormProps) {
   const reviewableProject = SAMPLE_CONTRIBUTIONS[0]
 
   const isFormReady =
-    (connected || isDemoMode) && status === "idle" && reviewableProject
+    (connected || isDemoMode) && (status === "idle" || status === "error") && reviewableProject
   const isReviewing =
     status === "generating_proof" || status === "submitting_review"
   const isReviewed = status === "reviewed"
@@ -200,7 +200,7 @@ export function ReviewForm({ onReviewed }: ReviewFormProps) {
       )}
 
       {/* Error state */}
-      {status === "failed" && (
+      {(status === "failed" || status === "error") && (
         <div className="mb-6">
           <DeSciStatus currentStep="failed" mode="review" error={error} />
         </div>

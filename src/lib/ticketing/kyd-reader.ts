@@ -40,7 +40,7 @@ function setCache<T>(key: string, data: T): void {
 // KYD-specific event data (cNFT ticket references)
 // ---------------------------------------------------------------------------
 
-const KYD_EVENTS: Event[] = [
+export const KYD_EVENTS: Event[] = [
   {
     id: "kyd-breakpoint-2026",
     title: "Solana Breakpoint 2026",

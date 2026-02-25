@@ -58,7 +58,7 @@ export function PlaylistForm({ onCreated }: PlaylistFormProps) {
   const reviewableStream = SAMPLE_STREAMS[0]
 
   const isFormReady =
-    (connected || isDemoMode) && status === "idle" && reviewableStream
+    (connected || isDemoMode) && (status === "idle" || status === "error") && reviewableStream
   const isCreating =
     status === "generating_proof" || status === "encrypting_playlist"
   const isCreated = status === "created"
@@ -208,7 +208,7 @@ export function PlaylistForm({ onCreated }: PlaylistFormProps) {
       )}
 
       {/* Error state */}
-      {status === "failed" && (
+      {(status === "failed" || status === "error") && (
         <div className="mb-6">
           <MusicStatus currentStep="failed" mode="playlist" error={error} />
         </div>

@@ -67,7 +67,7 @@ export function TeleportForm({ onTeleported }: TeleportFormProps) {
   const destination = worlds[0]
 
   const isFormReady =
-    (connected || isDemoMode) && status === "idle" && destination
+    (connected || isDemoMode) && (status === "idle" || status === "error") && destination
   const isTeleporting =
     status === "generating_proof" || status === "teleporting"
   const isArrived = status === "arrived"
@@ -207,7 +207,7 @@ export function TeleportForm({ onTeleported }: TeleportFormProps) {
       )}
 
       {/* Error state */}
-      {status === "failed" && (
+      {(status === "failed" || status === "error") && (
         <div className="mb-6">
           <MetaverseStatus currentStep="failed" mode="teleport" error={error} />
         </div>

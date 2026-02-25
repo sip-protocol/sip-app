@@ -1,4 +1,5 @@
 import { getSDK } from "@/lib/sip-client"
+import { generateStealthAddressBrowser } from "@/lib/stealth-browser-fallback"
 
 export interface StealthLoyaltyResult {
   stealthAddress: string
@@ -13,20 +14,25 @@ export interface StealthLoyaltyResult {
  * Rewards sent to this address cannot be linked to the claimant's wallet.
  */
 export async function generateLoyaltyStealthAddress(): Promise<StealthLoyaltyResult> {
-  const sdk = await getSDK()
+  try {
+    const sdk = await getSDK()
 
-  const { metaAddress, spendingPrivateKey, viewingPrivateKey } =
-    sdk.generateStealthMetaAddress("solana")
+    const { metaAddress, spendingPrivateKey, viewingPrivateKey } =
+      sdk.generateStealthMetaAddress("solana")
 
-  const { stealthAddress } = sdk.generateStealthAddress(metaAddress)
+    const { stealthAddress } = sdk.generateStealthAddress(metaAddress)
 
-  const metaAddressStr = sdk.encodeStealthMetaAddress(metaAddress)
-  const stealthAddressStr = `sip:solana:${stealthAddress.address}`
+    const metaAddressStr = sdk.encodeStealthMetaAddress(metaAddress)
+    const stealthAddressStr = `sip:solana:${stealthAddress.address}`
 
-  return {
-    stealthAddress: stealthAddressStr,
-    metaAddress: metaAddressStr,
-    spendingKey: spendingPrivateKey,
-    viewingKey: viewingPrivateKey,
+    return {
+      stealthAddress: stealthAddressStr,
+      metaAddress: metaAddressStr,
+      spendingKey: spendingPrivateKey,
+      viewingKey: viewingPrivateKey,
+    }
+  } catch {
+    // SDK imports Node.js-only deps (gRPC) — fall back to Web Crypto
+    return generateStealthAddressBrowser()
   }
 }

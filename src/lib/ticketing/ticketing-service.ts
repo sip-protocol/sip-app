@@ -6,6 +6,7 @@ import type {
   VerifyTicketParams,
 } from "./types"
 import { SIMULATION_DELAYS, getEvent, getTicket } from "./constants"
+import { KYD_EVENTS } from "./kyd-reader"
 import { generateTicketingStealthAddress } from "./stealth-ticketing"
 import {
   createRealCommitment,
@@ -68,7 +69,7 @@ export class TicketingService {
         if (!p.eventId) {
           return "Event ID is required"
         }
-        const event = getEvent(p.eventId)
+        const event = getEvent(p.eventId) ?? KYD_EVENTS.find((e) => e.id === p.eventId)
         if (!event) {
           return "Event not found"
         }

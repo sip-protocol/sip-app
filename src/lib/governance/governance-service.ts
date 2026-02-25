@@ -233,10 +233,55 @@ export class GovernanceService {
         voter: encrypted.voter,
         timestamp: encrypted.timestamp,
       }
-    } catch (error) {
-      throw new Error(
-        `Encryption failed: ${error instanceof Error ? error.message : "Unknown error"}`
-      )
+    } catch {
+      // SDK imports Node.js-only deps (gRPC) that fail in browser.
+      // Fall back to Web Crypto for browser-compatible encryption.
+      return this.encryptVoteBrowser(params, encryptionKey)
+    }
+  }
+
+  private async encryptVoteBrowser(
+    params: VoteParams,
+    encryptionKey: string
+  ): Promise<SerializedEncryptedVote> {
+    const payload = JSON.stringify({
+      choice: params.choice,
+      weight: params.weight,
+      proposalId: params.proposalId,
+    })
+    const encoder = new TextEncoder()
+    const data = encoder.encode(payload)
+    const keyData = encoder.encode(encryptionKey.padEnd(32, "0").slice(0, 32))
+
+    const cryptoKey = await crypto.subtle.importKey(
+      "raw",
+      keyData,
+      { name: "AES-GCM" },
+      false,
+      ["encrypt"]
+    )
+    const iv = crypto.getRandomValues(new Uint8Array(12))
+    const encrypted = await crypto.subtle.encrypt(
+      { name: "AES-GCM", iv },
+      cryptoKey,
+      data
+    )
+
+    const toHex = (buf: ArrayBuffer | Uint8Array) =>
+      "0x" +
+      Array.from(new Uint8Array(buf))
+        .map((b) => b.toString(16).padStart(2, "0"))
+        .join("")
+
+    const keyHash = await crypto.subtle.digest("SHA-256", keyData)
+
+    return {
+      ciphertext: toHex(encrypted),
+      nonce: toHex(iv),
+      encryptionKeyHash: toHex(keyHash),
+      proposalId: params.proposalId,
+      voter: "",
+      timestamp: Date.now(),
     }
   }
 
@@ -263,10 +308,46 @@ export class GovernanceService {
         choice: revealed.choice,
         weight: revealed.weight.toString(),
       }
-    } catch (error) {
-      throw new Error(
-        `Decryption failed: ${error instanceof Error ? error.message : "Unknown error"}`
-      )
+    } catch {
+      // SDK imports Node.js-only deps — fall back to Web Crypto decryption
+      return this.decryptVoteBrowser(encryptedVote, encryptionKey)
     }
+  }
+
+  private async decryptVoteBrowser(
+    encryptedVote: SerializedEncryptedVote,
+    encryptionKey: string
+  ): Promise<{ choice: number; weight: string }> {
+    const encoder = new TextEncoder()
+    const keyData = encoder.encode(encryptionKey.padEnd(32, "0").slice(0, 32))
+
+    const cryptoKey = await crypto.subtle.importKey(
+      "raw",
+      keyData,
+      { name: "AES-GCM" },
+      false,
+      ["decrypt"]
+    )
+
+    const fromHex = (hex: string) => {
+      const clean = hex.startsWith("0x") ? hex.slice(2) : hex
+      const bytes = new Uint8Array(clean.length / 2)
+      for (let i = 0; i < clean.length; i += 2) {
+        bytes[i / 2] = parseInt(clean.slice(i, i + 2), 16)
+      }
+      return bytes
+    }
+
+    const ciphertext = fromHex(encryptedVote.ciphertext)
+    const iv = fromHex(encryptedVote.nonce)
+
+    const decrypted = await crypto.subtle.decrypt(
+      { name: "AES-GCM", iv },
+      cryptoKey,
+      ciphertext
+    )
+
+    const decoded = JSON.parse(new TextDecoder().decode(decrypted))
+    return { choice: decoded.choice, weight: decoded.weight }
   }
 }

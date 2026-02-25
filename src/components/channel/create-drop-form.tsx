@@ -64,7 +64,7 @@ export function CreateDropForm({ onPublished }: CreateDropFormProps) {
 
   const isFormReady =
     (connected || isDemoMode) &&
-    status === "idle" &&
+    (status === "idle" || status === "error") &&
     title.trim() &&
     content.trim()
   const isPublishing =
@@ -244,7 +244,7 @@ export function CreateDropForm({ onPublished }: CreateDropFormProps) {
       )}
 
       {/* Error state */}
-      {status === "failed" && (
+      {(status === "failed" || status === "error") && (
         <div className="mb-6">
           <ChannelStatus currentStep="failed" mode="publish" error={error} />
         </div>

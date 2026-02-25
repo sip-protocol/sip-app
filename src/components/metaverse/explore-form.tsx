@@ -78,7 +78,7 @@ export function ExploreForm({ world, onExplored }: ExploreFormProps) {
     ),
   }
 
-  const isFormReady = (connected || isDemoMode) && status === "idle"
+  const isFormReady = (connected || isDemoMode) && (status === "idle" || status === "error")
   const isExploring =
     status === "selecting_world" ||
     status === "generating_stealth_avatar" ||
@@ -245,7 +245,7 @@ export function ExploreForm({ world, onExplored }: ExploreFormProps) {
       )}
 
       {/* Error state */}
-      {status === "failed" && (
+      {(status === "failed" || status === "error") && (
         <div className="mb-6">
           <MetaverseStatus currentStep="failed" mode="explore" error={error} />
         </div>

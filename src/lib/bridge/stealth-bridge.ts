@@ -1,5 +1,6 @@
 import type { BridgeChainId } from "./types"
 import { getSDK } from "@/lib/sip-client"
+import { generateStealthAddressBrowser } from "@/lib/stealth-browser-fallback"
 
 export interface StealthBridgeResult {
   stealthAddress: string
@@ -30,32 +31,44 @@ function toSdkChainId(chain: BridgeChainId): string {
 export async function generateBridgeStealthAddress(
   destChain: BridgeChainId
 ): Promise<StealthBridgeResult> {
-  const sdk = await getSDK()
+  try {
+    const sdk = await getSDK()
 
-  const sdkChain = toSdkChainId(destChain)
+    const sdkChain = toSdkChainId(destChain)
 
-  // Generate recipient keypair (meta-address) on dest chain
-  const { metaAddress, spendingPrivateKey, viewingPrivateKey } =
-    sdk.generateStealthMetaAddress(
-      sdkChain as Parameters<typeof sdk.generateStealthMetaAddress>[0]
-    )
+    // Generate recipient keypair (meta-address) on dest chain
+    const { metaAddress, spendingPrivateKey, viewingPrivateKey } =
+      sdk.generateStealthMetaAddress(
+        sdkChain as Parameters<typeof sdk.generateStealthMetaAddress>[0]
+      )
 
-  // Generate one-time stealth address from the meta-address
-  const { stealthAddress, sharedSecret } =
-    sdk.generateStealthAddress(metaAddress)
+    // Generate one-time stealth address from the meta-address
+    const { stealthAddress, sharedSecret } =
+      sdk.generateStealthAddress(metaAddress)
 
-  // Encode the meta-address for display/storage
-  const metaAddressStr = sdk.encodeStealthMetaAddress(metaAddress)
+    // Encode the meta-address for display/storage
+    const metaAddressStr = sdk.encodeStealthMetaAddress(metaAddress)
 
-  // Format stealth address for display
-  const stealthAddressStr = `sip:${destChain}:${stealthAddress.address}`
+    // Format stealth address for display
+    const stealthAddressStr = `sip:${destChain}:${stealthAddress.address}`
 
-  return {
-    stealthAddress: stealthAddressStr,
-    stealthMetaAddress: metaAddressStr,
-    spendingPrivateKey,
-    viewingPrivateKey,
-    sharedSecret,
+    return {
+      stealthAddress: stealthAddressStr,
+      stealthMetaAddress: metaAddressStr,
+      spendingPrivateKey,
+      viewingPrivateKey,
+      sharedSecret,
+    }
+  } catch {
+    // SDK imports Node.js-only deps (gRPC) — fall back to Web Crypto
+    const fallback = await generateStealthAddressBrowser()
+    return {
+      stealthAddress: fallback.stealthAddress.replace("solana", destChain),
+      stealthMetaAddress: fallback.metaAddress,
+      spendingPrivateKey: fallback.spendingKey,
+      viewingPrivateKey: fallback.viewingKey,
+      sharedSecret: fallback.sharedSecret,
+    }
   }
 }
 

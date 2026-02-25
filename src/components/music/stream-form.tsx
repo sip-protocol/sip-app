@@ -77,7 +77,7 @@ export function StreamForm({ track, onStreamed }: StreamFormProps) {
     ),
   }
 
-  const isFormReady = (connected || isDemoMode) && status === "idle"
+  const isFormReady = (connected || isDemoMode) && (status === "idle" || status === "error")
   const isStreaming =
     status === "selecting_track" ||
     status === "generating_stealth_listener" ||
@@ -242,7 +242,7 @@ export function StreamForm({ track, onStreamed }: StreamFormProps) {
       )}
 
       {/* Error state */}
-      {status === "failed" && (
+      {(status === "failed" || status === "error") && (
         <div className="mb-6">
           <MusicStatus currentStep="failed" mode="stream" error={error} />
         </div>

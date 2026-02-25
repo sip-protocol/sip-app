@@ -86,7 +86,7 @@ export function PurchaseForm({ event, onPurchased }: PurchaseFormProps) {
     ),
   }
 
-  const isFormReady = (connected || isDemoMode) && status === "idle"
+  const isFormReady = (connected || isDemoMode) && (status === "idle" || status === "error")
   const isPurchasing =
     status === "selecting_event" ||
     status === "generating_stealth_ticket" ||
@@ -276,7 +276,7 @@ export function PurchaseForm({ event, onPurchased }: PurchaseFormProps) {
       )}
 
       {/* Error state */}
-      {status === "failed" && (
+      {(status === "failed" || status === "error") && (
         <div className="mb-6">
           <TicketingStatus currentStep="failed" mode="purchase" error={error} />
         </div>

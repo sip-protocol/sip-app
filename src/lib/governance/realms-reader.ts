@@ -394,7 +394,10 @@ export class RealmsReader {
         record.account.realm.equals(realmConfig.pubkey)
       )
 
-      if (realmRecords.length === 0) return { weight: "0" }
+      if (realmRecords.length === 0) {
+        // No token records — fall back to simulated weight for demo UX
+        return { weight: this.getSimulatedWeight(daoId) }
+      }
 
       let totalWeight = BigInt(0)
       for (const record of realmRecords) {
@@ -403,8 +406,9 @@ export class RealmsReader {
         )
       }
 
+      const weight = totalWeight.toString()
       return {
-        weight: totalWeight.toString(),
+        weight: weight === "0" ? this.getSimulatedWeight(daoId) : weight,
         tokenOwnerRecordPubkey: realmRecords[0].pubkey.toBase58(),
       }
     } catch (error) {

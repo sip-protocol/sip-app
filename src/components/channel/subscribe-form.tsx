@@ -66,7 +66,7 @@ export function SubscribeForm({ drop, onSubscribed }: SubscribeFormProps) {
     ),
   }
 
-  const isFormReady = (connected || isDemoMode) && status === "idle"
+  const isFormReady = (connected || isDemoMode) && (status === "idle" || status === "error")
   const isSubscribing =
     status === "selecting_channel" || status === "subscribing"
   const isSubscribed = status === "subscribed"
@@ -192,7 +192,7 @@ export function SubscribeForm({ drop, onSubscribed }: SubscribeFormProps) {
       )}
 
       {/* Error state */}
-      {status === "failed" && (
+      {(status === "failed" || status === "error") && (
         <div className="mb-6">
           <ChannelStatus currentStep="failed" mode="subscribe" error={error} />
         </div>

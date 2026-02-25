@@ -6,6 +6,7 @@ import type {
   ClaimRewardParams,
 } from "./types"
 import { SIMULATION_DELAYS, getGame } from "./constants"
+import { MAGICBLOCK_GAMES } from "./magicblock-reader"
 import { generateGamingStealthAddress } from "./stealth-gaming"
 import {
   createRealCommitment,
@@ -58,7 +59,7 @@ export class GamingService {
         if (!p.gameId) {
           return "Game ID is required"
         }
-        const game = getGame(p.gameId)
+        const game = getGame(p.gameId) ?? MAGICBLOCK_GAMES.find((g) => g.id === p.gameId)
         if (!game) {
           return "Game not found"
         }

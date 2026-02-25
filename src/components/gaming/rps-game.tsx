@@ -118,7 +118,7 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
     []
   )
 
-  const canPlay = (connected || isDemoMode) && phase === "select"
+  const canPlay = (connected || isDemoMode) && (phase === "select" || status === "error")
 
   const generateOpponentCommitment = useCallback((_move: RpsMove) => {
     const fakeCommitment =
@@ -554,7 +554,7 @@ export function RpsGame({ game, onBack }: RpsGameProps) {
       )}
 
       {/* Error state */}
-      {status === "failed" && (
+      {(status === "failed" || status === "error") && (
         <div className="mb-6">
           <GamingStatus currentStep="failed" mode="play" error={error} />
         </div>

@@ -54,7 +54,7 @@ export function VerifyForm({ onVerified }: VerifyFormProps) {
   const verifiableTicket = SAMPLE_TICKETS[0]
 
   const isFormReady =
-    (connected || isDemoMode) && status === "idle" && verifiableTicket
+    (connected || isDemoMode) && (status === "idle" || status === "error") && verifiableTicket
   const isVerifying =
     status === "generating_proof" || status === "verifying_attendance"
   const isVerified = status === "verified"
@@ -197,7 +197,7 @@ export function VerifyForm({ onVerified }: VerifyFormProps) {
       )}
 
       {/* Error state */}
-      {status === "failed" && (
+      {(status === "failed" || status === "error") && (
         <div className="mb-6">
           <TicketingStatus currentStep="failed" mode="verify" error={error} />
         </div>

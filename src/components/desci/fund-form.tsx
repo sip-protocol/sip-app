@@ -78,7 +78,7 @@ export function FundForm({ project, onFunded }: FundFormProps) {
     ),
   }
 
-  const isFormReady = (connected || isDemoMode) && status === "idle"
+  const isFormReady = (connected || isDemoMode) && (status === "idle" || status === "error")
   const isFunding =
     status === "selecting_project" ||
     status === "generating_stealth_funding" ||
@@ -264,7 +264,7 @@ export function FundForm({ project, onFunded }: FundFormProps) {
       )}
 
       {/* Error state */}
-      {status === "failed" && (
+      {(status === "failed" || status === "error") && (
         <div className="mb-6">
           <DeSciStatus currentStep="failed" mode="fund" error={error} />
         </div>

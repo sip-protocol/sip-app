@@ -54,7 +54,7 @@ export function ClaimForm({ onClaimed }: ClaimFormProps) {
   const claimableResult = SAMPLE_RESULTS.find((r) => r.won)
 
   const isFormReady =
-    (connected || isDemoMode) && status === "idle" && claimableResult
+    (connected || isDemoMode) && (status === "idle" || status === "error") && claimableResult
   const isClaiming =
     status === "generating_stealth" || status === "claiming_reward"
   const isClaimed = status === "claimed"
@@ -194,7 +194,7 @@ export function ClaimForm({ onClaimed }: ClaimFormProps) {
       )}
 
       {/* Error state */}
-      {status === "failed" && (
+      {(status === "failed" || status === "error") && (
         <div className="mb-6">
           <GamingStatus currentStep="failed" mode="claim" error={error} />
         </div>

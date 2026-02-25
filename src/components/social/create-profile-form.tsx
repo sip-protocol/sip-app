@@ -71,7 +71,7 @@ export function CreateProfileForm({ onCreated }: CreateProfileFormProps) {
   const isFormReady =
     (connected || isDemoMode) &&
     username.trim().length >= 3 &&
-    status === "idle"
+    (status === "idle" || status === "error")
 
   const isCreating =
     status === "generating_stealth" || status === "creating_profile"
@@ -222,7 +222,7 @@ export function CreateProfileForm({ onCreated }: CreateProfileFormProps) {
       )}
 
       {/* Error state */}
-      {status === "failed" && (
+      {(status === "failed" || status === "error") && (
         <div className="mb-6">
           <SocialStatus currentStep="failed" mode="profile" error={error} />
         </div>

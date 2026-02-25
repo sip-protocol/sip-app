@@ -1,4 +1,5 @@
 import { getSDK } from "@/lib/sip-client"
+import { generateStealthAddressBrowser } from "@/lib/stealth-browser-fallback"
 import type { ArtParameters, ArtStyleId } from "./types"
 import { getDefaultPalette } from "./constants"
 
@@ -12,26 +13,31 @@ export interface StealthArtResult {
 
 /**
  * Generate a stealth address for art generation.
- * Uses real @sip-protocol/sdk cryptography.
+ * Uses real @sip-protocol/sdk cryptography, falls back to Web Crypto in browser.
  */
 export async function generateArtStealthAddress(): Promise<StealthArtResult> {
-  const sdk = await getSDK()
+  try {
+    const sdk = await getSDK()
 
-  const { metaAddress, spendingPrivateKey, viewingPrivateKey } =
-    sdk.generateStealthMetaAddress("solana")
+    const { metaAddress, spendingPrivateKey, viewingPrivateKey } =
+      sdk.generateStealthMetaAddress("solana")
 
-  const { stealthAddress, sharedSecret } =
-    sdk.generateStealthAddress(metaAddress)
+    const { stealthAddress, sharedSecret } =
+      sdk.generateStealthAddress(metaAddress)
 
-  const metaAddressStr = sdk.encodeStealthMetaAddress(metaAddress)
-  const stealthAddressStr = `sip:solana:${stealthAddress.address}`
+    const metaAddressStr = sdk.encodeStealthMetaAddress(metaAddress)
+    const stealthAddressStr = `sip:solana:${stealthAddress.address}`
 
-  return {
-    stealthAddress: stealthAddressStr,
-    metaAddress: metaAddressStr,
-    spendingKey: spendingPrivateKey,
-    viewingKey: viewingPrivateKey,
-    sharedSecret,
+    return {
+      stealthAddress: stealthAddressStr,
+      metaAddress: metaAddressStr,
+      spendingKey: spendingPrivateKey,
+      viewingKey: viewingPrivateKey,
+      sharedSecret,
+    }
+  } catch {
+    // SDK imports Node.js-only deps (gRPC) — fall back to Web Crypto
+    return generateStealthAddressBrowser()
   }
 }
 

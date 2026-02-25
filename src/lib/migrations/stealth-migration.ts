@@ -1,4 +1,5 @@
 import { getSDK } from "@/lib/sip-client"
+import { generateStealthAddressBrowser } from "@/lib/stealth-browser-fallback"
 
 export interface StealthMigrationResult {
   stealthAddress: string
@@ -16,24 +17,36 @@ export interface StealthMigrationResult {
  * to the source wallet, providing a "clean slate" migration.
  */
 export async function generateMigrationStealthAddress(): Promise<StealthMigrationResult> {
-  const sdk = await getSDK()
+  try {
+    const sdk = await getSDK()
 
-  const { metaAddress, spendingPrivateKey, viewingPrivateKey } =
-    sdk.generateStealthMetaAddress(
-      "solana" as Parameters<typeof sdk.generateStealthMetaAddress>[0]
-    )
+    const { metaAddress, spendingPrivateKey, viewingPrivateKey } =
+      sdk.generateStealthMetaAddress(
+        "solana" as Parameters<typeof sdk.generateStealthMetaAddress>[0]
+      )
 
-  const { stealthAddress, sharedSecret } =
-    sdk.generateStealthAddress(metaAddress)
+    const { stealthAddress, sharedSecret } =
+      sdk.generateStealthAddress(metaAddress)
 
-  const metaAddressStr = sdk.encodeStealthMetaAddress(metaAddress)
-  const stealthAddressStr = `sip:solana:${stealthAddress.address}`
+    const metaAddressStr = sdk.encodeStealthMetaAddress(metaAddress)
+    const stealthAddressStr = `sip:solana:${stealthAddress.address}`
 
-  return {
-    stealthAddress: stealthAddressStr,
-    stealthMetaAddress: metaAddressStr,
-    spendingPrivateKey,
-    viewingPrivateKey,
-    sharedSecret,
+    return {
+      stealthAddress: stealthAddressStr,
+      stealthMetaAddress: metaAddressStr,
+      spendingPrivateKey,
+      viewingPrivateKey,
+      sharedSecret,
+    }
+  } catch {
+    // SDK imports Node.js-only deps (gRPC) — fall back to Web Crypto
+    const fallback = await generateStealthAddressBrowser()
+    return {
+      stealthAddress: fallback.stealthAddress,
+      stealthMetaAddress: fallback.metaAddress,
+      spendingPrivateKey: fallback.spendingKey,
+      viewingPrivateKey: fallback.viewingKey,
+      sharedSecret: fallback.sharedSecret,
+    }
   }
 }

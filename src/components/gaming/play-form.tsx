@@ -78,7 +78,7 @@ export function PlayForm({ game, onResolved }: PlayFormProps) {
   }
 
   const isFormReady =
-    (connected || isDemoMode) && status === "idle" && move.trim()
+    (connected || isDemoMode) && (status === "idle" || status === "error") && move.trim()
   const isPlaying =
     status === "committing_move" ||
     status === "generating_commitment" ||
@@ -277,7 +277,7 @@ export function PlayForm({ game, onResolved }: PlayFormProps) {
       )}
 
       {/* Error state */}
-      {status === "failed" && (
+      {(status === "failed" || status === "error") && (
         <div className="mb-6">
           <GamingStatus currentStep="failed" mode="play" error={error} />
         </div>

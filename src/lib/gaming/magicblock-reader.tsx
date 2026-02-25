@@ -62,7 +62,7 @@ function setCache<T>(key: string, data: T): void {
 // MagicBlock-specific game data (BOLT ECS references)
 // ---------------------------------------------------------------------------
 
-const MAGICBLOCK_GAMES: Game[] = [
+export const MAGICBLOCK_GAMES: Game[] = [
   {
     id: "mb-soar-pvp",
     title: "SOAR Arena",
