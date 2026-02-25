@@ -48,12 +48,12 @@ const nextConfig: NextConfig = {
       config.resolve.fallback = {
         ...config.resolve.fallback,
         dns: emptyModule,
-        fs: emptyModule,
-        "fs/promises": emptyModule,
+        fs: false,
+        "fs/promises": false,
         http2: emptyModule,
-        net: emptyModule,
-        tls: emptyModule,
-        worker_threads: emptyModule,
+        net: false,
+        tls: false,
+        worker_threads: false,
       }
     }
     return config
