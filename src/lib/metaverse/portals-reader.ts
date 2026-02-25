@@ -39,7 +39,7 @@ function setCache<T>(key: string, data: T): void {
 // Portals-specific world data
 // ---------------------------------------------------------------------------
 
-const PORTALS_WORLDS: World[] = [
+export const PORTALS_WORLDS: World[] = [
   {
     id: "portals-nft-gallery",
     title: "Portals NFT Gallery",

@@ -6,6 +6,7 @@ import type {
   ReviewProjectParams,
 } from "./types"
 import { SIMULATION_DELAYS, getProject } from "./constants"
+import { REAL_BIODAO_PROJECTS } from "./bio-reader"
 import { generateDeSciStealthAddress } from "./stealth-desci"
 import {
   createRealCommitment,
@@ -61,7 +62,9 @@ export class DeSciService {
         if (!p.projectId) {
           return "Project ID is required"
         }
-        const project = getProject(p.projectId)
+        const project =
+          getProject(p.projectId) ??
+          REAL_BIODAO_PROJECTS.find((x) => x.id === p.projectId)
         if (!project) {
           return "Project not found"
         }
@@ -98,7 +101,9 @@ export class DeSciService {
       throw new Error(validationError)
     }
 
-    const project = getProject(params.projectId)
+    const project =
+      getProject(params.projectId) ??
+      REAL_BIODAO_PROJECTS.find((x) => x.id === params.projectId)
 
     const record: DeSciActionRecord = {
       id: generateId("fund"),
@@ -213,7 +218,9 @@ export class DeSciService {
       throw new Error(validationError)
     }
 
-    const project = getProject(params.projectId)
+    const project =
+      getProject(params.projectId) ??
+      REAL_BIODAO_PROJECTS.find((x) => x.id === params.projectId)
 
     const record: DeSciActionRecord = {
       id: generateId("review"),

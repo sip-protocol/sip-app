@@ -6,6 +6,7 @@ import type {
   TeleportParams,
 } from "./types"
 import { SIMULATION_DELAYS, getWorld } from "./constants"
+import { PORTALS_WORLDS } from "./portals-reader"
 import { generateMetaverseStealthAddress } from "./stealth-metaverse"
 import {
   createRealCommitment,
@@ -56,7 +57,8 @@ export class MetaverseService {
         if (!p.worldId) {
           return "World ID is required"
         }
-        const world = getWorld(p.worldId)
+        const world =
+          getWorld(p.worldId) ?? PORTALS_WORLDS.find((w) => w.id === p.worldId)
         if (!world) {
           return "World not found"
         }
@@ -95,7 +97,9 @@ export class MetaverseService {
       throw new Error(validationError)
     }
 
-    const world = getWorld(params.worldId)
+    const world =
+      getWorld(params.worldId) ??
+      PORTALS_WORLDS.find((w) => w.id === params.worldId)
 
     const record: MetaverseActionRecord = {
       id: generateId("explore"),
@@ -191,7 +195,9 @@ export class MetaverseService {
       throw new Error(validationError)
     }
 
-    const world = getWorld(params.worldId)
+    const world =
+      getWorld(params.worldId) ??
+      PORTALS_WORLDS.find((w) => w.id === params.worldId)
 
     const record: MetaverseActionRecord = {
       id: generateId("teleport"),

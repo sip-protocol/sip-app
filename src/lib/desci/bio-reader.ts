@@ -35,7 +35,7 @@ function setCache<T>(key: string, data: T): void {
 
 // Real BioDAOs from the bio.xyz ecosystem with publicly available info.
 // These use real names and approximate public data for authenticity.
-const REAL_BIODAO_PROJECTS: Project[] = [
+export const REAL_BIODAO_PROJECTS: Project[] = [
   {
     id: "vitadao",
     title: "VitaDAO",

@@ -331,7 +331,7 @@ export class RealmsReader {
     }
 
     const realmConfig = KNOWN_REALMS[daoId]
-    if (!realmConfig) return "0"
+    if (!realmConfig) return this.getSimulatedWeight(daoId)
 
     try {
       const connection = this.getConnection()
@@ -378,7 +378,7 @@ export class RealmsReader {
     }
 
     const realmConfig = KNOWN_REALMS[daoId]
-    if (!realmConfig) return { weight: "0" }
+    if (!realmConfig) return { weight: this.getSimulatedWeight(daoId) }
 
     try {
       const connection = this.getConnection()
