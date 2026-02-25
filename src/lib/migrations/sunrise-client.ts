@@ -7,10 +7,28 @@ import {
 import type { MigrationMode } from "./types"
 import { logger } from "@/lib/logger"
 
-// Sunrise Stake on-chain addresses (verified from sunrise-stake/app repo)
-// String constants — PublicKey instances created lazily to support test mocking
-const SUNRISE_STATE_ADDRESS = "43m66crxGfXSJpmx5wXRoFuHubhHA1GCvtHgmHW6cM1P"
-const SUNRISE_HOLDING_ADDRESS = "shcFT8Ur2mzpX61uWQRL9KyERZp4w2ehDEvA7iaAthn"
+// ---------------------------------------------------------------------------
+// @sunrisestake/client SDK integration
+// Import Environment constants for verified on-chain addresses.
+// The SDK client itself requires AnchorProvider (wallet), so we use it
+// for address validation and fall back to direct RPC for data queries.
+// ---------------------------------------------------------------------------
+let SunriseEnvironment: Record<string, { state: PublicKey; holdingAccount: PublicKey }> | null =
+  null
+try {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const sunriseSdk = require("@sunrisestake/client")
+  SunriseEnvironment = sunriseSdk.Environment
+  logger.info("[SIP][Sunrise] SDK loaded — using verified addresses", "SunriseClient")
+} catch {
+  // SDK unavailable — use hardcoded addresses
+}
+
+// Sunrise Stake on-chain addresses — prefer SDK constants, fallback to hardcoded
+const SUNRISE_STATE_ADDRESS = SunriseEnvironment?.["mainnet-beta"]?.state?.toBase58()
+  ?? "43m66crxGfXSJpmx5wXRoFuHubhHA1GCvtHgmHW6cM1P"
+const SUNRISE_HOLDING_ADDRESS = SunriseEnvironment?.["mainnet-beta"]?.holdingAccount?.toBase58()
+  ?? "shcFT8Ur2mzpX61uWQRL9KyERZp4w2ehDEvA7iaAthn"
 
 // Solana RPC — env var or public fallback
 const SOLANA_RPC_URL =
