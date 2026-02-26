@@ -542,7 +542,7 @@ function DemoVideoSection() {
                 onPause={() => setIsPlaying(false)}
                 onEnded={() => setIsPlaying(false)}
               >
-                <source src="/sip-app-demo.mp4" type="video/mp4" />
+                <source src="https://cdn.sip-protocol.org/videos/showcase/sip-app-demo.mp4" type="video/mp4" />
               </video>
 
               {/* Play overlay */}
