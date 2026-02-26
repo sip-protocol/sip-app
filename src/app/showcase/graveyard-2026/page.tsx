@@ -3,7 +3,9 @@
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
+import { useRef } from "react"
 import {
+  PlayCircleIcon,
   ShieldIcon as Shield,
   LockIcon as Lock,
   EyeIcon as Eye,
@@ -341,6 +343,7 @@ export default function GraveyardShowcase2026() {
   return (
     <>
       <HeroSection />
+      <DemoVideoSection />
       <PrimitivesSection />
       <ResurrectionSection />
       <TracksSection />
@@ -461,6 +464,139 @@ function HeroSection() {
           className="absolute bottom-8 left-1/2 -translate-x-1/2"
         >
           <ChevronDown className="w-6 h-6 text-gray-600 animate-bounce" />
+        </motion.div>
+      </div>
+    </section>
+  )
+}
+
+// ============================================================================
+// Demo Video
+// ============================================================================
+
+function DemoVideoSection() {
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const [isPlaying, setIsPlaying] = useState(false)
+
+  const handlePlayToggle = () => {
+    if (!videoRef.current) return
+    if (videoRef.current.paused) {
+      videoRef.current.play()
+      setIsPlaying(true)
+    } else {
+      videoRef.current.pause()
+      setIsPlaying(false)
+    }
+  }
+
+  return (
+    <section className="py-16 sm:py-20">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-8"
+        >
+          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3">
+            See It In Action
+          </h2>
+          <p className="text-gray-400 max-w-xl mx-auto">
+            5 dead Solana categories, resurrected with real cryptographic
+            privacy in under 3 minutes
+          </p>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 40, scale: 0.97 }}
+          whileInView={{ opacity: 1, y: 0, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, delay: 0.1 }}
+          className="relative group"
+        >
+          {/* Browser-style frame */}
+          <div className="rounded-2xl overflow-hidden border border-gray-700/60 bg-gray-900/80 shadow-2xl shadow-purple-500/10">
+            {/* Title bar */}
+            <div className="flex items-center gap-3 px-4 py-3 bg-gray-800/80 border-b border-gray-700/50">
+              <div className="flex gap-1.5">
+                <div className="w-3 h-3 rounded-full bg-red-500/80" />
+                <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
+                <div className="w-3 h-3 rounded-full bg-green-500/80" />
+              </div>
+              <div className="flex-1 flex justify-center">
+                <div className="px-4 py-1 rounded-md bg-gray-700/50 text-xs text-gray-400 font-mono">
+                  app.sip-protocol.org
+                </div>
+              </div>
+              <div className="w-[54px]" />
+            </div>
+
+            {/* Video container */}
+            <div className="relative cursor-pointer" onClick={handlePlayToggle}>
+              <video
+                ref={videoRef}
+                className="w-full"
+                playsInline
+                onPlay={() => setIsPlaying(true)}
+                onPause={() => setIsPlaying(false)}
+                onEnded={() => setIsPlaying(false)}
+              >
+                <source src="/sip-app-demo.mp4" type="video/mp4" />
+              </video>
+
+              {/* Play overlay */}
+              <AnimatePresence>
+                {!isPlaying && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="absolute inset-0 flex items-center justify-center bg-black/40"
+                  >
+                    <motion.div
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="w-20 h-20 rounded-full bg-purple-500/90 backdrop-blur-sm flex items-center justify-center shadow-lg shadow-purple-500/30"
+                    >
+                      <PlayCircleIcon
+                        size={48}
+                        weight="fill"
+                        className="text-white ml-1"
+                      />
+                    </motion.div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
+
+          {/* Glow effect */}
+          <div className="absolute -inset-1 bg-gradient-to-r from-purple-500/20 via-green-500/10 to-purple-500/20 rounded-2xl blur-xl -z-10 opacity-50 group-hover:opacity-75 transition-opacity" />
+        </motion.div>
+
+        {/* Track labels */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.4 }}
+          className="flex flex-wrap justify-center gap-2 mt-6"
+        >
+          {[
+            "Private Governance",
+            "Green Migration",
+            "Anonymous Social",
+            "Privacy Arena",
+            "Privacy Ticketing",
+          ].map((track) => (
+            <span
+              key={track}
+              className="px-3 py-1 text-xs rounded-full bg-gray-800/60 text-gray-400 border border-gray-700/40"
+            >
+              {track}
+            </span>
+          ))}
         </motion.div>
       </div>
     </section>
