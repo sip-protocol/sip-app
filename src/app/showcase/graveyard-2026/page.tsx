@@ -1018,7 +1018,7 @@ function TractionSection() {
     {
       value: "8,688+",
       label: "Tests Passing",
-      detail: "SDK: 6,691 | React: 543 | CLI: 62 | API: 198 | App: 1,184",
+      detail: "SDK: 6,691 | React: 543 | CLI: 62 | API: 198 | RN: 10 | App: 1,184",
       color: "from-green-900/30 to-emerald-900/30 border-green-500/20",
       text: "from-green-400 to-emerald-400",
     },
