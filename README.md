@@ -26,6 +26,8 @@
 
 **Live:** [app.sip-protocol.org](https://app.sip-protocol.org) | **Companion:** [SIP Privacy Mobile](https://github.com/sip-protocol/sip-mobile)
 
+**🏆 Winner — [Zypherpunk Hackathon](https://zypherpunk.xyz) ($6,500) | 🥇 1st Place — [Solana Graveyard Hackathon](https://solana.com/graveyard-hack) (Torque)**
+
 </div>
 
 ---
