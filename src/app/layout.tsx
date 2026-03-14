@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next"
+import Script from "next/script"
 import { Inter, JetBrains_Mono } from "next/font/google"
 import { Providers } from "@/providers"
 import { Header, Footer } from "@/components/layout"
@@ -90,6 +91,12 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${jetbrainsMono.variable} antialiased min-h-screen flex flex-col bg-gray-950 text-white`}
       >
+        {/* Umami Analytics (self-hosted, privacy-first) */}
+        <Script
+          src="https://analytics.sip-protocol.org/script.js"
+          data-website-id="4ccd6b5d-58c5-4f87-b070-0b182e5e673a"
+          strategy="afterInteractive"
+        />
         <Providers>
           <Header />
           <main className="flex-1 pt-16">
