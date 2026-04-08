@@ -89,7 +89,7 @@ All write operations need:
 | Variable | Tracks | Required |
 |----------|--------|----------|
 | `NEXT_PUBLIC_RPC_URL` | All | Already set (mainnet) |
-| `NEXT_PUBLIC_HELIUS_API_KEY` | Art, DRiP, Ticketing, Metaverse | Needed for DAS reads |
+| `NEXT_PUBLIC_SIP_APP_HELIUS_API_KEY` | Art, DRiP, Ticketing, Metaverse | Needed for DAS reads |
 | `TAPESTRY_API_KEY` | Social | Needed for Tapestry SDK |
 | `NEXT_PUBLIC_SIP_PROGRAM_ID` | Gaming, DeSci, Metaverse | Already set |
 

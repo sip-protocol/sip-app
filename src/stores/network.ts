@@ -17,8 +17,8 @@ interface NetworkState {
 
 const HELIUS_MAINNET =
   process.env.NEXT_PUBLIC_RPC_URL ||
-  (process.env.NEXT_PUBLIC_HELIUS_API_KEY
-    ? `https://mainnet.helius-rpc.com/?api-key=${process.env.NEXT_PUBLIC_HELIUS_API_KEY}`
+  (process.env.NEXT_PUBLIC_SIP_APP_HELIUS_API_KEY
+    ? `https://mainnet.helius-rpc.com/?api-key=${process.env.NEXT_PUBLIC_SIP_APP_HELIUS_API_KEY}`
     : "https://api.mainnet-beta.solana.com")
 
 function getRpcUrl(cluster: Cluster, customRpc: string | null): string {

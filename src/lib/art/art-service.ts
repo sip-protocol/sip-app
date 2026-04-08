@@ -67,8 +67,8 @@ const EXCHANGE_ART_COLLECTIONS = [
 function getHeliusUrl(): string | null {
   const key =
     (typeof process !== "undefined" &&
-      (process.env?.NEXT_PUBLIC_HELIUS_API_KEY ||
-        process.env?.HELIUS_API_KEY)) ||
+      (process.env?.NEXT_PUBLIC_SIP_APP_HELIUS_API_KEY ||
+        process.env?.SIP_APP_HELIUS_API_KEY)) ||
     null
   if (!key) return null
   return `https://mainnet.helius-rpc.com/?api-key=${key}`

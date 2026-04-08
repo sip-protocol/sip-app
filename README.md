@@ -166,7 +166,7 @@ pnpm dev
 ```bash
 # .env.local
 NEXT_PUBLIC_SOLANA_RPC_URL=https://api.mainnet-beta.solana.com
-NEXT_PUBLIC_HELIUS_API_KEY=your-key  # For DAS API
+NEXT_PUBLIC_SIP_APP_HELIUS_API_KEY=your-key  # For DAS API
 ```
 
 ---

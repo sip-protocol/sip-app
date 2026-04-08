@@ -713,7 +713,7 @@ Manual verification (requires wallet with SOL):
 | Variable | Tracks | Required | Status |
 |----------|--------|----------|--------|
 | `NEXT_PUBLIC_RPC_URL` | All | Already set | ✅ mainnet |
-| `NEXT_PUBLIC_HELIUS_API_KEY` | Art, DRiP, Ticketing, Metaverse | Needed for DAS | ⚠️ Add |
+| `NEXT_PUBLIC_SIP_APP_HELIUS_API_KEY` | Art, DRiP, Ticketing, Metaverse | Needed for DAS | ⚠️ Add |
 | `TAPESTRY_API_KEY` | Social | Needed for writes | ⚠️ Add |
 | `NEXT_PUBLIC_SIP_PROGRAM_ID` | Gaming, DeSci, Metaverse | Already set | ✅ |
 

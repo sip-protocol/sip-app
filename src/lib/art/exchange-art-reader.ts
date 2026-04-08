@@ -104,8 +104,8 @@ export class ExchangeArtReader {
       try {
         const apiKey =
           typeof process !== "undefined"
-            ? (process.env.NEXT_PUBLIC_HELIUS_API_KEY ??
-              process.env.HELIUS_API_KEY)
+            ? (process.env.NEXT_PUBLIC_SIP_APP_HELIUS_API_KEY ??
+              process.env.SIP_APP_HELIUS_API_KEY)
             : undefined
 
         if (apiKey) {

@@ -21,8 +21,8 @@ const SOLANA_RPC = {
   devnet: "https://api.devnet.solana.com",
   mainnet:
     process.env.NEXT_PUBLIC_SOLANA_RPC_URL ||
-    (process.env.NEXT_PUBLIC_HELIUS_API_KEY
-      ? `https://mainnet.helius-rpc.com/?api-key=${process.env.NEXT_PUBLIC_HELIUS_API_KEY}`
+    (process.env.NEXT_PUBLIC_SIP_APP_HELIUS_API_KEY
+      ? `https://mainnet.helius-rpc.com/?api-key=${process.env.NEXT_PUBLIC_SIP_APP_HELIUS_API_KEY}`
       : "https://api.mainnet-beta.solana.com"),
 }
 

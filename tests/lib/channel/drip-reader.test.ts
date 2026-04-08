@@ -56,8 +56,8 @@ describe("DripReader", () => {
 
   describe("drip mode — no API key", () => {
     beforeEach(() => {
-      delete process.env.NEXT_PUBLIC_HELIUS_API_KEY
-      delete process.env.HELIUS_API_KEY
+      delete process.env.NEXT_PUBLIC_SIP_APP_HELIUS_API_KEY
+      delete process.env.SIP_APP_HELIUS_API_KEY
       reader = new DripReader("drip")
       reader.clearCache()
     })
@@ -70,7 +70,7 @@ describe("DripReader", () => {
 
   describe("drip mode — with API key", () => {
     beforeEach(() => {
-      process.env.NEXT_PUBLIC_HELIUS_API_KEY = "test-key"
+      process.env.NEXT_PUBLIC_SIP_APP_HELIUS_API_KEY = "test-key"
       reader = new DripReader("drip")
       reader.clearCache()
     })
@@ -230,7 +230,7 @@ describe("DripReader", () => {
 
   describe("content type mapping", () => {
     beforeEach(() => {
-      process.env.NEXT_PUBLIC_HELIUS_API_KEY = "test-key"
+      process.env.NEXT_PUBLIC_SIP_APP_HELIUS_API_KEY = "test-key"
       reader = new DripReader("drip")
       reader.clearCache()
     })

@@ -29,11 +29,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Check for Helius API key
-    const heliusApiKey = process.env.HELIUS_API_KEY
+    const heliusApiKey = process.env.SIP_APP_HELIUS_API_KEY
     if (!heliusApiKey) {
       // Fall back to mock data if no API key configured
       logger.warn(
-        "HELIUS_API_KEY not set, using mock data",
+        "SIP_APP_HELIUS_API_KEY not set, using mock data",
         "PrivacyScoreRoute"
       )
       const mockResult = generateMockResult(walletAddress)
@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// Mock data fallback when HELIUS_API_KEY is not configured
+// Mock data fallback when SIP_APP_HELIUS_API_KEY is not configured
 function generateMockResult(walletAddress: string) {
   const seed = walletAddress.split("").reduce((a, b) => a + b.charCodeAt(0), 0)
   const random = (min: number, max: number) =>
