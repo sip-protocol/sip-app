@@ -48,9 +48,9 @@ vi.mock("@/lib/sns-stealth-client", () => {
 
 const mockGetExplorerUrl = vi.fn((sig: string) => `https://solscan.io/tx/${sig}`)
 vi.mock("@/stores/network", () => ({
-  useNetworkStore: {
-    getState: () => ({ getExplorerUrl: mockGetExplorerUrl }),
-  },
+  useNetworkStore: <T,>(
+    selector: (s: { getExplorerUrl: typeof mockGetExplorerUrl }) => T,
+  ): T => selector({ getExplorerUrl: mockGetExplorerUrl }),
 }))
 
 const mockConnection = {}

@@ -33,6 +33,7 @@ interface CardStateData {
 export function PublishCard({ domainPubkey }: Props) {
   const wallet = useWallet()
   const { connection } = useConnection()
+  const getExplorerUrl = useNetworkStore((s) => s.getExplorerUrl)
 
   const [cardData, setCardData] = useState<CardStateData>({
     state: "loading",
@@ -72,13 +73,8 @@ export function PublishCard({ domainPubkey }: Props) {
             errorMessage: null,
           })
         } else {
-          // Exhaustive narrowing — NetworkError or other unknown errors surface here
-          setCardData({
-            state: "no-record",
-            domainName: fullDomain,
-            signature: null,
-            errorMessage: null,
-          })
+          const _exhaustive: never = result
+          throw new Error(`Unhandled resolve result: ${String(_exhaustive)}`)
         }
       } catch (err) {
         if (cancelled) return
@@ -128,9 +124,7 @@ export function PublishCard({ domainPubkey }: Props) {
   }, [cardData.domainName, connection, wallet])
 
   const { state, domainName, signature, errorMessage } = cardData
-  const explorerUrl = signature
-    ? useNetworkStore.getState().getExplorerUrl(signature)
-    : null
+  const explorerUrl = signature ? getExplorerUrl(signature) : null
 
   // Loading skeleton
   if (state === "loading") {
@@ -249,6 +243,11 @@ export function PublishCard({ domainPubkey }: Props) {
           type="button"
           onClick={handlePublish}
           disabled={isPublishing}
+          aria-label={
+            isPublishing
+              ? `Publishing private payments for ${domainName}`
+              : `Enable private payments for ${domainName}`
+          }
           className={cn(
             "flex-shrink-0 px-4 py-2 text-sm font-semibold rounded-xl transition-colors",
             isPublishing
