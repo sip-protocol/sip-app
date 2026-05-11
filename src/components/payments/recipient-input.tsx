@@ -1,6 +1,7 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useCallback, useEffect, useRef } from "react"
+import { useConnection } from "@solana/wallet-adapter-react"
 import {
   QrCodeIcon,
   BookOpenIcon,
@@ -8,14 +9,29 @@ import {
   XIcon,
   CameraSlashIcon,
   TrashIcon,
+  SpinnerGapIcon,
+  CheckCircleIcon,
+  WarningIcon,
+  XCircleIcon,
 } from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 import { logger } from "@/lib/logger"
+import bs58 from "bs58"
+import {
+  resolve as snsResolve,
+  MetaAddress,
+  NotFound,
+  Malformed,
+} from "@/lib/sns-stealth-client"
+import { resolve as bonfidaResolve } from "@bonfida/spl-name-service"
+import {
+  classifyInput,
+  SIP_ADDRESS_REGEX,
+  type RecipientResolution,
+} from "./recipient-resolution"
 
-// SIP stealth address format: sip:solana:<spendingKey(base58)>:<viewingKey(base58)>
-// Base58 alphabet: [1-9A-HJ-NP-Za-km-z], 32-byte key = 32-44 base58 chars
-const SIP_ADDRESS_REGEX =
-  /^sip:solana:[1-9A-HJ-NP-Za-km-z]{32,44}:[1-9A-HJ-NP-Za-km-z]{32,44}$/
+// SNS resolution debounce delay (ms) — avoids firing on every keystroke
+const RESOLVE_DEBOUNCE_MS = 350
 
 // Saved contacts storage key
 const CONTACTS_KEY = "sip-address-book"
@@ -29,18 +45,20 @@ interface Contact {
 interface RecipientInputProps {
   value: string
   onChange: (value: string) => void
+  onResolutionChange?: (resolution: RecipientResolution) => void
   disabled?: boolean
 }
 
 export function RecipientInput({
   value,
   onChange,
+  onResolutionChange,
   disabled,
 }: RecipientInputProps) {
+  const { connection } = useConnection()
   const [touched, setTouched] = useState(false)
   const [showQRScanner, setShowQRScanner] = useState(false)
   const [showAddressBook, setShowAddressBook] = useState(false)
-  // Load contacts from localStorage using lazy initializer
   const [contacts, setContacts] = useState<Contact[]>(() => {
     if (typeof window === "undefined") return []
     try {
@@ -53,10 +71,122 @@ export function RecipientInput({
   const [newContactLabel, setNewContactLabel] = useState("")
   const [showSavePrompt, setShowSavePrompt] = useState(false)
 
-  const isValid = value === "" || SIP_ADDRESS_REGEX.test(value)
-  const showError = touched && value !== "" && !isValid
+  // Resolution state — drives all SNS-specific UX
+  const [resolution, setResolution] = useState<RecipientResolution>({
+    kind: "empty",
+  })
+  // "Send Public" deferred flow: holds the resolved Solana address string
+  const [publicAddressPreview, setPublicAddressPreview] = useState<
+    string | null
+  >(null)
+  const [publicAddressLoading, setPublicAddressLoading] = useState(false)
 
-  // Save contacts to localStorage
+  // Stale-request guard — increments on every input change, compared inside async callback
+  const resolveGenRef = useRef(0)
+  // Debounce timer ref
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  // Unmount guard — set true in cleanup, checked across awaits to prevent
+  // setState on an unmounted component when a resolve settles late
+  const unmountedRef = useRef(false)
+
+  // ── Resolution effect ──────────────────────────────────────────────────────
+
+  useEffect(() => {
+    // Re-arm unmount flag — cleanup will flip it true; if a fresh effect runs
+    // (value/connection changed), the previous run's async sees the new state
+    // via the generation counter, not via unmountedRef.
+    unmountedRef.current = false
+
+    // Cancel any pending debounce
+    if (debounceRef.current !== null) {
+      clearTimeout(debounceRef.current)
+      debounceRef.current = null
+    }
+
+    const initial = classifyInput(value)
+
+    // Non-SNS states resolve synchronously — no debounce needed
+    if (initial.kind !== "sns-resolving") {
+      resolveGenRef.current += 1
+      setResolution(initial)
+      onResolutionChange?.(initial)
+      // Clear public address preview when input changes
+      setPublicAddressPreview(null)
+      return
+    }
+
+    // SNS path: set resolving immediately, then debounce the actual network call
+    setResolution(initial)
+    onResolutionChange?.(initial)
+    setPublicAddressPreview(null)
+
+    const generation = ++resolveGenRef.current
+    const domain = initial.domain
+
+    debounceRef.current = setTimeout(async () => {
+      if (unmountedRef.current) return
+      if (!connection) {
+        // Connection not yet available — stay in resolving state
+        return
+      }
+
+      try {
+        const result = await snsResolve(connection, domain)
+
+        if (unmountedRef.current) return // unmounted during await
+        if (resolveGenRef.current !== generation) return // stale — discard
+
+        let next: RecipientResolution
+
+        if (result instanceof MetaAddress) {
+          // Build sip: URI from MetaAddress
+          const uri = `sip:solana:${bs58.encode(result.spending)}:${bs58.encode(result.viewing)}`
+          next = { kind: "sns-resolved", domain, uri }
+        } else if (result instanceof NotFound) {
+          next =
+            result.subject === "domain"
+              ? { kind: "sns-not-found-domain", domain }
+              : { kind: "sns-not-found-record", domain }
+        } else if (result instanceof Malformed) {
+          next = { kind: "sns-malformed", domain, reason: result.reason }
+        } else {
+          // Unexpected result type — treat as malformed
+          next = { kind: "sns-malformed", domain, reason: "unknown" }
+        }
+
+        setResolution(next)
+        onResolutionChange?.(next)
+      } catch (err) {
+        if (unmountedRef.current) return // unmounted during await
+        if (resolveGenRef.current !== generation) return // stale
+
+        logger.error("SNS resolution error", err, "RecipientInput")
+        // Network/chain errors: fall back to not-found-domain (safe, shows red error)
+        const next: RecipientResolution = {
+          kind: "sns-not-found-domain",
+          domain,
+        }
+        setResolution(next)
+        onResolutionChange?.(next)
+      }
+    }, RESOLVE_DEBOUNCE_MS)
+
+    return () => {
+      unmountedRef.current = true
+      if (debounceRef.current !== null) {
+        clearTimeout(debounceRef.current)
+        debounceRef.current = null
+      }
+    }
+    // onResolutionChange intentionally omitted from deps: callers MUST pass a
+    // stable reference (useState setter or useCallback). Adding it here would
+    // re-run the effect on every parent render if a caller creates a new
+    // function reference each cycle, defeating debounce entirely.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value, connection])
+
+  // ── Contact helpers ────────────────────────────────────────────────────────
+
   const saveContacts = useCallback((newContacts: Contact[]) => {
     try {
       localStorage.setItem(CONTACTS_KEY, JSON.stringify(newContacts))
@@ -75,12 +205,9 @@ export function RecipientInput({
 
   const handleBlur = useCallback(() => {
     setTouched(true)
-    // Show save prompt if valid address and not already saved
     if (value && SIP_ADDRESS_REGEX.test(value)) {
       const exists = contacts.some((c) => c.address === value)
-      if (!exists) {
-        setShowSavePrompt(true)
-      }
+      if (!exists) setShowSavePrompt(true)
     }
   }, [value, contacts])
 
@@ -97,7 +224,6 @@ export function RecipientInput({
   const handleSelectContact = useCallback(
     (contact: Contact) => {
       onChange(contact.address)
-      // Update last used
       const updated = contacts.map((c) =>
         c.address === contact.address ? { ...c, lastUsed: Date.now() } : c
       )
@@ -109,7 +235,6 @@ export function RecipientInput({
 
   const handleSaveContact = useCallback(() => {
     if (!value || !SIP_ADDRESS_REGEX.test(value)) return
-
     const newContact: Contact = {
       address: value,
       label: newContactLabel || `Address ${contacts.length + 1}`,
@@ -136,7 +261,55 @@ export function RecipientInput({
     [onChange]
   )
 
-  // Sort contacts by last used
+  // ── "Not-found-record" warn-and-downgrade handlers ─────────────────────────
+
+  const handleCancel = useCallback(() => {
+    onChange("")
+  }, [onChange])
+
+  const handleSendPublic = useCallback(async () => {
+    if (resolution.kind !== "sns-not-found-record") return
+    const domain = resolution.domain
+
+    setPublicAddressLoading(true)
+    setPublicAddressPreview(null)
+
+    try {
+      // Resolve the domain's SOL pointer (the public Solana address it points to)
+      const pubkey = await bonfidaResolve(connection, domain)
+      setPublicAddressPreview(pubkey.toBase58())
+    } catch (err) {
+      logger.error(
+        "Bonfida resolve error for Send Public",
+        err,
+        "RecipientInput"
+      )
+      setPublicAddressPreview("error")
+    } finally {
+      setPublicAddressLoading(false)
+    }
+
+    // TODO: Implement full public-send flow once the form supports raw Solana
+    // addresses as recipients. Currently only sip: URIs are supported by
+    // useSendPayment. Tracked in: sip-app#[send-public-follow-up].
+  }, [resolution, connection])
+
+  // ── Border color based on resolution ──────────────────────────────────────
+
+  const inputBorderClass = (() => {
+    if (resolution.kind === "sns-resolved" || resolution.kind === "sip-uri") {
+      return "border-sip-green-500 focus:border-sip-green-500"
+    }
+    if (
+      resolution.kind === "sns-not-found-domain" ||
+      resolution.kind === "sns-malformed" ||
+      (resolution.kind === "invalid" && touched && value !== "")
+    ) {
+      return "border-red-500 focus:border-red-500"
+    }
+    return "border-[var(--border-default)] focus:border-[var(--border-focus)]"
+  })()
+
   const sortedContacts = [...contacts].sort((a, b) => b.lastUsed - a.lastUsed)
 
   return (
@@ -145,7 +318,7 @@ export function RecipientInput({
         htmlFor="recipient"
         className="block text-sm font-medium text-[var(--text-secondary)] mb-2"
       >
-        Recipient Stealth Address
+        Recipient
       </label>
 
       <div className="relative">
@@ -156,19 +329,26 @@ export function RecipientInput({
           onChange={handleChange}
           onBlur={handleBlur}
           disabled={disabled}
-          placeholder="sip:solana:7x3Fh9w...ABC:2Bp4kL1...XYZ"
+          placeholder="alice.sol or sip:solana:7x3Fh9w…:2Bp4kL1…"
           className={cn(
             "w-full px-4 py-3 pr-28 bg-[var(--surface-secondary)] border rounded-xl font-mono text-sm transition-all",
             "focus:outline-none focus:ring-2 focus:ring-sip-purple-500/20",
-            showError
-              ? "border-red-500 focus:border-red-500"
-              : "border-[var(--border-default)] focus:border-[var(--border-focus)]",
+            inputBorderClass,
             disabled && "opacity-50 cursor-not-allowed"
           )}
         />
 
         {/* Action Buttons */}
         <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
+          {/* Resolving spinner */}
+          {resolution.kind === "sns-resolving" && (
+            <SpinnerGapIcon
+              size={16}
+              className="animate-spin text-[var(--text-tertiary)]"
+              aria-hidden
+            />
+          )}
+
           {/* QR Scanner */}
           <button
             type="button"
@@ -214,17 +394,134 @@ export function RecipientInput({
         </div>
       </div>
 
-      {/* Error / Help text */}
-      {showError ? (
-        <p className="mt-2 text-xs text-red-500">
-          Invalid stealth address format. Expected:
-          sip:solana:&lt;spend&gt;:&lt;view&gt;
-        </p>
-      ) : (
-        <p className="mt-2 text-xs text-[var(--text-tertiary)]">
-          Enter the recipient&apos;s SIP stealth meta-address
-        </p>
-      )}
+      {/* ── Resolution feedback area ────────────────────────────────────────── */}
+
+      {/*
+        aria-live: SR users typing into the input get state changes announced
+        without having to navigate to this region. Polite (not assertive) so
+        the resolving spinner doesn't interrupt rapid typing.
+      */}
+      <div aria-live="polite" aria-atomic="true">
+        {resolution.kind === "sns-resolving" && (
+          <p className="mt-2 text-xs text-[var(--text-tertiary)] flex items-center gap-1.5">
+            <SpinnerGapIcon size={12} className="animate-spin" aria-hidden />
+            Resolving {resolution.domain}…
+          </p>
+        )}
+
+        {resolution.kind === "sns-resolved" && (
+          <p className="mt-2 text-xs text-sip-green-500 flex items-center gap-1.5">
+            <CheckCircleIcon size={12} weight="fill" aria-hidden />
+            {resolution.domain} · private payment available
+          </p>
+        )}
+
+        {resolution.kind === "sip-uri" && value !== "" && (
+          <p className="mt-2 text-xs text-sip-green-500 flex items-center gap-1.5">
+            <CheckCircleIcon size={12} weight="fill" aria-hidden />
+            SIP stealth address ready
+          </p>
+        )}
+
+        {resolution.kind === "sns-not-found-record" && (
+          <div className="mt-3 p-3 rounded-xl bg-amber-500/10 border border-amber-500/30">
+            <div className="flex items-start gap-2 mb-2">
+              <WarningIcon
+                size={16}
+                weight="fill"
+                className="text-amber-400 mt-0.5 shrink-0"
+                aria-hidden
+              />
+              <div>
+                <p className="text-xs font-medium text-amber-300">
+                  Private payment not available.
+                </p>
+                <p className="text-xs text-amber-400/80 mt-0.5">
+                  {resolution.domain} hasn&apos;t enabled SIP-STEALTH.
+                </p>
+              </div>
+            </div>
+
+            {/* Public address preview (shown after "Send Public" is clicked) */}
+            {publicAddressLoading && (
+              <p className="text-xs text-[var(--text-tertiary)] flex items-center gap-1.5 mt-2">
+                <SpinnerGapIcon
+                  size={12}
+                  className="animate-spin"
+                  aria-hidden
+                />
+                Looking up public address…
+              </p>
+            )}
+            {publicAddressPreview && publicAddressPreview !== "error" && (
+              <p className="text-xs text-[var(--text-secondary)] mt-2 font-mono break-all">
+                Public address:{" "}
+                <span className="text-[var(--text-primary)]">
+                  {publicAddressPreview}
+                </span>
+                <br />
+                <span className="text-[var(--text-tertiary)] not-italic font-sans">
+                  Public sends via .sol are coming in a follow-up — not yet
+                  available.
+                </span>
+              </p>
+            )}
+            {publicAddressPreview === "error" && (
+              <p className="text-xs text-red-400 mt-2">
+                Could not look up public address for {resolution.domain}.
+              </p>
+            )}
+
+            <div className="flex gap-2 mt-3">
+              <button
+                type="button"
+                onClick={handleSendPublic}
+                disabled={publicAddressLoading}
+                className="px-3 py-1.5 text-xs font-medium bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded-lg hover:bg-amber-500/30 transition-colors disabled:opacity-50"
+              >
+                Send Public
+              </button>
+              <button
+                type="button"
+                onClick={handleCancel}
+                className="px-3 py-1.5 text-xs font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--border-default)] rounded-lg hover:bg-[var(--surface-secondary)] transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
+
+        {resolution.kind === "sns-not-found-domain" && (
+          <p className="mt-2 text-xs text-red-500 flex items-center gap-1.5">
+            <XCircleIcon size={12} weight="fill" aria-hidden />
+            {resolution.domain} not found
+          </p>
+        )}
+
+        {resolution.kind === "sns-malformed" && (
+          <p className="mt-2 text-xs text-red-500 flex items-center gap-1.5">
+            <XCircleIcon size={12} weight="fill" aria-hidden />
+            {resolution.domain}&apos;s privacy record is invalid (
+            {resolution.reason})
+          </p>
+        )}
+
+        {resolution.kind === "invalid" && touched && value !== "" && (
+          <p className="mt-2 text-xs text-red-500">
+            Invalid format. Use a .sol domain or
+            sip:solana:&lt;spend&gt;:&lt;view&gt;
+          </p>
+        )}
+
+        {/* Empty / pristine help text */}
+        {resolution.kind === "empty" && (
+          <p className="mt-2 text-xs text-[var(--text-tertiary)]">
+            Enter a .sol domain or SIP stealth meta-address
+          </p>
+        )}
+      </div>
+      {/* /aria-live resolution feedback area */}
 
       {/* Save to Address Book Prompt */}
       {showSavePrompt && (
@@ -279,7 +576,8 @@ export function RecipientInput({
   )
 }
 
-// QR Scanner Modal
+// ── QR Scanner Modal ───────────────────────────────────────────────────────────
+
 interface QRScannerModalProps {
   onScan: (value: string) => void
   onClose: () => void
@@ -287,7 +585,6 @@ interface QRScannerModalProps {
 
 function QRScannerModal({ onScan, onClose }: QRScannerModalProps) {
   const [manualInput, setManualInput] = useState("")
-  // Check camera availability using lazy initializer
   const [cameraError] = useState<string | null>(() => {
     if (typeof window === "undefined") return null
     if (!navigator.mediaDevices?.getUserMedia) {
@@ -357,7 +654,7 @@ function QRScannerModal({ onScan, onClose }: QRScannerModalProps) {
               type="text"
               value={manualInput}
               onChange={(e) => setManualInput(e.target.value)}
-              placeholder="sip:solana:..."
+              placeholder="sip:solana:... or alice.sol"
               className="flex-1 px-3 py-2 text-xs font-mono rounded-lg bg-[var(--surface-secondary)] border border-[var(--border-default)] focus:outline-none focus:border-sip-purple-500"
             />
             <button
@@ -375,7 +672,8 @@ function QRScannerModal({ onScan, onClose }: QRScannerModalProps) {
   )
 }
 
-// Address Book Modal
+// ── Address Book Modal ─────────────────────────────────────────────────────────
+
 interface AddressBookModalProps {
   contacts: Contact[]
   onSelect: (contact: Contact) => void
@@ -479,6 +777,17 @@ function AddressBookModal({
   )
 }
 
+/**
+ * Validate a raw recipient string.
+ *
+ * Returns true only for exact sip:solana URI format.
+ * SNS .sol domains are resolved asynchronously via RecipientInput's internal
+ * state machine — use `onResolutionChange` + `isReadyToSend()` from
+ * `recipient-resolution.ts` for SNS-aware validation.
+ *
+ * @deprecated Prefer the `onResolutionChange` + `isReadyToSend` pattern.
+ *   Kept for backward compatibility with callers that only need sip: URI check.
+ */
 export function validateRecipient(value: string): boolean {
   return SIP_ADDRESS_REGEX.test(value)
 }
