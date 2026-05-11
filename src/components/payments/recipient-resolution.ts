@@ -50,7 +50,7 @@ export type RSnsNotFoundDomain = {
 }
 
 /** Domain exists but the SIP-STEALTH record is malformed. Red error. */
-export type RSnsmalformed = {
+export type RSnsMalformed = {
   kind: "sns-malformed"
   domain: string
   reason: string
@@ -66,7 +66,7 @@ export type RecipientResolution =
   | RSnsResolved
   | RSnsNotFoundRecord
   | RSnsNotFoundDomain
-  | RSnsmalformed
+  | RSnsMalformed
   | RInvalid
 
 // ── Pure helpers ──────────────────────────────────────────────────────────────

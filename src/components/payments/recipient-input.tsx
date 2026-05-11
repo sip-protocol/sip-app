@@ -76,10 +76,18 @@ export function RecipientInput({
   const resolveGenRef = useRef(0)
   // Debounce timer ref
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  // Unmount guard — set true in cleanup, checked across awaits to prevent
+  // setState on an unmounted component when a resolve settles late
+  const unmountedRef = useRef(false)
 
   // ── Resolution effect ──────────────────────────────────────────────────────
 
   useEffect(() => {
+    // Re-arm unmount flag — cleanup will flip it true; if a fresh effect runs
+    // (value/connection changed), the previous run's async sees the new state
+    // via the generation counter, not via unmountedRef.
+    unmountedRef.current = false
+
     // Cancel any pending debounce
     if (debounceRef.current !== null) {
       clearTimeout(debounceRef.current)
@@ -107,6 +115,7 @@ export function RecipientInput({
     const domain = initial.domain
 
     debounceRef.current = setTimeout(async () => {
+      if (unmountedRef.current) return
       if (!connection) {
         // Connection not yet available — stay in resolving state
         return
@@ -115,6 +124,7 @@ export function RecipientInput({
       try {
         const result = await snsResolve(connection, domain)
 
+        if (unmountedRef.current) return // unmounted during await
         if (resolveGenRef.current !== generation) return // stale — discard
 
         let next: RecipientResolution
@@ -138,6 +148,7 @@ export function RecipientInput({
         setResolution(next)
         onResolutionChange?.(next)
       } catch (err) {
+        if (unmountedRef.current) return // unmounted during await
         if (resolveGenRef.current !== generation) return // stale
 
         logger.error("SNS resolution error", err, "RecipientInput")
@@ -149,11 +160,16 @@ export function RecipientInput({
     }, RESOLVE_DEBOUNCE_MS)
 
     return () => {
+      unmountedRef.current = true
       if (debounceRef.current !== null) {
         clearTimeout(debounceRef.current)
         debounceRef.current = null
       }
     }
+  // onResolutionChange intentionally omitted from deps: callers MUST pass a
+  // stable reference (useState setter or useCallback). Adding it here would
+  // re-run the effect on every parent render if a caller creates a new
+  // function reference each cycle, defeating debounce entirely.
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value, connection])
 
@@ -364,6 +380,13 @@ export function RecipientInput({
 
       {/* ── Resolution feedback area ────────────────────────────────────────── */}
 
+      {/*
+        aria-live: SR users typing into the input get state changes announced
+        without having to navigate to this region. Polite (not assertive) so
+        the resolving spinner doesn't interrupt rapid typing.
+      */}
+      <div aria-live="polite" aria-atomic="true">
+
       {resolution.kind === "sns-resolving" && (
         <p className="mt-2 text-xs text-[var(--text-tertiary)] flex items-center gap-1.5">
           <SpinnerGapIcon size={12} className="animate-spin" aria-hidden />
@@ -470,11 +493,14 @@ export function RecipientInput({
       )}
 
       {/* Empty / pristine help text */}
-      {(resolution.kind === "empty" || (resolution.kind === "sip-uri" && value === "")) && (
+      {resolution.kind === "empty" && (
         <p className="mt-2 text-xs text-[var(--text-tertiary)]">
           Enter a .sol domain or SIP stealth meta-address
         </p>
       )}
+
+      </div>
+      {/* /aria-live resolution feedback area */}
 
       {/* Save to Address Book Prompt */}
       {showSavePrompt && (
