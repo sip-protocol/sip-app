@@ -6,7 +6,7 @@ import { useDemoModeStore } from "@/stores/demo-mode"
 import { DemoBanner } from "@/components/ui/demo-banner"
 import { LAMPORTS_PER_SOL } from "@solana/web3.js"
 import type { ViewingKey } from "@sip-protocol/types"
-import { RecipientInput, validateRecipient } from "./recipient-input"
+import { RecipientInput } from "./recipient-input"
 import { AmountInput, type Token } from "./amount-input"
 import { PrivacyToggle, type PrivacyLevel } from "./privacy-toggle"
 import { TransactionStatus } from "./transaction-status"
@@ -15,6 +15,11 @@ import { useSendPayment } from "@/hooks/use-send-payment"
 import { useViewingKeyStorage } from "@/hooks/use-viewing-key-storage"
 import { cn } from "@/lib/utils"
 import { logger } from "@/lib/logger"
+import {
+  isReadyToSend,
+  targetUri,
+  type RecipientResolution,
+} from "./recipient-resolution"
 
 export function SendShieldedForm() {
   const { publicKey, connected } = useWallet()
@@ -26,6 +31,8 @@ export function SendShieldedForm() {
 
   // Form state
   const [recipient, setRecipient] = useState("")
+  // Resolution state from RecipientInput — drives submit gate + target URI
+  const [resolution, setResolution] = useState<RecipientResolution>({ kind: "empty" })
   const [amount, setAmount] = useState("")
   const [token, setToken] = useState<Token>("SOL")
   const [privacyLevel, setPrivacyLevel] = useState<PrivacyLevel>("shielded")
@@ -62,8 +69,9 @@ export function SendShieldedForm() {
     }
   }, [publicKey, connection])
 
-  // Validation
-  const isValidRecipient = recipient !== "" && validateRecipient(recipient)
+  // Validation — recipient is ready when the resolution machine reaches a
+  // send-capable state (sip-uri or sns-resolved)
+  const isValidRecipient = isReadyToSend(resolution)
   const numericAmount = parseFloat(amount) || 0
   const isValidAmount =
     numericAmount > 0 && (balance === undefined || numericAmount <= balance)
@@ -78,6 +86,13 @@ export function SendShieldedForm() {
       e.preventDefault()
       if (!canSubmit) return
 
+      // Extract the resolved sip: URI to pass to the payment hook
+      const resolvedUri = targetUri(resolution)
+      if (!resolvedUri) {
+        logger.error("Submit called with no resolved URI", undefined, "SendShieldedForm")
+        return
+      }
+
       // For compliant mode, require viewing key
       if (privacyLevel === "compliant" && !viewingKey) {
         logger.error(
@@ -89,7 +104,7 @@ export function SendShieldedForm() {
       }
 
       const result = await send({
-        recipient,
+        recipient: resolvedUri,
         amount,
         token,
         privacyLevel,
@@ -104,7 +119,7 @@ export function SendShieldedForm() {
     [
       canSubmit,
       send,
-      recipient,
+      resolution,
       amount,
       token,
       privacyLevel,
@@ -116,6 +131,7 @@ export function SendShieldedForm() {
   const handleReset = useCallback(() => {
     reset()
     setRecipient("")
+    setResolution({ kind: "empty" })
     setAmount("")
     setPrivacyLevel("shielded")
     setViewingKey(null)
@@ -172,6 +188,7 @@ export function SendShieldedForm() {
         <RecipientInput
           value={recipient}
           onChange={setRecipient}
+          onResolutionChange={setResolution}
           disabled={status === "pending"}
         />
       </div>
