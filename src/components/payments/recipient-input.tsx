@@ -17,7 +17,12 @@ import {
 import { cn } from "@/lib/utils"
 import { logger } from "@/lib/logger"
 import bs58 from "bs58"
-import { resolve as snsResolve, MetaAddress, NotFound, Malformed } from "@/lib/sns-stealth-client"
+import {
+  resolve as snsResolve,
+  MetaAddress,
+  NotFound,
+  Malformed,
+} from "@/lib/sns-stealth-client"
 import { resolve as bonfidaResolve } from "@bonfida/spl-name-service"
 import {
   classifyInput,
@@ -67,9 +72,13 @@ export function RecipientInput({
   const [showSavePrompt, setShowSavePrompt] = useState(false)
 
   // Resolution state — drives all SNS-specific UX
-  const [resolution, setResolution] = useState<RecipientResolution>({ kind: "empty" })
+  const [resolution, setResolution] = useState<RecipientResolution>({
+    kind: "empty",
+  })
   // "Send Public" deferred flow: holds the resolved Solana address string
-  const [publicAddressPreview, setPublicAddressPreview] = useState<string | null>(null)
+  const [publicAddressPreview, setPublicAddressPreview] = useState<
+    string | null
+  >(null)
   const [publicAddressLoading, setPublicAddressLoading] = useState(false)
 
   // Stale-request guard — increments on every input change, compared inside async callback
@@ -153,7 +162,10 @@ export function RecipientInput({
 
         logger.error("SNS resolution error", err, "RecipientInput")
         // Network/chain errors: fall back to not-found-domain (safe, shows red error)
-        const next: RecipientResolution = { kind: "sns-not-found-domain", domain }
+        const next: RecipientResolution = {
+          kind: "sns-not-found-domain",
+          domain,
+        }
         setResolution(next)
         onResolutionChange?.(next)
       }
@@ -166,11 +178,11 @@ export function RecipientInput({
         debounceRef.current = null
       }
     }
-  // onResolutionChange intentionally omitted from deps: callers MUST pass a
-  // stable reference (useState setter or useCallback). Adding it here would
-  // re-run the effect on every parent render if a caller creates a new
-  // function reference each cycle, defeating debounce entirely.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // onResolutionChange intentionally omitted from deps: callers MUST pass a
+    // stable reference (useState setter or useCallback). Adding it here would
+    // re-run the effect on every parent render if a caller creates a new
+    // function reference each cycle, defeating debounce entirely.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value, connection])
 
   // ── Contact helpers ────────────────────────────────────────────────────────
@@ -188,7 +200,7 @@ export function RecipientInput({
     (e: React.ChangeEvent<HTMLInputElement>) => {
       onChange(e.target.value.trim())
     },
-    [onChange],
+    [onChange]
   )
 
   const handleBlur = useCallback(() => {
@@ -213,12 +225,12 @@ export function RecipientInput({
     (contact: Contact) => {
       onChange(contact.address)
       const updated = contacts.map((c) =>
-        c.address === contact.address ? { ...c, lastUsed: Date.now() } : c,
+        c.address === contact.address ? { ...c, lastUsed: Date.now() } : c
       )
       saveContacts(updated)
       setShowAddressBook(false)
     },
-    [onChange, contacts, saveContacts],
+    [onChange, contacts, saveContacts]
   )
 
   const handleSaveContact = useCallback(() => {
@@ -237,7 +249,7 @@ export function RecipientInput({
     (address: string) => {
       saveContacts(contacts.filter((c) => c.address !== address))
     },
-    [contacts, saveContacts],
+    [contacts, saveContacts]
   )
 
   const handleQRScan = useCallback(
@@ -246,7 +258,7 @@ export function RecipientInput({
       setTouched(true)
       setShowQRScanner(false)
     },
-    [onChange],
+    [onChange]
   )
 
   // ── "Not-found-record" warn-and-downgrade handlers ─────────────────────────
@@ -267,7 +279,11 @@ export function RecipientInput({
       const pubkey = await bonfidaResolve(connection, domain)
       setPublicAddressPreview(pubkey.toBase58())
     } catch (err) {
-      logger.error("Bonfida resolve error for Send Public", err, "RecipientInput")
+      logger.error(
+        "Bonfida resolve error for Send Public",
+        err,
+        "RecipientInput"
+      )
       setPublicAddressPreview("error")
     } finally {
       setPublicAddressLoading(false)
@@ -318,7 +334,7 @@ export function RecipientInput({
             "w-full px-4 py-3 pr-28 bg-[var(--surface-secondary)] border rounded-xl font-mono text-sm transition-all",
             "focus:outline-none focus:ring-2 focus:ring-sip-purple-500/20",
             inputBorderClass,
-            disabled && "opacity-50 cursor-not-allowed",
+            disabled && "opacity-50 cursor-not-allowed"
           )}
         />
 
@@ -353,7 +369,7 @@ export function RecipientInput({
               "p-2 rounded-lg transition-colors disabled:opacity-50",
               contacts.length > 0
                 ? "text-sip-purple-400 hover:bg-sip-purple-500/10"
-                : "text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-tertiary)]",
+                : "text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-tertiary)]"
             )}
             title="Address Book"
           >
@@ -386,119 +402,124 @@ export function RecipientInput({
         the resolving spinner doesn't interrupt rapid typing.
       */}
       <div aria-live="polite" aria-atomic="true">
+        {resolution.kind === "sns-resolving" && (
+          <p className="mt-2 text-xs text-[var(--text-tertiary)] flex items-center gap-1.5">
+            <SpinnerGapIcon size={12} className="animate-spin" aria-hidden />
+            Resolving {resolution.domain}…
+          </p>
+        )}
 
-      {resolution.kind === "sns-resolving" && (
-        <p className="mt-2 text-xs text-[var(--text-tertiary)] flex items-center gap-1.5">
-          <SpinnerGapIcon size={12} className="animate-spin" aria-hidden />
-          Resolving {resolution.domain}…
-        </p>
-      )}
+        {resolution.kind === "sns-resolved" && (
+          <p className="mt-2 text-xs text-sip-green-500 flex items-center gap-1.5">
+            <CheckCircleIcon size={12} weight="fill" aria-hidden />
+            {resolution.domain} · private payment available
+          </p>
+        )}
 
-      {resolution.kind === "sns-resolved" && (
-        <p className="mt-2 text-xs text-sip-green-500 flex items-center gap-1.5">
-          <CheckCircleIcon size={12} weight="fill" aria-hidden />
-          {resolution.domain} · private payment available
-        </p>
-      )}
+        {resolution.kind === "sip-uri" && value !== "" && (
+          <p className="mt-2 text-xs text-sip-green-500 flex items-center gap-1.5">
+            <CheckCircleIcon size={12} weight="fill" aria-hidden />
+            SIP stealth address ready
+          </p>
+        )}
 
-      {resolution.kind === "sip-uri" && value !== "" && (
-        <p className="mt-2 text-xs text-sip-green-500 flex items-center gap-1.5">
-          <CheckCircleIcon size={12} weight="fill" aria-hidden />
-          SIP stealth address ready
-        </p>
-      )}
+        {resolution.kind === "sns-not-found-record" && (
+          <div className="mt-3 p-3 rounded-xl bg-amber-500/10 border border-amber-500/30">
+            <div className="flex items-start gap-2 mb-2">
+              <WarningIcon
+                size={16}
+                weight="fill"
+                className="text-amber-400 mt-0.5 shrink-0"
+                aria-hidden
+              />
+              <div>
+                <p className="text-xs font-medium text-amber-300">
+                  Private payment not available.
+                </p>
+                <p className="text-xs text-amber-400/80 mt-0.5">
+                  {resolution.domain} hasn&apos;t enabled SIP-STEALTH.
+                </p>
+              </div>
+            </div>
 
-      {resolution.kind === "sns-not-found-record" && (
-        <div className="mt-3 p-3 rounded-xl bg-amber-500/10 border border-amber-500/30">
-          <div className="flex items-start gap-2 mb-2">
-            <WarningIcon
-              size={16}
-              weight="fill"
-              className="text-amber-400 mt-0.5 shrink-0"
-              aria-hidden
-            />
-            <div>
-              <p className="text-xs font-medium text-amber-300">
-                Private payment not available.
+            {/* Public address preview (shown after "Send Public" is clicked) */}
+            {publicAddressLoading && (
+              <p className="text-xs text-[var(--text-tertiary)] flex items-center gap-1.5 mt-2">
+                <SpinnerGapIcon
+                  size={12}
+                  className="animate-spin"
+                  aria-hidden
+                />
+                Looking up public address…
               </p>
-              <p className="text-xs text-amber-400/80 mt-0.5">
-                {resolution.domain} hasn&apos;t enabled SIP-STEALTH.
+            )}
+            {publicAddressPreview && publicAddressPreview !== "error" && (
+              <p className="text-xs text-[var(--text-secondary)] mt-2 font-mono break-all">
+                Public address:{" "}
+                <span className="text-[var(--text-primary)]">
+                  {publicAddressPreview}
+                </span>
+                <br />
+                <span className="text-[var(--text-tertiary)] not-italic font-sans">
+                  Public sends via .sol are coming in a follow-up — not yet
+                  available.
+                </span>
               </p>
+            )}
+            {publicAddressPreview === "error" && (
+              <p className="text-xs text-red-400 mt-2">
+                Could not look up public address for {resolution.domain}.
+              </p>
+            )}
+
+            <div className="flex gap-2 mt-3">
+              <button
+                type="button"
+                onClick={handleSendPublic}
+                disabled={publicAddressLoading}
+                className="px-3 py-1.5 text-xs font-medium bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded-lg hover:bg-amber-500/30 transition-colors disabled:opacity-50"
+              >
+                Send Public
+              </button>
+              <button
+                type="button"
+                onClick={handleCancel}
+                className="px-3 py-1.5 text-xs font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--border-default)] rounded-lg hover:bg-[var(--surface-secondary)] transition-colors"
+              >
+                Cancel
+              </button>
             </div>
           </div>
+        )}
 
-          {/* Public address preview (shown after "Send Public" is clicked) */}
-          {publicAddressLoading && (
-            <p className="text-xs text-[var(--text-tertiary)] flex items-center gap-1.5 mt-2">
-              <SpinnerGapIcon size={12} className="animate-spin" aria-hidden />
-              Looking up public address…
-            </p>
-          )}
-          {publicAddressPreview && publicAddressPreview !== "error" && (
-            <p className="text-xs text-[var(--text-secondary)] mt-2 font-mono break-all">
-              Public address:{" "}
-              <span className="text-[var(--text-primary)]">
-                {publicAddressPreview}
-              </span>
-              <br />
-              <span className="text-[var(--text-tertiary)] not-italic font-sans">
-                Public sends via .sol are coming in a follow-up — not yet available.
-              </span>
-            </p>
-          )}
-          {publicAddressPreview === "error" && (
-            <p className="text-xs text-red-400 mt-2">
-              Could not look up public address for {resolution.domain}.
-            </p>
-          )}
+        {resolution.kind === "sns-not-found-domain" && (
+          <p className="mt-2 text-xs text-red-500 flex items-center gap-1.5">
+            <XCircleIcon size={12} weight="fill" aria-hidden />
+            {resolution.domain} not found
+          </p>
+        )}
 
-          <div className="flex gap-2 mt-3">
-            <button
-              type="button"
-              onClick={handleSendPublic}
-              disabled={publicAddressLoading}
-              className="px-3 py-1.5 text-xs font-medium bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded-lg hover:bg-amber-500/30 transition-colors disabled:opacity-50"
-            >
-              Send Public
-            </button>
-            <button
-              type="button"
-              onClick={handleCancel}
-              className="px-3 py-1.5 text-xs font-medium text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--border-default)] rounded-lg hover:bg-[var(--surface-secondary)] transition-colors"
-            >
-              Cancel
-            </button>
-          </div>
-        </div>
-      )}
+        {resolution.kind === "sns-malformed" && (
+          <p className="mt-2 text-xs text-red-500 flex items-center gap-1.5">
+            <XCircleIcon size={12} weight="fill" aria-hidden />
+            {resolution.domain}&apos;s privacy record is invalid (
+            {resolution.reason})
+          </p>
+        )}
 
-      {resolution.kind === "sns-not-found-domain" && (
-        <p className="mt-2 text-xs text-red-500 flex items-center gap-1.5">
-          <XCircleIcon size={12} weight="fill" aria-hidden />
-          {resolution.domain} not found
-        </p>
-      )}
+        {resolution.kind === "invalid" && touched && value !== "" && (
+          <p className="mt-2 text-xs text-red-500">
+            Invalid format. Use a .sol domain or
+            sip:solana:&lt;spend&gt;:&lt;view&gt;
+          </p>
+        )}
 
-      {resolution.kind === "sns-malformed" && (
-        <p className="mt-2 text-xs text-red-500 flex items-center gap-1.5">
-          <XCircleIcon size={12} weight="fill" aria-hidden />
-          {resolution.domain}&apos;s privacy record is invalid ({resolution.reason})
-        </p>
-      )}
-
-      {resolution.kind === "invalid" && touched && value !== "" && (
-        <p className="mt-2 text-xs text-red-500">
-          Invalid format. Use a .sol domain or sip:solana:&lt;spend&gt;:&lt;view&gt;
-        </p>
-      )}
-
-      {/* Empty / pristine help text */}
-      {resolution.kind === "empty" && (
-        <p className="mt-2 text-xs text-[var(--text-tertiary)]">
-          Enter a .sol domain or SIP stealth meta-address
-        </p>
-      )}
-
+        {/* Empty / pristine help text */}
+        {resolution.kind === "empty" && (
+          <p className="mt-2 text-xs text-[var(--text-tertiary)]">
+            Enter a .sol domain or SIP stealth meta-address
+          </p>
+        )}
       </div>
       {/* /aria-live resolution feedback area */}
 
@@ -605,11 +626,16 @@ function QRScannerModal({ onScan, onClose }: QRScannerModalProps) {
                 size={48}
                 className="mx-auto mb-3 text-[var(--text-tertiary)]"
               />
-              <p className="text-sm text-[var(--text-secondary)]">{cameraError}</p>
+              <p className="text-sm text-[var(--text-secondary)]">
+                {cameraError}
+              </p>
             </div>
           ) : (
             <div className="text-center px-6">
-              <QrCodeIcon size={64} className="mx-auto mb-4 text-sip-purple-400" />
+              <QrCodeIcon
+                size={64}
+                className="mx-auto mb-4 text-sip-purple-400"
+              />
               <p className="text-sm text-[var(--text-secondary)]">
                 Point your camera at a SIP address QR code
               </p>

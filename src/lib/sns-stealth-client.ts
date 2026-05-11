@@ -18,7 +18,7 @@ import type { WalletContextState } from "@solana/wallet-adapter-react"
 
 export async function resolve(
   connection: Connection,
-  domain: string,
+  domain: string
 ): Promise<ResolveResult> {
   return resolveSIPStealth(connection, domain)
 }
@@ -26,24 +26,24 @@ export async function resolve(
 export async function publish(
   connection: Connection,
   domain: string,
-  wallet: WalletContextState,
+  wallet: WalletContextState
 ): Promise<{ signature: string }> {
   if (!wallet.publicKey || !wallet.signMessage || !wallet.sendTransaction) {
     throw new Error(
-      "Wallet not connected or does not support signMessage/sendTransaction",
+      "Wallet not connected or does not support signMessage/sendTransaction"
     )
   }
 
   const keys = await deriveStealthKeys(
     { signMessage: wallet.signMessage },
-    domain,
+    domain
   )
 
   const tx = await buildPublishTx(
     connection,
     domain,
     { spending: keys.spending, viewing: keys.viewing },
-    wallet.publicKey,
+    wallet.publicKey
   )
 
   const signature = await wallet.sendTransaction(tx, connection)

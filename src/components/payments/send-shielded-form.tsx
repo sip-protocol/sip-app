@@ -32,7 +32,9 @@ export function SendShieldedForm() {
   // Form state
   const [recipient, setRecipient] = useState("")
   // Resolution state from RecipientInput — drives submit gate + target URI
-  const [resolution, setResolution] = useState<RecipientResolution>({ kind: "empty" })
+  const [resolution, setResolution] = useState<RecipientResolution>({
+    kind: "empty",
+  })
   const [amount, setAmount] = useState("")
   const [token, setToken] = useState<Token>("SOL")
   const [privacyLevel, setPrivacyLevel] = useState<PrivacyLevel>("shielded")
@@ -89,7 +91,11 @@ export function SendShieldedForm() {
       // Extract the resolved sip: URI to pass to the payment hook
       const resolvedUri = targetUri(resolution)
       if (!resolvedUri) {
-        logger.error("Submit called with no resolved URI", undefined, "SendShieldedForm")
+        logger.error(
+          "Submit called with no resolved URI",
+          undefined,
+          "SendShieldedForm"
+        )
         return
       }
 

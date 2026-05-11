@@ -73,7 +73,7 @@ export type RecipientResolution =
 
 /** Return true when the resolution represents a ready-to-send state. */
 export function isReadyToSend(
-  r: RecipientResolution,
+  r: RecipientResolution
 ): r is RSipUri | RSnsResolved {
   return r.kind === "sip-uri" || r.kind === "sns-resolved"
 }

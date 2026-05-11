@@ -4,7 +4,12 @@ import { useState, useEffect, useCallback } from "react"
 import { useWallet, useConnection } from "@solana/wallet-adapter-react"
 import { PublicKey } from "@solana/web3.js"
 import { reverseLookup } from "@bonfida/spl-name-service"
-import { CheckCircle, Globe, ArrowSquareOut, Warning } from "@phosphor-icons/react"
+import {
+  CheckCircle,
+  Globe,
+  ArrowSquareOut,
+  Warning,
+} from "@phosphor-icons/react"
 import { cn } from "@/lib/utils"
 import { logger } from "@/lib/logger"
 import { useNetworkStore } from "@/stores/network"
@@ -21,7 +26,13 @@ interface Props {
   domainPubkey: string
 }
 
-type CardState = "loading" | "has-record" | "no-record" | "publishing" | "published" | "error"
+type CardState =
+  | "loading"
+  | "has-record"
+  | "no-record"
+  | "publishing"
+  | "published"
+  | "error"
 
 interface CardStateData {
   state: CardState
@@ -83,22 +94,33 @@ export function PublishCard({ domainPubkey }: Props) {
           state: "error",
           domainName: null,
           signature: null,
-          errorMessage: err instanceof Error ? err.message : "Failed to load domain",
+          errorMessage:
+            err instanceof Error ? err.message : "Failed to load domain",
         })
       }
     }
 
     load()
-    return () => { cancelled = true }
+    return () => {
+      cancelled = true
+    }
   }, [domainPubkey, connection])
 
   const handlePublish = useCallback(async () => {
     if (!cardData.domainName) return
 
-    setCardData((prev) => ({ ...prev, state: "publishing", errorMessage: null }))
+    setCardData((prev) => ({
+      ...prev,
+      state: "publishing",
+      errorMessage: null,
+    }))
 
     try {
-      const { signature } = await publish(connection, cardData.domainName, wallet)
+      const { signature } = await publish(
+        connection,
+        cardData.domainName,
+        wallet
+      )
       setCardData((prev) => ({
         ...prev,
         state: "published",
@@ -170,7 +192,11 @@ export function PublishCard({ domainPubkey }: Props) {
       <div className="bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-2xl p-5">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-full bg-sip-green-500/10 flex items-center justify-center flex-shrink-0">
-            <CheckCircle size={18} className="text-sip-green-500" weight="fill" />
+            <CheckCircle
+              size={18}
+              className="text-sip-green-500"
+              weight="fill"
+            />
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold text-[var(--text-primary)] truncate">
@@ -191,7 +217,11 @@ export function PublishCard({ domainPubkey }: Props) {
       <div className="bg-[var(--surface-primary)] border border-[var(--border-default)] rounded-2xl p-5">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 rounded-full bg-sip-green-500/10 flex items-center justify-center flex-shrink-0">
-            <CheckCircle size={18} className="text-sip-green-500" weight="fill" />
+            <CheckCircle
+              size={18}
+              className="text-sip-green-500"
+              weight="fill"
+            />
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold text-[var(--text-primary)] truncate">

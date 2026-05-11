@@ -29,7 +29,9 @@ export default function SipStealthPage() {
           setLoadState("idle")
         }
       })
-      return () => { cancelled = true }
+      return () => {
+        cancelled = true
+      }
     }
 
     // Defer initial state transition to avoid sync setState-in-effect lint error
@@ -49,11 +51,15 @@ export default function SipStealthPage() {
       .catch((err) => {
         if (cancelled) return
         logger.error("Failed to load .sol domains", err, "SipStealthPage")
-        setErrorMessage(err instanceof Error ? err.message : "Failed to load domains")
+        setErrorMessage(
+          err instanceof Error ? err.message : "Failed to load domains"
+        )
         setLoadState("error")
       })
 
-    return () => { cancelled = true }
+    return () => {
+      cancelled = true
+    }
   }, [publicKey, connected, connection])
 
   return (
@@ -62,7 +68,11 @@ export default function SipStealthPage() {
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-3">
           <div className="w-10 h-10 rounded-xl bg-sip-purple-500/15 flex items-center justify-center">
-            <ShieldCheck size={20} className="text-sip-purple-400" weight="fill" />
+            <ShieldCheck
+              size={20}
+              className="text-sip-purple-400"
+              weight="fill"
+            />
           </div>
           <h1 className="text-2xl font-bold text-[var(--text-primary)]">
             Enable Private Payments
@@ -86,7 +96,8 @@ export default function SipStealthPage() {
             Connect your wallet
           </p>
           <p className="text-sm text-[var(--text-secondary)]">
-            Connect a wallet to see your .sol domains and enable private payments.
+            Connect a wallet to see your .sol domains and enable private
+            payments.
           </p>
         </div>
       )}
@@ -115,7 +126,9 @@ export default function SipStealthPage() {
       {/* Error loading domains */}
       {connected && loadState === "error" && (
         <div className="bg-[var(--surface-primary)] border border-red-500/20 rounded-2xl p-6 text-center">
-          <p className="text-sm text-red-400 font-medium mb-1">Failed to load domains</p>
+          <p className="text-sm text-red-400 font-medium mb-1">
+            Failed to load domains
+          </p>
           <p className="text-xs text-[var(--text-tertiary)]">{errorMessage}</p>
         </div>
       )}
