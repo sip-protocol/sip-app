@@ -9,8 +9,10 @@ const utilBrowser = path.resolve(process.cwd(), "src/lib/util-browser.js")
 const yellowstoneStub = path.resolve(process.cwd(), "src/lib/yellowstone-grpc-stub.js")
 
 const nextConfig: NextConfig = {
-  // Enable standalone output for Docker deployment
-  output: "standalone",
+  // Standalone output for the Docker/VPS rollback build. On Vercel, leave it
+  // unset so the platform's native build output is used (VERCEL=1 in Vercel
+  // builds). Keeps the VPS image (Dockerfile COPY .next/standalone) buildable.
+  output: process.env.VERCEL ? undefined : "standalone",
 
   // Strict mode for better error detection
   reactStrictMode: true,
