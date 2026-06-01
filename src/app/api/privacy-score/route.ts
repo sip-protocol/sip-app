@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server"
-import { createSurveillanceAnalyzer } from "@sip-protocol/sdk"
 import { logger } from "@/lib/logger"
 
 // Basic Solana address validation (base58, 32-44 chars)
@@ -41,7 +40,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(mockResult)
     }
 
-    // Use real SDK analyzer
+    // Use real SDK analyzer. Imported lazily (not at module top level) so the
+    // mock path above never loads @sip-protocol/sdk. On Vercel's serverless
+    // runtime the SDK resolves to its ESM build, whose transitive
+    // `import { CommitmentLevel } from "@triton-one/yellowstone-grpc"` (a CJS
+    // module) fails native ESM named-export detection at load time. Keeping the
+    // import lazy means that failure only surfaces when a real Helius key is
+    // configured (this branch); the default mock path stays unaffected.
+    const { createSurveillanceAnalyzer } = await import("@sip-protocol/sdk")
     const analyzer = createSurveillanceAnalyzer({
       heliusApiKey,
       cluster:
