@@ -50,33 +50,38 @@ export function useStealthKeys(): UseStealthKeysResult {
   const [error, setError] = useState<string | null>(null)
   const [hasBackedUp, setHasBackedUp] = useState(false)
 
-  // Load existing keys from storage
+  // Load existing keys from storage. Wrapped in a local function so the state
+  // updates are not direct synchronous setState in the effect body (react-hooks).
   useEffect(() => {
-    if (!connected || !publicKey) {
-      setKeys(null)
-      return
-    }
-
-    const storageKey = getStorageKey(publicKey.toBase58())
-
-    try {
-      const stored = localStorage.getItem(storageKey)
-      if (stored) {
-        const parsed = JSON.parse(stored) as StealthKeys
-        setKeys(parsed)
+    const loadFromStorage = () => {
+      if (!connected || !publicKey) {
+        setKeys(null)
+        return
       }
 
-      const backedUp = localStorage.getItem(
-        `${BACKUP_KEY}_${publicKey.toBase58()}`
-      )
-      setHasBackedUp(backedUp === "true")
-    } catch {
-      logger.error(
-        "Failed to load stealth keys from storage",
-        undefined,
-        "useStealthKeys"
-      )
+      const storageKey = getStorageKey(publicKey.toBase58())
+
+      try {
+        const stored = localStorage.getItem(storageKey)
+        if (stored) {
+          const parsed = JSON.parse(stored) as StealthKeys
+          setKeys(parsed)
+        }
+
+        const backedUp = localStorage.getItem(
+          `${BACKUP_KEY}_${publicKey.toBase58()}`
+        )
+        setHasBackedUp(backedUp === "true")
+      } catch {
+        logger.error(
+          "Failed to load stealth keys from storage",
+          undefined,
+          "useStealthKeys"
+        )
+      }
     }
+
+    loadFromStorage()
   }, [connected, publicKey])
 
   const generate = useCallback(async () => {

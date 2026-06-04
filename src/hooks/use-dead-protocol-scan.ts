@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { useWallet } from "@solana/wallet-adapter-react"
 import { useDemoModeStore } from "@/stores/demo-mode"
 import { scanWallet } from "@/lib/migrations/dead-protocol-scanner"
@@ -20,30 +20,48 @@ export function useDeadProtocolScan(): UseDeadProtocolScanReturn {
   const [isScanning, setIsScanning] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const scan = async () => {
-    if (!publicKey && !isDemoMode) return
+  // Bumped by rescan() to re-run the scan effect without duplicating its logic
+  const [rescanNonce, setRescanNonce] = useState(0)
 
-    try {
+  // Auto-scan when a wallet connects; clear results when it disconnects. The
+  // effect owns its async work with a cancel guard so a settled scan never
+  // updates state after unmount or after the wallet changes.
+  const address = publicKey?.toBase58() ?? null
+  useEffect(() => {
+    let cancelled = false
+
+    const run = async () => {
+      if (!address) {
+        setScanResult(null)
+        return
+      }
+
       setIsScanning(true)
       setError(null)
-      const address = publicKey?.toBase58() ?? "demo"
-      const result = await scanWallet(address)
-      setScanResult(result)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Scan failed")
-    } finally {
-      setIsScanning(false)
+      try {
+        const result = await scanWallet(address)
+        if (!cancelled) setScanResult(result)
+      } catch (err) {
+        if (!cancelled) {
+          setError(err instanceof Error ? err.message : "Scan failed")
+        }
+      } finally {
+        if (!cancelled) setIsScanning(false)
+      }
     }
-  }
 
-  useEffect(() => {
-    if (publicKey) {
-      scan()
-    } else {
-      setScanResult(null)
+    run()
+
+    return () => {
+      cancelled = true
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [publicKey?.toBase58()])
+  }, [address, rescanNonce])
 
-  return { scanResult, isScanning, error, rescan: scan }
+  // Manual rescan re-runs the scan effect via a nonce bump (single scan path)
+  const rescan = useCallback(() => {
+    if (!publicKey && !isDemoMode) return
+    setRescanNonce((n) => n + 1)
+  }, [publicKey, isDemoMode])
+
+  return { scanResult, isScanning, error, rescan }
 }

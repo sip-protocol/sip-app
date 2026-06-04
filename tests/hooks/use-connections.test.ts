@@ -95,4 +95,19 @@ describe("useConnections", () => {
     expect(result.current.status).toBe("idle")
     expect(result.current.error).toBeNull()
   })
+
+  it("clears loaded connections when the profileId becomes null", async () => {
+    const { result, rerender } = renderHook(
+      ({ id }: { id: string | null }) => useConnections(id),
+      { initialProps: { id: "profile-dolphin" as string | null } }
+    )
+
+    await waitFor(() =>
+      expect(result.current.connections.length).toBeGreaterThanOrEqual(2)
+    )
+
+    rerender({ id: null })
+
+    await waitFor(() => expect(result.current.connections).toEqual([]))
+  })
 })

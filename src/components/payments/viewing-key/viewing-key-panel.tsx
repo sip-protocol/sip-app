@@ -61,7 +61,12 @@ export function ViewingKeyPanel({
   // Use ref to track if we've already generated on mount
   const hasGeneratedRef = useRef(false)
   const onViewingKeyChangeRef = useRef(onViewingKeyChange)
-  onViewingKeyChangeRef.current = onViewingKeyChange
+  // Keep the latest callback in a ref so the generate effect can invoke it
+  // without re-subscribing. Updated in an effect (not during render) per
+  // react-hooks/refs — useRef already seeds the mount value the effect reads.
+  useEffect(() => {
+    onViewingKeyChangeRef.current = onViewingKeyChange
+  })
 
   // Auto-generate viewing key on mount if not provided
   useEffect(() => {
