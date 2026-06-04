@@ -43,40 +43,60 @@ export function useBalance(options?: UseBalanceOptions): UseBalanceResult {
   const tokenSymbol = options?.tokenSymbol
   const tokenDecimals = options?.tokenDecimals
 
-  const fetchBalance = useCallback(async () => {
-    if (!isConnected || !address || !chain) {
-      setBalance(null)
+  // Bumped by refresh() to re-run the fetch effect without duplicating its logic
+  const [refreshNonce, setRefreshNonce] = useState(0)
+
+  // Fetch on mount, when the wallet/token changes, on manual refresh, and every
+  // 30s while connected. The effect owns its async work with a cancel guard so a
+  // settled request never updates state after unmount or after a dependency change.
+  useEffect(() => {
+    let cancelled = false
+
+    const load = async () => {
+      if (!isConnected || !address || !chain) {
+        setBalance(null)
+        setError(null)
+        return
+      }
+
+      setIsLoading(true)
       setError(null)
-      return
+
+      try {
+        const rawBalance = await getBalanceForChain(address, chain, tokenMint)
+        if (!cancelled) setBalance(rawBalance)
+      } catch (err) {
+        // Balance fetch failed - error handled via state
+        if (!cancelled) {
+          setError(
+            err instanceof Error ? err.message : "Failed to fetch balance"
+          )
+          setBalance(null)
+        }
+      } finally {
+        if (!cancelled) setIsLoading(false)
+      }
     }
 
-    setIsLoading(true)
-    setError(null)
+    load()
 
-    try {
-      const rawBalance = await getBalanceForChain(address, chain, tokenMint)
-      setBalance(rawBalance)
-    } catch (err) {
-      // Balance fetch failed - error handled via state
-      setError(err instanceof Error ? err.message : "Failed to fetch balance")
-      setBalance(null)
-    } finally {
-      setIsLoading(false)
+    if (!isConnected) {
+      return () => {
+        cancelled = true
+      }
     }
-  }, [isConnected, address, chain, tokenMint])
 
-  // Fetch balance on mount and when wallet/token changes
-  useEffect(() => {
-    fetchBalance()
-  }, [fetchBalance])
+    const interval = setInterval(load, 30000)
+    return () => {
+      cancelled = true
+      clearInterval(interval)
+    }
+  }, [isConnected, address, chain, tokenMint, refreshNonce])
 
-  // Auto-refresh balance every 30 seconds when connected
-  useEffect(() => {
-    if (!isConnected) return
-
-    const interval = setInterval(fetchBalance, 30000)
-    return () => clearInterval(interval)
-  }, [isConnected, fetchBalance])
+  // Manual refresh re-runs the fetch effect via a nonce bump (single fetch path)
+  const refresh = useCallback(async () => {
+    setRefreshNonce((n) => n + 1)
+  }, [])
 
   // Get network config for formatting
   const network = chain ? NETWORKS[chain] : null
@@ -94,7 +114,7 @@ export function useBalance(options?: UseBalanceOptions): UseBalanceResult {
     symbol,
     isLoading,
     error,
-    refresh: fetchBalance,
+    refresh,
   }
 }
 

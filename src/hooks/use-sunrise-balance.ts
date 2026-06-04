@@ -31,49 +31,67 @@ export function useSunriseBalance(): UseSunriseBalanceReturn {
   const [gsolBalance, setGsolBalance] = useState<number | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  // Bumped by refresh() to re-run the fetch effect without duplicating its logic
+  const [refreshNonce, setRefreshNonce] = useState(0)
 
-  const fetchBalance = useCallback(async () => {
-    if (!publicKey && !isDemoMode) {
-      setGsolBalance(null)
-      return
-    }
+  // The effect owns its async work with a cancel guard so a settled query never
+  // updates state after unmount or after a dependency change.
+  useEffect(() => {
+    let cancelled = false
 
-    try {
-      setIsLoading(true)
-      setError(null)
-
-      if (isDemoMode || !publicKey) {
-        // Demo mode: return a representative mock balance
-        setGsolBalance(isDemoMode ? 12.5 : 0)
+    const load = async () => {
+      if (!publicKey && !isDemoMode) {
+        setGsolBalance(null)
         return
       }
 
-      // Real wallet scan: query gSOL token accounts owned by the connected wallet
-      const result = await connection.getParsedTokenAccountsByOwner(publicKey, {
-        mint: gsolMintPubkey,
-      })
+      try {
+        setIsLoading(true)
+        setError(null)
 
-      const balance =
-        result.value[0]?.account.data.parsed.info.tokenAmount.uiAmount ?? 0
+        if (isDemoMode || !publicKey) {
+          // Demo mode: return a representative mock balance
+          setGsolBalance(isDemoMode ? 12.5 : 0)
+          return
+        }
 
-      setGsolBalance(balance)
-    } catch (err) {
-      logger.warn(
-        `[SIP] Failed to fetch gSOL balance, defaulting to 0: ${err instanceof Error ? err.message : err}`,
-        "useSunriseBalance"
-      )
-      setGsolBalance(0)
-      setError(
-        err instanceof Error ? err.message : "Failed to fetch gSOL balance"
-      )
-    } finally {
-      setIsLoading(false)
+        // Real wallet scan: query gSOL token accounts owned by the connected wallet
+        const result = await connection.getParsedTokenAccountsByOwner(
+          publicKey,
+          { mint: gsolMintPubkey }
+        )
+
+        const balance =
+          result.value[0]?.account.data.parsed.info.tokenAmount.uiAmount ?? 0
+
+        if (!cancelled) setGsolBalance(balance)
+      } catch (err) {
+        logger.warn(
+          `[SIP] Failed to fetch gSOL balance, defaulting to 0: ${err instanceof Error ? err.message : err}`,
+          "useSunriseBalance"
+        )
+        if (!cancelled) {
+          setGsolBalance(0)
+          setError(
+            err instanceof Error ? err.message : "Failed to fetch gSOL balance"
+          )
+        }
+      } finally {
+        if (!cancelled) setIsLoading(false)
+      }
     }
-  }, [publicKey, connection, isDemoMode])
 
-  useEffect(() => {
-    fetchBalance()
-  }, [fetchBalance])
+    load()
 
-  return { gsolBalance, isLoading, error, refresh: fetchBalance }
+    return () => {
+      cancelled = true
+    }
+  }, [publicKey, connection, isDemoMode, refreshNonce])
+
+  // Manual refresh re-runs the fetch effect via a nonce bump (single fetch path)
+  const refresh = useCallback(() => {
+    setRefreshNonce((n) => n + 1)
+  }, [])
+
+  return { gsolBalance, isLoading, error, refresh }
 }

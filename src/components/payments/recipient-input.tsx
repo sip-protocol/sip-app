@@ -105,22 +105,28 @@ export function RecipientInput({
 
     const initial = classifyInput(value)
 
-    // Non-SNS states resolve synchronously — no debounce needed
-    if (initial.kind !== "sns-resolving") {
+    // Apply the synchronous classification result. Wrapped in a local function so
+    // these are not direct synchronous setState calls in the effect body (which
+    // trigger cascading renders) — the local-function form is the shape React's
+    // react-hooks rules recommend for effect-driven updates.
+    const applyInitial = () => {
       resolveGenRef.current += 1
       setResolution(initial)
       onResolutionChange?.(initial)
       // Clear public address preview when input changes
       setPublicAddressPreview(null)
+    }
+
+    // Non-SNS states resolve synchronously — no debounce needed
+    if (initial.kind !== "sns-resolving") {
+      applyInitial()
       return
     }
 
     // SNS path: set resolving immediately, then debounce the actual network call
-    setResolution(initial)
-    onResolutionChange?.(initial)
-    setPublicAddressPreview(null)
+    applyInitial()
 
-    const generation = ++resolveGenRef.current
+    const generation = resolveGenRef.current
     const domain = initial.domain
 
     debounceRef.current = setTimeout(async () => {

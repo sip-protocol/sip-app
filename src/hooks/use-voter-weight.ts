@@ -19,26 +19,33 @@ export function useVoterWeight(daoId: string | null): UseVoterWeightReturn {
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
-    if (!daoId) {
-      setWeight(null)
-      setTokenOwnerRecordPubkey(null)
-      return
-    }
-
-    const reader = new RealmsReader("realms")
+    let cancelled = false
 
     async function load() {
+      if (!daoId) {
+        setWeight(null)
+        setTokenOwnerRecordPubkey(null)
+        return
+      }
+
+      const reader = new RealmsReader("realms")
       setIsLoading(true)
       try {
-        const info = await reader.getVoterInfo(daoId!, publicKey?.toBase58())
-        setWeight(info.weight)
-        setTokenOwnerRecordPubkey(info.tokenOwnerRecordPubkey ?? null)
+        const info = await reader.getVoterInfo(daoId, publicKey?.toBase58())
+        if (!cancelled) {
+          setWeight(info.weight)
+          setTokenOwnerRecordPubkey(info.tokenOwnerRecordPubkey ?? null)
+        }
       } finally {
-        setIsLoading(false)
+        if (!cancelled) setIsLoading(false)
       }
     }
 
     load()
+
+    return () => {
+      cancelled = true
+    }
   }, [daoId, publicKey])
 
   return { weight, tokenOwnerRecordPubkey, isLoading }

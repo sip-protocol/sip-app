@@ -445,13 +445,15 @@ export function useQuote(params: QuoteParams | null): QuoteResult {
 
   // Freshness tracking effect
   useEffect(() => {
-    if (!fetchedAt || !quote) {
-      setFreshness("expired")
-      setExpiresIn(null)
-      return
-    }
-
     const updateFreshness = () => {
+      // No active quote — reset to expired. Kept inside this local function so it
+      // is not a direct synchronous setState in the effect body (react-hooks).
+      if (!fetchedAt || !quote) {
+        setFreshness("expired")
+        setExpiresIn(null)
+        return
+      }
+
       const elapsed = Date.now() - fetchedAt
       const remaining = Math.max(
         0,
@@ -471,6 +473,9 @@ export function useQuote(params: QuoteParams | null): QuoteResult {
 
     // Update immediately
     updateFreshness()
+
+    // Without an active quote there is nothing to count down — skip the interval
+    if (!fetchedAt || !quote) return
 
     // Update every second for countdown
     freshnessIntervalRef.current = setInterval(updateFreshness, 1000)

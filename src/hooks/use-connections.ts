@@ -43,24 +43,29 @@ export function useConnections(profileId: string | null): UseConnectionsReturn {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    if (!profileId) {
-      setConnections([])
-      return
-    }
-
-    const reader = new TapestryReader("simulation")
+    let cancelled = false
 
     async function load() {
+      if (!profileId) {
+        setConnections([])
+        return
+      }
+
+      const reader = new TapestryReader("simulation")
       setIsLoading(true)
       try {
-        const data = await reader.getConnections(profileId!)
-        setConnections(data)
+        const data = await reader.getConnections(profileId)
+        if (!cancelled) setConnections(data)
       } finally {
-        setIsLoading(false)
+        if (!cancelled) setIsLoading(false)
       }
     }
 
     load()
+
+    return () => {
+      cancelled = true
+    }
   }, [profileId])
 
   const reset = useCallback(() => {
