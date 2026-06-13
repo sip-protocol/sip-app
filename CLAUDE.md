@@ -69,9 +69,9 @@
 | Claim Payments | ✅ Full | ✅ Full | Same core |
 | View History | ✅ Full | ✅ Full | Different viz |
 | Viewing Key Disclosure | ✅ Full | ✅ Full | Compliance-critical |
-| Jupiter DEX | 🔲 Scaffolded | ✅ Full | Mobile-first for swaps |
+| Jupiter DEX | ✅ Full | ✅ Full | `/dex/jupiter` swap UI |
 | Privacy Score | ✅ Full (D3) | ✅ Basic | Web excels at viz |
-| Compliance Dashboard | 🔲 Scaffolded | ✅ Basic | Web for enterprise |
+| Compliance Dashboard | ✅ Full | ✅ Basic | `/enterprise/compliance` |
 | Audit Reports | 🔲 Planned | ✅ Basic | Web for accountants |
 | Native Key Mgmt | ❌ N/A | ✅ Full | Mobile-only |
 | Biometric Auth | ❌ N/A | ✅ Full | Mobile-only |
@@ -146,7 +146,9 @@ Before building ANY feature, ask:
 - `sip-protocol.org` = "What is SIP?" (marketing)
 - `app.sip-protocol.org` = "Use SIP now" (THE product)
 
-### App Routes (14 total)
+### App Routes (44 page routes across 18 route groups + 2 API routes)
+
+The app spans 18 route groups (Graveyard hackathon tracks): `(art)`, `(bridge)`, `(channel)`, `(desci)`, `(dex)`, `(enterprise)`, `(gaming)`, `(governance)`, `(loyalty)`, `(metaverse)`, `(migrations)`, `(music)`, `(payments)`, `(settings)`, `(social)`, `(ticketing)`, `(tools)`, `(wallet)`, plus `showcase/` pages and `api/` routes (`/api/advisor`, `/api/privacy-score`). Core privacy routes:
 
 | Route | Purpose | Status |
 |-------|---------|--------|
@@ -157,13 +159,15 @@ Before building ANY feature, ask:
 | `/payments/scan` | Scan for incoming | ✅ Live |
 | `/payments/history` | Transaction history | ✅ Live |
 | `/payments/disclose` | Viewing key disclosure | ✅ Live |
-| `/privacy-score` | Wallet surveillance analyzer | ✅ Live |
-| `/wallet` | Wallet interface | Scaffolded |
-| `/wallet/keys` | Viewing key management | Scaffolded |
-| `/dex` | Private DEX | Scaffolded |
-| `/dex/jupiter` | Jupiter integration | Scaffolded |
-| `/enterprise` | Enterprise dashboard | Scaffolded |
-| `/enterprise/compliance` | Compliance tools | Scaffolded |
+| `/privacy-score` | Wallet surveillance analyzer (under `(tools)`) | ✅ Live |
+| `/dex`, `/dex/jupiter` | Private DEX + Jupiter swap UI | ✅ Live |
+| `/wallet`, `/wallet/keys` | Wallet interface | 🔲 Coming Soon |
+| `/wallet/sip-stealth` | SIP stealth wallet | ✅ Live |
+| `/enterprise/compliance` | Compliance dashboard (audit trail, viewing keys) | ✅ Live |
+| `/enterprise` | Enterprise landing | 🔲 Coming Soon |
+| `/art`, `/bridge`, `/channel`, `/desci`, `/gaming`, `/governance`, `/loyalty`, `/metaverse`, `/migrations`, `/music`, `/social`, `/ticketing` (+ sub-routes) | Graveyard track demos | ✅ Live |
+| `/settings` | App settings | ✅ Live |
+| `/showcase/graveyard-2026`, `/showcase/solana-privacy-2026` | Showcase pages | ✅ Live |
 
 ### Route Groups Structure
 
@@ -178,23 +182,33 @@ src/app/
 │   │   ├── send/page.tsx   # Send shielded payment
 │   │   ├── receive/page.tsx# Generate stealth address
 │   │   ├── scan/page.tsx   # Scan for incoming
-│   │   └── history/page.tsx# Transaction history
+│   │   ├── history/page.tsx# Transaction history
+│   │   └── disclose/page.tsx # Viewing key disclosure
 │   └── layout.tsx          # Payments-specific layout
 │
 ├── (wallet)/               # Route group: Wallet
 │   └── wallet/
 │       ├── page.tsx        # Wallet overview
-│       └── keys/page.tsx   # Viewing key management
+│       ├── keys/page.tsx   # Viewing key management
+│       └── sip-stealth/page.tsx # SIP stealth wallet
 │
 ├── (dex)/                  # Route group: DEX
 │   └── dex/
 │       ├── page.tsx        # Private swap interface
 │       └── jupiter/page.tsx# Jupiter integration
 │
-└── (enterprise)/           # Route group: Enterprise
-    └── enterprise/
-        ├── page.tsx        # Dashboard
-        └── compliance/     # Compliance tools
+├── (enterprise)/           # Route group: Enterprise
+│   └── enterprise/
+│       ├── page.tsx        # Dashboard
+│       └── compliance/     # Compliance tools
+│
+├── (tools)/                # privacy-score
+├── (art)/ (bridge)/ (channel)/ (desci)/ (gaming)/ (governance)/
+├── (loyalty)/ (metaverse)/ (migrations)/ (music)/ (social)/
+├── (ticketing)/ (settings)/   # Graveyard hackathon track demos
+│
+├── showcase/               # graveyard-2026, solana-privacy-2026
+└── api/                    # advisor, privacy-score (route.ts handlers)
 ```
 
 ---
@@ -203,7 +217,7 @@ src/app/
 
 **Tech Stack:** Next.js 16 (App Router), React 19, Tailwind CSS 4, Zustand 5, Vitest
 **Deployment:** app.sip-protocol.org (Docker + GHCR → VPS port 5004 blue / 5005 green)
-**Tests:** 122 test suites, 1,184 unit tests + 27 demo E2E + 25 mainnet E2E (Playwright)
+**Tests:** 131 test suites, 1,282 unit tests + 27 demo E2E + 25 mainnet E2E (Playwright)
 
 **Key Commands:**
 ```bash
@@ -227,7 +241,7 @@ pnpm typecheck            # Type check
 ## Dependencies
 
 **Core:**
-- `@sip-protocol/sdk` v0.8.1 - Core privacy SDK
+- `@sip-protocol/sdk` v0.11.0 - Core privacy SDK
 - `@sip-protocol/types` - TypeScript types
 - `@sip-protocol/react` - React hooks (useSIP, useStealthAddress, etc.)
 
@@ -375,7 +389,7 @@ Study these for quality benchmarks:
 
 ---
 
-**Last Updated:** 2026-02-24
-**Status:** Live at app.sip-protocol.org | 13 routes | 122 test suites, 1,184 tests + 52 E2E | SDK v0.8.1
+**Last Updated:** 2026-06-12
+**Status:** Live at app.sip-protocol.org | 44 page routes (18 groups) | 131 test suites, 1,282 tests + 52 E2E | SDK v0.11.0
 **Positioning:** Privacy Command Center — enterprise, compliance, power users
 **Companion:** sip-mobile ("Privacy in Your Pocket" — consumers, daily use)
