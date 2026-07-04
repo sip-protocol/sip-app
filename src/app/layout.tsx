@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next"
 import Script from "next/script"
 import { Inter, JetBrains_Mono } from "next/font/google"
+import { Analytics } from "@vercel/analytics/next"
 import { Providers } from "@/providers"
 import { Header, Footer } from "@/components/layout"
 import { AdvisorWidget } from "@/components/advisor"
@@ -105,6 +106,7 @@ export default function RootLayout({
           <Footer />
           <AdvisorWidget />
         </Providers>
+        <Analytics />
       </body>
     </html>
   )

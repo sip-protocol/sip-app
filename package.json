@@ -71,6 +71,7 @@
     "@solana/web3.js": "^1.98.4",
     "@sunrisestake/client": "^0.1.16",
     "@torque-labs/torque-ts-sdk": "^0.0.136",
+    "@vercel/analytics": "^2.0.1",
     "@wormhole-foundation/sdk-base": "^4.21.0",
     "@wormhole-foundation/sdk-definitions": "^4.21.0",
     "@wormhole-foundation/sdk-solana": "^4.21.0",
