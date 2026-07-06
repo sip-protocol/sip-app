@@ -74,7 +74,7 @@
     "@vercel/analytics": "^2.0.1",
     "@wormhole-foundation/sdk-base": "^4.21.0",
     "@wormhole-foundation/sdk-definitions": "^4.21.0",
-    "@wormhole-foundation/sdk-solana": "^4.21.0",
+    "@wormhole-foundation/sdk-solana": "^4.24.0",
     "@wormhole-foundation/sdk-solana-core": "^4.21.0",
     "@wormhole-foundation/sdk-solana-ntt": "^4.0.14",
     "bs58": "^6.0.0",
