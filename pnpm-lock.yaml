@@ -112,11 +112,11 @@ importers:
         specifier: ^4.21.0
         version: 4.21.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)
       '@wormhole-foundation/sdk-solana-core':
-        specifier: ^4.21.0
-        version: 4.21.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)
+        specifier: ^4.24.0
+        version: 4.24.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)
       '@wormhole-foundation/sdk-solana-ntt':
         specifier: ^6.2.0
-        version: 6.3.0(@wormhole-foundation/sdk-base@4.24.0)(@wormhole-foundation/sdk-definitions@4.24.0)(@wormhole-foundation/sdk-solana-core@4.21.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10))(@wormhole-foundation/sdk-solana@4.21.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10))(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@5.0.10)
+        version: 6.3.0(@wormhole-foundation/sdk-base@4.24.0)(@wormhole-foundation/sdk-definitions@4.24.0)(@wormhole-foundation/sdk-solana-core@4.24.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10))(@wormhole-foundation/sdk-solana@4.21.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10))(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@5.0.10)
       bs58:
         specifier: ^6.0.0
         version: 6.0.0
@@ -4660,6 +4660,10 @@ packages:
     resolution: {integrity: sha512-lsvzujGGR5T4p4XgXNHzS/HrseDBtoTtUR0pwuumGGh0+OLr0GchP9q62leAP16SY1KLHrF3ULDyGBu1Q+P2cw==}
     engines: {node: '>=16'}
 
+  '@wormhole-foundation/sdk-connect@4.24.0':
+    resolution: {integrity: sha512-WlBih0bor+CTNl+L8xSbiVa/aweOIpGY7lVMJJ2CSO5HFqrlkqZ81s0ZVorHonrqifIjkNotpDPZSZQzf5r4cw==}
+    engines: {node: '>=16'}
+
   '@wormhole-foundation/sdk-cosmwasm-core@1.0.3':
     resolution: {integrity: sha512-RzrJktyotuHi/2esFFqFgoHqppIZfbjJizYVB6BNtYTGHu/3X9hTedVaMGyLzagAyaxWSCuS4OCN4K1LpqNX9g==}
     engines: {node: '>=16'}
@@ -4719,8 +4723,8 @@ packages:
     resolution: {integrity: sha512-k65W7URd0vAw58UmIKibz+CkXijpVtAER46F9D+HZzSPGggcf/Ps9xfY285+fYMgAKSkyMqlLNrwsTR2STM/0w==}
     engines: {node: '>=16'}
 
-  '@wormhole-foundation/sdk-solana-core@4.21.0':
-    resolution: {integrity: sha512-7Nnrr3a/kN8s6YQKTAXlEO+5pycfHZ/CyxtlGJhLM0ouhQLLTy9EReW9YYyCcbLH9TueMCaRvXKLgklpc0tqyg==}
+  '@wormhole-foundation/sdk-solana-core@4.24.0':
+    resolution: {integrity: sha512-Ao7FL4Agec/9As8aqbPnGxU65PeiS/fEPxTRBL0zKQ/Xt+O/vluOHY+jLnylppR3VfcVyqGLuIfPYq+ZX7wlXA==}
     engines: {node: '>=16'}
 
   '@wormhole-foundation/sdk-solana-ntt@6.3.0':
@@ -4742,6 +4746,10 @@ packages:
 
   '@wormhole-foundation/sdk-solana@4.21.0':
     resolution: {integrity: sha512-lr+pyS4IeK1UbQZz7impskfY424pChP1AONQbFCv2CP6A3FGIHsgGCV6ko3BnjLsJ0AZQeikwiQhfbe7VsGDyQ==}
+    engines: {node: '>=16'}
+
+  '@wormhole-foundation/sdk-solana@4.24.0':
+    resolution: {integrity: sha512-NM50j4lv6tL7i079dmE27MTEl83JGVYHdUCsCXfWzZl1wT5ENiJLLA/gcPmnozpf3Cyq4Sr/fCfdQ1iiWosaWg==}
     engines: {node: '>=16'}
 
   '@wormhole-foundation/sdk-sui-core@1.0.3':
@@ -16591,6 +16599,15 @@ snapshots:
       - debug
       - supports-color
 
+  '@wormhole-foundation/sdk-connect@4.24.0':
+    dependencies:
+      '@wormhole-foundation/sdk-base': 4.24.0
+      '@wormhole-foundation/sdk-definitions': 4.24.0
+      axios: 1.16.1(debug@4.4.3)
+    transitivePeerDependencies:
+      - debug
+      - supports-color
+
   '@wormhole-foundation/sdk-cosmwasm-core@1.0.3(bufferutil@4.1.0)(google-protobuf@3.21.4)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76)':
     dependencies:
       '@cosmjs/cosmwasm-stargate': 0.32.4(bufferutil@4.1.0)(utf-8-validate@5.0.10)
@@ -16767,13 +16784,13 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  '@wormhole-foundation/sdk-solana-core@4.21.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)':
+  '@wormhole-foundation/sdk-solana-core@4.24.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)':
     dependencies:
       '@coral-xyz/anchor': 0.29.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)
       '@coral-xyz/borsh': 0.29.0(@solana/web3.js@1.98.4(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10))
       '@solana/web3.js': 1.98.4(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)
-      '@wormhole-foundation/sdk-connect': 4.21.0
-      '@wormhole-foundation/sdk-solana': 4.21.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)
+      '@wormhole-foundation/sdk-connect': 4.24.0
+      '@wormhole-foundation/sdk-solana': 4.24.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
       - bufferutil
       - debug
@@ -16782,7 +16799,7 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  '@wormhole-foundation/sdk-solana-ntt@6.3.0(@wormhole-foundation/sdk-base@4.24.0)(@wormhole-foundation/sdk-definitions@4.24.0)(@wormhole-foundation/sdk-solana-core@4.21.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10))(@wormhole-foundation/sdk-solana@4.21.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10))(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@5.0.10)':
+  '@wormhole-foundation/sdk-solana-ntt@6.3.0(@wormhole-foundation/sdk-base@4.24.0)(@wormhole-foundation/sdk-definitions@4.24.0)(@wormhole-foundation/sdk-solana-core@4.24.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10))(@wormhole-foundation/sdk-solana@4.21.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10))(bufferutil@4.1.0)(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.9.3)(utf-8-validate@5.0.10)':
     dependencies:
       '@coral-xyz/anchor': 0.29.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)
       '@coral-xyz/borsh': 0.29.0(@solana/web3.js@1.98.4(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10))
@@ -16792,7 +16809,7 @@ snapshots:
       '@wormhole-foundation/sdk-definitions': 4.24.0
       '@wormhole-foundation/sdk-definitions-ntt': 6.3.0(@wormhole-foundation/sdk-base@4.24.0)(@wormhole-foundation/sdk-definitions@4.24.0)
       '@wormhole-foundation/sdk-solana': 4.21.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)
-      '@wormhole-foundation/sdk-solana-core': 4.21.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)
+      '@wormhole-foundation/sdk-solana-core': 4.24.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)
       bn.js: 5.2.3
     transitivePeerDependencies:
       - bufferutil
@@ -16840,6 +16857,22 @@ snapshots:
       '@solana/spl-token': 0.3.9(@solana/web3.js@1.98.4(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10))(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)
       '@solana/web3.js': 1.98.4(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)
       '@wormhole-foundation/sdk-connect': 4.21.0
+      rpc-websockets: 7.11.2
+    transitivePeerDependencies:
+      - bufferutil
+      - debug
+      - encoding
+      - supports-color
+      - typescript
+      - utf-8-validate
+
+  '@wormhole-foundation/sdk-solana@4.24.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)':
+    dependencies:
+      '@coral-xyz/anchor': 0.29.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)
+      '@coral-xyz/borsh': 0.29.0(@solana/web3.js@1.98.4(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10))
+      '@solana/spl-token': 0.3.9(@solana/web3.js@1.98.4(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10))(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)
+      '@solana/web3.js': 1.98.4(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)
+      '@wormhole-foundation/sdk-connect': 4.24.0
       rpc-websockets: 7.11.2
     transitivePeerDependencies:
       - bufferutil
