@@ -50,7 +50,7 @@
     "validate": "pnpm typecheck && pnpm lint && pnpm test:run"
   },
   "dependencies": {
-    "@audius/sdk": "^13.0.1",
+    "@audius/sdk": "^15.3.1",
     "@bonfida/spl-name-service": "^3.0.21",
     "@magicblock-labs/bolt-sdk": "^0.2.4",
     "@metaplex-foundation/mpl-bubblegum": "^5.0.2",
